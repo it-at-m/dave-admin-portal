@@ -11,283 +11,291 @@
         fixed-header
         :search="filterDienstleister"
         :loading="dienstleisterIsLoading"
+    >
+      <template v-slot:top>
+        <v-toolbar
+            flat
+        >
+          <!-- Eingabefeld zum Filtern der Dienstleister -->
+          <v-text-field
+              v-model="filterDienstleister"
+              append-icon="mdi-filter"
+              label="Dienstleister nach dem gefiltert werden soll"
+              single-line
+              hide-details
+          ></v-text-field>
+          <v-spacer/>
+
+          <!-- Der Editierdialog Dienstleister-->
+          <v-dialog
+              v-model="showEditDiensleisterDialog"
+              width="50%"
+              height="600px"
+              persistent
           >
-            <template v-slot:top>
-              <v-toolbar
-                  flat
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                  v-bind="attrs"
+                  v-on="on"
               >
-                <!-- Eingabefeld zum Filtern der Dienstleister -->
-                <v-text-field
-                    v-model="filterDienstleister"
-                    append-icon="mdi-filter"
-                    label="Dienstleister nach dem gefiltert werden soll"
-                    single-line
-                    hide-details
-                ></v-text-field>
-                <v-spacer/>
-
-                <!-- Der Editierdialog Dienstleister-->
-                <v-dialog
-                    v-model="showEditDiensleisterDialog"
-                    width="50%"
-                    height="600px"
-                    persistent
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-icon
-                        v-bind="attrs"
-                        v-on="on"
-                    >
-                      mdi-plus-box
-                    </v-icon>
-                  </template>
-                  <v-card width="100%" height="100%">
-                    <v-card-title>
-                      <span class="headline"> {{ getDienstleisterTitle }}</span>
-                    </v-card-title>
-
-                    <v-card-text>
-                      <v-container>
-                        <v-row dense>
-                          <v-col
-                              cols="12"
-                              md="8"
-                          >
-                            <!-- Der eindeutige Bezeichner -->
-                            <v-text-field
-                                v-model="dienstleisterToEdit.name"
-                                label="Name"
-                                :rules="[nameVerwendbar, pflichtfeld]"
-                            />
-                          </v-col>
-                          <v-spacer/>
-                          <v-col
-                              cols="12"
-                              md="2"
-                          >
-                            <v-checkbox
-                                v-model="dienstleisterToEdit.active"
-                                label="Aktiv"
-                            />
-                          </v-col>
-                        </v-row>
-                        <v-row dense>
-                          <v-col
-                              cols="12"
-                              md="8"
-                          >
-                            <v-text-field
-                                v-model="dienstleisterToEdit.kennung"
-                                label="LhmObjectId"
-                                :rules="[kennungVerwendbar, pflichtfeld]"
-                            />
-                          </v-col>
-                        </v-row>
-                        <v-row dense>
-                          <v-col>
-                            <v-data-table
-                              class="overflow-y-auto"
-                              :height="tableHeightMail"
-                              dense
-                              :headers="headerMail"
-                              :items="getEmailAddresses"
-                              :items-per-page="-1"
-                              hide-default-footer
-                              fixed-header
-                              :search="filterEmailaddress"
-                              no-data-text="Es muss mindestens eine E-Mail-Adresse angegeben werden."
-                          >
-                            <template v-slot:top>
-                              <v-toolbar
-                                  flat
-                              >
-                                <v-text-field
-                                    v-model="filterEmailaddress"
-                                    append-icon="mdi-filter"
-                                    label="E-Mail-Adresse nach der gefiltert werden soll"
-                                    single-line
-                                    hide-details
-                                />
-
-                                <v-spacer/>
-
-                                <!-- Der Editierdialog E-Mail -->
-                                <v-dialog
-                                    v-model="showEditMailDialog"
-                                    max-width="700px"
-                                    persistent
-                                >
-                                  <template v-slot:activator="{ on, attrs }">
-                                    <v-icon
-                                        v-bind="attrs"
-                                        v-on="on"
-                                    >
-                                      mdi-plus-box
-                                    </v-icon>
-                                  </template>
-                                  <v-card>
-                                    <v-card-title>
-                                      <span class="headline"> {{getTitleMail}}</span>
-                                    </v-card-title>
-
-                                    <v-card-text>
-                                      <v-container>
-                                        <v-row>
-                                          <v-col
-                                              cols="12"
-                                              md="8"
-                                          >
-                                            <!-- Der eindeutige Bezeichner -->
-                                            <v-text-field
-                                                v-model="editEmailaddress.emailAddress"
-                                                label="E-Mail"
-                                                :rules="[pflichtfeld, isEmailValidOrEmpty, isEmailADuplicate]"
-                                            ></v-text-field>
-                                          </v-col>
-                                        </v-row>
-                                      </v-container>
-                                    </v-card-text>
-
-                                    <!-- Buttons zum speichern und Abbrechen des Editierdialogs -->
-                                    <v-card-actions>
-                                      <v-spacer></v-spacer>
-                                      <v-btn
-                                          color="secondary"
-                                          @click="saveEditMailDialog"
-                                          :disabled="disableSpeicherButtonMail"
-                                      >
-                                        Speichern
-                                      </v-btn>
-                                      <v-btn
-                                          color="grey lighten-1"
-                                          @click="closeEditMailDialog"
-                                      >
-                                        Abbrechen
-                                      </v-btn>
-                                    </v-card-actions>
-
-                                  </v-card>
-                                </v-dialog>
-
-                                <!-- Der Löschdialog E-Mail-->
-                                <v-dialog
-                                    v-model="showDeleteMailDialog"
-                                    max-width="700px"
-                                    persistent
-                                >
-                                  <v-card>
-                                    <v-card-title>Soll folgende E-Mail-Adresse gelöscht werden?</v-card-title>
-                                    <v-card-text>
-                                      <v-text-field
-                                          label="E-Mail-Adresse"
-                                          v-model="editEmailaddress.emailAddress"
-                                          readonly
-                                      />
-                                    </v-card-text>
-                                    <v-card-actions>
-                                      <v-spacer></v-spacer>
-                                      <v-btn color="red lighten-1"
-                                             @click="deleteMailConfirm">
-                                        Löschen
-                                      </v-btn>
-                                      <v-btn color="grey lighten-1"
-                                             @click="closeMailDelete">
-                                        Abbrechen
-                                      </v-btn>
-                                      <v-spacer></v-spacer>
-                                    </v-card-actions>
-                                  </v-card>
-                                </v-dialog>
-
-                              </v-toolbar>
-                            </template>
-
-                            <!-- Buttons in Tabellenspalte "Aktionen" -->
-                            <template v-slot:[`item.aktionen`]="{ item }">
-                              <v-icon
-                                  small
-                                  @click="editMail(item)"
-                              >
-                                mdi-pencil
-                              </v-icon>
-                              <v-icon
-                                  small
-                                  @click="deleteMail(item)"
-                              >
-                                mdi-delete
-                              </v-icon>
-                            </template>
-
-                          </v-data-table>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-card-text>
-
-                    <!-- Buttons zum speichern und Abbrechen des Editierdialogs -->
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn
-                          color="secondary"
-                          @click="saveEditDienstleisterDialog"
-                          :disabled="disableSpeicherButtonDienstleister"
-                      >
-                        Speichern
-                      </v-btn>
-                      <v-btn
-                          color="grey lighten-1"
-                          @click="closeEditDienstleisterDialog"
-                      >
-                        Abbrechen
-                      </v-btn>
-                    </v-card-actions>
-
-                  </v-card>
-                </v-dialog>
-
-                <!-- Der Löschdialog Dienstleister-->
-                <v-dialog
-                    v-model="showDeleteDienstleisterDialog"
-                    max-width="50%"
-                    height="600px"
-                    persistent
-                >
-                  <v-card>
-                    <v-card-title>Soll folgender Dienstleister gelöscht werden?</v-card-title>
-                    <v-card-text>
-                      <v-text-field
-                        label="Name"
-                        v-model="dienstleisterToEdit.name"
-                        readonly
-                      />
-                      <v-text-field
-                          label="LhmObjectId"
-                          v-model="dienstleisterToEdit.kennung"
-                          readonly
-                      />
-                      <v-text-field
-                          label="E-Mail"
-                          v-model="dienstleisterToEdit.emailAddressesAsString"
-                          readonly
-                      />
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="red lighten-1"
-                             @click="deleteDienstleisterConfirm">
-                        Löschen
-                      </v-btn>
-                      <v-btn color="grey lighten-1"
-                             @click="closeDeleteDienstleisterDialog">
-                        Abbrechen
-                      </v-btn>
-                      <v-spacer></v-spacer>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-
-              </v-toolbar>
+                mdi-plus-box
+              </v-icon>
             </template>
+            <v-card width="100%" height="100%">
+              <v-card-title>
+                <span class="headline"> {{ getDienstleisterTitle }}</span>
+              </v-card-title>
+
+              <v-card-text>
+                <v-container>
+                  <v-row dense>
+                    <v-col
+                        cols="12"
+                        md="8"
+                    >
+                      <!-- Der eindeutige Bezeichner -->
+                      <v-text-field
+                          v-model="dienstleisterToEdit.name"
+                          label="Name"
+                          :rules="[nameVerwendbar, pflichtfeld]"
+                      />
+                    </v-col>
+                    <v-spacer/>
+                    <v-col
+                        cols="12"
+                        md="2"
+                    >
+                      <v-checkbox
+                          v-model="dienstleisterToEdit.active"
+                          label="Aktiv"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row dense>
+                    <v-col
+                        cols="12"
+                        md="8"
+                    >
+                      <v-text-field
+                          v-model="dienstleisterToEdit.kennung"
+                          label="Kennung"
+                          :rules="[kennungVerwendbar, pflichtfeld]"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row dense>
+                    <v-col>
+                      <v-data-table
+                          class="overflow-y-auto"
+                          :height="tableHeightMail"
+                          dense
+                          :headers="headerMail"
+                          :items="getEmailAddresses"
+                          :items-per-page="-1"
+                          hide-default-footer
+                          fixed-header
+                          :search="filterEmailaddress"
+                          no-data-text="Es muss mindestens eine E-Mail-Adresse angegeben werden."
+                      >
+                        <template v-slot:top>
+                          <v-toolbar
+                              flat
+                          >
+                            <v-text-field
+                                v-model="filterEmailaddress"
+                                append-icon="mdi-filter"
+                                label="E-Mail-Adresse nach der gefiltert werden soll"
+                                single-line
+                                hide-details
+                            />
+
+                            <v-spacer/>
+
+                            <!-- Der Editierdialog E-Mail -->
+                            <v-dialog
+                                v-model="showEditMailDialog"
+                                max-width="700px"
+                                persistent
+                            >
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-icon
+                                    v-bind="attrs"
+                                    v-on="on"
+                                >
+                                  mdi-plus-box
+                                </v-icon>
+                              </template>
+                              <v-card>
+                                <v-card-title>
+                                  <span class="headline"> {{ getTitleMail }}</span>
+                                </v-card-title>
+
+                                <v-card-text>
+                                  <v-container>
+                                    <v-row>
+                                      <v-col
+                                          cols="12"
+                                          md="8"
+                                      >
+                                        <!-- Der eindeutige Bezeichner -->
+                                        <v-text-field
+                                            v-model="editEmailaddress.emailAddress"
+                                            label="E-Mail"
+                                            :rules="[pflichtfeld, isEmailValidOrEmpty, isEmailADuplicate]"
+                                        ></v-text-field>
+                                      </v-col>
+                                    </v-row>
+                                  </v-container>
+                                </v-card-text>
+
+                                <!-- Buttons zum speichern und Abbrechen des Editierdialogs -->
+                                <v-card-actions>
+                                  <v-spacer></v-spacer>
+                                  <v-btn
+                                      color="secondary"
+                                      @click="saveEditMailDialog"
+                                      :disabled="disableSpeicherButtonMail"
+                                  >
+                                    Speichern
+                                  </v-btn>
+                                  <v-btn
+                                      color="grey lighten-1"
+                                      @click="closeEditMailDialog"
+                                  >
+                                    Abbrechen
+                                  </v-btn>
+                                </v-card-actions>
+
+                              </v-card>
+                            </v-dialog>
+
+                            <!-- Der Löschdialog E-Mail-->
+                            <v-dialog
+                                v-model="showDeleteMailDialog"
+                                max-width="700px"
+                                persistent
+                            >
+                              <v-card>
+                                <v-card-title>Soll folgende E-Mail-Adresse gelöscht werden?</v-card-title>
+                                <v-card-text>
+                                  <v-text-field
+                                      label="E-Mail-Adresse"
+                                      v-model="editEmailaddress.emailAddress"
+                                      readonly
+                                  />
+                                </v-card-text>
+                                <v-card-actions>
+                                  <v-spacer></v-spacer>
+                                  <v-btn
+                                      color="red lighten-1"
+                                      @click="deleteMailConfirm"
+                                  >
+                                    Löschen
+                                  </v-btn>
+                                  <v-btn
+                                      color="grey lighten-1"
+                                      @click="closeMailDelete"
+                                  >
+                                    Abbrechen
+                                  </v-btn>
+                                  <v-spacer></v-spacer>
+                                </v-card-actions>
+                              </v-card>
+                            </v-dialog>
+
+                          </v-toolbar>
+                        </template>
+
+                        <!-- Buttons in Tabellenspalte "Aktionen" -->
+                        <template v-slot:[`item.aktionen`]="{ item }">
+                          <v-icon
+                              small
+                              @click="editMail(item)"
+                          >
+                            mdi-pencil
+                          </v-icon>
+                          <v-icon
+                              small
+                              @click="deleteMail(item)"
+                          >
+                            mdi-delete
+                          </v-icon>
+                        </template>
+
+                      </v-data-table>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+
+              <!-- Buttons zum speichern und Abbrechen des Editierdialogs -->
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="secondary"
+                    @click="saveEditDienstleisterDialog"
+                    :disabled="disableSpeicherButtonDienstleister"
+                >
+                  Speichern
+                </v-btn>
+                <v-btn
+                    color="grey lighten-1"
+                    @click="closeEditDienstleisterDialog"
+                >
+                  Abbrechen
+                </v-btn>
+              </v-card-actions>
+
+            </v-card>
+          </v-dialog>
+
+          <!-- Der Löschdialog Dienstleister-->
+          <v-dialog
+              v-model="showDeleteDienstleisterDialog"
+              max-width="50%"
+              height="600px"
+              persistent
+          >
+            <v-card>
+              <v-card-title>Soll folgender Dienstleister gelöscht werden?</v-card-title>
+              <v-card-text>
+                <v-text-field
+                    label="Name"
+                    v-model="dienstleisterToEdit.name"
+                    readonly
+                />
+                <v-text-field
+                    label="Kennung"
+                    v-model="dienstleisterToEdit.kennung"
+                    readonly
+                />
+                <v-text-field
+                    label="E-Mail"
+                    v-model="dienstleisterToEdit.emailAddressesAsString"
+                    readonly
+                />
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="red lighten-1"
+                    @click="deleteDienstleisterConfirm"
+                >
+                  Löschen
+                </v-btn>
+                <v-btn
+                    color="grey lighten-1"
+                    @click="closeDeleteDienstleisterDialog"
+                >
+                  Abbrechen
+                </v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+        </v-toolbar>
+      </template>
       <!-- Für Anzeige der Booleans "active" als Check (Haken) -->
       <template v-slot:[`item.active`]="{ item }">
         <v-icon
@@ -335,12 +343,12 @@ export default class ConfigDienstleister extends Vue {
   @Prop() private readonly height!: string;
 
   // Dienstleister
-  private dienstleister:Array<DienstleisterDTO> = [];
-  private dienstleisterIsLoading:boolean = false;
+  private dienstleister: Array<DienstleisterDTO> = [];
+  private dienstleisterIsLoading: boolean = false;
   private showDeleteDienstleisterDialog: boolean = false;
   private showEditDiensleisterDialog: boolean = false;
   private filterDienstleister: string = '';
-  private dienstleisterToEdit:DienstleisterDTO= DefaultObjectCreator.createDefaulDienstleisterDTO();
+  private dienstleisterToEdit: DienstleisterDTO = DefaultObjectCreator.createDefaulDienstleisterDTO();
   private editDienstleisterIndex: number = -1;
   /* Zur Prüfung ob der Dienstleistername bereits vergeben ist. */
   private dienstleisterNamen: Set<string> = new Set<string>();
@@ -348,12 +356,12 @@ export default class ConfigDienstleister extends Vue {
   private dienstleisterKennungen: Set<string> = new Set<string>();
 
   // E-Mail-Adresse
-  private filterEmailaddress:string = "";
-  private mailaddressesForDuplicateCheck:Set<string> = new Set<string>();
+  private filterEmailaddress: string = "";
+  private mailaddressesForDuplicateCheck: Set<string> = new Set<string>();
   private showDeleteMailDialog: boolean = false;
   private showEditMailDialog: boolean = false;
   private editMailIndex: number = -1;
-  private editEmailaddress:EmailAddressDTO = DefaultObjectCreator.createDefaultEmailaddressDTO();
+  private editEmailaddress: EmailAddressDTO = DefaultObjectCreator.createDefaultEmailaddressDTO();
   private emailaddresses: Array<EmailAddressDTO> = [];
 
   // E-Mail
@@ -372,7 +380,7 @@ export default class ConfigDienstleister extends Vue {
     }
   }
 
-  get dienstleisterHeaders():Array<any> {
+  get dienstleisterHeaders(): Array<any> {
     return [
       {
         text: 'Name',
@@ -381,7 +389,7 @@ export default class ConfigDienstleister extends Vue {
         divider: true
       },
       {
-        text: 'LhmObjectId',
+        text: 'Kennung',
         value: 'kennung',
         divider: true
       },
@@ -409,7 +417,7 @@ export default class ConfigDienstleister extends Vue {
     ];
   }
 
-  get getDienstleister():Array<DienstleisterDTO>{
+  get getDienstleister(): Array<DienstleisterDTO> {
     return this.dienstleister;
   }
 
@@ -423,28 +431,31 @@ export default class ConfigDienstleister extends Vue {
     return parseInt(this.height.replace('px', '')) - 136 + 'px';
   }
 
-  get getDienstleisterTitle () {
+  get getDienstleisterTitle() {
     return this.editDienstleisterIndex === -1 ? 'Dienstleister anlegen' : 'Dienstleister bearbeiten'
   }
 
   /* Lädt alle Dienstleister */
   private loadAllDienstleister() {
     this.dienstleisterIsLoading = true;
-    DienstleisterService.getAll().then((dienstleisterDTOS:Array<DienstleisterDTO>) => {
-      this.dienstleister = dienstleisterDTOS;
-    }).catch((error: ApiError) => {
-      this.$store.dispatch('snackbar/showError', error);
-    }).finally(() => {
-      this.dienstleisterIsLoading = false;
-      this.initDataStructureForInputValidation();
-    })
+    DienstleisterService.getAll()
+        .then((dienstleisterDTOS: Array<DienstleisterDTO>) => {
+          this.dienstleister = dienstleisterDTOS;
+        })
+        .catch((error: ApiError) => {
+          this.$store.dispatch('snackbar/showError', error);
+        })
+        .finally(() => {
+          this.dienstleisterIsLoading = false;
+          this.initDataStructureForInputValidation();
+        })
   }
 
   /*
     öffnet den Edit-Dialog des Dienstleisters und
     lädt die entsprechenden Daten.
   */
-  private editDienstleister (dienstleister: DienstleisterDTO) {
+  private editDienstleister(dienstleister: DienstleisterDTO) {
     this.editDienstleisterIndex = this.dienstleister.indexOf(dienstleister);
     this.dienstleisterToEdit = Object.assign({}, dienstleister);
     this.showEditDiensleisterDialog = true;
@@ -453,7 +464,7 @@ export default class ConfigDienstleister extends Vue {
 
     this.resetEmailFields();
     dienstleister.emailAddresses.forEach(value => {
-      let dto:EmailAddressDTO = {} as EmailAddressDTO;
+      let dto: EmailAddressDTO = {} as EmailAddressDTO;
       dto.emailAddress = value;
       this.emailaddresses.push(dto);
       this.mailaddressesForDuplicateCheck.add(value);
@@ -523,11 +534,13 @@ export default class ConfigDienstleister extends Vue {
                     "Der Dienstleister wurde erfolgreich aktualisiert."
                 )
             );
-          }).catch((error: ApiError) => {
-        this.$store.dispatch('snackbar/showError', error);
-      }).finally(() => {
-        this.loadAllDienstleister();
-      });
+          })
+          .catch((error: ApiError) => {
+            this.$store.dispatch('snackbar/showError', error);
+          })
+          .finally(() => {
+            this.loadAllDienstleister();
+          });
     } else if (this.dienstleisterToEdit) {
       // Neuer Dienstleister
       DienstleisterService.save(this.dienstleisterToEdit)
@@ -539,11 +552,13 @@ export default class ConfigDienstleister extends Vue {
                     "Der Dienstleister wurde erfolgreich gespeichert."
                 )
             );
-          }).catch((error: ApiError) => {
-        this.$store.dispatch('snackbar/showError', error);
-      }).finally(() => {
-        this.loadAllDienstleister();
-      });
+          })
+          .catch((error: ApiError) => {
+            this.$store.dispatch('snackbar/showError', error);
+          })
+          .finally(() => {
+            this.loadAllDienstleister();
+          });
     }
     this.closeEditDienstleisterDialog();
   }
@@ -577,11 +592,13 @@ export default class ConfigDienstleister extends Vue {
                     "Der Dienstleister wurde erfolgreich gelöscht."
                 )
             );
-          }).catch((error: ApiError) => {
-        this.$store.dispatch('snackbar/showError', error);
-      }).finally(() => {
-        this.loadAllDienstleister();
-      });
+          })
+          .catch((error: ApiError) => {
+            this.$store.dispatch('snackbar/showError', error);
+          })
+          .finally(() => {
+            this.loadAllDienstleister();
+          });
     }
     this.closeDeleteDienstleisterDialog();
   }
@@ -603,7 +620,7 @@ export default class ConfigDienstleister extends Vue {
   private initDataStructureForInputValidation(): void {
     this.dienstleisterKennungen.clear();
     this.dienstleisterNamen.clear();
-    this.getDienstleister.forEach((dienstleister:DienstleisterDTO) => {
+    this.getDienstleister.forEach((dienstleister: DienstleisterDTO) => {
       this.dienstleisterNamen.add(dienstleister.name);
       this.dienstleisterKennungen.add(dienstleister.kennung);
     });
@@ -615,7 +632,7 @@ export default class ConfigDienstleister extends Vue {
     return "50%";
   }
 
-  get getTitleMail () {
+  get getTitleMail() {
     return this.editMailIndex === -1 ? 'E-Mail-Adresse anlegen' : 'E-Mail-Adresse bearbeiten'
   }
 
@@ -746,7 +763,7 @@ export default class ConfigDienstleister extends Vue {
   }
 
   /* Prüft, ob die Email valide oder leer ist. */
-  private isEmailValidOrEmpty(email:string): boolean | string {
+  private isEmailValidOrEmpty(email: string): boolean | string {
     if (_.isEmpty(email) || this.isEmailValid(email)) {
       return true;
     } else {
@@ -761,7 +778,7 @@ export default class ConfigDienstleister extends Vue {
   }
 
   /* Prúft, ob die Email bereits gespeichert ist */
-  private isEmailADuplicate(email:string): boolean | string {
+  private isEmailADuplicate(email: string): boolean | string {
     if (this.mailaddressesForDuplicateCheck.has(email)) {
       return 'Die Email-Adresse exisitert bereits.';
     } else {
