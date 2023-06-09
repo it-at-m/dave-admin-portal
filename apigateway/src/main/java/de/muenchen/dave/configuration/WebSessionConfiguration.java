@@ -24,10 +24,8 @@ import org.springframework.session.Session;
 import org.springframework.session.config.annotation.web.server.EnableSpringWebSession;
 import org.springframework.session.hazelcast.HazelcastIndexedSessionRepository;
 
-
 /**
  * This class configures Hazelcast as the ReactiveSessionRepository.
- *
  */
 @Configuration
 @EnableSpringWebSession
@@ -54,7 +52,7 @@ public class WebSessionConfiguration {
     }
 
     @Bean
-    @Profile({"local", "test"})
+    @Profile({ "local", "test" })
     public Config localConfig(@Value("${spring.session.timeout}") int timeout) {
         final var hazelcastConfig = new Config();
         hazelcastConfig.setInstanceName(hazelcastInstanceName);
@@ -74,12 +72,11 @@ public class WebSessionConfiguration {
     }
 
     @Bean
-    @Profile({"dev", "kon", "demo", "prod"})
+    @Profile({ "dev", "kon", "demo", "prod" })
     public Config config(@Value("${spring.session.timeout}") int timeout) {
         final var hazelcastConfig = new Config();
         hazelcastConfig.setInstanceName(hazelcastInstanceName);
         hazelcastConfig.setClusterName(groupConfigName);
-
 
         addSessionTimeoutToHazelcastConfig(hazelcastConfig, timeout);
 
@@ -93,7 +90,7 @@ public class WebSessionConfiguration {
 
     /**
      * Adds the session timeout in seconds to the hazelcast configuration.
-     *
+     * <p>
      * Since we are creating the map it's important to evict sessions
      * by setting a reasonable value for time to live.
      *

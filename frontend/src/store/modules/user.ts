@@ -1,8 +1,8 @@
 import SsoUserInfoResponse from "@/domain/SsoUserInfoResponse";
-import _ from 'lodash';
+import _ from "lodash";
 
-const rolePoweruser: string = "ROLE_POWERUSER";
-const roleFachadmin: string = "ROLE_FACHADMIN";
+const rolePoweruser = "ROLE_POWERUSER";
+const roleFachadmin = "ROLE_FACHADMIN";
 
 /**
  * Der UserStore wird benötigt, um die vom KeyCloak erhaltenen Nutzerdaten (Name, eMail und Authorities)
@@ -10,32 +10,39 @@ const roleFachadmin: string = "ROLE_FACHADMIN";
  * der Oberfläche nur für bestimmte Rollen sichtbar sein sollen.
  */
 export default {
-  namespaced: true,
-  state: {
-    ssoUserInfoResponse: {} as SsoUserInfoResponse,
-  },
-  getters: {
-    getName(state: any): string {
-      return state.ssoUserInfoResponse.name;
+    namespaced: true,
+    state: {
+        ssoUserInfoResponse: {} as SsoUserInfoResponse,
     },
-    isPoweruser(state: any): boolean {
-      return state.ssoUserInfoResponse.authorities?.includes(rolePoweruser);
+    getters: {
+        getName(state: any): string {
+            return state.ssoUserInfoResponse.name;
+        },
+        isPoweruser(state: any): boolean {
+            return state.ssoUserInfoResponse.authorities?.includes(
+                rolePoweruser
+            );
+        },
+        isFachadmin(state: any): boolean {
+            return state.ssoUserInfoResponse.authorities?.includes(
+                roleFachadmin
+            );
+        },
+        hasNoAuthorities(state: any): boolean {
+            return (
+                state.ssoUserInfoResponse.authorities === undefined ||
+                state.ssoUserInfoResponse.authorities.length === 0
+            );
+        },
     },
-    isFachadmin(state: any): boolean {
-        return state.ssoUserInfoResponse.authorities?.includes(roleFachadmin);
+    mutations: {
+        setSsoUserInfoResponse(state: any, payload: SsoUserInfoResponse) {
+            state.ssoUserInfoResponse = payload;
+        },
     },
-    hasNoAuthorities(state: any): boolean {
-      return state.ssoUserInfoResponse.authorities === undefined || state.ssoUserInfoResponse.authorities.length === 0;
+    actions: {
+        setSsoUserInfoResponse(context: any, payload: SsoUserInfoResponse) {
+            context.commit("setSsoUserInfoResponse", payload);
+        },
     },
-  },
-  mutations: {
-    setSsoUserInfoResponse(state: any, payload: SsoUserInfoResponse) {
-      state.ssoUserInfoResponse = payload;
-    },
-  },
-  actions: {
-    setSsoUserInfoResponse(context: any, payload: SsoUserInfoResponse) {
-      context.commit('setSsoUserInfoResponse', payload)
-    },
-  }
-}
+};
