@@ -2,21 +2,21 @@ import BaseEntity from "@/domain/BaseEntity";
 import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 
 export default interface FahrbeziehungDTO extends BaseEntity {
-  // Kreuzung
-  von: number;
-  nach: number;
+    // Kreuzung
+    von: number;
+    nach: number;
 
-  // Kreisverkehr
-  knotenarm: number;
-  hinein: boolean;
-  heraus: boolean;
-  vorbei: boolean;
+    // Kreisverkehr
+    knotenarm: number;
+    hinein: boolean;
+    heraus: boolean;
+    vorbei: boolean;
 
-  hochrechnungsfaktor: HochrechnungsfaktorDTO;
+    hochrechnungsfaktor: HochrechnungsfaktorDTO;
 
-  active: boolean;
-  
-  // nur im Frontend
-  indexKey: string;
-  kreisverkehrTyp: string;
+    active: boolean;
+
+    // nur im Frontend
+    indexKey: string;
+    kreisverkehrTyp: string;
 }

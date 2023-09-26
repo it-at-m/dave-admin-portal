@@ -3,7 +3,7 @@ import SucheZaehlstelleSuggestDTO from "@/domain/dto/suche/SucheZaehlstelleSugge
 import SucheZaehlungSuggestDTO from "@/domain/dto/suche/SucheZaehlungSuggestDTO";
 
 export default interface SucheComplexSuggestsDTO {
-  wordSuggests: SucheWordSuggestDTO[];
-  zaehlstellenSuggests: SucheZaehlstelleSuggestDTO[];
-  zaehlungenSuggests: SucheZaehlungSuggestDTO[];
+    wordSuggests: SucheWordSuggestDTO[];
+    zaehlstellenSuggests: SucheZaehlstelleSuggestDTO[];
+    zaehlungenSuggests: SucheZaehlungSuggestDTO[];
 }

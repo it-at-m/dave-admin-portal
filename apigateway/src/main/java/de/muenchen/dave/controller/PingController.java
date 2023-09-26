@@ -4,6 +4,10 @@
  */
 package de.muenchen.dave.controller;
 
+import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.methodOn;
+
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
-import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.methodOn;
-
-
 /**
  * Endpoint for pinging with an authorized request
  * to check for available or expired security sessions.
@@ -29,6 +27,20 @@ import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.met
 public class PingController {
 
     private static final String PING_PATH = "/api";
+
+    /**
+     * Endpoint returns {@link HttpStatus#OK} with self
+     * link as a hateoas response.
+     *
+     * @return a response with {@link HttpStatus#OK}.
+     */
+    @GetMapping(value = PING_PATH)
+    public Mono<HateoasResponse> ping() {
+        log.debug("GET request on endpoint \"{}\".", PING_PATH);
+        return linkTo(methodOn(PingController.class).ping()).withSelfRel()
+                .toMono()
+                .map(HateoasResponse::new);
+    }
 
     /**
      * The hateoas response for the ping controller.
@@ -45,20 +57,6 @@ public class PingController {
             super(initialLinks);
         }
 
-    }
-
-    /**
-     * Endpoint returns {@link HttpStatus#OK} with self
-     * link as a hateoas response.
-     *
-     * @return a response with {@link HttpStatus#OK}.
-     */
-    @GetMapping(value = PING_PATH)
-    public Mono<HateoasResponse> ping() {
-        log.debug("GET request on endpoint \"{}\".", PING_PATH);
-        return linkTo(methodOn(PingController.class).ping()).withSelfRel()
-                .toMono()
-                .map(HateoasResponse::new);
     }
 
 }

@@ -1,4 +1,4 @@
-import {Component, Vue} from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 
 /**
  * Mit dem SaveLeave Mixin kann ein Datenverlust durch ungewolltest Navigieren verhindert werden.
@@ -13,44 +13,40 @@ import {Component, Vue} from "vue-property-decorator";
  *
  * Mit dem Aufruf von `leaveWithoutSave()` oder `cancelSaveLeave()` kann die Entscheidung des Nutzers ausgeführt werden.
  */
-Component.registerHooks([
-  'beforeRouteLeave',
-]);
+Component.registerHooks(["beforeRouteLeave"]);
 @Component
 export default class SaveLeaveMixin extends Vue {
+    showSaveLeaveDialog = false;
+    isSave = false;
 
-  showSaveLeaveDialog: boolean = false;
-  isSave: boolean = false;
-
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   next: any = null;
 
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   beforeRouteLeave(to: any, from: any, next: any): void {
-    if (this.isDirty() && !this.isSave) {
-      this.showSaveLeaveDialog = true;
-      this.next = next;
-    } else {
-      this.showSaveLeaveDialog = false;
-      next();
+        if (this.isDirty() && !this.isSave) {
+            this.showSaveLeaveDialog = true;
+            this.next = next;
+        } else {
+            this.showSaveLeaveDialog = false;
+            next();
+        }
     }
-  }
 
-  cancelSaveLeave(): void {
-    this.showSaveLeaveDialog = false;
-    this.next(false);
-  }
+    cancelSaveLeave(): void {
+        this.showSaveLeaveDialog = false;
+        this.next(false);
+    }
 
-  leaveWithoutSave(): void {
-    this.next();
-  }
+    leaveWithoutSave(): void {
+        this.next();
+    }
 
-  /**
-   * Methode sollte überschrieben werden.
-   * In dieser Methode wird geprüft, ob der Nutzer ungespeicherte Änderungen eingegeben hat.
-   */
-  isDirty(): boolean {
-    return true;
-  }
-
+    /**
+     * Methode sollte überschrieben werden.
+     * In dieser Methode wird geprüft, ob der Nutzer ungespeicherte Änderungen eingegeben hat.
+     */
+    isDirty(): boolean {
+        return true;
+    }
 }

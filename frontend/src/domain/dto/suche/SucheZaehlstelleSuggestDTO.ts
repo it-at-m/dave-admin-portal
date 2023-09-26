@@ -1,4 +1,4 @@
 export default interface SucheZaehlstelleSuggestDTO {
-  id: string;
-  text: string;
+    id: string;
+    text: string;
 }

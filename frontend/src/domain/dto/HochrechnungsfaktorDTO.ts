@@ -1,23 +1,22 @@
 import BaseEntity from "@/domain/BaseEntity";
 
 export default interface HochrechnungsfaktorDTO extends BaseEntity {
+    /**
+     * Der eindeutige Bezeichner.
+     */
+    matrix: string;
 
-  /**
-   * Der eindeutige Bezeichner.
-   */
-  matrix: string;
+    kfz: number;
 
-  kfz: number;
+    sv: number;
 
-  sv: number;
+    gv: number;
 
-  gv: number;
+    active: boolean;
 
-  active: boolean;
-
-  /**
-   * Es darf nur ein DTO den Wert true aufweisen.
-   * Allen anderen DTOs müssen den Wert false besitzen.
-   */
-  defaultFaktor: boolean;
+    /**
+     * Es darf nur ein DTO den Wert true aufweisen.
+     * Allen anderen DTOs müssen den Wert false besitzen.
+     */
+    defaultFaktor: boolean;
 }

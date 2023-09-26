@@ -1,17 +1,15 @@
 import TooltipDTO from "@/domain/dto/TooltipDTO";
 
 export default interface ZaehlstelleKarteDTO {
+    id: string;
 
-  id: string;
+    nummer: string;
 
-  nummer: string;
+    letzteZaehlungId: string;
 
-  letzteZaehlungId: string;
+    longitude: string;
 
-  longitude: string;
+    latitude: string;
 
-  latitude: string;
-
-  tooltip: TooltipDTO;
-
+    tooltip: TooltipDTO;
 }
