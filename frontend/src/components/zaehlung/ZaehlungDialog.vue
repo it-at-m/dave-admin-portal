@@ -52,8 +52,8 @@ export default class ZaehlungDialog extends Vue {
     /**
      * Steuerflag für den Dialog
      */
-    @Prop() private showDialog!: boolean;
-    @Prop() private zaehlstelle!: ZaehlstelleDTO;
+    @Prop() showDialog!: boolean;
+    @Prop() zaehlstelle!: ZaehlstelleDTO;
 
     get editZaehlung(): boolean {
         return this.$store.getters.getZaehlung.id;
@@ -74,11 +74,11 @@ export default class ZaehlungDialog extends Vue {
         this.$store.dispatch("setResetformevent", !this.showDialog);
     }
 
-    private cancelCreate(): void {
+    cancelCreate(): void {
         this.$emit("cancel");
     }
 
-    private saved(backendIdDTO: BackendIdDTO): void {
+    saved(backendIdDTO: BackendIdDTO): void {
         this.$emit("saved", backendIdDTO);
     }
 }

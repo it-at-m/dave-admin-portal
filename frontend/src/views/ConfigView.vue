@@ -85,7 +85,7 @@ import ConfigDienstleister from "@/components/config/subconfig/ConfigDienstleist
     },
 })
 export default class ConfigView extends Vue {
-    private activeTab = 0;
+    activeTab = 0;
 
     /**
      * Berechnet die Höhe der Fläche unter den Tabs (72px hoch) in "vh"

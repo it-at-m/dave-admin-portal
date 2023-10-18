@@ -114,11 +114,11 @@ import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/Fahrbezieh
     },
 })
 export default class ZaehlungForm extends Vue {
-    @Prop() private zaehlstelle!: ZaehlstelleDTO;
+    @Prop() zaehlstelle!: ZaehlstelleDTO;
 
-    private readonly SHEETHEIGHT: string = "580px";
+    readonly SHEETHEIGHT: string = "580px";
 
-    private activeTab = 0;
+    activeTab = 0;
     private isAllgemeinFormValid = false;
 
     /**
@@ -133,7 +133,7 @@ export default class ZaehlungForm extends Vue {
         });
     }
 
-    private save(): void {
+    save(): void {
         let copy: ZaehlungDTO = _.cloneDeep(this.$store.getters.getZaehlung);
         let selfIdLength: number = ZaehlungForm.generateId().length;
         copy.knotenarme.forEach((arm: KnotenarmDTO) => {
@@ -155,13 +155,13 @@ export default class ZaehlungForm extends Vue {
             });
     }
 
-    private cancel(): void {
+    cancel(): void {
         this.activeTab = 0;
         this.$store.dispatch("setResetformevent", true);
         this.$emit("cancel");
     }
 
-    private setAllgemeineFormValid(isPartValid: boolean) {
+    setAllgemeineFormValid(isPartValid: boolean) {
         this.isAllgemeinFormValid = isPartValid;
     }
 

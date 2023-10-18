@@ -57,13 +57,13 @@ export default class DeleteZaehlungDialog extends Vue {
     @Prop() showDialog!: boolean;
     @Prop() dialogtext!: string;
 
-    private dialogtitle = "Zählung löschen";
+    dialogtitle = "Zählung löschen";
 
-    private cancel(): void {
+    cancel(): void {
         this.$emit("cancel");
     }
 
-    private deleteIt(): void {
+    deleteIt(): void {
         this.$emit("deleteIt");
     }
 }

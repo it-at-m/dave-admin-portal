@@ -17,7 +17,9 @@
                         :minheight="headerHeightVh"
                         :nummer="zaehlstelle.nummer"
                         :kreuzungsname="kreuzungsname"
-                        :stadtbezirk-nummer="zaehlstelle.stadtbezirkNummer"
+                        :stadtbezirk-nummer="
+                            zaehlstelle.stadtbezirkNummer.toString()
+                        "
                         :stadtbezirk="zaehlstelle.stadtbezirk"
                         :style="{ cursor: 'pointer' }"
                         @edit-zaehlstelle="editZaehlstelle"
@@ -237,20 +239,20 @@ import { wetterText } from "@/domain/enums/Wetter";
 })
 export default class ZaehlstelleView extends Vue {
     // Die Basisinformationen zur Zählstelle
-    private zaehlstelle: ZaehlstelleDTO =
+    zaehlstelle: ZaehlstelleDTO =
         DefaultObjectCreator.createDefaultZaehlstelleDTO();
     private zaehlungen: Array<ZaehlungDTO> = [] as Array<ZaehlungDTO>;
 
-    private showUpdateZaehlstelleDialog = false;
-    private showZaehlungDialog = false;
-    private showChatDialog = false;
+    showUpdateZaehlstelleDialog = false;
+    showZaehlungDialog = false;
+    showChatDialog = false;
 
     private zaehlungCards: Array<ZaehlungCardObject> = [];
 
-    private fab = false;
-    private query = "";
+    fab = false;
+    query = "";
 
-    private reloadZaehlstellenMap = false;
+    reloadZaehlstellenMap = false;
 
     /**
      * Die Daten zur Zählstelle und der ausgewählten Zählung wird über die
@@ -341,7 +343,7 @@ export default class ZaehlstelleView extends Vue {
         return this.headerHeight + "vh";
     }
 
-    private editZaehlstelle() {
+    editZaehlstelle() {
         this.showUpdateZaehlstelleDialog = true;
     }
 
@@ -360,7 +362,7 @@ export default class ZaehlstelleView extends Vue {
         return zaehlung;
     }
 
-    private loadZaehlstelle(): void {
+    loadZaehlstelle(): void {
         // ID der Zählstelle aus der URL holen (oder Warnung ausgeben, falls keine vorhanden ist)
         const zaehlstelleId = this.$route.params.zaehlstelleId;
         if (!zaehlstelleId) {
@@ -396,27 +398,27 @@ export default class ZaehlstelleView extends Vue {
         return zaehlstelleId;
     }
 
-    private reloadDataAndCloseDialog() {
+    reloadDataAndCloseDialog() {
         this.loadZaehlstelle();
         this.reloadZaehlstellenMap = !this.reloadZaehlstellenMap;
         this.showUpdateZaehlstelleDialog = false;
         this.showZaehlungDialog = false;
     }
 
-    private cancelUpdateZaehlstelleDialog() {
+    cancelUpdateZaehlstelleDialog() {
         this.showUpdateZaehlstelleDialog = false;
         this.loadZaehlstelle();
     }
 
-    private cancelZaehlungDialog() {
+    cancelZaehlungDialog() {
         this.showZaehlungDialog = false;
     }
 
-    private openZaehlungDialog() {
+    openZaehlungDialog() {
         this.showZaehlungDialog = true;
     }
 
-    private createZaehlung() {
+    createZaehlung() {
         this.$store.dispatch(
             "setZaehlung",
             _.cloneDeep(this.createDefaultZaehlungDTO())
@@ -424,18 +426,18 @@ export default class ZaehlstelleView extends Vue {
         this.showZaehlungDialog = true;
     }
 
-    private openZaehlungDatenportal(zaehlungId: string) {
+    openZaehlungDatenportal(zaehlungId: string) {
         let url = `${BaseUrlProvider.getBaseUrlDatenportal()}#/zaehlstelle/${
             this.zaehlstelle.id
         }/${zaehlungId}`;
         window.open(url);
     }
 
-    private openChatDialog() {
+    openChatDialog() {
         this.showChatDialog = true;
     }
 
-    private closeChatDialog() {
+    closeChatDialog() {
         this.showChatDialog = false;
     }
 
