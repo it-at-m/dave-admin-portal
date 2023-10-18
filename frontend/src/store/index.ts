@@ -9,7 +9,7 @@ import pkweinheit from "@/store/modules/pkweinheit";
 import hochrechnungsfaktor from "@/store/modules/hochrechnungsfaktor";
 
 Vue.use(Vuex);
-const debug = process.env.NODE_ENV !== "production";
+const debug = import.meta.env.NODE_ENV !== "production";
 
 export default new Vuex.Store({
     modules: {

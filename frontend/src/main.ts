@@ -1,5 +1,4 @@
 import Vue, { VNode } from "vue";
-import "babel-polyfill";
 import Vuetify from "./plugins/vuetify";
 import store from "./store";
 import i18n from "./i18n";

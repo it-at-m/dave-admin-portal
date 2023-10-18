@@ -172,6 +172,7 @@ import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleD
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 import TooltipDTO from "@/domain/dto/TooltipDTO";
+import markerIconRed from "@/assets/marker-icon-red.png";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -428,7 +429,7 @@ export default class ZaehlstelleMap extends Vue {
         if (this.zId) {
             if (this.zId === zaehlstelleKarte.id) {
                 let defaultIcon = new Icon.Default();
-                defaultIcon.options.iconUrl = require("@/assets/marker-icon-red.png");
+                defaultIcon.options.iconUrl = markerIconRed;
                 return { opacity: 1.0, icon: defaultIcon };
             } else {
                 return { opacity: 0.5 };
@@ -476,7 +477,7 @@ export default class ZaehlstelleMap extends Vue {
     // Erzeugt einen neuen roten Marker auf der Karte
     private createNewMarker(coords: LatLng): Marker {
         let defaultIcon = new Icon.Default();
-        defaultIcon.options.iconUrl = require("@/assets/marker-icon-red.png");
+        defaultIcon.options.iconUrl = markerIconRed;
         return new Marker(coords, {
             icon: defaultIcon,
             opacity: 1.0,

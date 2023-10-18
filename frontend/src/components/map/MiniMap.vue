@@ -6,7 +6,6 @@
     >
         <l-map
             ref="minimap"
-            v-resize="onResize"
             :options="mapOptions"
             style="z-index: 1"
             @ready="mapReady"
@@ -86,6 +85,7 @@ import {
 /* eslint-disable no-unused-vars */
 import { control, Icon, LatLng, Marker } from "leaflet";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import markerIconRed from "@/assets/marker-icon-red.png";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -149,7 +149,7 @@ export default class MiniMap extends Vue {
     // und fügt diesen der Karte hinzu
     private createMarkerForNewZaehlstelle(coords: LatLng) {
         let defaultIcon = new Icon.Default();
-        defaultIcon.options.iconUrl = require("@/assets/marker-icon-red.png");
+        defaultIcon.options.iconUrl = markerIconRed;
         this.newMarker = new Marker(coords, {
             icon: defaultIcon,
             opacity: 1.0,
@@ -191,11 +191,6 @@ export default class MiniMap extends Vue {
             this.createMarkerForNewZaehlstelle(this.coords);
             this.theMap.mapObject?.setView(this.coords, this.zoom);
         }, 200);
-    }
-
-    onResize() {
-        //provoziert ein Rerendering der Karte
-        setTimeout(() => this.theMap.mapObject.invalidateSize(), 200);
     }
 }
 </script>

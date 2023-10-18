@@ -68,6 +68,8 @@ import ChatMessageService from "@/api/service/ChatMessageService";
 import Message from "@/domain/chat/Message";
 import ChatMessageDTO from "@/domain/dto/ChatMessageDTO";
 import { ApiError } from "@/api/error";
+import accountTieUrl from "@/assets/account-tie.png";
+import kindlUrl from "@/assets/kindl.jpg";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -84,12 +86,12 @@ export default class ChatDialog extends Vue {
     private dienstleister: Participant = {
         name: "Dienstleister",
         id: ChatDialog.DIENSTLEISTER_ID,
-        profilePicture: require("@/assets/account-tie.png"),
+        profilePicture: accountTieUrl,
     };
     private mobilitaetsreferat: Participant = {
         name: "Mobilitätsreferat",
         id: ChatDialog.MOBILITAETSREFERAT_ID,
-        profilePicture: require("@/assets/kindl.jpg"),
+        profilePicture: kindlUrl,
     };
 
     // Hier ist myself das Mobilitätsreferat
