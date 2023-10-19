@@ -76,8 +76,8 @@ import kindlUrl from "@/assets/kindl.jpg";
     components: { Chat },
 })
 export default class ChatDialog extends Vue {
-    @Prop() private showDialog!: boolean;
-    private messages: Message[] = [];
+    @Prop() showDialog!: boolean;
+    messages: Message[] = [];
     private zaehlungId = "";
 
     public static DIENSTLEISTER_ID = 1;

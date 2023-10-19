@@ -33,7 +33,7 @@ export default class ZaehlstelleInfo extends Vue {
     @Prop({ default: "" }) stadtbezirkNummer?: string;
     @Prop({ default: "" }) stadtbezirk?: string;
 
-    private editZaehlstelle() {
+    editZaehlstelle() {
         this.$emit("edit-zaehlstelle");
     }
 }

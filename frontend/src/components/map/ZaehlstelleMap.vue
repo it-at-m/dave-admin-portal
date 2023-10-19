@@ -191,16 +191,16 @@ import markerIconRed from "@/assets/marker-icon-red.png";
 })
 export default class ZaehlstelleMap extends Vue {
     @Prop({ default: "15vh" })
-    private readonly height!: string;
+    readonly height!: string;
 
     @Prop({ default: "160px" })
-    private readonly minheight!: string;
+    readonly minheight!: string;
 
     @Prop({ default: "100%" })
-    private readonly width!: string;
+    readonly width!: string;
 
     @Prop({ default: 12 })
-    private zoom!: number;
+    zoom!: number;
 
     @Ref("map")
     private readonly theMap!: LMap;
@@ -213,14 +213,14 @@ export default class ZaehlstelleMap extends Vue {
 
     private newMarker: Marker | null = null;
 
-    private addMarker = false;
+    addMarker = false;
 
-    private fab = false;
-    private fab2 = false;
+    fab = false;
+    fab2 = false;
 
     private useCustomCursor = false;
 
-    private showCreateZaehlstelleDialog = false;
+    showCreateZaehlstelleDialog = false;
 
     @Prop()
     private zId?: string;
@@ -237,7 +237,7 @@ export default class ZaehlstelleMap extends Vue {
     /**
      * Optionen fuer die Darstellung der Karte
      */
-    private mapOptions: object = {
+    mapOptions: object = {
         minZoom: 10,
         maxZoom: 18,
         preferCanvas: false,
@@ -453,14 +453,14 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     // Button-Klick-Event um in den Anlegen-Modus zu wechseln.
-    private addZaehlstellenMarker() {
+    addZaehlstellenMarker() {
         this.addMarker = !this.addMarker;
         this.useCustomCursor = !this.useCustomCursor;
         this.deleteNewMarker();
     }
 
     // Klick-Event zum anlegen eines neuen Markers auf der Karte
-    private mouseUp(event: LeafletMouseEvent) {
+    mouseUp(event: LeafletMouseEvent) {
         if (this.addMarker && !this.newMarker) {
             this.useCustomCursor = false;
             this.createMarkerForNewZaehlstelle(event.latlng);
@@ -486,7 +486,7 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     // Klick-Event zum Oeffnen des ZaehlstelleCreateDialog
-    private createZaehlstelle() {
+    createZaehlstelle() {
         if (this.newMarker) {
             this.showCreateZaehlstelleDialog = true;
         } else {
@@ -501,7 +501,7 @@ export default class ZaehlstelleMap extends Vue {
 
     // Wenn ein neuer Marker existiert wird dieser gelöscht
     // und der Anlegen-Modus wird verlassen
-    private deleteNewMarker() {
+    deleteNewMarker() {
         if (this.newMarker) {
             this.theMap.mapObject.removeLayer(this.newMarker);
             this.newMarker = null;
@@ -509,14 +509,14 @@ export default class ZaehlstelleMap extends Vue {
         }
     }
 
-    private reloadDataAndCloseDialog(backendIdDTO: BackendIdDTO) {
+    reloadDataAndCloseDialog(backendIdDTO: BackendIdDTO) {
         this.searchZaehlstelle();
         this.resetBooleans();
         this.closeDialog();
         this.routeToZaehlstelle(backendIdDTO.id);
     }
 
-    private cancelCreateZaehlstelleDialog() {
+    cancelCreateZaehlstelleDialog() {
         this.deleteNewMarker();
         this.resetBooleans();
         this.closeDialog();
@@ -537,7 +537,7 @@ export default class ZaehlstelleMap extends Vue {
         this.$router.push("/zaehlstelle/" + id);
     }
 
-    private mapReady() {
+    mapReady() {
         this.theMap.mapObject.addControl(
             control.attribution({
                 position: "bottomleft",

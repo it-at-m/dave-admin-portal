@@ -175,17 +175,17 @@ import _ from "lodash";
 
 @Component
 export default class ConfigInfoMessage extends Vue {
-    @Prop() private readonly height!: string;
+    @Prop() readonly height!: string;
 
     private showHistory = false;
 
-    private dates: Array<string> = [];
+    dates: Array<string> = [];
 
-    private datepickerMenuModel = false;
+    datepickerMenuModel = false;
 
-    private activeInfoMessage: InfoMessageDTO = {} as InfoMessageDTO;
+    activeInfoMessage: InfoMessageDTO = {} as InfoMessageDTO;
 
-    private inactiveInfoMessages: Array<InfoMessageDTO> = [];
+    inactiveInfoMessages: Array<InfoMessageDTO> = [];
 
     @Ref("datepickerMenu") private datepickerMenu: any;
 
@@ -229,7 +229,7 @@ export default class ConfigInfoMessage extends Vue {
         this.inactiveInfoMessages = inactiveInfoMessages;
     }
 
-    private closeMenu(): void {
+    closeMenu(): void {
         this.datepickerMenuModel = false;
         this.resetDatum();
     }
@@ -238,7 +238,7 @@ export default class ConfigInfoMessage extends Vue {
         this.dates = [];
     }
 
-    private saveDate(): void {
+    saveDate(): void {
         this.datepickerMenu.save(this.dates);
         this.activeInfoMessage.gueltigVon = this.formatDateForBackend(
             this.dates[0]
@@ -252,7 +252,7 @@ export default class ConfigInfoMessage extends Vue {
         return this.createComputedDateFormatted(this.dates);
     }
 
-    private computedDateFormattedForList(infoMessage: InfoMessageDTO): string {
+    computedDateFormattedForList(infoMessage: InfoMessageDTO): string {
         const dates: Array<string> = this.infoMessageToDateArray(infoMessage);
         return this.createComputedDateFormatted(dates);
     }
@@ -296,12 +296,12 @@ export default class ConfigInfoMessage extends Vue {
         return new Date(datum + "T" + time).toISOString();
     }
 
-    private cancel(): void {
+    cancel(): void {
         this.loadInfoMessages();
         this.$emit("cancel");
     }
 
-    private save(): void {
+    save(): void {
         InfoMessageService.save(this.activeInfoMessage)
             .then((infoMessages: Array<InfoMessageDTO>) => {
                 this.setActiveInfoMessage(infoMessages[0]);
@@ -318,7 +318,7 @@ export default class ConfigInfoMessage extends Vue {
             });
     }
 
-    private inactivateInfoMessage(): void {
+    inactivateInfoMessage(): void {
         InfoMessageService.setAllInfoMessagesInactive()
             .then(() => {
                 this.$store.dispatch("snackbar/showToast", {
@@ -343,7 +343,7 @@ export default class ConfigInfoMessage extends Vue {
         );
     }
 
-    private changeInfoMessageView(): void {
+    changeInfoMessageView(): void {
         this.showHistory = !this.showHistory;
     }
 

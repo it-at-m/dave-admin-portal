@@ -88,10 +88,10 @@ export default class BeauftrageZaehlungDialog extends Vue {
     @Prop({ default: "" }) dienstleisterkennung?: string;
     @Prop() isBeauftragen!: boolean;
 
-    private filterDienstleister = "";
-    private dienstleisterIsLoading = false;
+    filterDienstleister = "";
+    dienstleisterIsLoading = false;
     private dienstleister: Array<DienstleisterDTO> = [];
-    private selectedDienstleister: Array<DienstleisterDTO> = [];
+    selectedDienstleister: Array<DienstleisterDTO> = [];
 
     @Watch("showDialog")
     private initOnOpen() {
@@ -104,17 +104,17 @@ export default class BeauftrageZaehlungDialog extends Vue {
         }
     }
 
-    private cancel(): void {
+    cancel(): void {
         this.$emit("cancel");
     }
 
-    private beauftragen(): void {
+    beauftragen(): void {
         if (this.selectedDienstleister.length === 1) {
             this.$emit("beauftragen", this.selectedDienstleister[0]);
         }
     }
 
-    private korrigieren(): void {
+    korrigieren(): void {
         if (this.selectedDienstleister.length === 1) {
             this.$emit("korrigieren", this.selectedDienstleister[0]);
         }

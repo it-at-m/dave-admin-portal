@@ -54,7 +54,7 @@ import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 
 @Component
 export default class UnreadMessages extends Vue {
-    private zaehlstellenWithUnreadMessages: ZaehlstelleDTO[] = [];
+    zaehlstellenWithUnreadMessages: ZaehlstelleDTO[] = [];
 
     private static readonly PARTICIPANT_ID_MOBILITAETSREFERAT: number = 2;
 
@@ -62,7 +62,7 @@ export default class UnreadMessages extends Vue {
         this.loadZaehlstellenWithUnreadMessages();
     }
 
-    private select(zaehlstelle: ZaehlstelleDTO): void {
+    select(zaehlstelle: ZaehlstelleDTO): void {
         this.$router.push(`/zaehlstelle/${zaehlstelle.id}`);
     }
 
@@ -92,7 +92,7 @@ export default class UnreadMessages extends Vue {
      * @param zaehlstelleDto Zählstelle die durchsucht werden soll
      * @private
      */
-    private getZaehlungenWithUnreadMessagesFromZaehlstelle(
+    getZaehlungenWithUnreadMessagesFromZaehlstelle(
         zaehlstelleDto: ZaehlstelleDTO
     ): ZaehlungDTO[] {
         let zaehlungen: ZaehlungDTO[] = [];

@@ -402,15 +402,15 @@ import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
 
 @Component
 export default class ConfigDienstleister extends Vue {
-    @Prop() private readonly height!: string;
+    @Prop() readonly height!: string;
 
     // Dienstleister
     private dienstleister: Array<DienstleisterDTO> = [];
-    private dienstleisterIsLoading = false;
-    private showDeleteDienstleisterDialog = false;
-    private showEditDiensleisterDialog = false;
-    private filterDienstleister = "";
-    private dienstleisterToEdit: DienstleisterDTO =
+    dienstleisterIsLoading = false;
+    showDeleteDienstleisterDialog = false;
+    showEditDiensleisterDialog = false;
+    filterDienstleister = "";
+    dienstleisterToEdit: DienstleisterDTO =
         DefaultObjectCreator.createDefaulDienstleisterDTO();
     private editDienstleisterIndex = -1;
     /* Zur Prüfung ob der Dienstleistername bereits vergeben ist. */
@@ -419,12 +419,12 @@ export default class ConfigDienstleister extends Vue {
     private dienstleisterKennungen: Set<string> = new Set<string>();
 
     // E-Mail-Adresse
-    private filterEmailaddress = "";
+    filterEmailaddress = "";
     private mailaddressesForDuplicateCheck: Set<string> = new Set<string>();
-    private showDeleteMailDialog = false;
-    private showEditMailDialog = false;
+    showDeleteMailDialog = false;
+    showEditMailDialog = false;
     private editMailIndex = -1;
-    private editEmailaddress: EmailAddressDTO =
+    editEmailaddress: EmailAddressDTO =
         DefaultObjectCreator.createDefaultEmailaddressDTO();
     private emailaddresses: Array<EmailAddressDTO> = [];
 
@@ -522,7 +522,7 @@ export default class ConfigDienstleister extends Vue {
     öffnet den Edit-Dialog des Dienstleisters und
     lädt die entsprechenden Daten.
   */
-    private editDienstleister(dienstleister: DienstleisterDTO) {
+    editDienstleister(dienstleister: DienstleisterDTO) {
         this.editDienstleisterIndex = this.dienstleister.indexOf(dienstleister);
         this.dienstleisterToEdit = Object.assign({}, dienstleister);
         this.showEditDiensleisterDialog = true;
@@ -539,7 +539,7 @@ export default class ConfigDienstleister extends Vue {
     }
 
     /* Prüft, ob der Dienstleistername bereits vergeben ist. */
-    private nameVerwendbar(name: string): boolean | string {
+    nameVerwendbar(name: string): boolean | string {
         if (!this.dienstleisterNamen.has(name)) {
             return true;
         }
@@ -547,7 +547,7 @@ export default class ConfigDienstleister extends Vue {
     }
 
     /* Prüft, ob die Dienstleisterkennung bereits vergeben ist. */
-    private kennungVerwendbar(kennung: string): boolean | string {
+    kennungVerwendbar(kennung: string): boolean | string {
         if (!this.dienstleisterKennungen.has(kennung)) {
             return true;
         }
@@ -555,7 +555,7 @@ export default class ConfigDienstleister extends Vue {
     }
 
     /* Prüft, ob ein Wert gesetzt ist. */
-    private pflichtfeld(value: any): boolean | string {
+    pflichtfeld(value: any): boolean | string {
         if (!_.isEmpty(value)) {
             return true;
         }
@@ -563,7 +563,7 @@ export default class ConfigDienstleister extends Vue {
     }
 
     /* Schließt den Editdialog und setzt den Index des geänderten Items zurück. */
-    private closeEditDienstleisterDialog() {
+    closeEditDienstleisterDialog() {
         this.showEditDiensleisterDialog = false;
         this.editDienstleisterIndex = -1;
         this.dienstleisterToEdit =
@@ -592,7 +592,7 @@ export default class ConfigDienstleister extends Vue {
      *
      * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
      */
-    private saveEditDienstleisterDialog() {
+    saveEditDienstleisterDialog() {
         if (this.editDienstleisterIndex > -1 && this.dienstleisterToEdit) {
             // Bestehender Dienstleister
             DienstleisterService.update(this.dienstleisterToEdit)
@@ -641,7 +641,7 @@ export default class ConfigDienstleister extends Vue {
      *
      * @param dienstleister das Item was gelöscht werden soll.
      */
-    private deleteDienstleister(dienstleister: DienstleisterDTO) {
+    deleteDienstleister(dienstleister: DienstleisterDTO) {
         this.editDienstleisterIndex = this.dienstleister.indexOf(dienstleister);
         this.dienstleisterToEdit = Object.assign({}, dienstleister);
         this.showDeleteDienstleisterDialog = true;
@@ -653,7 +653,7 @@ export default class ConfigDienstleister extends Vue {
      *
      * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
      */
-    private deleteDienstleisterConfirm() {
+    deleteDienstleisterConfirm() {
         if (this.editDienstleisterIndex > -1 && this.dienstleisterToEdit) {
             DienstleisterService.delete(this.dienstleisterToEdit)
                 .then(() => {
@@ -679,7 +679,7 @@ export default class ConfigDienstleister extends Vue {
     /**
      * Schließt den Löschdialog und setzt den Index des gelöschten Items zurück.
      */
-    private closeDeleteDienstleisterDialog() {
+    closeDeleteDienstleisterDialog() {
         this.showDeleteDienstleisterDialog = false;
         this.editDienstleisterIndex = -1;
         this.dienstleisterToEdit =
@@ -756,7 +756,7 @@ export default class ConfigDienstleister extends Vue {
      *
      * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
      */
-    private saveEditMailDialog() {
+    saveEditMailDialog() {
         if (this.editMailIndex > -1 && this.editEmailaddress) {
             // Bestehende Email
             let deletedEmail = this.emailaddresses.splice(
@@ -795,7 +795,7 @@ export default class ConfigDienstleister extends Vue {
     /**
      * Schließt den Editdialog und setzt den Index des geänderten Items zurück.
      */
-    private closeEditMailDialog() {
+    closeEditMailDialog() {
         this.showEditMailDialog = false;
         this.editMailIndex = -1;
         this.editEmailaddress =
@@ -809,7 +809,7 @@ export default class ConfigDienstleister extends Vue {
      *
      * @param item das Item was gelöscht werden soll.
      */
-    private deleteMail(item: EmailAddressDTO) {
+    deleteMail(item: EmailAddressDTO) {
         this.editMailIndex = this.emailaddresses.indexOf(item);
         this.editEmailaddress = Object.assign({}, item);
         this.showDeleteMailDialog = true;
@@ -821,7 +821,7 @@ export default class ConfigDienstleister extends Vue {
      *
      * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
      */
-    private deleteMailConfirm() {
+    deleteMailConfirm() {
         if (this.editMailIndex > -1 && this.editEmailaddress) {
             let index: number = this.dienstleisterToEdit.emailAddresses.indexOf(
                 this.editEmailaddress.emailAddress
@@ -840,7 +840,7 @@ export default class ConfigDienstleister extends Vue {
     /**
      * Schließt den Löschdialog und setzt den Index des gelöschten Items zurück.
      */
-    private closeMailDelete() {
+    closeMailDelete() {
         this.showDeleteMailDialog = false;
         this.editMailIndex = -1;
         this.editEmailaddress =
@@ -851,7 +851,7 @@ export default class ConfigDienstleister extends Vue {
      * Öffnet den Dialog zum Ändern eines items.
      * @param emailaddressDTO zum Ändern.
      */
-    private editMail(emailaddressDTO: EmailAddressDTO) {
+    editMail(emailaddressDTO: EmailAddressDTO) {
         this.editMailIndex = this.emailaddresses.indexOf(emailaddressDTO);
         this.editEmailaddress = Object.assign({}, emailaddressDTO);
         this.mailaddressesForDuplicateCheck.delete(
@@ -867,7 +867,7 @@ export default class ConfigDienstleister extends Vue {
     }
 
     /* Prüft, ob die Email valide oder leer ist. */
-    private isEmailValidOrEmpty(email: string): boolean | string {
+    isEmailValidOrEmpty(email: string): boolean | string {
         if (_.isEmpty(email) || this.isEmailValid(email)) {
             return true;
         } else {
@@ -876,14 +876,14 @@ export default class ConfigDienstleister extends Vue {
     }
 
     /* Prüft, ob die Email valide ist. */
-    private isEmailValid(email: string): boolean {
+    isEmailValid(email: string): boolean {
         const pattern =
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return pattern.test(email);
     }
 
     /* Prúft, ob die Email bereits gespeichert ist */
-    private isEmailADuplicate(email: string): boolean | string {
+    isEmailADuplicate(email: string): boolean | string {
         if (this.mailaddressesForDuplicateCheck.has(email)) {
             return "Die Email-Adresse exisitert bereits.";
         } else {

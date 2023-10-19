@@ -74,13 +74,13 @@ import markerIconRed from "@/assets/marker-icon-red.png";
 })
 export default class ZaehlungCardMap extends Vue {
     @Prop({ default: "15vh" })
-    private readonly height!: string;
+    readonly height!: string;
 
     @Prop({ default: "160px" })
-    private readonly minheight!: string;
+    readonly minheight!: string;
 
     @Prop({ default: "100%" })
-    private readonly width!: string;
+    readonly width!: string;
 
     @Ref("zaehlungcardmap")
     private readonly theMap!: LMap;
@@ -93,7 +93,7 @@ export default class ZaehlungCardMap extends Vue {
     private readonly latLngZaehlung!: LatLng;
 
     @Prop({ default: true })
-    private readonly showLuftbild!: boolean;
+    readonly showLuftbild!: boolean;
 
     @Prop({ default: false })
     private readonly editZaehlungMarker!: boolean;
@@ -104,7 +104,7 @@ export default class ZaehlungCardMap extends Vue {
     /**
      * Optionen fuer die Darstellung der Karte
      */
-    private mapOptions: object = {
+    mapOptions: object = {
         minZoom: 10,
         maxZoom: 18,
         preferCanvas: false,

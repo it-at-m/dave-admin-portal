@@ -103,13 +103,13 @@ import markerIconRed from "@/assets/marker-icon-red.png";
 })
 export default class MiniMap extends Vue {
     @Prop({ default: "15vh" })
-    private readonly height!: string;
+    readonly height!: string;
 
     @Prop({ default: "160px" })
-    private readonly minheight!: string;
+    readonly minheight!: string;
 
     @Prop({ default: "100%" })
-    private readonly width!: string;
+    readonly width!: string;
     @Prop({ default: DefaultObjectCreator.createCenterOfMunichLatLng() })
     coords!: LatLng;
 
@@ -123,7 +123,7 @@ export default class MiniMap extends Vue {
     /**
      * Optionen fuer die Darstellung der Karte
      */
-    private mapOptions: object = {
+    mapOptions: object = {
         minZoom: 10,
         maxZoom: 18,
         preferCanvas: false,
