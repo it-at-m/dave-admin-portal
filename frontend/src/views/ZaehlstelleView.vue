@@ -17,9 +17,7 @@
                         :minheight="headerHeightVh"
                         :nummer="zaehlstelle.nummer"
                         :kreuzungsname="kreuzungsname"
-                        :stadtbezirk-nummer="
-                            zaehlstelle.stadtbezirkNummer.toString()
-                        "
+                        :stadtbezirk-nummer="`${zaehlstelle.stadtbezirkNummer}`"
                         :stadtbezirk="zaehlstelle.stadtbezirk"
                         :style="{ cursor: 'pointer' }"
                         @edit-zaehlstelle="editZaehlstelle"
