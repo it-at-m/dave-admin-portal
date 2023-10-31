@@ -59,11 +59,11 @@ import FahrbeziehungComparator from "@/util/FahrbeziehungComparator";
 })
 export default class FahrbeziehungKreisverkehrForm extends Vue {
     @Prop()
-    private readonly height!: string;
+    readonly height!: string;
 
     private fahrbeziehungen: Array<FahrbeziehungDTO> = [];
 
-    private allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
+    allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
 
     mounted() {
         this.updateWorkingCopy();
@@ -151,7 +151,7 @@ export default class FahrbeziehungKreisverkehrForm extends Vue {
         });
     }
 
-    private updateFahrbeziehung(fahrbeziehung: FahrbeziehungDTO): void {
+    updateFahrbeziehung(fahrbeziehung: FahrbeziehungDTO): void {
         if (fahrbeziehung.active) {
             // aktualisieren
             this.$store.dispatch(
@@ -238,13 +238,13 @@ export default class FahrbeziehungKreisverkehrForm extends Vue {
         return allPossibleFahrbeziehungen;
     }
 
-    private getHochrechnungsfaktorAsText(hf: HochrechnungsfaktorDTO): string {
+    getHochrechnungsfaktorAsText(hf: HochrechnungsfaktorDTO): string {
         return ObjectToTextTranslator.getHochrechnungsfaktorAsText(hf);
     }
 
     // Neu
-    private selectedFahrbeziehungen = new Array<FahrbeziehungDTO>();
-    private headersFahrbeziehungen = [
+    selectedFahrbeziehungen = new Array<FahrbeziehungDTO>();
+    headersFahrbeziehungen = [
         {
             text: "Knotenarm",
             align: "start",
@@ -254,7 +254,7 @@ export default class FahrbeziehungKreisverkehrForm extends Vue {
         { text: "Hochrechnungsfaktor", value: "hochrechnungsfaktor" },
     ];
 
-    private selectAll(event: any) {
+    selectAll(event: any) {
         if (event.items) {
             event.items.forEach((item: FahrbeziehungDTO) => {
                 item.active = event.value;
@@ -263,7 +263,7 @@ export default class FahrbeziehungKreisverkehrForm extends Vue {
         }
     }
 
-    private selectItem(event: any) {
+    selectItem(event: any) {
         if (event.item) {
             event.item.active = event.value;
             this.selectedFahrbeziehungen.push(_.cloneDeep(event.item));

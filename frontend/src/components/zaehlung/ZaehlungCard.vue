@@ -348,17 +348,17 @@ import BeauftrageZaehlungDialog from "@/components/zaehlung/BeauftrageZaehlungDi
     },
 })
 export default class ZaehlungCard extends Vue {
-    private fab = false;
-    private loading = false;
-    private iconColor = "black";
-    private deleteDialog = false;
-    private deleteDialogText = "Wollen Sie die Zählung wirklich löschen?";
-    private isBeauftragen = true;
+    fab = false;
+    loading = false;
+    iconColor = "black";
+    deleteDialog = false;
+    deleteDialogText = "Wollen Sie die Zählung wirklich löschen?";
+    isBeauftragen = true;
 
-    private showBeauftragenDialog = false;
+    showBeauftragenDialog = false;
 
     @Prop()
-    private readonly zaehlung!: ZaehlungDTO;
+    readonly zaehlung!: ZaehlungDTO;
 
     @Prop()
     private readonly zaehlstelleId!: string;
@@ -463,7 +463,7 @@ export default class ZaehlungCard extends Vue {
         return latLng(parseFloat(lat), parseFloat(lng));
     }
 
-    private zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
+    zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
         this.loading = true;
         const update: UpdateStatusDTO = {} as UpdateStatusDTO;
         update.zaehlungId = this.zaehlung.id;
@@ -486,12 +486,12 @@ export default class ZaehlungCard extends Vue {
             });
     }
 
-    private zaehlungLoeschen() {
+    zaehlungLoeschen() {
         this.deleteDialogText = `Wollen Sie die Zählung vom ${this.datum} wirklich löschen?`;
         this.deleteDialog = true;
     }
 
-    private deleteZaehlung() {
+    deleteZaehlung() {
         this.deleteDialog = false;
         this.loading = true;
         ZaehlungService.deleteZaehlungById(this.zaehlung.id)
@@ -517,7 +517,7 @@ export default class ZaehlungCard extends Vue {
             });
     }
 
-    private zaehlungFreigeben() {
+    zaehlungFreigeben() {
         this.loading = true;
         const update: UpdateStatusDTO = {} as UpdateStatusDTO;
         update.zaehlungId = this.zaehlung.id;
@@ -538,7 +538,7 @@ export default class ZaehlungCard extends Vue {
             });
     }
 
-    private zaehlungKorrigieren() {
+    zaehlungKorrigieren() {
         this.loading = true;
         const update: UpdateStatusDTO = {} as UpdateStatusDTO;
         update.zaehlungId = this.zaehlung.id;
@@ -559,16 +559,16 @@ export default class ZaehlungCard extends Vue {
             });
     }
 
-    private openZaehlungDialog() {
+    openZaehlungDialog() {
         this.$store.dispatch("setZaehlung", _.cloneDeep(this.zaehlung));
         this.$emit("openZaehlungDialog");
     }
 
-    private openZaehlungInDatenportal() {
+    openZaehlungInDatenportal() {
         this.$emit("openZaehlungDatenportal", this.getZaehlung.id);
     }
 
-    private zaehlungKopieren() {
+    zaehlungKopieren() {
         this.loading = true;
         let zaehlungCopy: ZaehlungDTO = _.cloneDeep(this.zaehlung);
         zaehlungCopy.id = "";
@@ -602,13 +602,13 @@ export default class ZaehlungCard extends Vue {
             });
     }
 
-    private openChatDialog() {
+    openChatDialog() {
         this.$store.dispatch("setZaehlung", _.cloneDeep(this.zaehlung));
         this.zaehlung.unreadMessagesMobilitaetsreferat = false;
         this.$emit("openChatDialog", this.zaehlung.id);
     }
 
-    private dienstleisterKorrigieren(dienstleister: DienstleisterDTO) {
+    dienstleisterKorrigieren(dienstleister: DienstleisterDTO) {
         this.loading = true;
         ZaehlungService.updateDienstleisterkennung(
             this.getZaehlung.id,
@@ -630,7 +630,7 @@ export default class ZaehlungCard extends Vue {
             });
     }
 
-    private openDienstleisterDialog(isBeauftragen: boolean): void {
+    openDienstleisterDialog(isBeauftragen: boolean): void {
         this.showBeauftragenDialog = true;
         this.isBeauftragen = isBeauftragen;
     }

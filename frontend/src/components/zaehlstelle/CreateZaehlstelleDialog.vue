@@ -43,13 +43,13 @@ export default class CreateZaehlstelleDialog extends Vue {
     @Prop({ default: DefaultObjectCreator.createCenterOfMunichLatLng() })
     coords!: LatLng;
 
-    private dialogtitle = "Neue Zählstelle anlegen";
+    dialogtitle = "Neue Zählstelle anlegen";
 
-    private cancelCreate(): void {
+    cancelCreate(): void {
         this.$emit("cancel");
     }
 
-    private saved(backendIdDTO: BackendIdDTO): void {
+    saved(backendIdDTO: BackendIdDTO): void {
         this.$emit("saved", backendIdDTO);
     }
 }

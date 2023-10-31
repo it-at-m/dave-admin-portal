@@ -161,14 +161,14 @@ import _ from "lodash";
 
 @Component
 export default class ConfigEmailAddress extends Vue {
-    @Prop() private readonly height!: string;
+    @Prop() readonly height!: string;
 
-    private showEditDialog = false;
-    private showDeleteDialog = false;
-    private filterEmailaddress = "";
+    showEditDialog = false;
+    showDeleteDialog = false;
+    filterEmailaddress = "";
     private editIndex = -1;
     private mailaddressesForDuplicateCheck: Set<string> = new Set<string>();
-    private editEmailaddress: EmailAddressDTO =
+    editEmailaddress: EmailAddressDTO =
         DefaultObjectCreator.createDefaultEmailaddressDTO();
     private emailaddresses: Array<EmailAddressDTO> = [];
 
@@ -205,7 +205,7 @@ export default class ConfigEmailAddress extends Vue {
      *
      * @param item das Item was gelöscht werden soll.
      */
-    private deleteItem(item: EmailAddressDTO) {
+    deleteItem(item: EmailAddressDTO) {
         this.editIndex = this.emailaddresses.indexOf(item);
         this.editEmailaddress = Object.assign({}, item);
         this.showDeleteDialog = true;
@@ -217,7 +217,7 @@ export default class ConfigEmailAddress extends Vue {
      *
      * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
      */
-    private deleteItemConfirm() {
+    deleteItemConfirm() {
         if (this.editIndex > -1 && this.editEmailaddress) {
             EmailAddressService.delete(this.editEmailaddress)
                 .then(() => {
@@ -243,7 +243,7 @@ export default class ConfigEmailAddress extends Vue {
     /**
      * Schließt den Löschdialog und setzt den Index des gelöschten Items zurück.
      */
-    private closeDelete() {
+    closeDelete() {
         this.showDeleteDialog = false;
         this.editIndex = -1;
         this.editEmailaddress =
@@ -255,7 +255,7 @@ export default class ConfigEmailAddress extends Vue {
      * Öffnet den Dialog zum Ändern eines items.
      * @param item zum Ändern.
      */
-    private editItem(item: EmailAddressDTO) {
+    editItem(item: EmailAddressDTO) {
         this.editIndex = this.emailaddresses.indexOf(item);
         this.editEmailaddress = Object.assign({}, item);
         this.mailaddressesForDuplicateCheck.delete(item.emailAddress);
@@ -271,7 +271,7 @@ export default class ConfigEmailAddress extends Vue {
      *
      * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
      */
-    private saveEditItemDialog() {
+    saveEditItemDialog() {
         if (this.editIndex > -1 && this.editEmailaddress) {
             // Bestehende Email
             EmailAddressService.update(this.editEmailaddress)
@@ -317,7 +317,7 @@ export default class ConfigEmailAddress extends Vue {
     /**
      * Schließt den Editdialog und setzt den Index des geänderten Items zurück.
      */
-    private closeEditItemDialog() {
+    closeEditItemDialog() {
         this.showEditDialog = false;
         this.editIndex = -1;
         this.editEmailaddress =
@@ -376,7 +376,7 @@ export default class ConfigEmailAddress extends Vue {
     /* Rules */
 
     /* Prüft, ob ein Wert gesetzt ist. */
-    private pflichtfeld(value: any): boolean | string {
+    pflichtfeld(value: any): boolean | string {
         if (!_.isEmpty(value)) {
             return true;
         }
@@ -384,7 +384,7 @@ export default class ConfigEmailAddress extends Vue {
     }
 
     /* Prüft,ob die Email valide oder nicht leer ist*/
-    private isEmailValidOrEmpty(email: string): boolean | string {
+    isEmailValidOrEmpty(email: string): boolean | string {
         if (_.isEmpty(email) || this.isEmailValid(email)) {
             return true;
         } else {
@@ -393,7 +393,7 @@ export default class ConfigEmailAddress extends Vue {
     }
 
     /* Prüft, ob die EMail bereits hinterlegt ist. */
-    private isEmailADuplicate(email: string): boolean | string {
+    isEmailADuplicate(email: string): boolean | string {
         if (this.mailaddressesForDuplicateCheck.has(email)) {
             return "Die Email-Adresse exisitert bereits.";
         } else {

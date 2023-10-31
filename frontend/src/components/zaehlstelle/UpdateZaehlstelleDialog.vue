@@ -41,13 +41,13 @@ export default class UpdateZaehlstelleDialog extends Vue {
     @Prop() value!: boolean;
     @Prop() zaehlstelle!: ZaehlstelleDTO;
 
-    private dialogtitle = "Zählstelle bearbeiten";
+    dialogtitle = "Zählstelle bearbeiten";
 
-    private cancelCreate(): void {
+    cancelCreate(): void {
         this.$emit("cancel");
     }
 
-    private saved(): void {
+    saved(): void {
         this.$emit("saved");
     }
 }

@@ -62,7 +62,7 @@ export default class OpenZaehlungPanel extends Vue {
 
     @Prop() zaehlungen!: Array<OpenZaehlungDTO>;
 
-    private getItemTitle(zaehlung: OpenZaehlungDTO) {
+    getItemTitle(zaehlung: OpenZaehlungDTO) {
         return `Zählung vom ${this.$d(
             new Date(zaehlung.datum),
             "short",
@@ -72,13 +72,13 @@ export default class OpenZaehlungPanel extends Vue {
         }`;
     }
 
-    private getItemSubtitle(zaehlung: OpenZaehlungDTO) {
+    getItemSubtitle(zaehlung: OpenZaehlungDTO) {
         return `Projektnummer: ${zaehlung.projektNummer}, Projektname: ${
             zaehlung.projektName
         }, Zählart: ${zaehlartText.get(zaehlung.zaehlart)}`;
     }
 
-    private openZaehlung(zaehlung: OpenZaehlungDTO): void {
+    openZaehlung(zaehlung: OpenZaehlungDTO): void {
         this.$router.push(
             `/zaehlstelle/${zaehlung.zaehlstellenId}/${zaehlung.id}`
         );
