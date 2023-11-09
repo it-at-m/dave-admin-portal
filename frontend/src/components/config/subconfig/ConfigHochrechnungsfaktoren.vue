@@ -234,9 +234,9 @@ import { ApiError, Levels } from "@/api/error";
 
 @Component
 export default class ConfigHochrechnungsfaktoren extends Vue {
-    @Prop() private readonly height!: string;
+    @Prop() readonly height!: string;
 
-    private filterMatrix = "";
+    filterMatrix = "";
 
     // Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
     // 64px Suche in Tabelle
@@ -261,14 +261,14 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
 
     private hochrechnungsfaktoren: Array<HochrechnungsfaktorDTO> = [];
 
-    private editHochrechnungsfaktor: HochrechnungsfaktorDTO =
+    editHochrechnungsfaktor: HochrechnungsfaktorDTO =
         DefaultObjectCreator.createDefaultHochrechnungsfaktor();
 
     private editIndex = -1;
 
-    private showEditDialog = false;
+    showEditDialog = false;
 
-    private showDeleteDialog = false;
+    showDeleteDialog = false;
 
     mounted() {
         this.getAllHochrechnungsfaktoren();
@@ -363,7 +363,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
      *
      * @param item das Item was gelöscht werden soll.
      */
-    private deleteItem(item: HochrechnungsfaktorDTO) {
+    deleteItem(item: HochrechnungsfaktorDTO) {
         this.editIndex = this.hochrechnungsfaktoren.indexOf(item);
         this.editHochrechnungsfaktor = Object.assign({}, item);
         this.showDeleteDialog = true;
@@ -375,7 +375,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
      *
      * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
      */
-    private deleteItemConfirm() {
+    deleteItemConfirm() {
         if (this.editIndex > -1 && this.editHochrechnungsfaktor) {
             HochrechnungsfaktorService.deleteHochrechnungsfaktor(
                 this.editHochrechnungsfaktor
@@ -403,7 +403,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
     /**
      * Schließt den Löschdialog und setzt den Index des gelöschten Items zurück.
      */
-    private closeDelete() {
+    closeDelete() {
         this.showDeleteDialog = false;
         this.editIndex = -1;
         this.editHochrechnungsfaktor =
@@ -415,7 +415,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
      * Öffnet den Dialog zum Ändern eines items.
      * @param item zum Ändern.
      */
-    private editItem(item: HochrechnungsfaktorDTO) {
+    editItem(item: HochrechnungsfaktorDTO) {
         this.editIndex = this.hochrechnungsfaktoren.indexOf(item);
         this.editHochrechnungsfaktor = Object.assign({}, item);
         this.showEditDialog = true;
@@ -432,7 +432,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
      *
      * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
      */
-    private saveEditItemDialog() {
+    saveEditItemDialog() {
         if (this.editIndex > -1 && this.editHochrechnungsfaktor) {
             // Bestehender HOFA
             HochrechnungsfaktorService.putHochrechnungsfaktor(
@@ -482,7 +482,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
     /**
      * Schließt den Editdialog und setzt den Index des geänderten Items zurück.
      */
-    private closeEditItemDialog() {
+    closeEditItemDialog() {
         this.showEditDialog = false;
         this.editIndex = -1;
         this.editHochrechnungsfaktor =
@@ -525,7 +525,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
     /**
      * Prüft, ob der Matrixname bereits vergeben ist.
      */
-    private matrixVerwendbar(matrix: any): boolean | string {
+    matrixVerwendbar(matrix: any): boolean | string {
         const matrixBereitsVorhanden = this.hofaMatrizen.has(matrix);
         if (!matrixBereitsVorhanden) {
             return true;
@@ -536,7 +536,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
     /**
      * Prüft, ob ein Wert gesetzt ist.
      */
-    private pflichtfeld(value: any): boolean | string {
+    pflichtfeld(value: any): boolean | string {
         if (!_.isEmpty(value)) {
             return true;
         }
@@ -546,7 +546,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
     /**
      * Prüft, ob der übergebene Wert eine Zahl ist.
      */
-    private mustBeNumber(value: any): boolean | string {
+    mustBeNumber(value: any): boolean | string {
         if (_.isNumber(value)) {
             return true;
         }
@@ -559,7 +559,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
      *
      * Es darf nur ein Hochrechnungsfaktor den Wert "true" annehmen.
      */
-    private isDefaultFactorValid(value: boolean): boolean | string {
+    isDefaultFactorValid(value: boolean): boolean | string {
         let result: any;
         if (this.checkForValidDefaultFactor(value)) {
             result = true;

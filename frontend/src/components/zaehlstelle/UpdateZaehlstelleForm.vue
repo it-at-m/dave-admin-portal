@@ -160,9 +160,9 @@ import MiniMap from "@/components/map/MiniMap.vue";
     components: { MiniMap },
 })
 export default class UpdateZaehlstelleForm extends Vue {
-    @Prop({ default: {} }) private zaehlstelle!: ZaehlstelleDTO;
+    @Prop({ default: {} }) zaehlstelle!: ZaehlstelleDTO;
 
-    private newSuchwort = "";
+    newSuchwort = "";
 
     get getStadtbezirksnummer(): string {
         const stadtbezirksnummer: string | undefined =
@@ -200,7 +200,7 @@ export default class UpdateZaehlstelleForm extends Vue {
     }
 
     // Fuegt das eingegebene Wort den Suchwoertern hinzu
-    private addSuchwortToList() {
+    addSuchwortToList() {
         if (_.isNil(this.zaehlstelle.customSuchwoerter)) {
             this.zaehlstelle.customSuchwoerter = [];
         }
@@ -217,7 +217,7 @@ export default class UpdateZaehlstelleForm extends Vue {
         this.newSuchwort = "";
     }
 
-    private save(): void {
+    save(): void {
         ZaehlstellenService.saveZaehlstelle(this.zaehlstelle)
             .then(() => {
                 this.$emit("saved");
@@ -227,7 +227,7 @@ export default class UpdateZaehlstelleForm extends Vue {
             });
     }
 
-    private cancel(): void {
+    cancel(): void {
         this.$emit("cancel");
     }
 
@@ -238,7 +238,7 @@ export default class UpdateZaehlstelleForm extends Vue {
         else return DefaultObjectCreator.createCenterOfMunichLatLng();
     }
 
-    private updateZaehlstellenCoords(newCoords: LatLng): void {
+    updateZaehlstellenCoords(newCoords: LatLng): void {
         if (!this.zaehlstelle.punkt) {
             this.zaehlstelle.punkt = {} as GeoPoint;
         }

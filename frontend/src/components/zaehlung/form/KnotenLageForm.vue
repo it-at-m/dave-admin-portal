@@ -221,12 +221,11 @@ export default class KnotenLageForm extends Vue {
     private zaehlstelle!: ZaehlstelleDTO;
 
     @Prop()
-    private readonly height!: string;
+    readonly height!: string;
 
-    private zaehlung: ZaehlungDTO =
-        DefaultObjectCreator.createDefaultZaehlungDTO();
+    zaehlung: ZaehlungDTO = DefaultObjectCreator.createDefaultZaehlungDTO();
 
-    private strassen: Array<string> = [];
+    strassen: Array<string> = [];
 
     mounted() {
         this.updateWorkingCopy();
@@ -312,7 +311,7 @@ export default class KnotenLageForm extends Vue {
         else return this.coordsZaehlstelle;
     }
 
-    private updateZaehlungCoords(newCoords: LatLng): void {
+    updateZaehlungCoords(newCoords: LatLng): void {
         if (!this.zaehlung.punkt) {
             this.zaehlung.punkt = {} as GeoPoint;
         }

@@ -19,6 +19,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class KontaktForm extends Vue {
     @Prop()
-    private readonly height!: string;
+    readonly height!: string;
 }
 </script>

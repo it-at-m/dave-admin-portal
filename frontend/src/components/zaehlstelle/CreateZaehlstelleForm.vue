@@ -159,22 +159,22 @@ import MiniMap from "@/components/map/MiniMap.vue";
     components: { MiniMap },
 })
 export default class ZaehlstelleForm extends Vue {
-    private validZaehlstelle = false;
+    validZaehlstelle = false;
 
-    private zaehlstelle: ZaehlstelleDTO =
+    zaehlstelle: ZaehlstelleDTO =
         DefaultObjectCreator.createDefaultZaehlstelleDTO();
 
-    private stadtbezirksviertelModel = "";
+    stadtbezirksviertelModel = "";
     private laufendeNummer = "";
 
-    private newSuchwort = "";
+    newSuchwort = "";
 
-    private stadtbezirksviertel: KeyVal = {} as KeyVal;
+    stadtbezirksviertel: KeyVal = {} as KeyVal;
 
     @Prop({ default: DefaultObjectCreator.createCenterOfMunichLatLng() })
     coords!: LatLng;
 
-    private suchwoerter: Array<string> = [];
+    suchwoerter: Array<string> = [];
 
     mounted() {
         this.zaehlstelle = DefaultObjectCreator.createDefaultZaehlstelleDTO();
@@ -227,7 +227,7 @@ export default class ZaehlstelleForm extends Vue {
     }
 
     // Fuegt das eingegebene Wort den Suchwoertern hinzu
-    private addSuchwortToList() {
+    addSuchwortToList() {
         if (this.newSuchwort == null || this.newSuchwort.trim() === "") {
             return;
         }
@@ -237,7 +237,7 @@ export default class ZaehlstelleForm extends Vue {
         this.newSuchwort = "";
     }
 
-    private save(): void {
+    save(): void {
         if (this.validZaehlstelle) {
             this.zaehlstelle.lat = this.coords.lat;
             this.zaehlstelle.lng = this.coords.lng;
@@ -261,7 +261,7 @@ export default class ZaehlstelleForm extends Vue {
         }
     }
 
-    private cancel(): void {
+    cancel(): void {
         this.resetZaehlstelle();
         this.$emit("cancel");
     }
@@ -276,7 +276,7 @@ export default class ZaehlstelleForm extends Vue {
         this.validZaehlstelle = false;
     }
 
-    private updateZaehlstellenCoords(newCoords: LatLng): void {
+    updateZaehlstellenCoords(newCoords: LatLng): void {
         if (!this.zaehlstelle.punkt) {
             this.zaehlstelle.punkt = {} as GeoPoint;
         }

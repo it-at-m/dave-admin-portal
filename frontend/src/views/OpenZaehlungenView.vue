@@ -74,18 +74,14 @@ import OpenZaehlungPanel from "@/components/zaehlung/OpenZaehlungPanel.vue";
 })
 export default class OpenZaehlungenView extends Vue {
     // Die Basisinformationen zur Zählstelle
-    private createdZaehlungen: Array<OpenZaehlungDTO> =
+    createdZaehlungen: Array<OpenZaehlungDTO> = [] as Array<OpenZaehlungDTO>;
+    instructedZaehlungen: Array<OpenZaehlungDTO> = [] as Array<OpenZaehlungDTO>;
+    countingZaehlungen: Array<OpenZaehlungDTO> = [] as Array<OpenZaehlungDTO>;
+    accomplishedZaehlungen: Array<OpenZaehlungDTO> =
         [] as Array<OpenZaehlungDTO>;
-    private instructedZaehlungen: Array<OpenZaehlungDTO> =
-        [] as Array<OpenZaehlungDTO>;
-    private countingZaehlungen: Array<OpenZaehlungDTO> =
-        [] as Array<OpenZaehlungDTO>;
-    private accomplishedZaehlungen: Array<OpenZaehlungDTO> =
-        [] as Array<OpenZaehlungDTO>;
-    private correctionZaehlungen: Array<OpenZaehlungDTO> =
-        [] as Array<OpenZaehlungDTO>;
+    correctionZaehlungen: Array<OpenZaehlungDTO> = [] as Array<OpenZaehlungDTO>;
 
-    private isNotEmpty = false;
+    isNotEmpty = false;
 
     /**
      * Die Daten der offenen Zählungen werden über die
@@ -209,7 +205,7 @@ export default class OpenZaehlungenView extends Vue {
 <style lang="sass">
 // Entfernt die Elevation beim ExpansionPanel. Die Build-In-Funktion (flat) kann leider nicht genutzt werden,
 // da dann auch die Trennstriche zwischen den Panels entfernt werden.
-@import './node_modules/vuetify/src/components/VExpansionPanel/_variables.scss'
+@import 'vuetify/src/components/VExpansionPanel/_variables.scss'
 .v-expansion-panel
   &::before
     +elevation(0)

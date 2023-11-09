@@ -66,7 +66,6 @@
                     ></v-checkbox>
                     <v-checkbox
                         v-model="selectOrDeselectAllVmodel"
-                        value=""
                         :label="labelSelectOrDeselectAll"
                         color="grey darken-1"
                         hide-details
@@ -91,17 +90,17 @@ import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 @Component
 export default class FahrzeugeForm extends Vue {
     @Prop()
-    private readonly height!: string;
+    readonly height!: string;
 
     // Variablen für die Checkboxen
-    private pkw = false;
-    private lkw = false;
-    private lz = false;
-    private bus = false;
-    private krad = false;
-    private rad = false;
-    private fuss = false;
-    private selectOrDeselectAllVmodel = false;
+    pkw = false;
+    lkw = false;
+    lz = false;
+    bus = false;
+    krad = false;
+    rad = false;
+    fuss = false;
+    selectOrDeselectAllVmodel = false;
 
     mounted() {
         this.resetForm();
@@ -219,7 +218,7 @@ export default class FahrzeugeForm extends Vue {
      * aus- oder abzuwählen, wenn diese nicht disabled sind.
      * @private
      */
-    private selectOrDeselectAll() {
+    selectOrDeselectAll() {
         this.pkw = this.selectOrDeselectAllVmodel;
         this.lkw = this.selectOrDeselectAllVmodel;
         this.lz = this.selectOrDeselectAllVmodel;
