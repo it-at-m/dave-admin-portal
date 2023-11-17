@@ -631,8 +631,4 @@ wurden die Farbe auf schwarz gesetzt */
     background-color: transparent;
     border: none;
 }
-
-.messstelle-marker-color {
-    background-color: purple;
-}
 </style>
