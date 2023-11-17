@@ -470,7 +470,7 @@ export default class ZaehlstelleMap extends Vue {
         }
         tooltip = `${tooltip}<br/>`;
         if (tooltipDto.standortDatenportal) {
-            tooltip = `${tooltip}${tooltipDto.standortDatenportal}<br/>`;
+            tooltip = `${tooltip}Standort Datenportal: ${tooltipDto.standortDatenportal}<br/>`;
         }
         if (tooltipDto.stadtbezirk) {
             tooltip = `${tooltip}Stadtbezirk: ${tooltipDto.stadtbezirk}<br/>`;
