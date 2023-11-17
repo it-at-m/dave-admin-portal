@@ -30,11 +30,11 @@ export default class SucheService {
             longitude: 11.6242116,
             tooltip: {
                 mstId: "MSTID1",
-                standortDatenportal: "testdatenportal",
+                standortDatenportal: "StandortDatenportal1",
                 stadtbezirk: 13,
-                realisierungsdatum: "testrealisierung",
-                abbaudatum: "testabbau",
-                datumLetzteMessung: "testmessung",
+                realisierungsdatum: "01.01.2023",
+                abbaudatum: "01.02.2023",
+                datumLetzteMessung: "15.01.2023",
                 kfz: true,
             },
         };
@@ -46,11 +46,11 @@ export default class SucheService {
             longitude: 11.6227731,
             tooltip: {
                 mstId: "MSTID2",
-                standortDatenportal: "testdatenportal2",
+                standortDatenportal: "StandortDatenportal2",
                 stadtbezirk: 13,
-                realisierungsdatum: "testrealisierung2",
-                abbaudatum: "testabbau2",
-                datumLetzteMessung: "testmessung2",
+                realisierungsdatum: "02.01.2020",
+                abbaudatum: "04.04.2020",
+                datumLetzteMessung: "31.03.2020",
                 kfz: true,
             },
         };
@@ -62,11 +62,11 @@ export default class SucheService {
             longitude: 11.6217731,
             tooltip: {
                 mstId: "MSTID3",
-                standortDatenportal: "testdatenportal3",
+                standortDatenportal: "StandortDatenportal3",
                 stadtbezirk: 13,
-                realisierungsdatum: "testrealisierung3",
-                abbaudatum: "testabbau3",
-                datumLetzteMessung: "testmessung3",
+                realisierungsdatum: "01.01.2023",
+                abbaudatum: "01.01.2023",
+                datumLetzteMessung: "01.03.2023",
                 kfz: true,
             },
         };
