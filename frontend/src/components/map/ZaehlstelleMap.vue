@@ -255,7 +255,7 @@ export default class ZaehlstelleMap extends Vue {
         this.searchZaehlstelle();
     }
 
-    get getZaehlstellenKarteFromStore(): ZaehlstelleKarteDTO[] {
+    get getZaehlstellenKarteFromStore(): AnzeigeKarteDTO[] {
         return this.$store.getters["search/result"];
     }
 
@@ -337,14 +337,22 @@ export default class ZaehlstelleMap extends Vue {
             chunkedLoading: true,
         });
 
-        const zaehlstellenKarte: ZaehlstelleKarteDTO[] =
+        const zaehlstellenKarte: AnzeigeKarteDTO[] =
             this.getZaehlstellenKarteFromStore;
         const markers: Array<Marker> = [];
         zaehlstellenKarte.forEach((anzeigeKarte) => {
             if (anzeigeKarte.type != "messstelle") {
-                markers.push(this.createMarkerForZaehlstelle(anzeigeKarte));
+                markers.push(
+                    this.createMarkerForZaehlstelle(
+                        anzeigeKarte as ZaehlstelleKarteDTO
+                    )
+                );
             } else {
-                markers.push(this.createMarkerForMessstelle(anzeigeKarte));
+                markers.push(
+                    this.createMarkerForMessstelle(
+                        anzeigeKarte as MessstelleKarteDTO
+                    )
+                );
             }
         });
         this.mapMarkerClusterGroup.addLayers(markers);
