@@ -175,6 +175,7 @@ import TooltipDTO from "@/domain/dto/TooltipDTO";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
 import AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
+import MessstelleKarteDTO from "@/domain/dto/MessstelleKarteDTO";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -388,9 +389,12 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     private createMarkerForMessstelle(
-        anzeigeKarteDto: AnzeigeKarteDTO
+        messstelleKarteDto: MessstelleKarteDTO
     ): Marker {
-        let marker: Marker = new Marker(this.createLatLng(anzeigeKarteDto), {});
+        let marker: Marker = new Marker(
+            this.createLatLng(messstelleKarteDto),
+            {}
+        );
         const icon = L.divIcon({
             html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ee82ee"><title>cards-diamond</title><path  d="M19,12L12,22L5,12L12,2" /></svg>',
             iconSize: [40, 40], // size of the icon
@@ -399,7 +403,7 @@ export default class ZaehlstelleMap extends Vue {
         });
         marker.setIcon(icon);
         marker.bindTooltip(
-            this.createTooltipMessstelle(anzeigeKarteDto.tooltip),
+            this.createTooltipMessstelle(messstelleKarteDto.tooltip),
             {
                 direction: "top",
                 offset: [0, -35],
@@ -500,10 +504,7 @@ export default class ZaehlstelleMap extends Vue {
 
     // Extrahiert aus der Zaehlstelle die Koordinaten
     private createLatLng(anzeigeKarte: AnzeigeKarteDTO): LatLng {
-        return this.createLatLngFromString(
-            anzeigeKarte.latitude,
-            anzeigeKarte.longitude
-        );
+        return latLng(anzeigeKarte.latitude, anzeigeKarte.longitude);
     }
 
     // Erzeugt aus den String Koordinaten ein Objekt von Typ LatLng
