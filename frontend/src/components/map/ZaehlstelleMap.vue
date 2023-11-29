@@ -173,6 +173,8 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 import TooltipDTO from "@/domain/dto/TooltipDTO";
 import markerIconRed from "@/assets/marker-icon-red.png";
+import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
+import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 import TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
 import AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
 import MessstelleKarteDTO from "@/domain/dto/MessstelleKarteDTO";
@@ -401,20 +403,14 @@ export default class ZaehlstelleMap extends Vue {
     ): Marker {
         let marker: Marker = new Marker(
             this.createLatLng(messstelleKarteDto),
-            {}
+            this.markerOptionsMessstelle(messstelleKarteDto)
         );
-        const icon = L.divIcon({
-            html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ee82ee"><title>cards-diamond</title><path  d="M19,12L12,22L5,12L12,2" /></svg>',
-            iconSize: [40, 40], // size of the icon
-            iconAnchor: [20, 40],
-            className: "leaflet-custom-div-icon",
-        });
-        marker.setIcon(icon);
+
         marker.bindTooltip(
             this.createTooltipMessstelle(messstelleKarteDto.tooltip),
             {
                 direction: "top",
-                offset: [0, -35],
+                offset: [-14, 0],
             }
         );
         return marker;
@@ -507,6 +503,24 @@ export default class ZaehlstelleMap extends Vue {
             }
         } else {
             return { opacity: 1.0 };
+        }
+    }
+
+    /**
+     * Setzt die Optionen bezüglich verwendetes Icon für den Messstellenmarker.
+     */
+    private markerOptionsMessstelle(messstelleKarte: MessstelleKarteDTO) {
+        let defaultIcon = new Icon.Default();
+        defaultIcon.options.iconUrl = markerIconDiamondViolet;
+        if (this.zId) {
+            if (this.zId === messstelleKarte.id) {
+                defaultIcon.options.iconUrl = markerIconDiamondRed;
+                return { opacity: 1.0, icon: defaultIcon };
+            } else {
+                return { opacity: 0.5, icon: defaultIcon };
+            }
+        } else {
+            return { opacity: 1.0, icon: defaultIcon };
         }
     }
 
@@ -625,10 +639,5 @@ wurden die Farbe auf schwarz gesetzt */
 
 .leaflet-control-zoom a.leaflet-control-zoom-out {
     color: black;
-}
-
-.leaflet-custom-div-icon {
-    background-color: transparent;
-    border: none;
 }
 </style>
