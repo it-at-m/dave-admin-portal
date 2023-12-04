@@ -22,7 +22,7 @@
                 layers="gsm:g_stadtkarte_gesamt"
                 :visible="true"
                 name="Stadtkarte"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
+                :attribution="mapAttribution"
                 layer-type="base"
             />
             <!--      Luftbild Geoportal -->
@@ -31,7 +31,7 @@
                 layers="gsm:g_luftbild"
                 :visible="false"
                 name="Luftbild"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
+                :attribution="mapAttribution"
                 layer-type="base"
             />
             <!--      OpenStreetMap -->
@@ -51,13 +51,13 @@
                 :transparent="true"
                 format="image/png"
                 name="Stadtbezirke"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
+                :attribution="mapAttribution"
                 layer-type="overlay"
             />
             <l-wms-tile-layer
                 :transparent="true"
                 :visible="false"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
+                :attribution="mapAttribution"
                 base-url="https://geoportal.muenchen.de/geoserver/gsm/wms?"
                 format="image/png"
                 layer-type="overlay"
@@ -236,6 +236,9 @@ export default class ZaehlstelleMap extends Vue {
     @Ref("map") readonly printMap!: any;
     @Ref("sheet") readonly sheet!: HTMLDivElement;
     private base64 = "base64";
+
+    private readonly mapAttribution =
+        '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
 
     /**
      * Optionen fuer die Darstellung der Karte
