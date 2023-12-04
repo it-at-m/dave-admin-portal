@@ -68,7 +68,7 @@ function loadMessstelle() {
                     color="grey lighten-3"
                     class="d-flex flex-column"
                 >
-                    <!-- Basisinformation zur Zählstelle -->
+                    <!-- Basisinformation zur Messstelle -->
                     <MessstelleInfo
                         v-if="messstelle"
                         :id="messstelle.mstId"
