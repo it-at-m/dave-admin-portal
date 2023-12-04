@@ -7,5 +7,9 @@ export default interface ZaehlstelleKarteDTO extends AnzeigeKarteDTO{
 
     letzteZaehlungId: string;
 
+    longitude: string;
+
+    latitude: string;
+
     tooltip: TooltipDTO;
 }
