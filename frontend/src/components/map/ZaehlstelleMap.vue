@@ -239,7 +239,7 @@ export default class ZaehlstelleMap extends Vue {
     @Ref("sheet") readonly sheet!: HTMLDivElement;
     private base64 = "base64";
 
-    private readonly mapAttribution =
+    readonly mapAttribution =
         '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
 
     /**
