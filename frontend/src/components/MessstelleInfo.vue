@@ -3,6 +3,8 @@ interface Props {
     name: string;
     id: string;
     stadtbezirkNummer: number;
+    height: string;
+    minheight: string;
 }
 
 const props = defineProps<Props>();
@@ -11,10 +13,10 @@ const props = defineProps<Props>();
 <template>
     <v-sheet
         width="100%"
-        :height="height"
-        :min-height="minheight"
         color="transparent"
         class="pa-4"
+        :min-height="props.minheight"
+        :height="props.height"
     >
         <span class="text-caption">Messstelle</span><br />
         <span class="text-h5">{{ props.name }}</span
