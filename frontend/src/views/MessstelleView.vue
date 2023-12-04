@@ -1,32 +1,57 @@
 <script setup lang="ts">
-import ZaehlstelleInfo from "@/components/zaehlstelle/ZaehlstelleInfo.vue";
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
-import { WritableComputedRef, computed } from "vue";
+import { computed, ComputedRef, Ref, WritableComputedRef } from "vue";
+import MessstelleService from "@/api/service/MessstelleService";
+import MessstelleDTO from "@/domain/dto/MessstelleDTO";
+import { ref } from "@vue/reactivity";
+import { useRoute } from "vue-router/composables";
+import MessstelleInfo from "@/components/MessstelleInfo.vue";
+import { useVuetify } from "@/util/useVuetify";
 
 const reloadMessstelle = false;
+const messstelle: Ref<null | MessstelleDTO> = ref(null);
+const vuetify = useVuetify();
 
-const headerHeight: WritableComputedRef<number> = computed(() => {
-    return 160 / (this.$vuetify.breakpoint.height / 100);
+// eslint-disable-next-line no-undef
+onMounted(() => {
+    loadMessstelle();
 });
 
-const headerHeightVh: WritableComputedRef<string> = computed(() => {
-    return this.headerHeight + "vh";
+const headerHeight: ComputedRef<number> = computed(() => {
+    return 160 / (vuetify.breakpoint.height / 100);
 });
 
-const messstelleId: WritableComputedRef<string> = computed(() => {
-    const messstelle = this.$route.params.messstelle;
-    if (!messstelle) {
+const headerHeightVh: ComputedRef<string> = computed(() => {
+    return headerHeight.value + "vh";
+});
+
+const messstelleId: ComputedRef<string> = computed(() => {
+    const route = useRoute();
+    const messstelleId = route.params.messstelleId;
+    if (!messstelleId) {
         return "";
     }
-    return messstelle;
+    return messstelleId;
 });
 
-const latlng = computed(() => {
-  if(this)
+const latlng: ComputedRef<string[] | undefined> = computed(() => {
+    console.log(messstelle.value);
+    if (
+        messstelle.value?.lng == undefined ||
+        messstelle.value?.lat == undefined
+    ) {
+        return [];
+    } else {
+        console.log(messstelle.value?.lng);
+        return [
+            messstelle.value?.lng.toString(),
+            messstelle.value?.lng.toString(),
+        ];
+    }
 });
 
 function loadMessstelle() {
-
+    messstelle.value = MessstelleService.getMessstelleById("testid");
 }
 </script>
 
@@ -44,16 +69,12 @@ function loadMessstelle() {
                     class="d-flex flex-column"
                 >
                     <!-- Basisinformation zur Zählstelle -->
-                    <zaehlstelle-info
-                        :height="headerHeightVh"
-                        :minheight="headerHeightVh"
-                        :nummer="zaehlstelle.nummer"
-                        :kreuzungsname="kreuzungsname"
-                        :stadtbezirk-nummer="`${zaehlstelle.stadtbezirkNummer}`"
-                        :stadtbezirk="zaehlstelle.stadtbezirk"
-                        :style="{ cursor: 'pointer' }"
-                        @edit-zaehlstelle="editZaehlstelle"
-                    ></zaehlstelle-info>
+                    <MessstelleInfo
+                        :id="messstelleId"
+                        :stadtbezirk-nummer="3"
+                        name="name"
+                    >
+                    </MessstelleInfo>
                 </v-sheet>
             </v-col>
             <v-col cols="9">
