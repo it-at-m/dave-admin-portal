@@ -1,6 +1,7 @@
 import BaseEntity from "@/domain/BaseEntity";
 
 export default interface MessstelleDTO extends BaseEntity {
+    mstId: string;
     name: string;
     stadtbezirkNummer: number;
     lat: number;
