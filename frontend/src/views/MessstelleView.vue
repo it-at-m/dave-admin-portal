@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
-import { computed, ComputedRef, Ref, WritableComputedRef } from "vue";
+import { computed, ComputedRef, ref, Ref } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
 import MessstelleDTO from "@/domain/dto/MessstelleDTO";
-import { ref } from "@vue/reactivity";
 import { useRoute } from "vue-router/composables";
 import MessstelleInfo from "@/components/MessstelleInfo.vue";
 import { useVuetify } from "@/util/useVuetify";
@@ -34,24 +33,25 @@ const messstelleId: ComputedRef<string> = computed(() => {
     return messstelleId;
 });
 
-const latlng: ComputedRef<string[] | undefined> = computed(() => {
-    console.log(messstelle.value);
+const latlng: ComputedRef<string[]> = computed(() => {
     if (
-        messstelle.value?.lng == undefined ||
-        messstelle.value?.lat == undefined
+        messstelle.value == null ||
+        messstelle.value.lng == undefined ||
+        messstelle.value.lat == undefined
     ) {
         return [];
     } else {
-        console.log(messstelle.value?.lng);
         return [
-            messstelle.value?.lng.toString(),
-            messstelle.value?.lng.toString(),
+            messstelle.value.lat.toString(),
+            messstelle.value.lng.toString(),
         ];
     }
 });
 
 function loadMessstelle() {
-    messstelle.value = MessstelleService.getMessstelleById("testid");
+    const route = useRoute();
+    const messstelleId = route.params.messstelleId;
+    messstelle.value = MessstelleService.getMessstelleById(messstelleId);
 }
 </script>
 
@@ -70,9 +70,12 @@ function loadMessstelle() {
                 >
                     <!-- Basisinformation zur Zählstelle -->
                     <MessstelleInfo
-                        :id="messstelleId"
-                        :stadtbezirk-nummer="3"
-                        name="name"
+                        v-if="messstelle"
+                        :id="messstelle.mstId"
+                        :stadtbezirk-nummer="messstelle.stadtbezirkNummer"
+                        :name="messstelle.name"
+                        :height="headerHeightVh"
+                        :minheight="headerHeightVh"
                     >
                     </MessstelleInfo>
                 </v-sheet>
@@ -80,8 +83,8 @@ function loadMessstelle() {
             <v-col cols="9">
                 <zaehlstelle-map
                     :z-id="messstelleId"
-                    :latlng="latlng"
                     :zoom="17"
+                    :latlng="latlng"
                     :height="headerHeightVh"
                     :minheight="headerHeightVh"
                     show-marker="true"
