@@ -417,6 +417,10 @@ export default class ZaehlstelleMap extends Vue {
                 offset: [0, -35],
             }
         );
+        marker.on("click", () => {
+            // Zeige alle Zaehlungen zur Zaehlstelle an.
+            this.routeToMessstelle("testid");
+        });
         return marker;
     }
 
@@ -603,6 +607,10 @@ export default class ZaehlstelleMap extends Vue {
 
     private routeToZaehlstelle(id: string) {
         this.$router.push("/zaehlstelle/" + id);
+    }
+
+    private routeToMessstelle(id: string) {
+        this.$router.push("/messstelle/" + id);
     }
 
     mapReady() {
