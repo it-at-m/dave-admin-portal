@@ -408,18 +408,11 @@ export default class ZaehlstelleMap extends Vue {
             this.createLatLng(messstelleKarteDto),
             this.markerOptionsMessstelle(messstelleKarteDto)
         );
-        const icon = L.divIcon({
-            html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ee82ee"><title>cards-diamond</title><path  d="M19,12L12,22L5,12L12,2" /></svg>',
-            iconSize: [40, 40], // size of the icon
-            iconAnchor: [20, 40],
-            className: "leaflet-custom-div-icon",
-        });
-        marker.setIcon(icon);
         marker.bindTooltip(
             this.createTooltipMessstelle(messstelleKarteDto.tooltip),
             {
                 direction: "top",
-                offset: [0, -35],
+                offset: [-14, 0],
             }
         );
         marker.on("click", () => {
