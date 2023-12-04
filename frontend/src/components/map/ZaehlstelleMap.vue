@@ -419,7 +419,7 @@ export default class ZaehlstelleMap extends Vue {
         );
         marker.on("click", () => {
             // Zeige alle Zaehlungen zur Zaehlstelle an.
-            this.routeToMessstelle("testid");
+            this.routeToMessstelle(messstelleKarteDto.id);
         });
         return marker;
     }
