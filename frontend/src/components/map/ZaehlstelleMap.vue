@@ -462,12 +462,12 @@ export default class ZaehlstelleMap extends Vue {
     private createTooltipMessstelle(tooltipDto: TooltipMessstelleDTO): string {
         let tooltip = "<div><b>";
         if (tooltipDto.mstId) {
-            tooltip = `${tooltip}MST_ID: ${tooltipDto.mstId}</b><br/>`;
+            tooltip = `${tooltip}Messstelle: ${tooltipDto.mstId}</b><br/>`;
         }
-        tooltip = `${tooltip}<br/>`;
         if (tooltipDto.standortDatenportal) {
             tooltip = `${tooltip}Standort Datenportal: ${tooltipDto.standortDatenportal}<br/>`;
         }
+        tooltip = `${tooltip}<br/>`;
         if (tooltipDto.stadtbezirk) {
             tooltip = `${tooltip}Stadtbezirk: ${tooltipDto.stadtbezirk}<br/>`;
         }
@@ -478,8 +478,7 @@ export default class ZaehlstelleMap extends Vue {
             tooltip = `${tooltip}Abbau: ${tooltipDto.abbaudatum}<br/>`;
         }
         if (tooltipDto.kfz) {
-            const yesNo = tooltipDto.kfz ? "ja" : "nein";
-            tooltip = `${tooltip}KFZ: ${yesNo}</b><br/>`;
+            tooltip = `${tooltip}KFZ</b><br/>`;
         }
         if (tooltipDto.datumLetzteMessung) {
             tooltip = `${tooltip}Letzter Messtag: ${tooltipDto.datumLetzteMessung}<br/>`;
