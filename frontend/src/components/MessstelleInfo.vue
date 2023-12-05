@@ -1,15 +1,3 @@
-<script setup lang="ts">
-interface Props {
-    name: string;
-    id: string;
-    stadtbezirkNummer: number;
-    height: string;
-    minheight: string;
-}
-
-const props = defineProps<Props>();
-</script>
-
 <template>
     <v-sheet
         width="100%"
@@ -27,7 +15,15 @@ const props = defineProps<Props>();
         >
     </v-sheet>
 </template>
+<script setup lang="ts">
+interface Props {
+    name: string;
+    id: string;
+    stadtbezirkNummer: number;
+    height: string;
+    minheight: string;
+}
 
-<style scoped>
+const props = defineProps<Props>();
+</script>
 
-</style>

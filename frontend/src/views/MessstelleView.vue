@@ -1,3 +1,43 @@
+<template>
+    <v-container
+        fluid
+        class="pa-0"
+    >
+        <v-row no-gutters>
+            <v-col cols="3">
+                <v-sheet
+                    :min-height="headerHeightVh"
+                    width="100%"
+                    color="grey lighten-3"
+                    class="d-flex flex-column"
+                >
+                    <!-- Basisinformation zur Messstelle -->
+                    <MessstelleInfo
+                        v-if="messstelle"
+                        :id="messstelle.mstId"
+                        :stadtbezirk-nummer="messstelle.stadtbezirkNummer"
+                        :name="messstelle.name"
+                        :height="headerHeightVh"
+                        :minheight="headerHeightVh"
+                    >
+                    </MessstelleInfo>
+                </v-sheet>
+            </v-col>
+            <v-col cols="9">
+                <zaehlstelle-map
+                    :z-id="messstelleId"
+                    :zoom="17"
+                    :latlng="latlng"
+                    :height="headerHeightVh"
+                    :minheight="headerHeightVh"
+                    show-marker="true"
+                    :reload="reloadMessstelle"
+                    width="100%"
+                />
+            </v-col>
+        </v-row>
+    </v-container>
+</template>
 <script setup lang="ts">
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
 import { computed, ComputedRef, ref, Ref } from "vue";
@@ -54,48 +94,3 @@ function loadMessstelle() {
     messstelle.value = MessstelleService.getMessstelleById(messstelleId);
 }
 </script>
-
-<template>
-    <v-container
-        fluid
-        class="pa-0"
-    >
-        <v-row no-gutters>
-            <v-col cols="3">
-                <v-sheet
-                    :min-height="headerHeightVh"
-                    width="100%"
-                    color="grey lighten-3"
-                    class="d-flex flex-column"
-                >
-                    <!-- Basisinformation zur Messstelle -->
-                    <MessstelleInfo
-                        v-if="messstelle"
-                        :id="messstelle.mstId"
-                        :stadtbezirk-nummer="messstelle.stadtbezirkNummer"
-                        :name="messstelle.name"
-                        :height="headerHeightVh"
-                        :minheight="headerHeightVh"
-                    >
-                    </MessstelleInfo>
-                </v-sheet>
-            </v-col>
-            <v-col cols="9">
-                <zaehlstelle-map
-                    :z-id="messstelleId"
-                    :zoom="17"
-                    :latlng="latlng"
-                    :height="headerHeightVh"
-                    :minheight="headerHeightVh"
-                    show-marker="true"
-                    :reload="reloadMessstelle"
-                    width="100%"
-                />
-            </v-col>
-        </v-row>
-    </v-container>
-</template>
-
-<style scoped>
-
-</style>
