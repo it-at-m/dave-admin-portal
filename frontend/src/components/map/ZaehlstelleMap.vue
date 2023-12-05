@@ -622,7 +622,7 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     private routeToZaehlstelle(id: string) {
-        this.$router.push("/zaehlstelle/" + id);
+        this.$router.push(`/zaehlstelle/${id}`);
     }
 
     private routeToMessstelle(id: string) {
