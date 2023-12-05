@@ -26,8 +26,8 @@ export default class SucheService {
         const mstOne: MessstelleKarteDTO = {
             type: "messstelle",
             id: "randomID",
-            latitude: 48.1887727,
-            longitude: 11.4303655,
+            latitude: 48.1887227,
+            longitude: 11.4290655,
             tooltip: {
                 mstId: "MSTID1",
                 standortDatenportal: "StandortDatenportal1",
