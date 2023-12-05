@@ -465,7 +465,7 @@ export default class ZaehlstelleMap extends Vue {
             tooltip = `${tooltip}Messstelle: ${tooltipDto.mstId}</b><br/>`;
         }
         if (tooltipDto.standortDatenportal) {
-            tooltip = `${tooltip}Standort Datenportal: ${tooltipDto.standortDatenportal}<br/>`;
+            tooltip = `${tooltip}${tooltipDto.standortDatenportal}<br/>`;
         }
         tooltip = `${tooltip}<br/>`;
         if (tooltipDto.stadtbezirk) {
