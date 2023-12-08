@@ -21,8 +21,8 @@ export default class DefaultObjectCreator {
             nummer: "",
             letzteZaehlungId: "",
             tooltip: {} as TooltipDTO,
-            latitude: "",
-            longitude: "",
+            latitude: 0,
+            longitude: 0,
         };
     }
 

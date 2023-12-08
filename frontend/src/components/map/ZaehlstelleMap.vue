@@ -22,7 +22,7 @@
                 layers="gsm:g_stadtkarte_gesamt"
                 :visible="true"
                 name="Stadtkarte"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
+                :attribution="mapAttribution"
                 layer-type="base"
             />
             <!--      Luftbild Geoportal -->
@@ -31,7 +31,7 @@
                 layers="gsm:g_luftbild"
                 :visible="false"
                 name="Luftbild"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
+                :attribution="mapAttribution"
                 layer-type="base"
             />
             <!--      OpenStreetMap -->
@@ -51,13 +51,13 @@
                 :transparent="true"
                 format="image/png"
                 name="Stadtbezirke"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
+                :attribution="mapAttribution"
                 layer-type="overlay"
             />
             <l-wms-tile-layer
                 :transparent="true"
                 :visible="false"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
+                :attribution="mapAttribution"
                 base-url="https://geoportal.muenchen.de/geoserver/gsm/wms?"
                 format="image/png"
                 layer-type="overlay"
@@ -173,6 +173,12 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 import TooltipDTO from "@/domain/dto/TooltipDTO";
 import markerIconRed from "@/assets/marker-icon-red.png";
+import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
+import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
+import TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
+import AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
+import MessstelleKarteDTO from "@/domain/dto/MessstelleKarteDTO";
+import markerIconRed from "@/assets/marker-icon-red.png";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -234,6 +240,9 @@ export default class ZaehlstelleMap extends Vue {
     @Ref("sheet") readonly sheet!: HTMLDivElement;
     private base64 = "base64";
 
+    readonly mapAttribution =
+        '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
+
     /**
      * Optionen fuer die Darstellung der Karte
      */
@@ -252,7 +261,7 @@ export default class ZaehlstelleMap extends Vue {
         this.searchZaehlstelle();
     }
 
-    get getZaehlstellenKarteFromStore(): ZaehlstelleKarteDTO[] {
+    get getZaehlstellenKarteFromStore(): AnzeigeKarteDTO[] {
         return this.$store.getters["search/result"];
     }
 
@@ -311,6 +320,8 @@ export default class ZaehlstelleMap extends Vue {
             this.$store.getters["search/lastSearchQuery"]
         )
             .then((result) => {
+                // fügt testdaten für Messstellen hinzu, muss später entfernt werden sobald der richtige Service verfügbar ist
+                result.push(...SucheService.getMockMessstelleKarte());
                 this.$store.commit("search/result", result);
             })
             .catch((error) => {
@@ -332,11 +343,23 @@ export default class ZaehlstelleMap extends Vue {
             chunkedLoading: true,
         });
 
-        const zaehlstellenKarte: ZaehlstelleKarteDTO[] =
+        const zaehlstellenKarte: AnzeigeKarteDTO[] =
             this.getZaehlstellenKarteFromStore;
         const markers: Array<Marker> = [];
-        zaehlstellenKarte.forEach((zaehlstelleKarte) => {
-            markers.push(this.createMarkerForZaehlstelle(zaehlstelleKarte));
+        zaehlstellenKarte.forEach((anzeigeKarte) => {
+            if (anzeigeKarte.type != "messstelle") {
+                markers.push(
+                    this.createMarkerForZaehlstelle(
+                        anzeigeKarte as ZaehlstelleKarteDTO
+                    )
+                );
+            } else {
+                markers.push(
+                    this.createMarkerForMessstelle(
+                        anzeigeKarte as MessstelleKarteDTO
+                    )
+                );
+            }
         });
         this.mapMarkerClusterGroup.addLayers(markers);
         this.theMap.mapObject.addLayer(this.mapMarkerClusterGroup);
@@ -375,6 +398,27 @@ export default class ZaehlstelleMap extends Vue {
         marker.on("click", () => {
             // Zeige alle Zaehlungen zur Zaehlstelle an.
             this.routeToZaehlstelle(zaehlstelleKarte.id);
+        });
+        return marker;
+    }
+
+    private createMarkerForMessstelle(
+        messstelleKarteDto: MessstelleKarteDTO
+    ): Marker {
+        let marker: Marker = new Marker(
+            this.createLatLng(messstelleKarteDto),
+            this.markerOptionsMessstelle(messstelleKarteDto)
+        );
+        marker.bindTooltip(
+            this.createTooltipMessstelle(messstelleKarteDto.tooltip),
+            {
+                direction: "top",
+                offset: [-14, 0],
+            }
+        );
+        marker.on("click", () => {
+            // Zeige alle Zaehlungen zur Zaehlstelle an.
+            this.routeToMessstelle(messstelleKarteDto.id);
         });
         return marker;
     }
@@ -422,6 +466,36 @@ export default class ZaehlstelleMap extends Vue {
         return tooltip;
     }
 
+    private createTooltipMessstelle(tooltipDto: TooltipMessstelleDTO): string {
+        let tooltip = "<div><b>";
+        if (tooltipDto.mstId) {
+            tooltip = `${tooltip}MST_ID: ${tooltipDto.mstId}</b><br/>`;
+        }
+        tooltip = `${tooltip}<br/>`;
+        if (tooltipDto.standortDatenportal) {
+            tooltip = `${tooltip}Standort Datenportal: ${tooltipDto.standortDatenportal}<br/>`;
+        }
+        if (tooltipDto.stadtbezirk) {
+            tooltip = `${tooltip}Stadtbezirk: ${tooltipDto.stadtbezirk}<br/>`;
+        }
+        if (tooltipDto.realisierungsdatum) {
+            tooltip = `${tooltip} Aufbau: ${tooltipDto.realisierungsdatum}<br/>`;
+        }
+        if (tooltipDto.abbaudatum) {
+            tooltip = `${tooltip}Abbau: ${tooltipDto.abbaudatum}<br/>`;
+        }
+        if (tooltipDto.kfz) {
+            const yesNo = tooltipDto.kfz ? "ja" : "nein";
+            tooltip = `${tooltip}KFZ: ${yesNo}</b><br/>`;
+        }
+        if (tooltipDto.datumLetzteMessung) {
+            tooltip = `${tooltip}Letzter Messtag: ${tooltipDto.datumLetzteMessung}<br/>`;
+        }
+
+        tooltip = `${tooltip}</div>`;
+        return tooltip;
+    }
+
     /**
      * Setzt die Optionen bezüglich verwendetes Icon für den Zaehlstellenmarker.
      */
@@ -439,12 +513,27 @@ export default class ZaehlstelleMap extends Vue {
         }
     }
 
+    /**
+     * Setzt die Optionen bezüglich verwendetes Icon für den Messstellenmarker.
+     */
+    private markerOptionsMessstelle(messstelleKarte: MessstelleKarteDTO) {
+        let defaultIcon = new Icon.Default();
+        defaultIcon.options.iconUrl = markerIconDiamondViolet;
+        if (this.zId) {
+            if (this.zId === messstelleKarte.id) {
+                defaultIcon.options.iconUrl = markerIconDiamondRed;
+                return { opacity: 1.0, icon: defaultIcon };
+            } else {
+                return { opacity: 0.5, icon: defaultIcon };
+            }
+        } else {
+            return { opacity: 1.0, icon: defaultIcon };
+        }
+    }
+
     // Extrahiert aus der Zaehlstelle die Koordinaten
-    private createLatLng(zaehlstelleKarte: ZaehlstelleKarteDTO): LatLng {
-        return this.createLatLngFromString(
-            zaehlstelleKarte.latitude,
-            zaehlstelleKarte.longitude
-        );
+    private createLatLng(anzeigeKarte: AnzeigeKarteDTO): LatLng {
+        return latLng(anzeigeKarte.latitude, anzeigeKarte.longitude);
     }
 
     // Erzeugt aus den String Koordinaten ein Objekt von Typ LatLng
@@ -534,7 +623,11 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     private routeToZaehlstelle(id: string) {
-        this.$router.push("/zaehlstelle/" + id);
+        this.$router.push(`/zaehlstelle/${id}`);
+    }
+
+    private routeToMessstelle(id: string) {
+        this.$router.push(`/messstelle/${id}`);
     }
 
     mapReady() {
