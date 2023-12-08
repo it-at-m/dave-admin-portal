@@ -57,7 +57,7 @@ export default class SucheService {
 
         const mstthree: MessstelleKarteDTO = {
             type: "messstelle",
-            id: "randomID",
+            id: "randomID3",
             latitude: 48.1315995,
             longitude: 11.6217731,
             tooltip: {
