@@ -649,11 +649,12 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     private routeToZaehlstelle(id: string) {
-      this.saveMapPositionInUrl();
+        this.saveMapPositionInUrl();
         this.$router.push(`/zaehlstelle/${id}`);
     }
 
     private routeToMessstelle(id: string) {
+        this.saveMapPositionInUrl();
         this.$router.push(`/messstelle/${id}`);
     }
 
