@@ -4,10 +4,9 @@
         :width="width"
         :min-height="minheight"
     >
-        <!-- todo: warum steht hier zoom und nicht wie im datenportal center? -->
         <l-map
             ref="map"
-            :zoom="zoom"
+            :center="center"
             :options="mapOptions"
             :style="{ zIndex: 1, cursor: customCursor }"
             @mouseup="mouseUp"
