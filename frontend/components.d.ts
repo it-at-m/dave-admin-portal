@@ -36,6 +36,7 @@ declare module '@vue/runtime-core' {
     KnotenLageForm: typeof import('./src/components/zaehlung/form/KnotenLageForm.vue')['default']
     KontaktForm: typeof import('./src/components/zaehlung/form/KontaktForm.vue')['default']
     LhmTextField: typeof import('./src/components/common/LhmTextField.vue')['default']
+    MessstelleInfo: typeof import('./src/components/MessstelleInfo.vue')['default']
     MiniMap: typeof import('./src/components/map/MiniMap.vue')['default']
     OpenZaehlungPanel: typeof import('./src/components/zaehlung/OpenZaehlungPanel.vue')['default']
     QuelleIcon: typeof import('./src/components/icons/QuelleIcon.vue')['default']

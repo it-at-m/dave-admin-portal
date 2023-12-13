@@ -16,7 +16,6 @@
                         v-if="messstelle"
                         :id="messstelle.mstId"
                         :stadtbezirk-nummer="messstelle.stadtbezirkNummer"
-                        :name="messstelle.name"
                         :height="headerHeightVh"
                         :minheight="headerHeightVh"
                     >
