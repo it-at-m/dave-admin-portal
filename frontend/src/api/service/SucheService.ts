@@ -1,7 +1,5 @@
 import FetchService from "@/api/service/FetchService";
 import SucheComplexSuggestsDTO from "@/domain/dto/suche/SucheComplexSuggestsDTO";
-import ZaehlstelleKarteDTO from "@/domain/dto/ZaehlstelleKarteDTO";
-import MessstelleKarteDTO from "@/domain/dto/MessstelleKarteDTO";
 import AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
 
 export default class SucheService {

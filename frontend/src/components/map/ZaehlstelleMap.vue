@@ -261,11 +261,7 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     get getErhebungsstellenKarteFromStore(): AnzeigeKarteDTO[] {
-        let res = this.$store.getters["search/result"];
-        // console.log(
-        //     "getErhebungsstellenKarteFromStore: " + JSON.stringify(res)
-        // );
-        return res;
+        return this.$store.getters["search/result"];
     }
 
     get showSpeedDial(): boolean {
