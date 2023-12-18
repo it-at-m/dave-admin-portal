@@ -270,13 +270,13 @@ export default class ZaehlstelleMap extends Vue {
 
     get zoomValue() {
         const zoom = this.$router.currentRoute.query.zoom;
+
         if (zoom != undefined) {
             return parseFloat(zoom.toString());
         } else {
             return this.zoom;
         }
     }
-
     /**
      * Die Methode setzt Koordinate auf welche Zentriert werden soll.
      */
