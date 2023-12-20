@@ -13,9 +13,6 @@ export default {
         },
     },
     mutations: {
-        addResult(state: any, payload: number[]) {
-            state.result.push(payload);
-        },
         result(state: any, payload: number[]) {
             state.result = payload;
         },

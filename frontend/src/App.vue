@@ -101,6 +101,7 @@
                     ...)<br />
                     * Straßen- / Platzname (Rosenheimerplatz, Dachauer Straße,
                     ...)<br />
+                    * Messstellennummer / -name (4203,...)<br />
                     <!--            Es fehlt noch: Wetter, Schulzeit, (erweiterte) Zählsituation-->
                 </span>
             </v-tooltip>
@@ -417,7 +418,6 @@ export default class App extends Vue {
     }
 
     private search() {
-        // console.log("search");
         if (this.searchQuery == null) {
             this.searchQuery = "";
         }
@@ -435,7 +435,6 @@ export default class App extends Vue {
 
         SucheService.searchErhebungsstelle(this.searchQuery)
             .then((result) => {
-                // console.log("result: ", result);
                 this.$store.commit("search/result", result);
             })
             .catch((error) => {

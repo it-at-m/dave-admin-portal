@@ -307,7 +307,6 @@ export default class ZaehlstelleMap extends Vue {
 
     @Watch("$store.state.search.result")
     private resetMarker() {
-        // console.log("resetMarker");
         // Alte Layer entfernen bevor neue eingezeichnet werden
         this.theMap.mapObject.removeLayer(this.mapMarkerClusterGroup);
         this.deleteNewMarker();
@@ -316,12 +315,10 @@ export default class ZaehlstelleMap extends Vue {
 
     @Watch("reload")
     private searchErhebungsstelle() {
-        // console.log("reload:searchErhebungsstelle");
         SucheService.searchErhebungsstelle(
             this.$store.getters["search/lastSearchQuery"]
         )
             .then((result) => {
-                // console.log("searchErhebungsstelle: " + JSON.stringify(result));
                 this.$store.commit("search/result", result);
             })
             .catch((error) => {
@@ -348,7 +345,6 @@ export default class ZaehlstelleMap extends Vue {
         const markers: Array<Marker> = [];
         zaehlstellenKarte.forEach((anzeigeKarte) => {
             if (anzeigeKarte.type == "zaehlstelle") {
-                // console.log("type: " + anzeigeKarte.type);
                 markers.push(
                     this.createMarkerForZaehlstelle(
                         anzeigeKarte as ZaehlstelleKarteDTO
@@ -387,9 +383,6 @@ export default class ZaehlstelleMap extends Vue {
     private createMarkerForZaehlstelle(
         zaehlstelleKarte: ZaehlstelleKarteDTO
     ): Marker {
-        // console.log(
-        //     "createMarkerForZaehlstelle: " + JSON.stringify(zaehlstelleKarte)
-        // );
         let marker: Marker = new Marker(
             this.createLatLng(zaehlstelleKarte),
             this.markerOptionsZaehlstelle(zaehlstelleKarte)
@@ -424,7 +417,6 @@ export default class ZaehlstelleMap extends Vue {
             }
         );
         marker.on("click", () => {
-            // console.log("click: " + messstelleKarteDto.id);
             this.routeToMessstelle(messstelleKarteDto.id);
         });
         return marker;
@@ -443,7 +435,6 @@ export default class ZaehlstelleMap extends Vue {
     private createTooltipZaehlstelle(
         tooltipDto: TooltipZaehlstelleDTO
     ): string {
-        // console.log("createTooltipZaehlstelle: " + JSON.stringify(tooltipDto));
         let tooltip = "<div><b>";
         if (tooltipDto.zaehlstellennnummer) {
             tooltip = `${tooltip}Zählstelle: ${tooltipDto.zaehlstellennnummer}</b><br/>`;
@@ -477,7 +468,6 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     private createTooltipMessstelle(tooltipDto: TooltipMessstelleDTO): string {
-        // console.log("createTooltipMessstelle: " + JSON.stringify(tooltipDto));
         if (!tooltipDto) {
             return "<div></div>";
         }
