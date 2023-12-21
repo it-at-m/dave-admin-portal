@@ -431,8 +431,6 @@ export default class App extends Vue {
             this.$router.push(`/`);
         }
 
-        // TODO: reset store::search/result?
-
         SucheService.searchErhebungsstelle(this.searchQuery)
             .then((result) => {
                 this.$store.commit("search/result", result);

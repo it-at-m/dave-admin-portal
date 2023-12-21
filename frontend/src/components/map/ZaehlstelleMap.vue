@@ -435,6 +435,9 @@ export default class ZaehlstelleMap extends Vue {
     private createTooltipZaehlstelle(
         tooltipDto: TooltipZaehlstelleDTO
     ): string {
+        if (!tooltipDto) {
+            return "<div></div>";
+        }
         let tooltip = "<div><b>";
         if (tooltipDto.zaehlstellennnummer) {
             tooltip = `${tooltip}Zählstelle: ${tooltipDto.zaehlstellennnummer}</b><br/>`;

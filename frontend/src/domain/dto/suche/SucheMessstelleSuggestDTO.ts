@@ -1,4 +1,4 @@
-export default interface SucheZaehlstelleSuggestDTO {
+export default interface SucheMessstelleSuggestDTO {
     id: string;
     text: string;
 }
