@@ -7,17 +7,15 @@
         :height="props.height"
     >
         <span class="text-caption">Messstelle</span><br />
-        <span class="text-h5">{{ props.name }}</span
+        <span class="text-h5">{{ props.id }}</span
         ><br /><br />
-        <div class="text-caption text-truncate">{{ props.id }}</div>
         <span class="text-caption"
-            >Stadtbezirksnummer {{ props.stadtbezirkNummer }}</span
+            >Stadtbezirk {{ props.stadtbezirkNummer }}</span
         >
     </v-sheet>
 </template>
 <script setup lang="ts">
 interface Props {
-    name: string;
     id: string;
     stadtbezirkNummer: number;
     height: string;

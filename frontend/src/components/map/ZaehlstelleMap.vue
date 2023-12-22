@@ -6,7 +6,7 @@
     >
         <l-map
             ref="map"
-            :zoom="zoom"
+            :center="center"
             :options="mapOptions"
             :style="{ zIndex: 1, cursor: customCursor }"
             @mouseup="mouseUp"
@@ -268,11 +268,25 @@ export default class ZaehlstelleMap extends Vue {
         return !(this.latlng !== undefined && this.latlng.length === 2);
     }
 
+    get zoomValue() {
+        const zoom = this.$router.currentRoute.query.zoom;
+
+        if (zoom != undefined) {
+            return parseFloat(zoom.toString());
+        } else {
+            return this.zoom;
+        }
+    }
     /**
      * Die Methode setzt Koordinate auf welche Zentriert werden soll.
      */
     get center(): LatLng {
-        if (this.latlng && this.latlng.length == 2) {
+        const lat = this.$router.currentRoute.query.lat;
+        const lng = this.$router.currentRoute.query.lng;
+
+        if (lat != undefined && lng != undefined) {
+            return this.createLatLngFromString(lat.toString(), lng.toString());
+        } else if (this.latlng && this.latlng.length == 2) {
             return this.createLatLngFromString(this.latlng[0], this.latlng[1]);
         } else {
             // Mitte von München
@@ -375,7 +389,7 @@ export default class ZaehlstelleMap extends Vue {
                 18
             );
         } else if (this.zId == null) {
-            this.theMap.mapObject.setView(this.center, 12);
+            this.theMap.mapObject.setView(this.center, this.zoomValue);
         } else {
             this.theMap.mapObject.setView(this.center, 18);
         }
@@ -468,12 +482,12 @@ export default class ZaehlstelleMap extends Vue {
     private createTooltipMessstelle(tooltipDto: TooltipMessstelleDTO): string {
         let tooltip = "<div><b>";
         if (tooltipDto.mstId) {
-            tooltip = `${tooltip}MST_ID: ${tooltipDto.mstId}</b><br/>`;
+            tooltip = `${tooltip}Messstelle: ${tooltipDto.mstId}</b><br/>`;
+        }
+        if (tooltipDto.standortDatenportal) {
+            tooltip = `${tooltip}${tooltipDto.standortDatenportal}<br/>`;
         }
         tooltip = `${tooltip}<br/>`;
-        if (tooltipDto.standortDatenportal) {
-            tooltip = `${tooltip}Standort Datenportal: ${tooltipDto.standortDatenportal}<br/>`;
-        }
         if (tooltipDto.stadtbezirk) {
             tooltip = `${tooltip}Stadtbezirk: ${tooltipDto.stadtbezirk}<br/>`;
         }
@@ -484,8 +498,7 @@ export default class ZaehlstelleMap extends Vue {
             tooltip = `${tooltip}Abbau: ${tooltipDto.abbaudatum}<br/>`;
         }
         if (tooltipDto.kfz) {
-            const yesNo = tooltipDto.kfz ? "ja" : "nein";
-            tooltip = `${tooltip}KFZ: ${yesNo}</b><br/>`;
+            tooltip = `${tooltip}KFZ</b><br/>`;
         }
         if (tooltipDto.datumLetzteMessung) {
             tooltip = `${tooltip}Letzter Messtag: ${tooltipDto.datumLetzteMessung}<br/>`;
@@ -621,11 +634,25 @@ export default class ZaehlstelleMap extends Vue {
         this.showCreateZaehlstelleDialog = false;
     }
 
+    private saveMapPositionInUrl() {
+        const map = this.theMap.mapObject;
+        const mapCenter = map.getBounds().getCenter();
+        const lat = mapCenter.lat.toString();
+        const lng = mapCenter.lng.toString();
+        const zoom = map.getZoom().toString();
+        this.$router.replace({
+            path: this.$router.currentRoute.path,
+            query: { lat: lat, lng: lng, zoom: zoom },
+        });
+    }
+
     private routeToZaehlstelle(id: string) {
+        this.saveMapPositionInUrl();
         this.$router.push(`/zaehlstelle/${id}`);
     }
 
     private routeToMessstelle(id: string) {
+        this.saveMapPositionInUrl();
         this.$router.push(`/messstelle/${id}`);
     }
 
@@ -636,6 +663,7 @@ export default class ZaehlstelleMap extends Vue {
                 prefix: "",
             })
         );
+        this.theMap.mapObject.setZoom(this.zoomValue);
     }
 }
 </script>
