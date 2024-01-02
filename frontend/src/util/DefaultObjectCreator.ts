@@ -8,6 +8,7 @@ import Status from "@/domain/enums/Status";
 import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
 import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
+import MessstelleDTO from "@/domain/dto/MessstelleDTO";
 
 export default class DefaultObjectCreator {
     private static readonly MUNICH_CENTER_LATITUDE: number = 48.137227;
@@ -49,6 +50,13 @@ export default class DefaultObjectCreator {
         zaehlstelle.sichtbarDatenportal = true;
         zaehlstelle.customSuchwoerter = [];
         return zaehlstelle;
+    }
+
+    public static createDefaultMessstelleDTO(): MessstelleDTO {
+        const messstelle: MessstelleDTO = {} as MessstelleDTO;
+        messstelle.sichtbarDatenportal = true;
+        messstelle.customSuchwoerter = [];
+        return messstelle;
     }
 
     public static createDefaultHochrechnungsfaktor(): HochrechnungsfaktorDTO {

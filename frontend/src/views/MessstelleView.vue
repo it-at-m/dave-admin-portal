@@ -12,14 +12,16 @@
                     class="d-flex flex-column"
                 >
                     <!-- Basisinformation zur Messstelle -->
-                    <MessstelleInfo
-                        v-if="messstelle"
-                        :id="messstelle.mstId"
-                        :stadtbezirk-nummer="messstelle.stadtbezirkNummer"
+                    <messstelle-info
                         :height="headerHeightVh"
                         :minheight="headerHeightVh"
+                        :mst-id="messstelle.mstId"
+                        :stadtbezirk-nummer="messstelle.stadtbezirkNummer"
+                        :stadtbezirk="messstelle.stadtbezirk"
+                        :style="{ cursor: 'pointer' }"
+                        @edit-messstelle="editMessstelle"
                     >
-                    </MessstelleInfo>
+                    </messstelle-info>
                 </v-sheet>
             </v-col>
             <v-col cols="9">
@@ -30,11 +32,18 @@
                     :height="headerHeightVh"
                     :minheight="headerHeightVh"
                     show-marker="true"
-                    :reload="reloadMessstelle"
+                    :reload="reloadMessstelleMap"
                     width="100%"
                 />
             </v-col>
         </v-row>
+
+        <update-messstelle-dialog
+            v-model="showUpdateMessstelleDialog"
+            :messstelle="messstelle"
+            @saved="reloadDataAndCloseDialog"
+            @cancel="cancelUpdateMessstelleDialog"
+        />
     </v-container>
 </template>
 <script setup lang="ts">
@@ -43,11 +52,16 @@ import { computed, ComputedRef, ref, Ref } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
 import MessstelleDTO from "@/domain/dto/MessstelleDTO";
 import { useRoute } from "vue-router/composables";
-import MessstelleInfo from "@/components/MessstelleInfo.vue";
+import MessstelleInfo from "@/components/messstelle/MessstelleInfo.vue";
 import { useVuetify } from "@/util/useVuetify";
+import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import UpdateMessstelleDialog from "@/components/messstelle/UpdateMessstelleDialog.vue";
 
-const reloadMessstelle = false;
-const messstelle: Ref<null | MessstelleDTO> = ref(null);
+const reloadMessstelleMap: Ref<boolean> = ref(false);
+const showUpdateMessstelleDialog: Ref<boolean> = ref(false);
+const messstelle: Ref<MessstelleDTO> = ref(
+    DefaultObjectCreator.createDefaultMessstelleDTO()
+);
 const vuetify = useVuetify();
 
 // eslint-disable-next-line no-undef
@@ -74,22 +88,38 @@ const messstelleId: ComputedRef<string> = computed(() => {
 
 const latlng: ComputedRef<string[]> = computed(() => {
     if (
-        messstelle.value == null ||
-        messstelle.value.lng == undefined ||
-        messstelle.value.lat == undefined
+        messstelle.value.longitude == undefined ||
+        messstelle.value.latitude == undefined
     ) {
         return [];
     } else {
         return [
-            messstelle.value.lat.toString(),
-            messstelle.value.lng.toString(),
+            messstelle.value.latitude.toString(),
+            messstelle.value.longitude.toString(),
         ];
     }
 });
 
-function loadMessstelle() {
+function loadMessstelle(): void {
     const route = useRoute();
     const messstelleId = route.params.messstelleId;
-    messstelle.value = MessstelleService.getMessstelleById(messstelleId);
+    MessstelleService.getMessstelleById(messstelleId).then((messstelleById) => {
+        messstelle.value = messstelleById;
+    });
+}
+
+function editMessstelle(): void {
+    showUpdateMessstelleDialog.value = true;
+}
+
+function reloadDataAndCloseDialog() {
+    loadMessstelle();
+    reloadMessstelleMap.value = !reloadMessstelleMap.value;
+    showUpdateMessstelleDialog.value = false;
+}
+
+function cancelUpdateMessstelleDialog() {
+    showUpdateMessstelleDialog.value = false;
+    loadMessstelle();
 }
 </script>
