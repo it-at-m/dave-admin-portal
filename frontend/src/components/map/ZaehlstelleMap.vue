@@ -354,11 +354,11 @@ export default class ZaehlstelleMap extends Vue {
             chunkedLoading: true,
         });
 
-        const zaehlstellenKarte: AnzeigeKarteDTO[] =
+        const erhebungsstellenKarte: AnzeigeKarteDTO[] =
             this.getErhebungsstellenKarteFromStore;
         const markers: Array<Marker> = [];
-        zaehlstellenKarte.forEach((anzeigeKarte) => {
-            if (anzeigeKarte.type == "zaehlstelle") {
+        erhebungsstellenKarte.forEach((anzeigeKarte) => {
+            if (anzeigeKarte.type != "messstelle") {
                 markers.push(
                     this.createMarkerForZaehlstelle(
                         anzeigeKarte as ZaehlstelleKarteDTO
@@ -375,7 +375,7 @@ export default class ZaehlstelleMap extends Vue {
         this.mapMarkerClusterGroup.addLayers(markers);
         this.theMap.mapObject.addLayer(this.mapMarkerClusterGroup);
 
-        if (zaehlstellenKarte.length === 1) {
+        if (erhebungsstellenKarte.length === 1) {
             /**
              * Falls in der Main.view nach einer bestimmten Zaehlstelle gesucht
              * und diese Suche mit Druck auf die Enter-Taste eingeleitet wird,
@@ -383,7 +383,7 @@ export default class ZaehlstelleMap extends Vue {
              * Auf diese eine mit einem Icon angezeigte Zaehlstelle muss dann zentriert werden.
              */
             this.theMap.mapObject.setView(
-                this.createLatLng(zaehlstellenKarte[0]),
+                this.createLatLng(erhebungsstellenKarte[0]),
                 18
             );
         } else if (this.zId == null) {
