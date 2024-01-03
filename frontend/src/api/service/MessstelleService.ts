@@ -13,7 +13,7 @@ export default class MessstelleService {
         );
     }
 
-    static saveMessstelle(data: ZaehlstelleDTO): Promise<BackendIdDTO> {
+    static saveMessstelle(data: MessstelleDTO): Promise<BackendIdDTO> {
         return FetchService.postData(
             data,
             `${this.ENDPOINT}/save`,

@@ -1,7 +1,7 @@
 <template>
     <v-dialog
-        v-model="value"
-        persistent
+        :key="props.value"
+        v-model="visible"
         max-width="50%"
         height="600px"
     >
@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import MessstelleDTO from "@/domain/dto/MessstelleDTO";
 import UpdateMessstelleDialogForm from "@/components/messstelle/UpdateMessstelleDialogForm.vue";
-import { ref, Ref } from "vue";
+import { computed, ref, Ref } from "vue";
 
 const dialogtitle: Ref<string> = ref("Messstelle bearbeiten");
 
@@ -37,11 +37,16 @@ interface Props {
     messstelle: MessstelleDTO;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
-defineEmits<{
+const emits = defineEmits<{
     (e: "cancel"): void;
     (e: "saved"): void;
     (e: "input", v: boolean): void;
 }>();
+
+const visible = computed({
+    get: () => props.value,
+    set: (v) => emits("input", v),
+});
 </script>

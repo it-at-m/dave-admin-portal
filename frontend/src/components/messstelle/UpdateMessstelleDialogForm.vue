@@ -69,45 +69,52 @@
 import MessstelleDTO from "@/domain/dto/MessstelleDTO";
 import MessstelleForm from "@/components/messstelle/MessstelleForm.vue";
 import MessquerschnittForm from "@/components/messstelle/MessquerschnittForm.vue";
-import {computed, ComputedRef, ref, Ref} from "vue";
+import { computed, ComputedRef, ref, Ref } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
+import { ApiError } from "@/api/error";
+import { useStore } from "@/util/useStore";
 
 const SHEETHEIGHT: Ref<string> = ref("580px");
-    const activeTab: Ref<number> = ref(0);
-    const isMessstelleFormValid: Ref<boolean> = ref(false);
-    const isMessquerschnittFormValid: Ref<boolean> = ref(false);
+const activeTab: Ref<number> = ref(0);
+const isMessstelleFormValid: Ref<boolean> = ref(false);
+const isMessquerschnittFormValid: Ref<boolean> = ref(false);
 
-defineProps<{messstelle: MessstelleDTO}>();
+const store = useStore();
+
+defineProps<{ messstelle: MessstelleDTO }>();
+
+const emits = defineEmits<{
+    (e: "cancel"): void;
+    (e: "saved"): void;
+}>();
 
 const isUpdateMessstelleFormValid: ComputedRef<boolean> = computed(() => {
-  return isMessquerschnittFormValid.value && isMessstelleFormValid.value;
+    return isMessquerschnittFormValid.value && isMessstelleFormValid.value;
 });
 
 function save(): void {
-  // TODO
-  // MessstelleService.saveMessstelle(copy, this.zaehlstelle.id)
-  //     .then(() => {
-  //         this.$emit("saved");
-  //     })
-  //     .catch((error: ApiError) => {
-  //         this.$store.dispatch("snackbar/showError", error);
-  //     })
-  //     .finally(() => {
-  //         this.activeTab = 0;
-  //         this.$store.dispatch("setResetformevent", true);
-  //     });
+    // TODO Objekt senden
+    MessstelleService.saveMessstelle({} as MessstelleDTO)
+        .then(() => {
+            emits("saved");
+        })
+        .catch((error: ApiError) => {
+            store.dispatch("snackbar/showError", error);
+        })
+        .finally(() => {
+            activeTab.value = 0;
+        });
 }
 
 function cancel(): void {
-  activeTab.value = 0;
-  // this.$store.dispatch("setResetformevent", true);
-  // this.$emit("cancel");
+    activeTab.value = 0;
+    emits("cancel");
 }
 
 function setMessstelleFormValid(isPartValid: boolean): void {
-  isMessstelleFormValid.value = isPartValid;
+    isMessstelleFormValid.value = isPartValid;
 }
 function setMessquerschnittFormValid(isPartValid: boolean): void {
-  isMessquerschnittFormValid.value = isPartValid;
+    isMessquerschnittFormValid.value = isPartValid;
 }
 </script>

@@ -63,7 +63,7 @@ const messstelle: Ref<MessstelleDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleDTO()
 );
 const vuetify = useVuetify();
-
+const route = useRoute();
 // eslint-disable-next-line no-undef
 onMounted(() => {
     loadMessstelle();
@@ -101,7 +101,6 @@ const latlng: ComputedRef<string[]> = computed(() => {
 });
 
 function loadMessstelle(): void {
-    const route = useRoute();
     const messstelleId = route.params.messstelleId;
     MessstelleService.getMessstelleById(messstelleId).then((messstelleById) => {
         messstelle.value = messstelleById;
