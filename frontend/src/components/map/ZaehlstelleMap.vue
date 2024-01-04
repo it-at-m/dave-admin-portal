@@ -343,7 +343,7 @@ export default class ZaehlstelleMap extends Vue {
             });
     }
 
-    // Erzeugt für jede vorhandene Zaehlstelle einen Marker
+    // Erzeugt für jede vorhandene Zaehl-/Messstelle einen Marker
     // und fuegt diesen dem MarkerCluster hinzu
     private setMarkerToMap() {
         // Setzen einer leeren ZaehlstelleKarte ohne Marker
