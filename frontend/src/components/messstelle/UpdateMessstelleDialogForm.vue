@@ -29,6 +29,7 @@
             <!-- Inhalte -->
             <v-tab-item ref="messstelleform">
                 <messstelle-form
+                    v-model="messstelle"
                     :height="SHEETHEIGHT"
                     @isValid="setMessstelleFormValid"
                 />
@@ -69,19 +70,25 @@
 import MessstelleDTO from "@/domain/dto/MessstelleDTO";
 import MessstelleForm from "@/components/messstelle/MessstelleForm.vue";
 import MessquerschnittForm from "@/components/messstelle/MessquerschnittForm.vue";
-import { computed, ComputedRef, ref, Ref } from "vue";
+import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
 import { ApiError } from "@/api/error";
 import { useStore } from "@/util/useStore";
+import { useRoute } from "vue-router/composables";
+import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 const SHEETHEIGHT: Ref<string> = ref("580px");
 const activeTab: Ref<number> = ref(0);
 const isMessstelleFormValid: Ref<boolean> = ref(false);
 const isMessquerschnittFormValid: Ref<boolean> = ref(false);
+const messstelle: Ref<MessstelleDTO> = ref(
+    DefaultObjectCreator.createDefaultMessstelleDTO()
+);
 
 const store = useStore();
+const route = useRoute();
 
-defineProps<{ messstelle: MessstelleDTO }>();
+// defineProps<{ messstelle: MessstelleDTO }>();
 
 const emits = defineEmits<{
     (e: "cancel"): void;
@@ -90,6 +97,10 @@ const emits = defineEmits<{
 
 const isUpdateMessstelleFormValid: ComputedRef<boolean> = computed(() => {
     return isMessquerschnittFormValid.value && isMessstelleFormValid.value;
+});
+
+onMounted(() => {
+    alert("loadMessstelle()");
 });
 
 function save(): void {
@@ -108,6 +119,7 @@ function save(): void {
 
 function cancel(): void {
     activeTab.value = 0;
+    messstelle.value = DefaultObjectCreator.createDefaultMessstelleDTO();
     emits("cancel");
 }
 
@@ -116,5 +128,11 @@ function setMessstelleFormValid(isPartValid: boolean): void {
 }
 function setMessquerschnittFormValid(isPartValid: boolean): void {
     isMessquerschnittFormValid.value = isPartValid;
+}
+function loadMessstelle(): void {
+    const messstelleId = route.params.messstelleId;
+    MessstelleService.getMessstelleById(messstelleId).then((messstelleById) => {
+        messstelle.value = messstelleById;
+    });
 }
 </script>

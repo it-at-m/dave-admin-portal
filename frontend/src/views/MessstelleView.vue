@@ -102,6 +102,7 @@ const latlng: ComputedRef<string[]> = computed(() => {
 
 function loadMessstelle(): void {
     const messstelleId = route.params.messstelleId;
+    // Todo: hier nur die Daten für den Header laden
     MessstelleService.getMessstelleById(messstelleId).then((messstelleById) => {
         messstelle.value = messstelleById;
     });
