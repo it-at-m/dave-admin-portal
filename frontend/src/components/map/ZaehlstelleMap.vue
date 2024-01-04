@@ -358,16 +358,16 @@ export default class ZaehlstelleMap extends Vue {
             this.getErhebungsstellenKarteFromStore;
         const markers: Array<Marker> = [];
         erhebungsstellenKarte.forEach((anzeigeKarte) => {
-            if (anzeigeKarte.type != "messstelle") {
+            if (anzeigeKarte.type == "messstelle") {
                 markers.push(
-                    this.createMarkerForZaehlstelle(
-                        anzeigeKarte as ZaehlstelleKarteDTO
+                    this.createMarkerForMessstelle(
+                        anzeigeKarte as MessstelleKarteDTO
                     )
                 );
             } else {
                 markers.push(
-                    this.createMarkerForMessstelle(
-                        anzeigeKarte as MessstelleKarteDTO
+                    this.createMarkerForZaehlstelle(
+                        anzeigeKarte as ZaehlstelleKarteDTO
                     )
                 );
             }
