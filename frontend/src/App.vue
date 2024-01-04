@@ -66,6 +66,13 @@
                             <v-icon small>mdi-counter</v-icon>
                             {{ item.text }}
                         </v-list-item-title>
+                        <v-list-item-title
+                            v-if="item.type === suggestionTypeMessstelle"
+                            @click="showMessstelle(item)"
+                        >
+                            <v-icon small>mdi-cards-diamond</v-icon>
+                            {{ item.text }}
+                        </v-list-item-title>
                     </v-list-item-content>
                 </template>
             </v-autocomplete>
@@ -94,6 +101,7 @@
                     ...)<br />
                     * Straßen- / Platzname (Rosenheimerplatz, Dachauer Straße,
                     ...)<br />
+                    * Messstellennummer / -name (4203,...)<br />
                     <!--            Es fehlt noch: Wetter, Schulzeit, (erweiterte) Zählsituation-->
                 </span>
             </v-tooltip>
@@ -194,6 +202,7 @@ import SucheWordSuggestDTO from "@/domain/dto/suche/SucheWordSuggestDTO";
 import SucheComplexSuggestsDTO from "@/domain/dto/suche/SucheComplexSuggestsDTO";
 import SucheZaehlungSuggestDTO from "@/domain/dto/suche/SucheZaehlungSuggestDTO";
 import SucheZaehlstelleSuggestDTO from "@/domain/dto/suche/SucheZaehlstelleSuggestDTO";
+import SucheMessstelleSuggestDTO from "@/domain/dto/suche/SucheMessstelleSuggestDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 /* eslint-enable no-unused-vars */
@@ -207,6 +216,9 @@ export default class App extends Vue {
     private static readonly SUGGESTION_TYPE_ZAEHLSTELLE: string = "zaehlstelle";
 
     private static readonly SUGGESTION_TYPE_ZAEHLUNG: string = "zaehlung";
+
+    private static readonly SUGGESTION_TYPE_MESSSTELLE: string = "messstelle";
+
     private static readonly URL_HANDBUCH_LINK: string =
         "https://wilma.muenchen.de/web/senders/af10dc2a-8da5-4d24-815a-b6a9df4c686b/documents/54ddf065-d01f-4965-9bdf-c66ea47927c8";
 
@@ -254,6 +266,10 @@ export default class App extends Vue {
 
     get suggestionTypeZaehlung(): string {
         return App.SUGGESTION_TYPE_ZAEHLUNG;
+    }
+
+    get suggestionTypeMessstelle(): string {
+        return App.SUGGESTION_TYPE_MESSSTELLE;
     }
 
     // Lifecycle hook
@@ -313,6 +329,7 @@ export default class App extends Vue {
                                     word.text,
                                     this.suggestionTypeVorschlag,
                                     "",
+                                    "",
                                     ""
                                 )
                             );
@@ -326,7 +343,8 @@ export default class App extends Vue {
                                     zaehlung.text,
                                     this.suggestionTypeZaehlung,
                                     zaehlung.zaehlstelleId,
-                                    zaehlung.id
+                                    zaehlung.id,
+                                    ""
                                 )
                             );
                         }
@@ -339,7 +357,22 @@ export default class App extends Vue {
                                     zaehlstelle.text,
                                     this.suggestionTypeZaehlstelle,
                                     zaehlstelle.id,
+                                    "",
                                     ""
+                                )
+                            );
+                        }
+                    );
+
+                    suggestions.messstellenSuggests.forEach(
+                        (messstelle: SucheMessstelleSuggestDTO) => {
+                            this.suggestions.push(
+                                new Suggest(
+                                    messstelle.text,
+                                    this.suggestionTypeMessstelle,
+                                    "",
+                                    "",
+                                    messstelle.id
                                 )
                             );
                         }
@@ -390,11 +423,15 @@ export default class App extends Vue {
         }
 
         this.$store.commit("search/lastSearchQuery", this.searchQuery);
-        if (this.$route.name === "zaehlstelle" && this.searchQuery !== "") {
+        if (
+            (this.$route.name === "zaehlstelle" ||
+                this.$route.name === "messstelle") &&
+            this.searchQuery !== ""
+        ) {
             this.$router.push(`/`);
         }
 
-        SucheService.searchZaehlstelle(this.searchQuery)
+        SucheService.searchErhebungsstelle(this.searchQuery)
             .then((result) => {
                 this.$store.commit("search/result", result);
             })
@@ -420,6 +457,12 @@ export default class App extends Vue {
         this.$router.push(
             `/zaehlstelle/${item.zaehlstelleId}/${item.zaehlungId}`
         );
+    }
+
+    showMessstelle(item: Suggest) {
+        this.selectedSuggestion =
+            DefaultObjectCreator.createDefaultSuggestion();
+        this.$router.push(`/messstelle/${item.mstId}`);
     }
 
     updateSearchQuery(itemIndex: number) {
