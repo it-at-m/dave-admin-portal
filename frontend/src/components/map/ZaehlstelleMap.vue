@@ -6,7 +6,7 @@
     >
         <l-map
             ref="map"
-            :zoom="zoom"
+            :center="center"
             :options="mapOptions"
             :style="{ zIndex: 1, cursor: customCursor }"
             @mouseup="mouseUp"
@@ -268,11 +268,25 @@ export default class ZaehlstelleMap extends Vue {
         return !(this.latlng !== undefined && this.latlng.length === 2);
     }
 
+    get zoomValue() {
+        const zoom = this.$router.currentRoute.query.zoom;
+
+        if (zoom != undefined) {
+            return parseFloat(zoom.toString());
+        } else {
+            return this.zoom;
+        }
+    }
     /**
      * Die Methode setzt Koordinate auf welche Zentriert werden soll.
      */
     get center(): LatLng {
-        if (this.latlng && this.latlng.length == 2) {
+        const lat = this.$router.currentRoute.query.lat;
+        const lng = this.$router.currentRoute.query.lng;
+
+        if (lat != undefined && lng != undefined) {
+            return this.createLatLngFromString(lat.toString(), lng.toString());
+        } else if (this.latlng && this.latlng.length == 2) {
             return this.createLatLngFromString(this.latlng[0], this.latlng[1]);
         } else {
             // Mitte von München
@@ -329,7 +343,7 @@ export default class ZaehlstelleMap extends Vue {
             });
     }
 
-    // Erzeugt für jede vorhandene Zaehlstelle einen Marker
+    // Erzeugt für jede vorhandene Zaehl-/Messstelle einen Marker
     // und fuegt diesen dem MarkerCluster hinzu
     private setMarkerToMap() {
         // Setzen einer leeren ZaehlstelleKarte ohne Marker
@@ -340,20 +354,20 @@ export default class ZaehlstelleMap extends Vue {
             chunkedLoading: true,
         });
 
-        const zaehlstellenKarte: AnzeigeKarteDTO[] =
+        const erhebungsstellenKarte: AnzeigeKarteDTO[] =
             this.getErhebungsstellenKarteFromStore;
         const markers: Array<Marker> = [];
-        zaehlstellenKarte.forEach((anzeigeKarte) => {
-            if (anzeigeKarte.type == "zaehlstelle") {
+        erhebungsstellenKarte.forEach((anzeigeKarte) => {
+            if (anzeigeKarte.type == "messstelle") {
                 markers.push(
-                    this.createMarkerForZaehlstelle(
-                        anzeigeKarte as ZaehlstelleKarteDTO
+                    this.createMarkerForMessstelle(
+                        anzeigeKarte as MessstelleKarteDTO
                     )
                 );
             } else {
                 markers.push(
-                    this.createMarkerForMessstelle(
-                        anzeigeKarte as MessstelleKarteDTO
+                    this.createMarkerForZaehlstelle(
+                        anzeigeKarte as ZaehlstelleKarteDTO
                     )
                 );
             }
@@ -361,7 +375,7 @@ export default class ZaehlstelleMap extends Vue {
         this.mapMarkerClusterGroup.addLayers(markers);
         this.theMap.mapObject.addLayer(this.mapMarkerClusterGroup);
 
-        if (zaehlstellenKarte.length === 1) {
+        if (erhebungsstellenKarte.length === 1) {
             /**
              * Falls in der Main.view nach einer bestimmten Zaehlstelle gesucht
              * und diese Suche mit Druck auf die Enter-Taste eingeleitet wird,
@@ -369,11 +383,11 @@ export default class ZaehlstelleMap extends Vue {
              * Auf diese eine mit einem Icon angezeigte Zaehlstelle muss dann zentriert werden.
              */
             this.theMap.mapObject.setView(
-                this.createLatLng(zaehlstellenKarte[0]),
+                this.createLatLng(erhebungsstellenKarte[0]),
                 18
             );
         } else if (this.zId == null) {
-            this.theMap.mapObject.setView(this.center, 12);
+            this.theMap.mapObject.setView(this.center, this.zoomValue);
         } else {
             this.theMap.mapObject.setView(this.center, 18);
         }
@@ -634,11 +648,25 @@ export default class ZaehlstelleMap extends Vue {
         this.showCreateZaehlstelleDialog = false;
     }
 
+    private saveMapPositionInUrl() {
+        const map = this.theMap.mapObject;
+        const mapCenter = map.getBounds().getCenter();
+        const lat = mapCenter.lat.toString();
+        const lng = mapCenter.lng.toString();
+        const zoom = map.getZoom().toString();
+        this.$router.replace({
+            path: this.$router.currentRoute.path,
+            query: { lat: lat, lng: lng, zoom: zoom },
+        });
+    }
+
     private routeToZaehlstelle(id: string) {
+        this.saveMapPositionInUrl();
         this.$router.push(`/zaehlstelle/${id}`);
     }
 
     private routeToMessstelle(id: string) {
+        this.saveMapPositionInUrl();
         this.$router.push(`/messstelle/${id}`);
     }
 
@@ -649,6 +677,7 @@ export default class ZaehlstelleMap extends Vue {
                 prefix: "",
             })
         );
+        this.theMap.mapObject.setZoom(this.zoomValue);
     }
 }
 </script>
