@@ -16,7 +16,6 @@
 
             <v-card-text>
                 <update-messstelle-dialog-form
-                    :messstelle="messstelle"
                     @cancel="$emit('cancel')"
                     @saved="$emit('saved')"
                 />
@@ -26,7 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import MessstelleDTO from "@/domain/dto/MessstelleDTO";
 import UpdateMessstelleDialogForm from "@/components/messstelle/UpdateMessstelleDialogForm.vue";
 import { computed, ref, Ref } from "vue";
 
@@ -34,7 +32,6 @@ const dialogtitle: Ref<string> = ref("Messstelle bearbeiten");
 
 interface Props {
     value: boolean;
-    messstelle: MessstelleDTO;
 }
 
 const props = defineProps<Props>();

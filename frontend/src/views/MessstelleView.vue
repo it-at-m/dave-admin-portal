@@ -15,9 +15,7 @@
                     <messstelle-info
                         :height="headerHeightVh"
                         :minheight="headerHeightVh"
-                        :mst-id="messstelle.mstId"
-                        :stadtbezirk-nummer="messstelle.stadtbezirkNummer"
-                        :stadtbezirk="messstelle.stadtbezirk"
+                        :messstelle="messstelle"
                         :style="{ cursor: 'pointer' }"
                         @edit-messstelle="editMessstelle"
                     >
@@ -40,7 +38,6 @@
 
         <update-messstelle-dialog
             v-model="showUpdateMessstelleDialog"
-            :messstelle="messstelle"
             @saved="reloadDataAndCloseDialog"
             @cancel="cancelUpdateMessstelleDialog"
         />
@@ -48,23 +45,23 @@
 </template>
 <script setup lang="ts">
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
-import { computed, ComputedRef, ref, Ref } from "vue";
+import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
-import MessstelleDTO from "@/domain/dto/MessstelleDTO";
 import { useRoute } from "vue-router/composables";
 import MessstelleInfo from "@/components/messstelle/MessstelleInfo.vue";
 import { useVuetify } from "@/util/useVuetify";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import UpdateMessstelleDialog from "@/components/messstelle/UpdateMessstelleDialog.vue";
+import MessstelleInfoDTO from "@/domain/dto/messstelle/MessstelleInfoDTO";
 
 const reloadMessstelleMap: Ref<boolean> = ref(false);
 const showUpdateMessstelleDialog: Ref<boolean> = ref(false);
-const messstelle: Ref<MessstelleDTO> = ref(
-    DefaultObjectCreator.createDefaultMessstelleDTO()
+const messstelle: Ref<MessstelleInfoDTO> = ref(
+    DefaultObjectCreator.createDefaultMessstelleInfoDTO()
 );
 const vuetify = useVuetify();
 const route = useRoute();
-// eslint-disable-next-line no-undef
+
 onMounted(() => {
     loadMessstelle();
 });
@@ -102,8 +99,7 @@ const latlng: ComputedRef<string[]> = computed(() => {
 
 function loadMessstelle(): void {
     const messstelleId = route.params.messstelleId;
-    // Todo: hier nur die Daten für den Header laden
-    MessstelleService.getMessstelleById(messstelleId).then((messstelleById) => {
+    MessstelleService.getMessstelleInfo(messstelleId).then((messstelleById) => {
         messstelle.value = messstelleById;
     });
 }

@@ -6,121 +6,34 @@
         class="overflow-y-auto"
     >
         <v-card-text>
-            <v-form
-                ref="form"
-                v-model="validZaehlung"
-            >
+            <v-form>
                 <v-row dense>
                     <v-col
                         cols="12"
                         md="4"
                     >
-                        <v-text-field
-                            v-model="zaehlung.projektNummer"
-                            label="Projektnummer"
-                            outlined
-                            dense
-                            @blur="updateStore"
+                        <lhm-text-field
+                            caption="MessstellenId"
+                            :text="editMessstelle.mstId"
                         />
                     </v-col>
                     <v-col
                         cols="12"
                         md="4"
                     >
-                        <v-text-field
-                            v-model="zaehlung.projektName"
-                            label="Projektname"
-                            outlined
-                            dense
-                            @blur="updateStore"
+                        <lhm-text-field
+                            :text="editMessstelle.name"
+                            caption="Bezeichnung"
                         />
                     </v-col>
-                    <v-spacer />
-                </v-row>
-                <v-row dense>
                     <v-col
                         cols="12"
                         md="4"
                     >
-                        <v-autocomplete
-                            v-model="zaehlung.zaehldauer"
-                            outlined
-                            :items="getZaehldauer"
-                            dense
-                            label="Zähldauer"
-                            :rules="[
-                                () => !!zaehlung.zaehldauer || pflichtfeldText,
-                            ]"
-                            required
-                            @blur="updateStore"
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-autocomplete
-                            v-model="zaehlung.zaehlart"
-                            outlined
-                            :items="getZaehlarten"
-                            dense
-                            label="Zählart"
-                            :rules="[
-                                () => !!zaehlung.zaehlart || pflichtfeldText,
-                            ]"
-                            required
-                            @blur="updateStore"
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-menu
-                            ref="menu"
-                            v-model="menu"
-                            :close-on-content-click="false"
-                            :close-on-click="false"
-                            transition="scale-transition"
-                            offset-y
-                            max-width="290px"
-                            min-width="auto"
-                        >
-                            <template #activator="{ on, attrs }">
-                                <v-text-field
-                                    v-model="computedDateFormatted"
-                                    label="Datum"
-                                    prepend-inner-icon="mdi-calendar"
-                                    readonly
-                                    outlined
-                                    dense
-                                    v-bind="attrs"
-                                    v-on="on"
-                                ></v-text-field>
-                            </template>
-                            <v-date-picker
-                                v-model="date"
-                                no-title
-                                locale="de"
-                                :first-day-of-week="1"
-                            >
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="saveDate"
-                                >
-                                    OK
-                                </v-btn>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="closeMenu"
-                                >
-                                    Abbrechen
-                                </v-btn>
-                            </v-date-picker>
-                        </v-menu>
+                        <lhm-text-field
+                            :text="detektierteFahrzeuge"
+                            caption="Detektierte Fahrzeuge"
+                        />
                     </v-col>
                 </v-row>
                 <v-row dense>
@@ -128,42 +41,60 @@
                         cols="12"
                         md="4"
                     >
-                        <v-autocomplete
-                            v-model="zaehlung.quelle"
+                        <v-textarea
+                            v-model="editMessstelle.standort"
+                            label="Standort MS"
                             outlined
-                            :items="getQuelle"
                             dense
-                            label="Quelle"
-                            @blur="updateStore"
-                        ></v-autocomplete>
+                            rows="1"
+                            row-height="10"
+                        ></v-textarea>
                     </v-col>
                     <v-col
                         cols="12"
                         md="4"
                     >
-                        <v-autocomplete
-                            v-model="zaehlung.zaehlIntervall"
-                            outlined
-                            :items="getZaehlintervalle"
-                            dense
-                            label="Zählintervall"
-                            @blur="updateStore"
-                        ></v-autocomplete>
+                        <lhm-text-field
+                            :text="aufbaudatum"
+                            caption="Aufbau"
+                        />
                     </v-col>
-                    <v-spacer />
+                    <v-col
+                        cols="12"
+                        md="4"
+                    >
+                        <lhm-text-field
+                            :text="abbaudatum"
+                            caption="Abbau"
+                        />
+                    </v-col>
                 </v-row>
                 <v-row dense>
                     <v-col
                         cols="12"
                         md="4"
                     >
-                        <v-checkbox
-                            v-model="zaehlung.sonderzaehlung"
-                            label="Sonderzählung"
-                            color="grey darken-1"
-                            hide-details
-                            dense
-                            @change="updateStore"
+                        <lhm-text-field
+                            :text="stadtbezirk"
+                            caption="Stadtbezirk"
+                        />
+                    </v-col>
+                    <v-col
+                        cols="12"
+                        md="4"
+                    >
+                        <lhm-text-field
+                            :text="editMessstelle.status"
+                            caption="Status"
+                        />
+                    </v-col>
+                    <v-col
+                        cols="12"
+                        md="4"
+                    >
+                        <lhm-text-field
+                            :text="hersteller"
+                            caption="Hersteller"
                         />
                     </v-col>
                 </v-row>
@@ -172,16 +103,39 @@
                         cols="12"
                         md="12"
                     >
+                        <v-checkbox
+                            v-model="editMessstelle.sichtbarDatenportal"
+                            color="grey darken-1"
+                            hide-details
+                            dense
+                        >
+                            <template #label>
+                                <v-icon
+                                    class="mr-1"
+                                    color="red darken-1"
+                                >
+                                    mdi-alert-outline
+                                </v-icon>
+                                <div>Sichtbarkeitsstatus Datenportal<br /></div>
+                            </template>
+                        </v-checkbox>
+                    </v-col>
+                </v-row>
+                <v-row dense>
+                    <v-col
+                        cols="12"
+                        md="12"
+                    >
                         <v-textarea
-                            v-model="zaehlung.kommentar"
-                            label="Kommentar"
+                            v-model="editMessstelle.bemerkung"
+                            label="Bemerkung"
                             outlined
+                            readonly
                             dense
                             rows="2"
                             row-height="10"
                             counter="255"
                             maxlength="255"
-                            @blur="updateStore"
                         ></v-textarea>
                     </v-col>
                 </v-row>
@@ -191,7 +145,7 @@
                         md="12"
                     >
                         <v-combobox
-                            v-model="zaehlung.customSuchwoerter"
+                            v-model="editMessstelle.customSuchwoerter"
                             multiple
                             label="Suchwörter"
                             outlined
@@ -203,50 +157,25 @@
                             append-icon="mdi-plus"
                             @click:append="addSuchwortToList"
                             @keyup.enter="addSuchwortToList"
-                            @blur="addSuchwortToListAndUpdateStore"
+                            @blur="addSuchwortToList"
                         >
                         </v-combobox>
                     </v-col>
                 </v-row>
-                <v-row
-                    v-if="showZaehlsituation"
-                    dense
-                >
+                <v-row dense>
                     <v-col
                         cols="12"
                         md="12"
                     >
                         <v-textarea
-                            v-model="zaehlung.zaehlsituation"
-                            label="Zählsituation"
+                            v-model="editMessstelle.kommentar"
+                            label="Kommentar"
                             outlined
                             dense
                             rows="2"
                             row-height="10"
                             counter="255"
                             maxlength="255"
-                            @blur="updateStore"
-                        ></v-textarea>
-                    </v-col>
-                </v-row>
-                <v-row
-                    v-if="showZaehlsituation"
-                    dense
-                >
-                    <v-col
-                        cols="12"
-                        md="12"
-                    >
-                        <v-textarea
-                            v-model="zaehlung.zaehlsituationErweitert"
-                            label="erweiterte Zählsituation"
-                            outlined
-                            dense
-                            rows="2"
-                            row-height="10"
-                            counter="255"
-                            maxlength="255"
-                            @blur="updateStore"
                         ></v-textarea>
                     </v-col>
                 </v-row>
@@ -255,150 +184,92 @@
     </v-sheet>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, ComputedRef, ref, Ref } from "vue";
 /* eslint-disable no-unused-vars */
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import { zaehlartenDropDown } from "@/domain/enums/Zaehlart";
-import KeyVal from "@/domain/KeyVal";
-import { zaehldauerDropDown } from "@/domain/enums/Zaehldauer";
-import { quelleDropDown } from "@/domain/enums/Quelle";
-import _ from "lodash";
-import Status from "@/domain/enums/Status";
+import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+import LhmTextField from "@/components/common/LhmTextField.vue";
+
 /* eslint-enable no-unused-vars */
 
-@Component
-export default class MessstelleForm extends Vue {
-    @Prop()
-    readonly height!: string;
+interface Props {
+    height: string;
+    value: MessstelleEditDTO;
+}
 
-    newSuchwort = "";
+const props = defineProps<Props>();
 
-    // Without Time
-    date: string = new Date().toISOString().substr(0, 10);
-    menu = false;
-    validZaehlung = false;
+const emits = defineEmits<{
+    (e: "input", v: MessstelleEditDTO): void;
+}>();
 
-    zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
+const editMessstelle = computed({
+    get: () => props.value,
+    set: (v) => emits("input", v),
+});
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @Ref("menu") private vMenu: any;
+const detektierteFahrzeuge: ComputedRef<string> = computed(() => {
+    let result = "";
+    if (
+        editMessstelle.value.messquerschnitte &&
+        editMessstelle.value.messquerschnitte.length > 0
+    ) {
+        result =
+            editMessstelle.value.messquerschnitte[0].detektierteVerkehrsarten;
+    }
+    return result;
+});
 
-    mounted() {
-        this.validZaehlung = false;
-        this.updateWorkingCopy();
+const hersteller: ComputedRef<string> = computed(() => {
+    let result = "";
+    if (
+        editMessstelle.value.messquerschnitte &&
+        editMessstelle.value.messquerschnitte.length > 0
+    ) {
+        result = editMessstelle.value.messquerschnitte[0].hersteller;
+    }
+    return result;
+});
+
+const stadtbezirk: ComputedRef<string> = computed(() => {
+    return `${editMessstelle.value.stadtbezirkNummer} - ${editMessstelle.value.stadtbezirk}`;
+});
+
+const aufbaudatum: ComputedRef<string> = computed(() => {
+    return formatDate(editMessstelle.value.realisierungsdatum);
+});
+
+const abbaudatum: ComputedRef<string> = computed(() => {
+    return formatDate(editMessstelle.value.abbaudatum);
+});
+
+function formatDate(date: string): string {
+    if (!date) {
+        return "";
+    }
+    const [year, month, day] = date.split("-");
+    return `${day}.${month}.${year}`;
+}
+
+const newSuchwort: Ref<string> = ref("");
+
+function addSuchwortToList(): void {
+    if (
+        editMessstelle.value.customSuchwoerter === undefined ||
+        editMessstelle.value.customSuchwoerter === null
+    ) {
+        editMessstelle.value.customSuchwoerter = [];
     }
 
-    get zaehlungStore(): ZaehlungDTO {
-        return this.$store.getters.getZaehlung;
+    if (newSuchwort.value == null || newSuchwort.value.trim() === "") {
+        return;
     }
 
-    get showZaehlsituation(): boolean {
-        let possibleStatus: Array<Status> = [
-            Status.ACTIVE,
-            Status.ACCOMPLISHED,
-            Status.CORRECTION,
-            Status.COUNTING,
-        ];
-        return possibleStatus.includes(this.zaehlungStore.status);
+    if (!editMessstelle.value.customSuchwoerter.includes(newSuchwort.value)) {
+        editMessstelle.value.customSuchwoerter.push(
+            ...newSuchwort.value.split(",")
+        );
     }
-
-    @Watch("zaehlungStore")
-    updateWorkingCopy(): void {
-        this.zaehlung = _.cloneDeep(this.zaehlungStore);
-        this.resetDatum();
-    }
-
-    @Watch("validZaehlung")
-    sendIsValid(): void {
-        this.$emit("isValid", this.validZaehlung);
-    }
-
-    updateStore(): void {
-        this.$store.dispatch("setZaehlung", _.cloneDeep(this.zaehlung));
-    }
-
-    get computedDateFormatted(): string | null {
-        return this.formatDate(this.date);
-    }
-
-    private formatDateForBackend(): string {
-        let time = new Date().toLocaleTimeString(navigator.language, {
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-        return new Date(this.date + "T" + time).toISOString();
-    }
-
-    private formatDate(date: string): string | null {
-        if (!date) {
-            return null;
-        }
-        const [year, month, day] = date.split("-");
-        return `${day}.${month}.${year}`;
-    }
-
-    get pflichtfeldText(): string {
-        return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
-    }
-
-    get getZaehlarten(): Array<KeyVal> {
-        return zaehlartenDropDown;
-    }
-
-    get getZaehldauer(): Array<KeyVal> {
-        return zaehldauerDropDown;
-    }
-
-    get getQuelle(): Array<KeyVal> {
-        return quelleDropDown;
-    }
-
-    /* eslint-disable @typescript-eslint/ban-types */
-    get getZaehlintervalle(): Array<Object> {
-        return [{ text: "15 min", value: 15 }];
-    }
-    /* eslint-enable @typescript-eslint/ban-types */
-
-    // Fuegt das eingegebene Wort den Suchwoertern hinzu
-    addSuchwortToList(): void {
-        if (
-            this.zaehlung.customSuchwoerter === undefined ||
-            this.zaehlung.customSuchwoerter === null
-        ) {
-            this.zaehlung.customSuchwoerter = [];
-        }
-
-        if (this.newSuchwort == null || this.newSuchwort.trim() === "") {
-            return;
-        }
-
-        if (!this.zaehlung.customSuchwoerter.includes(this.newSuchwort)) {
-            this.zaehlung.customSuchwoerter.push(
-                ...this.newSuchwort.split(",")
-            );
-        }
-        this.newSuchwort = "";
-    }
-
-    addSuchwortToListAndUpdateStore(): void {
-        this.addSuchwortToList();
-        this.updateStore();
-    }
-
-    saveDate(): void {
-        this.vMenu.save(this.date);
-        this.zaehlung.datum = this.formatDateForBackend();
-        this.updateStore();
-    }
-
-    closeMenu(): void {
-        this.menu = false;
-        this.resetDatum();
-    }
-
-    private resetDatum(): void {
-        this.date = this.zaehlung.datum.substr(0, 10);
-    }
+    newSuchwort.value = "";
 }
 </script>

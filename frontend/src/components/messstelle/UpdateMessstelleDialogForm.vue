@@ -31,14 +31,10 @@
                 <messstelle-form
                     v-model="messstelle"
                     :height="SHEETHEIGHT"
-                    @isValid="setMessstelleFormValid"
                 />
             </v-tab-item>
             <v-tab-item ref="messquerschnittform">
-                <messquerschnitt-form
-                    :height="SHEETHEIGHT"
-                    @isValid="setMessquerschnittFormValid"
-                />
+                <messquerschnitt-form :height="SHEETHEIGHT" />
             </v-tab-item>
         </v-tabs-items>
 
@@ -46,7 +42,6 @@
             <v-spacer />
             <v-btn
                 color="secondary"
-                :disabled="!isUpdateMessstelleFormValid"
                 @click="save()"
             >
                 Speichern
@@ -62,51 +57,41 @@
 </template>
 
 <script setup lang="ts">
-/* eslint-disable no-unused-vars */
-/* eslint-enable no-unused-vars */
-// Components
-// Api
-// Util
-import MessstelleDTO from "@/domain/dto/MessstelleDTO";
+import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import MessstelleForm from "@/components/messstelle/MessstelleForm.vue";
 import MessquerschnittForm from "@/components/messstelle/MessquerschnittForm.vue";
-import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
+import { onMounted, ref, Ref } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
-import { ApiError } from "@/api/error";
+import { ApiError, Levels } from "@/api/error";
 import { useStore } from "@/util/useStore";
 import { useRoute } from "vue-router/composables";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 const SHEETHEIGHT: Ref<string> = ref("580px");
 const activeTab: Ref<number> = ref(0);
-const isMessstelleFormValid: Ref<boolean> = ref(false);
-const isMessquerschnittFormValid: Ref<boolean> = ref(false);
-const messstelle: Ref<MessstelleDTO> = ref(
-    DefaultObjectCreator.createDefaultMessstelleDTO()
+const messstelle: Ref<MessstelleEditDTO> = ref(
+    DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
 
 const store = useStore();
 const route = useRoute();
-
-// defineProps<{ messstelle: MessstelleDTO }>();
 
 const emits = defineEmits<{
     (e: "cancel"): void;
     (e: "saved"): void;
 }>();
 
-const isUpdateMessstelleFormValid: ComputedRef<boolean> = computed(() => {
-    return isMessquerschnittFormValid.value && isMessstelleFormValid.value;
-});
-
 onMounted(() => {
-    alert("loadMessstelle()");
+    loadMessstelle();
 });
 
 function save(): void {
-    // TODO Objekt senden
-    MessstelleService.saveMessstelle({} as MessstelleDTO)
+    MessstelleService.saveMessstelle(messstelle.value)
         .then(() => {
+            store.dispatch("snackbar/showToast", {
+                level: Levels.INFO,
+                snackbarTextPart1: `Die Messstelle ${messstelle.value.mstId} wurde erfolgreich aktualisiert.`,
+            });
             emits("saved");
         })
         .catch((error: ApiError) => {
@@ -119,20 +104,16 @@ function save(): void {
 
 function cancel(): void {
     activeTab.value = 0;
-    messstelle.value = DefaultObjectCreator.createDefaultMessstelleDTO();
+    messstelle.value = DefaultObjectCreator.createDefaultMessstelleEditDTO();
     emits("cancel");
 }
 
-function setMessstelleFormValid(isPartValid: boolean): void {
-    isMessstelleFormValid.value = isPartValid;
-}
-function setMessquerschnittFormValid(isPartValid: boolean): void {
-    isMessquerschnittFormValid.value = isPartValid;
-}
 function loadMessstelle(): void {
     const messstelleId = route.params.messstelleId;
-    MessstelleService.getMessstelleById(messstelleId).then((messstelleById) => {
-        messstelle.value = messstelleById;
-    });
+    MessstelleService.getMessstelleToEdit(messstelleId).then(
+        (messstelleById) => {
+            messstelle.value = messstelleById;
+        }
+    );
 }
 </script>

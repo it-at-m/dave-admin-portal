@@ -1,23 +1,30 @@
-import MessstelleDTO from "@/domain/dto/MessstelleDTO";
+import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import FetchService from "@/api/service/FetchService";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
+import MessstelleInfoDTO from "@/domain/dto/messstelle/MessstelleInfoDTO";
 
 export default class MessstelleService {
     private static readonly ENDPOINT: string =
         "api/dave-backend-service/messstelle";
-    static getMessstelleById(id: string): Promise<MessstelleDTO> {
+    static getMessstelleInfo(id: string): Promise<MessstelleInfoDTO> {
         return FetchService.getData(
-            `${this.ENDPOINT}/edit?id=${id}`,
-            "Beim holen der Messstelle ist ein Fehler aufgetreten."
+            `${this.ENDPOINT}/info?id=${id}`,
+            "Beim Laden der Messstellen-Info ist ein Fehler aufgetreten."
         );
     }
 
-    static saveMessstelle(data: MessstelleDTO): Promise<BackendIdDTO> {
-        return FetchService.postData(
+    static getMessstelleToEdit(id: string): Promise<MessstelleEditDTO> {
+        return FetchService.getData(
+            `${this.ENDPOINT}/edit?id=${id}`,
+            "Beim Laden der Messstellen ist ein Fehler aufgetreten."
+        );
+    }
+
+    static saveMessstelle(data: MessstelleEditDTO): Promise<BackendIdDTO> {
+        return FetchService.patchData(
             data,
-            `${this.ENDPOINT}/save`,
-            "Beim Speichern der Daten ist ein Fehler aufgetreten. Bitte Daten kontrollieren."
+            `${this.ENDPOINT}/update`,
+            "Beim Aktualisieren der Daten ist ein Fehler aufgetreten. Bitte Daten kontrollieren."
         );
     }
 }

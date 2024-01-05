@@ -177,7 +177,7 @@ import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 import TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
 import AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
-import MessstelleKarteDTO from "@/domain/dto/MessstelleKarteDTO";
+import MessstelleKarteDTO from "@/domain/dto/messstelle/MessstelleKarteDTO";
 /* eslint-enable no-unused-vars */
 
 @Component({
