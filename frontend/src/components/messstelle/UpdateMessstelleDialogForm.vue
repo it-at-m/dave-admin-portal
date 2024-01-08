@@ -34,7 +34,10 @@
                 />
             </v-tab-item>
             <v-tab-item ref="messquerschnittform">
-                <messquerschnitt-form :height="SHEETHEIGHT" />
+                <messquerschnitt-form
+                    v-model="messstelle"
+                    :height="SHEETHEIGHT"
+                />
             </v-tab-item>
         </v-tabs-items>
 
