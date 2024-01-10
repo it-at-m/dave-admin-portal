@@ -70,7 +70,7 @@ import { useStore } from "@/util/useStore";
 import { useRoute } from "vue-router/composables";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
-const SHEETHEIGHT: Ref<string> = ref("580px");
+const SHEETHEIGHT: Ref<string> = ref("600px");
 const activeTab: Ref<number> = ref(0);
 const messstelle: Ref<MessstelleEditDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleEditDTO()

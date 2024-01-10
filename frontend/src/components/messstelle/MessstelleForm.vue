@@ -41,14 +41,10 @@
                         cols="12"
                         md="4"
                     >
-                        <v-textarea
-                            v-model="editMessstelle.standort"
-                            label="Standort MS"
-                            outlined
-                            dense
-                            rows="1"
-                            row-height="10"
-                        ></v-textarea>
+                        <lhm-text-field
+                            :text="stadtbezirk"
+                            caption="Stadtbezirk"
+                        />
                     </v-col>
                     <v-col
                         cols="12"
@@ -75,15 +71,6 @@
                         md="4"
                     >
                         <lhm-text-field
-                            :text="stadtbezirk"
-                            caption="Stadtbezirk"
-                        />
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <lhm-text-field
                             :text="editMessstelle.status"
                             caption="Status"
                         />
@@ -97,17 +84,15 @@
                             caption="Hersteller"
                         />
                     </v-col>
-                </v-row>
-                <v-row dense>
                     <v-col
                         cols="12"
-                        md="12"
+                        md="4"
                     >
                         <v-checkbox
                             v-model="editMessstelle.sichtbarDatenportal"
                             color="grey darken-1"
-                            hide-details
                             dense
+                            hide-details
                         >
                             <template #label>
                                 <v-icon
@@ -127,15 +112,30 @@
                         md="12"
                     >
                         <v-textarea
-                            v-model="editMessstelle.bemerkung"
-                            label="Bemerkung"
+                            v-model="editMessstelle.standort"
+                            label="Standort MS"
                             outlined
-                            readonly
                             dense
                             rows="2"
                             row-height="10"
                             counter="255"
                             maxlength="255"
+                        ></v-textarea>
+                    </v-col>
+                </v-row>
+                <v-row dense>
+                    <v-col
+                        cols="12"
+                        md="12"
+                    >
+                        <v-textarea
+                            v-model="editMessstelle.bemerkung"
+                            label="Bemerkung"
+                            outlined
+                            readonly
+                            dense
+                            rows="1"
+                            row-height="10"
                         ></v-textarea>
                     </v-col>
                 </v-row>
