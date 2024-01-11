@@ -115,7 +115,7 @@
                         icon
                         small
                         v-on="on"
-                        @click="navigateToOpenZaehlungen"
+                        @click="navigateToErhebungsstellenOverview"
                     >
                         <v-icon>mdi-clipboard-list-outline</v-icon>
                     </v-btn>
@@ -478,8 +478,8 @@ export default class App extends Vue {
         window.open(App.URL_HANDBUCH_LINK);
     }
 
-    navigateToOpenZaehlungen() {
-        this.$router.push(`/offeneZaehlungen`);
+    navigateToErhebungsstellenOverview() {
+        this.$router.push(`/erhebungsstellenOverview`);
     }
 
     navigateToConfig() {

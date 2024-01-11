@@ -1,0 +1,201 @@
+<template>
+    <v-container
+        fluid
+        class="pa-0"
+    >
+        <v-sheet
+            v-if="!isNotEmpty"
+            id="empty"
+            class="d-flex align-center justify-center pa-4 mx-auto"
+        >
+            <span class="text-caption grey--text text--lighten-1"
+                >Es sind aktuell keine offenen Zählungen vorhanden.</span
+            >
+        </v-sheet>
+        <v-sheet
+            v-if="isNotEmpty"
+            width="100%"
+            color="transparent"
+            class="overflow-y-auto"
+        >
+            <v-expansion-panels
+                hover
+                focusable
+            >
+                <open-zaehlung-panel
+                    :header="getCreatedHeader"
+                    :status-design="createdStatusDesign"
+                    :zaehlungen="createdZaehlungen"
+                />
+                <open-zaehlung-panel
+                    :header="getInstructedHeader"
+                    :status-design="instructedStatusDesign"
+                    :zaehlungen="instructedZaehlungen"
+                />
+                <open-zaehlung-panel
+                    :header="getCountingHeader"
+                    :status-design="countingStatusDesign"
+                    :zaehlungen="countingZaehlungen"
+                />
+                <open-zaehlung-panel
+                    :header="getAccomplishedHeader"
+                    :status-design="accomplishedStatusDesign"
+                    :zaehlungen="accomplishedZaehlungen"
+                />
+                <open-zaehlung-panel
+                    :header="getCorrectionHeader"
+                    :status-design="correctionStatusDesign"
+                    :zaehlungen="correctionZaehlungen"
+                />
+            </v-expansion-panels>
+        </v-sheet>
+    </v-container>
+</template>
+
+<script setup lang="ts">
+// Komponenten
+// Typen
+/* eslint-disable no-unused-vars */
+import OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
+import Status, { statusIcon } from "@/domain/enums/Status";
+import IconOptions from "@/components/icons/IconOptions";
+/* eslint-enable no-unused-vars */
+// API Services
+import ZaehlungService from "@/api/service/ZaehlungService";
+
+// Util
+import ZaehlungComparator from "@/util/ZaehlungComparator";
+import OpenZaehlungPanel from "@/components/zaehlung/OpenZaehlungPanel.vue";
+import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
+import { useStore } from "@/util/useStore";
+
+const store = useStore();
+
+const createdZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
+    [] as Array<OpenZaehlungDTO>
+);
+const instructedZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
+    [] as Array<OpenZaehlungDTO>
+);
+const countingZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
+    [] as Array<OpenZaehlungDTO>
+);
+const accomplishedZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
+    [] as Array<OpenZaehlungDTO>
+);
+const correctionZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
+    [] as Array<OpenZaehlungDTO>
+);
+
+const isNotEmpty: Ref<boolean> = ref(false);
+
+const createdStatusDesign: ComputedRef<IconOptions> = computed(() => {
+    return getStatusDesign(Status.CREATED);
+});
+const instructedStatusDesign: ComputedRef<IconOptions> = computed(() => {
+    return getStatusDesign(Status.INSTRUCTED);
+});
+const countingStatusDesign: ComputedRef<IconOptions> = computed(() => {
+    return getStatusDesign(Status.COUNTING);
+});
+const accomplishedStatusDesign: ComputedRef<IconOptions> = computed(() => {
+    return getStatusDesign(Status.ACCOMPLISHED);
+});
+const correctionStatusDesign: ComputedRef<IconOptions> = computed(() => {
+    return getStatusDesign(Status.CORRECTION);
+});
+
+const getCreatedHeader: ComputedRef<string> = computed(() => {
+    return `Angelegte Zählungen: ${createdZaehlungen.value.length}`;
+});
+const getInstructedHeader: ComputedRef<string> = computed(() => {
+    return `Beauftragte Zählungen: ${instructedZaehlungen.value.length}`;
+});
+const getCountingHeader: ComputedRef<string> = computed(() => {
+    return `Laufende Zählungen: ${countingZaehlungen.value.length}`;
+});
+const getAccomplishedHeader: ComputedRef<string> = computed(() => {
+    return `Durchgeführte Zählungen: ${accomplishedZaehlungen.value.length}`;
+});
+const getCorrectionHeader: ComputedRef<string> = computed(() => {
+    return `Fehlerhafte Zählungen: ${correctionZaehlungen.value.length}`;
+});
+
+onMounted(() => {
+    loadOpenZaehlungen();
+});
+
+function loadOpenZaehlungen(): void {
+    resetDataArrays();
+    isNotEmpty.value = false;
+    ZaehlungService.getAllOpenZaehlungen()
+        .then((zaehlungen: Array<OpenZaehlungDTO>) => {
+            zaehlungen.forEach((zaehlung: OpenZaehlungDTO) => {
+                switch (zaehlung.status) {
+                    case Status.CREATED:
+                        createdZaehlungen.value.push(zaehlung);
+                        break;
+                    case Status.INSTRUCTED:
+                        instructedZaehlungen.value.push(zaehlung);
+                        break;
+                    case Status.COUNTING:
+                        countingZaehlungen.value.push(zaehlung);
+                        break;
+                    case Status.ACCOMPLISHED:
+                        accomplishedZaehlungen.value.push(zaehlung);
+                        break;
+                    case Status.CORRECTION:
+                        correctionZaehlungen.value.push(zaehlung);
+                        break;
+                }
+            });
+            isNotEmpty.value = zaehlungen.length > 0;
+            sortDataArrays();
+        })
+        .catch((error) => store.dispatch("snackbar/showError", error));
+}
+
+function sortDataArrays(): void {
+    createdZaehlungen.value = sortByDatumDesc(createdZaehlungen.value);
+    instructedZaehlungen.value = sortByDatumDesc(instructedZaehlungen.value);
+    countingZaehlungen.value = sortByDatumDesc(countingZaehlungen.value);
+    accomplishedZaehlungen.value = sortByDatumDesc(
+        accomplishedZaehlungen.value
+    );
+    correctionZaehlungen.value = sortByDatumDesc(correctionZaehlungen.value);
+}
+
+function sortByDatumDesc(
+    toSort: Array<OpenZaehlungDTO>
+): Array<OpenZaehlungDTO> {
+    return toSort.sort(ZaehlungComparator.sortByDatumDesc);
+}
+
+function resetDataArrays(): void {
+    createdZaehlungen.value = [];
+    instructedZaehlungen.value = [];
+    countingZaehlungen.value = [];
+    accomplishedZaehlungen.value = [];
+    correctionZaehlungen.value = [];
+}
+
+function getStatusDesign(status: Status): IconOptions {
+    let design: IconOptions | undefined = statusIcon.get(status);
+    if (!design) {
+        design = {} as IconOptions;
+        design.color = "deep-orange lighten-4";
+        design.iconPath = "mdi-calendar-question";
+        design.tooltip = "Status unbekannt";
+    }
+    return design;
+}
+</script>
+
+<style lang="sass">
+// Entfernt die Elevation beim ExpansionPanel. Die Build-In-Funktion (flat) kann leider nicht genutzt werden,
+// da dann auch die Trennstriche zwischen den Panels entfernt werden.
+@import 'vuetify/src/components/VExpansionPanel/_variables.scss'
+.v-expansion-panel
+  &::before
+    +elevation(0)
+</style>
