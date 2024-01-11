@@ -171,7 +171,7 @@ import { Levels } from "@/api/error";
 import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleDialog.vue";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import TooltipDTO from "@/domain/dto/TooltipDTO";
+import TooltipZaehlstelleDTO from "@/domain/dto/TooltipZaehlstelleDTO";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
@@ -257,10 +257,10 @@ export default class ZaehlstelleMap extends Vue {
     };
 
     mounted() {
-        this.searchZaehlstelle();
+        this.searchErhebungsstelle();
     }
 
-    get getZaehlstellenKarteFromStore(): AnzeigeKarteDTO[] {
+    get getErhebungsstellenKarteFromStore(): AnzeigeKarteDTO[] {
         return this.$store.getters["search/result"];
     }
 
@@ -328,13 +328,11 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     @Watch("reload")
-    private searchZaehlstelle() {
-        SucheService.searchZaehlstelle(
+    private searchErhebungsstelle() {
+        SucheService.searchErhebungsstelle(
             this.$store.getters["search/lastSearchQuery"]
         )
             .then((result) => {
-                // fügt testdaten für Messstellen hinzu, muss später entfernt werden sobald der richtige Service verfügbar ist
-                result.push(...SucheService.getMockMessstelleKarte());
                 this.$store.commit("search/result", result);
             })
             .catch((error) => {
@@ -345,7 +343,7 @@ export default class ZaehlstelleMap extends Vue {
             });
     }
 
-    // Erzeugt für jede vorhandene Zaehlstelle einen Marker
+    // Erzeugt für jede vorhandene Zaehl-/Messstelle einen Marker
     // und fuegt diesen dem MarkerCluster hinzu
     private setMarkerToMap() {
         // Setzen einer leeren ZaehlstelleKarte ohne Marker
@@ -356,20 +354,20 @@ export default class ZaehlstelleMap extends Vue {
             chunkedLoading: true,
         });
 
-        const zaehlstellenKarte: AnzeigeKarteDTO[] =
-            this.getZaehlstellenKarteFromStore;
+        const erhebungsstellenKarte: AnzeigeKarteDTO[] =
+            this.getErhebungsstellenKarteFromStore;
         const markers: Array<Marker> = [];
-        zaehlstellenKarte.forEach((anzeigeKarte) => {
-            if (anzeigeKarte.type != "messstelle") {
+        erhebungsstellenKarte.forEach((anzeigeKarte) => {
+            if (anzeigeKarte.type == "messstelle") {
                 markers.push(
-                    this.createMarkerForZaehlstelle(
-                        anzeigeKarte as ZaehlstelleKarteDTO
+                    this.createMarkerForMessstelle(
+                        anzeigeKarte as MessstelleKarteDTO
                     )
                 );
             } else {
                 markers.push(
-                    this.createMarkerForMessstelle(
-                        anzeigeKarte as MessstelleKarteDTO
+                    this.createMarkerForZaehlstelle(
+                        anzeigeKarte as ZaehlstelleKarteDTO
                     )
                 );
             }
@@ -377,7 +375,7 @@ export default class ZaehlstelleMap extends Vue {
         this.mapMarkerClusterGroup.addLayers(markers);
         this.theMap.mapObject.addLayer(this.mapMarkerClusterGroup);
 
-        if (zaehlstellenKarte.length === 1) {
+        if (erhebungsstellenKarte.length === 1) {
             /**
              * Falls in der Main.view nach einer bestimmten Zaehlstelle gesucht
              * und diese Suche mit Druck auf die Enter-Taste eingeleitet wird,
@@ -385,7 +383,7 @@ export default class ZaehlstelleMap extends Vue {
              * Auf diese eine mit einem Icon angezeigte Zaehlstelle muss dann zentriert werden.
              */
             this.theMap.mapObject.setView(
-                this.createLatLng(zaehlstellenKarte[0]),
+                this.createLatLng(erhebungsstellenKarte[0]),
                 18
             );
         } else if (this.zId == null) {
@@ -403,10 +401,13 @@ export default class ZaehlstelleMap extends Vue {
             this.createLatLng(zaehlstelleKarte),
             this.markerOptionsZaehlstelle(zaehlstelleKarte)
         );
-        marker.bindTooltip(this.createTooltip(zaehlstelleKarte.tooltip), {
-            direction: "top",
-            offset: [-14, 0],
-        });
+        marker.bindTooltip(
+            this.createTooltipZaehlstelle(zaehlstelleKarte.tooltip),
+            {
+                direction: "top",
+                offset: [-14, 0],
+            }
+        );
 
         marker.on("click", () => {
             // Zeige alle Zaehlungen zur Zaehlstelle an.
@@ -430,7 +431,6 @@ export default class ZaehlstelleMap extends Vue {
             }
         );
         marker.on("click", () => {
-            // Zeige alle Zaehlungen zur Zaehlstelle an.
             this.routeToMessstelle(messstelleKarteDto.id);
         });
         return marker;
@@ -446,7 +446,12 @@ export default class ZaehlstelleMap extends Vue {
      *  - anzahlZaehlungen
      *  - datumLetzteZaehlung
      */
-    private createTooltip(tooltipDto: TooltipDTO): string {
+    private createTooltipZaehlstelle(
+        tooltipDto: TooltipZaehlstelleDTO
+    ): string {
+        if (!tooltipDto) {
+            return "<div></div>";
+        }
         let tooltip = "<div><b>";
         if (tooltipDto.zaehlstellennnummer) {
             tooltip = `${tooltip}Zählstelle: ${tooltipDto.zaehlstellennnummer}</b><br/>`;
@@ -480,16 +485,25 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     private createTooltipMessstelle(tooltipDto: TooltipMessstelleDTO): string {
+        if (!tooltipDto) {
+            return "<div></div>";
+        }
         let tooltip = "<div><b>";
         if (tooltipDto.mstId) {
             tooltip = `${tooltip}Messstelle: ${tooltipDto.mstId}</b><br/>`;
         }
-        if (tooltipDto.standortDatenportal) {
-            tooltip = `${tooltip}${tooltipDto.standortDatenportal}<br/>`;
+        if (tooltipDto.standort) {
+            tooltip = `${tooltip}${tooltipDto.standort}<br/>`;
         }
         tooltip = `${tooltip}<br/>`;
-        if (tooltipDto.stadtbezirk) {
-            tooltip = `${tooltip}Stadtbezirk: ${tooltipDto.stadtbezirk}<br/>`;
+        if (!tooltipDto.stadtbezirk) {
+            tooltip = `${tooltip}Stadtbezirk: Keine Angabe<br/>`;
+        } else {
+            tooltip = `${tooltip}Stadtbezirk: `;
+            if (tooltipDto.stadtbezirknummer) {
+                tooltip = `${tooltip}${tooltipDto.stadtbezirknummer} - `;
+            }
+            tooltip = `${tooltip}${tooltipDto.stadtbezirk}<br/>`;
         }
         if (tooltipDto.realisierungsdatum) {
             tooltip = `${tooltip} Aufbau: ${tooltipDto.realisierungsdatum}<br/>`;
@@ -497,11 +511,11 @@ export default class ZaehlstelleMap extends Vue {
         if (tooltipDto.abbaudatum) {
             tooltip = `${tooltip}Abbau: ${tooltipDto.abbaudatum}<br/>`;
         }
-        if (tooltipDto.kfz) {
-            tooltip = `${tooltip}KFZ</b><br/>`;
+        if (tooltipDto.detektierteVerkehrsarten) {
+            tooltip = `${tooltip}Verkehrsarten: ${tooltipDto.detektierteVerkehrsarten}<br/>`;
         }
-        if (tooltipDto.datumLetzteMessung) {
-            tooltip = `${tooltip}Letzter Messtag: ${tooltipDto.datumLetzteMessung}<br/>`;
+        if (tooltipDto.datumLetztePlausibleMessung) {
+            tooltip = `${tooltip}Letzte plausible Messung: ${tooltipDto.datumLetztePlausibleMessung}<br/>`;
         }
 
         tooltip = `${tooltip}</div>`;
@@ -611,7 +625,7 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     reloadDataAndCloseDialog(backendIdDTO: BackendIdDTO) {
-        this.searchZaehlstelle();
+        this.searchErhebungsstelle();
         this.resetBooleans();
         this.closeDialog();
         this.routeToZaehlstelle(backendIdDTO.id);
