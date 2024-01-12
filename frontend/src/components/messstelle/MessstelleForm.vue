@@ -189,6 +189,7 @@ import { computed, ComputedRef, ref, Ref } from "vue";
 /* eslint-disable no-unused-vars */
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
+import _ from "lodash";
 
 /* eslint-enable no-unused-vars */
 
@@ -210,10 +211,7 @@ const editMessstelle = computed({
 
 const detektierteFahrzeuge: ComputedRef<string> = computed(() => {
     let result = "";
-    if (
-        editMessstelle.value.messquerschnitte &&
-        editMessstelle.value.messquerschnitte.length > 0
-    ) {
+    if (!_.isEmpty(editMessstelle.value.messquerschnitte)) {
         result =
             editMessstelle.value.messquerschnitte[0].detektierteVerkehrsarten;
     }
@@ -222,10 +220,7 @@ const detektierteFahrzeuge: ComputedRef<string> = computed(() => {
 
 const hersteller: ComputedRef<string> = computed(() => {
     let result = "";
-    if (
-        editMessstelle.value.messquerschnitte &&
-        editMessstelle.value.messquerschnitte.length > 0
-    ) {
+    if (!_.isEmpty(editMessstelle.value.messquerschnitte)) {
         result = editMessstelle.value.messquerschnitte[0].hersteller;
     }
     return result;
@@ -254,10 +249,7 @@ function formatDate(date: string): string {
 const newSuchwort: Ref<string> = ref("");
 
 function addSuchwortToList(): void {
-    if (
-        editMessstelle.value.customSuchwoerter === undefined ||
-        editMessstelle.value.customSuchwoerter === null
-    ) {
+    if (!editMessstelle.value.customSuchwoerter) {
         editMessstelle.value.customSuchwoerter = [];
     }
 
