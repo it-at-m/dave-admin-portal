@@ -40,6 +40,7 @@ declare module '@vue/runtime-core' {
     MessstelleForm: typeof import('./src/components/messstelle/MessstelleForm.vue')['default']
     MessstelleInfo: typeof import('./src/components/messstelle/MessstelleInfo.vue')['default']
     MiniMap: typeof import('./src/components/map/MiniMap.vue')['default']
+    OpenMessstellePanel: typeof import('./src/components/messstelle/OpenMessstellePanel.vue')['default']
     OpenZaehlungPanel: typeof import('./src/components/zaehlung/OpenZaehlungPanel.vue')['default']
     QuelleIcon: typeof import('./src/components/icons/QuelleIcon.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

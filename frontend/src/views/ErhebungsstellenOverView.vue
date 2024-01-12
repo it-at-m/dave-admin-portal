@@ -18,6 +18,9 @@
             color="transparent"
             class="overflow-y-auto"
         >
+            <v-card-title style="font-weight: bold; font-size: x-large"
+                >Zählstellen
+            </v-card-title>
             <v-expansion-panels
                 hover
                 focusable
@@ -48,26 +51,42 @@
                     :zaehlungen="correctionZaehlungen"
                 />
             </v-expansion-panels>
+            <v-card-title style="font-weight: bold; font-size: x-large"
+                >Messstellen
+            </v-card-title>
+            <v-expansion-panels
+                hover
+                focusable
+            >
+                <open-messstelle-panel
+                    :header="neueMessstellenHeader"
+                    color="blue lighten-4"
+                    icon="mdi-clipboard-edit-outline"
+                    :messstellen="neueMessstellen"
+                />
+                <open-messstelle-panel
+                    :header="nichtSichtbareMessstellenHeader"
+                    color="purple lighten-4"
+                    icon="mdi-eye-off-outline"
+                    :messstellen="nichtSichtbareMessstellen"
+                />
+            </v-expansion-panels>
         </v-sheet>
     </v-container>
 </template>
 
 <script setup lang="ts">
-// Komponenten
-// Typen
-/* eslint-disable no-unused-vars */
 import OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
 import Status, { statusIcon } from "@/domain/enums/Status";
 import IconOptions from "@/components/icons/IconOptions";
-/* eslint-enable no-unused-vars */
-// API Services
 import ZaehlungService from "@/api/service/ZaehlungService";
-
-// Util
 import ZaehlungComparator from "@/util/ZaehlungComparator";
 import OpenZaehlungPanel from "@/components/zaehlung/OpenZaehlungPanel.vue";
 import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
 import { useStore } from "@/util/useStore";
+import OpenMessstellePanel from "@/components/messstelle/OpenMessstellePanel.vue";
+import MessstelleService from "@/api/service/MessstelleService";
+import MessstelleOverviewDTO from "@/domain/dto/messstelle/MessstelleOverviewDTO";
 
 const store = useStore();
 
@@ -85,6 +104,12 @@ const accomplishedZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
 );
 const correctionZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
     [] as Array<OpenZaehlungDTO>
+);
+const neueMessstellen: Ref<Array<MessstelleOverviewDTO>> = ref(
+    [] as Array<MessstelleOverviewDTO>
+);
+const nichtSichtbareMessstellen: Ref<Array<MessstelleOverviewDTO>> = ref(
+    [] as Array<MessstelleOverviewDTO>
 );
 
 const isNotEmpty: Ref<boolean> = ref(false);
@@ -120,14 +145,21 @@ const getAccomplishedHeader: ComputedRef<string> = computed(() => {
 const getCorrectionHeader: ComputedRef<string> = computed(() => {
     return `Fehlerhafte Zählungen: ${correctionZaehlungen.value.length}`;
 });
+const neueMessstellenHeader: ComputedRef<string> = computed(() => {
+    return `Neue Messstellen: ${neueMessstellen.value.length}`;
+});
+const nichtSichtbareMessstellenHeader: ComputedRef<string> = computed(() => {
+    return `Nicht sichtbare Messstellen: ${nichtSichtbareMessstellen.value.length}`;
+});
 
 onMounted(() => {
+    resetDataArrays();
+    isNotEmpty.value = false;
     loadOpenZaehlungen();
+    loadOpenMessstellen();
 });
 
 function loadOpenZaehlungen(): void {
-    resetDataArrays();
-    isNotEmpty.value = false;
     ZaehlungService.getAllOpenZaehlungen()
         .then((zaehlungen: Array<OpenZaehlungDTO>) => {
             zaehlungen.forEach((zaehlung: OpenZaehlungDTO) => {
@@ -149,7 +181,23 @@ function loadOpenZaehlungen(): void {
                         break;
                 }
             });
-            isNotEmpty.value = zaehlungen.length > 0;
+            isNotEmpty.value = isNotEmpty.value || zaehlungen.length > 0;
+            sortDataArrays();
+        })
+        .catch((error) => store.dispatch("snackbar/showError", error));
+}
+
+function loadOpenMessstellen(): void {
+    MessstelleService.getAllMessstellenForOverview()
+        .then((messstellen: Array<MessstelleOverviewDTO>) => {
+            messstellen.forEach((messstelle: MessstelleOverviewDTO) => {
+                if (!messstelle.geprueft) {
+                    neueMessstellen.value.push(messstelle);
+                } else if (!messstelle.sichtbarDatenportal) {
+                    nichtSichtbareMessstellen.value.push(messstelle);
+                }
+            });
+            isNotEmpty.value = isNotEmpty.value || messstellen.length > 0;
             sortDataArrays();
         })
         .catch((error) => store.dispatch("snackbar/showError", error));
@@ -163,12 +211,22 @@ function sortDataArrays(): void {
         accomplishedZaehlungen.value
     );
     correctionZaehlungen.value = sortByDatumDesc(correctionZaehlungen.value);
+    neueMessstellen.value = sortByMstId(neueMessstellen.value);
+    nichtSichtbareMessstellen.value = sortByMstId(
+        nichtSichtbareMessstellen.value
+    );
 }
 
 function sortByDatumDesc(
     toSort: Array<OpenZaehlungDTO>
 ): Array<OpenZaehlungDTO> {
     return toSort.sort(ZaehlungComparator.sortByDatumDesc);
+}
+
+function sortByMstId(
+    toSort: Array<MessstelleOverviewDTO>
+): Array<MessstelleOverviewDTO> {
+    return toSort.sort((a, b) => (a.mstId > b.mstId ? 1 : -1));
 }
 
 function resetDataArrays(): void {

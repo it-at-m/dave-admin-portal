@@ -120,7 +120,7 @@
                         <v-icon>mdi-clipboard-list-outline</v-icon>
                     </v-btn>
                 </template>
-                <span> Offene Zählungen </span>
+                <span> Zählungen & Messstellen </span>
             </v-tooltip>
             <v-tooltip bottom>
                 <template #activator="{ on, attrs }">
