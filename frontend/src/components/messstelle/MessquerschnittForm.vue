@@ -23,15 +23,6 @@
                         ></v-autocomplete>
                     </v-col>
                     <v-spacer />
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <lhm-text-field
-                            :text="selectedMessquerschnitt.mqId"
-                            caption="MQ-ID"
-                        />
-                    </v-col>
                 </v-row>
                 <v-row dense>
                     <v-col
