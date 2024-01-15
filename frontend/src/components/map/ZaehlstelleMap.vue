@@ -177,7 +177,7 @@ import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 import TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
 import AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
-import MessstelleKarteDTO from "@/domain/dto/MessstelleKarteDTO";
+import MessstelleKarteDTO from "@/domain/dto/messstelle/MessstelleKarteDTO";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -490,7 +490,11 @@ export default class ZaehlstelleMap extends Vue {
         }
         let tooltip = "<div><b>";
         if (tooltipDto.mstId) {
-            tooltip = `${tooltip}Messstelle: ${tooltipDto.mstId}</b><br/>`;
+            tooltip = `${tooltip}Messstelle: ${tooltipDto.mstId}`;
+            if (tooltipDto.detektierteVerkehrsarten) {
+                tooltip = `${tooltip} (${tooltipDto.detektierteVerkehrsarten})`;
+            }
+            tooltip = `${tooltip}</b><br/>`;
         }
         if (tooltipDto.standort) {
             tooltip = `${tooltip}${tooltipDto.standort}<br/>`;
@@ -510,9 +514,6 @@ export default class ZaehlstelleMap extends Vue {
         }
         if (tooltipDto.abbaudatum) {
             tooltip = `${tooltip}Abbau: ${tooltipDto.abbaudatum}<br/>`;
-        }
-        if (tooltipDto.detektierteVerkehrsarten) {
-            tooltip = `${tooltip}Verkehrsarten: ${tooltipDto.detektierteVerkehrsarten}<br/>`;
         }
         if (tooltipDto.datumLetztePlausibleMessung) {
             tooltip = `${tooltip}Letzte plausible Messung: ${tooltipDto.datumLetztePlausibleMessung}<br/>`;
