@@ -59,10 +59,16 @@
                 focusable
             >
                 <open-messstelle-panel
-                    :header="neueMessstellenHeader"
+                    :header="geplanteMessstellenHeader"
+                    color="orange lighten-4"
+                    icon="mdi-clipboard-clock-outline"
+                    :messstellen="geplanteMessstellen"
+                />
+                <open-messstelle-panel
+                    :header="neuUmgesetzteMessstellenHeader"
                     color="blue lighten-4"
-                    icon="mdi-clipboard-edit-outline"
-                    :messstellen="neueMessstellen"
+                    icon="mdi-clipboard-plus-outline"
+                    :messstellen="neuUmgesetztMessstellen"
                 />
                 <open-messstelle-panel
                     :header="nichtSichtbareMessstellenHeader"
@@ -87,6 +93,7 @@ import { useStore } from "@/util/useStore";
 import OpenMessstellePanel from "@/components/messstelle/OpenMessstellePanel.vue";
 import MessstelleService from "@/api/service/MessstelleService";
 import MessstelleOverviewDTO from "@/domain/dto/messstelle/MessstelleOverviewDTO";
+import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 
 const store = useStore();
 
@@ -105,7 +112,10 @@ const accomplishedZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
 const correctionZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
     [] as Array<OpenZaehlungDTO>
 );
-const neueMessstellen: Ref<Array<MessstelleOverviewDTO>> = ref(
+const geplanteMessstellen: Ref<Array<MessstelleOverviewDTO>> = ref(
+    [] as Array<MessstelleOverviewDTO>
+);
+const neuUmgesetztMessstellen: Ref<Array<MessstelleOverviewDTO>> = ref(
     [] as Array<MessstelleOverviewDTO>
 );
 const nichtSichtbareMessstellen: Ref<Array<MessstelleOverviewDTO>> = ref(
@@ -145,8 +155,11 @@ const getAccomplishedHeader: ComputedRef<string> = computed(() => {
 const getCorrectionHeader: ComputedRef<string> = computed(() => {
     return `Fehlerhafte Zählungen: ${correctionZaehlungen.value.length}`;
 });
-const neueMessstellenHeader: ComputedRef<string> = computed(() => {
-    return `Neue Messstellen: ${neueMessstellen.value.length}`;
+const geplanteMessstellenHeader: ComputedRef<string> = computed(() => {
+    return `Geplante Messstellen: ${geplanteMessstellen.value.length}`;
+});
+const neuUmgesetzteMessstellenHeader: ComputedRef<string> = computed(() => {
+    return `Neu umgesetzte Messstellen: ${neuUmgesetztMessstellen.value.length}`;
 });
 const nichtSichtbareMessstellenHeader: ComputedRef<string> = computed(() => {
     return `Nicht sichtbare Messstellen: ${nichtSichtbareMessstellen.value.length}`;
@@ -191,8 +204,11 @@ function loadOpenMessstellen(): void {
     MessstelleService.getAllMessstellenForOverview()
         .then((messstellen: Array<MessstelleOverviewDTO>) => {
             messstellen.forEach((messstelle: MessstelleOverviewDTO) => {
-                if (!messstelle.geprueft) {
-                    neueMessstellen.value.push(messstelle);
+                console.error(messstelle.status);
+                if (messstelle.status === MessstelleStatus.IN_PLANUNG) {
+                    geplanteMessstellen.value.push(messstelle);
+                } else if (!messstelle.geprueft) {
+                    neuUmgesetztMessstellen.value.push(messstelle);
                 } else if (!messstelle.sichtbarDatenportal) {
                     nichtSichtbareMessstellen.value.push(messstelle);
                 }
@@ -211,7 +227,7 @@ function sortDataArrays(): void {
         accomplishedZaehlungen.value
     );
     correctionZaehlungen.value = sortByDatumDesc(correctionZaehlungen.value);
-    neueMessstellen.value = sortByMstId(neueMessstellen.value);
+    geplanteMessstellen.value = sortByMstId(geplanteMessstellen.value);
     nichtSichtbareMessstellen.value = sortByMstId(
         nichtSichtbareMessstellen.value
     );

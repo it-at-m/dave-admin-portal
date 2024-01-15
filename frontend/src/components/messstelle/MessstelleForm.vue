@@ -71,7 +71,9 @@
                         md="4"
                     >
                         <lhm-text-field
-                            :text="editMessstelle.status"
+                            :text="
+                                messstelleStatusText.get(editMessstelle.status)
+                            "
                             caption="Status"
                         />
                     </v-col>
@@ -190,6 +192,7 @@ import { computed, ComputedRef, ref, Ref } from "vue";
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import _ from "lodash";
+import { messstelleStatusText } from "@/domain/enums/MessstelleStatus";
 
 /* eslint-enable no-unused-vars */
 
