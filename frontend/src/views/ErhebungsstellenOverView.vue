@@ -4,16 +4,6 @@
         class="pa-0"
     >
         <v-sheet
-            v-if="!isNotEmpty"
-            id="empty"
-            class="d-flex align-center justify-center pa-4 mx-auto"
-        >
-            <span class="text-caption grey--text text--lighten-1"
-                >Es sind aktuell keine offenen Zählungen vorhanden.</span
-            >
-        </v-sheet>
-        <v-sheet
-            v-if="isNotEmpty"
             width="100%"
             color="transparent"
             class="overflow-y-auto"
@@ -22,6 +12,7 @@
                 >Zählstellen
             </v-card-title>
             <v-expansion-panels
+                v-if="hasOpenZaehlungen"
                 hover
                 focusable
             >
@@ -51,10 +42,22 @@
                     :zaehlungen="correctionZaehlungen"
                 />
             </v-expansion-panels>
+            <v-card-subtitle
+                v-else
+                class="text-caption grey--text text--lighten-1"
+                >Es sind aktuell keine offenen Zählungen vorhanden.
+            </v-card-subtitle>
+        </v-sheet>
+        <v-sheet
+            width="100%"
+            color="transparent"
+            class="overflow-y-auto"
+        >
             <v-card-title style="font-weight: bold; font-size: x-large"
                 >Messstellen
             </v-card-title>
             <v-expansion-panels
+                v-if="hasMessstellen"
                 hover
                 focusable
             >
@@ -77,6 +80,11 @@
                     :messstellen="nichtSichtbareMessstellen"
                 />
             </v-expansion-panels>
+            <v-card-subtitle
+                v-else
+                class="text-caption grey--text text--lighten-1"
+                >Es sind aktuell keine Daten zu den Messstellen vorhanden.
+            </v-card-subtitle>
         </v-sheet>
     </v-container>
 </template>
@@ -122,7 +130,8 @@ const nichtSichtbareMessstellen: Ref<Array<MessstelleOverviewDTO>> = ref(
     [] as Array<MessstelleOverviewDTO>
 );
 
-const isNotEmpty: Ref<boolean> = ref(false);
+const hasMessstellen: Ref<boolean> = ref(false);
+const hasOpenZaehlungen: Ref<boolean> = ref(false);
 
 const createdStatusDesign: ComputedRef<IconOptions> = computed(() => {
     return getStatusDesign(Status.CREATED);
@@ -167,12 +176,13 @@ const nichtSichtbareMessstellenHeader: ComputedRef<string> = computed(() => {
 
 onMounted(() => {
     resetDataArrays();
-    isNotEmpty.value = false;
+    hasMessstellen.value = false;
     loadOpenZaehlungen();
     loadOpenMessstellen();
 });
 
 function loadOpenZaehlungen(): void {
+    hasOpenZaehlungen.value = false;
     ZaehlungService.getAllOpenZaehlungen()
         .then((zaehlungen: Array<OpenZaehlungDTO>) => {
             zaehlungen.forEach((zaehlung: OpenZaehlungDTO) => {
@@ -194,7 +204,7 @@ function loadOpenZaehlungen(): void {
                         break;
                 }
             });
-            isNotEmpty.value = isNotEmpty.value || zaehlungen.length > 0;
+            hasOpenZaehlungen.value = zaehlungen.length > 0;
             sortDataArrays();
         })
         .catch((error) => store.dispatch("snackbar/showError", error));
@@ -213,7 +223,8 @@ function loadOpenMessstellen(): void {
                     nichtSichtbareMessstellen.value.push(messstelle);
                 }
             });
-            isNotEmpty.value = isNotEmpty.value || messstellen.length > 0;
+            hasMessstellen.value =
+                hasMessstellen.value || messstellen.length > 0;
             sortDataArrays();
         })
         .catch((error) => store.dispatch("snackbar/showError", error));
