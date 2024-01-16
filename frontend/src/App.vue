@@ -410,6 +410,10 @@ export default class App extends Vue {
             this.selectedSuggestion.type === this.suggestionTypeZaehlung
         ) {
             this.showZaehlung(this.selectedSuggestion);
+        } else if (
+            this.selectedSuggestion.type === this.suggestionTypeMessstelle
+        ) {
+            this.showMessstelle(this.selectedSuggestion);
         } else {
             this.search();
         }
