@@ -61,19 +61,19 @@
                 hover
                 focusable
             >
-                <open-messstelle-panel
+                <messstelle-overview-panel
                     :header="geplanteMessstellenHeader"
                     color="orange lighten-4"
                     icon="mdi-clipboard-clock-outline"
                     :messstellen="geplanteMessstellen"
                 />
-                <open-messstelle-panel
+                <messstelle-overview-panel
                     :header="neuUmgesetzteMessstellenHeader"
                     color="blue lighten-4"
                     icon="mdi-clipboard-plus-outline"
                     :messstellen="neuUmgesetztMessstellen"
                 />
-                <open-messstelle-panel
+                <messstelle-overview-panel
                     :header="nichtSichtbareMessstellenHeader"
                     color="purple lighten-4"
                     icon="mdi-eye-off-outline"
@@ -98,10 +98,10 @@ import ZaehlungComparator from "@/util/ZaehlungComparator";
 import OpenZaehlungPanel from "@/components/zaehlung/OpenZaehlungPanel.vue";
 import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
 import { useStore } from "@/util/useStore";
-import OpenMessstellePanel from "@/components/messstelle/OpenMessstellePanel.vue";
 import MessstelleService from "@/api/service/MessstelleService";
 import MessstelleOverviewDTO from "@/domain/dto/messstelle/MessstelleOverviewDTO";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
+import MessstelleOverviewPanel from "@/components/messstelle/MessstelleOverviewPanel.vue";
 
 const store = useStore();
 
