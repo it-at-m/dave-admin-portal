@@ -5,4 +5,6 @@ export default interface MessstelleKarteDTO extends AnzeigeKarteDTO {
     mstId: string;
 
     tooltip: TooltipMessstelleDTO;
+
+    status: string;
 }

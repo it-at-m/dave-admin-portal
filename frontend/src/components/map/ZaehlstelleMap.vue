@@ -175,9 +175,14 @@ import TooltipZaehlstelleDTO from "@/domain/dto/TooltipZaehlstelleDTO";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
+import markerIconDiamondOrange from "@/assets/cards-diamond-orange.png";
 import TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
 import AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
 import MessstelleKarteDTO from "@/domain/dto/messstelle/MessstelleKarteDTO";
+import {
+    MessstelleStatus,
+    messstelleStatusText,
+} from "@/domain/enums/MessstelleStatus";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -544,8 +549,21 @@ export default class ZaehlstelleMap extends Vue {
      * Setzt die Optionen bezüglich verwendetes Icon für den Messstellenmarker.
      */
     private markerOptionsMessstelle(messstelleKarte: MessstelleKarteDTO) {
-        let defaultIcon = new Icon.Default();
-        defaultIcon.options.iconUrl = markerIconDiamondViolet;
+        let defaultIcon = new Icon({
+            iconUrl: markerIconDiamondViolet,
+            iconSize: [25, 41],
+        });
+
+        // todo: entfernen wenn gefixed
+        console.log(messstelleKarte.status); // Status ist auch nach Ändern in Kibana noch "Status"
+
+        if (
+            messstelleKarte.status ===
+            messstelleStatusText.get(MessstelleStatus.IN_PLANUNG)
+        ) {
+            defaultIcon.options.iconUrl = markerIconDiamondOrange;
+        }
+
         if (this.zId) {
             if (this.zId === messstelleKarte.id) {
                 defaultIcon.options.iconUrl = markerIconDiamondRed;
