@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Main from "./views/Main.vue";
 import ZaehlstelleView from "@/views/ZaehlstelleView.vue";
-import ErhebungsstellenOverview from "@/views/ErhebungsstellenOverview.vue";
+import ErhebungsstellenOverview from "@/views/ErhebungsstellenOverviewView.vue";
 import ConfigView from "@/views/ConfigView.vue";
 import MessstelleView from "@/views/MessstelleView.vue";
 
