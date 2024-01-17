@@ -554,9 +554,6 @@ export default class ZaehlstelleMap extends Vue {
             iconSize: [25, 41],
         });
 
-        // todo: entfernen wenn gefixed
-        console.log(messstelleKarte.status); // Status ist auch nach Ändern in Kibana noch "Status"
-
         if (
             messstelleKarte.status ===
             messstelleStatusText.get(MessstelleStatus.IN_PLANUNG)
