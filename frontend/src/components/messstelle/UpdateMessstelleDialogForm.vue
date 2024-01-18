@@ -45,6 +45,7 @@
             <v-spacer />
             <v-btn
                 color="secondary"
+                :disabled="isMessstelleInPlanung"
                 @click="save()"
             >
                 Speichern
@@ -63,12 +64,13 @@
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import MessstelleForm from "@/components/messstelle/MessstelleForm.vue";
 import MessquerschnittForm from "@/components/messstelle/MessquerschnittForm.vue";
-import { onMounted, ref, Ref } from "vue";
+import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
 import { ApiError, Levels } from "@/api/error";
 import { useStore } from "@/util/useStore";
 import { useRoute } from "vue-router/composables";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 
 const SHEETHEIGHT: Ref<string> = ref("600px");
 const activeTab: Ref<number> = ref(0);
@@ -83,6 +85,10 @@ const emits = defineEmits<{
     (e: "cancel"): void;
     (e: "saved"): void;
 }>();
+
+const isMessstelleInPlanung: ComputedRef<boolean> = computed(() => {
+    return messstelle.value.status === MessstelleStatus.IN_PLANUNG;
+});
 
 onMounted(() => {
     loadMessstelle();
