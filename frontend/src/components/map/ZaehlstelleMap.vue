@@ -176,6 +176,7 @@ import markerIconRed from "@/assets/marker-icon-red.png";
 import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 import markerIconDiamondOrange from "@/assets/cards-diamond-orange.png";
+import markerIconDiamondShadow from "@/assets/cards-diamond-shadow.png";
 import TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
 import AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
 import MessstelleKarteDTO from "@/domain/dto/messstelle/MessstelleKarteDTO";
@@ -551,6 +552,8 @@ export default class ZaehlstelleMap extends Vue {
     private markerOptionsMessstelle(messstelleKarte: MessstelleKarteDTO) {
         let defaultIcon = new Icon({
             iconUrl: markerIconDiamondViolet,
+            shadowUrl: markerIconDiamondShadow,
+            shadowAnchor: [8, 25],
             iconSize: [25, 41],
         });
 
