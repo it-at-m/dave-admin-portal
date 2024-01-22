@@ -1,27 +1,12 @@
 export const enum MessstelleStatus {
-    /**
-     * In Planung
-     */
     IN_PLANUNG = "IN_PLANUNG",
 
-    /**
-     * In Bestand
-     */
     IN_BESTAND = "IN_BESTAND",
 
-    /**
-     * AUSSER_BETRIEB
-     */
     AUSSER_BETRIEB = "AUSSER_BETRIEB",
 
-    /**
-     * ABGEBAUT
-     */
     ABGEBAUT = "ABGEBAUT",
 
-    /**
-     * UNBEKANNT
-     */
     UNBEKANNT = "UNBEKANNT",
 }
 
