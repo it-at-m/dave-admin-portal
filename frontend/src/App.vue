@@ -115,12 +115,12 @@
                         icon
                         small
                         v-on="on"
-                        @click="navigateToOpenZaehlungen"
+                        @click="navigateToErhebungsstellenOverview"
                     >
                         <v-icon>mdi-clipboard-list-outline</v-icon>
                     </v-btn>
                 </template>
-                <span> Offene Zählungen </span>
+                <span> Zählungen & Messstellen </span>
             </v-tooltip>
             <v-tooltip bottom>
                 <template #activator="{ on, attrs }">
@@ -410,6 +410,10 @@ export default class App extends Vue {
             this.selectedSuggestion.type === this.suggestionTypeZaehlung
         ) {
             this.showZaehlung(this.selectedSuggestion);
+        } else if (
+            this.selectedSuggestion.type === this.suggestionTypeMessstelle
+        ) {
+            this.showMessstelle(this.selectedSuggestion);
         } else {
             this.search();
         }
@@ -478,8 +482,8 @@ export default class App extends Vue {
         window.open(App.URL_HANDBUCH_LINK);
     }
 
-    navigateToOpenZaehlungen() {
-        this.$router.push(`/offeneZaehlungen`);
+    navigateToErhebungsstellenOverview() {
+        this.$router.push(`/erhebungsstellenOverview`);
     }
 
     navigateToConfig() {

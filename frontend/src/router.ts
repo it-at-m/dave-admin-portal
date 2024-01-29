@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Main from "./views/Main.vue";
 import ZaehlstelleView from "@/views/ZaehlstelleView.vue";
-import OpenZaehlungenView from "@/views/OpenZaehlungenView.vue";
+import ErhebungsstellenOverview from "@/views/ErhebungsstellenOverviewView.vue";
 import ConfigView from "@/views/ConfigView.vue";
 import MessstelleView from "@/views/MessstelleView.vue";
 
@@ -38,9 +38,9 @@ export default new Router({
             component: Main,
         },
         {
-            path: "/offeneZaehlungen",
-            name: "offeneZaehlungen",
-            component: OpenZaehlungenView,
+            path: "/erhebungsstellenOverview",
+            name: "erhebungsstellenOverview",
+            component: ErhebungsstellenOverview,
         },
         {
             path: "/zaehlstelle/:zaehlstelleId/:zaehlungId?",
