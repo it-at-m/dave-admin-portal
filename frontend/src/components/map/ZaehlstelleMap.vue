@@ -557,10 +557,7 @@ export default class ZaehlstelleMap extends Vue {
             iconSize: [25, 41],
         });
 
-        if (
-            messstelleKarte.status ===
-            messstelleStatusText.get(MessstelleStatus.IN_PLANUNG)
-        ) {
+        if (messstelleKarte.status === MessstelleStatus.IN_PLANUNG) {
             defaultIcon.options.iconUrl = markerIconDiamondOrange;
         }
 
