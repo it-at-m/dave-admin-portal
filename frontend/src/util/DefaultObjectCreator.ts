@@ -10,6 +10,7 @@ import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
 import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import MessstelleInfoDTO from "@/domain/dto/messstelle/MessstelleInfoDTO";
+import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 
 export default class DefaultObjectCreator {
     private static readonly MUNICH_CENTER_LATITUDE: number = 48.137227;
@@ -56,6 +57,7 @@ export default class DefaultObjectCreator {
     public static createDefaultMessstelleEditDTO(): MessstelleEditDTO {
         const messstelle: MessstelleEditDTO = {} as MessstelleEditDTO;
         messstelle.sichtbarDatenportal = false;
+        messstelle.status = MessstelleStatus.IN_PLANUNG;
         messstelle.customSuchwoerter = [];
         messstelle.messquerschnitte = [];
         return messstelle;
