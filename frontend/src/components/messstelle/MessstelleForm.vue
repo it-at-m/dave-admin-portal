@@ -31,7 +31,7 @@
                         md="4"
                     >
                         <lhm-text-field
-                            :text="detektierteFahrzeuge"
+                            :text="editMessstelle.detektierteVerkehrsarten"
                             caption="Detektierte Fahrzeuge"
                         />
                     </v-col>
@@ -82,7 +82,7 @@
                         md="4"
                     >
                         <lhm-text-field
-                            :text="hersteller"
+                            :text="editMessstelle.hersteller"
                             caption="Hersteller"
                         />
                     </v-col>
@@ -191,7 +191,6 @@ import { computed, ComputedRef, ref, Ref } from "vue";
 /* eslint-disable no-unused-vars */
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
-import _ from "lodash";
 import { messstelleStatusText } from "@/domain/enums/MessstelleStatus";
 
 /* eslint-enable no-unused-vars */
@@ -210,23 +209,6 @@ const emits = defineEmits<{
 const editMessstelle = computed({
     get: () => props.value,
     set: (v) => emits("input", v),
-});
-
-const detektierteFahrzeuge: ComputedRef<string> = computed(() => {
-    let result = "";
-    if (!_.isEmpty(editMessstelle.value.messquerschnitte)) {
-        result =
-            editMessstelle.value.messquerschnitte[0].detektierteVerkehrsarten;
-    }
-    return result;
-});
-
-const hersteller: ComputedRef<string> = computed(() => {
-    let result = "";
-    if (!_.isEmpty(editMessstelle.value.messquerschnitte)) {
-        result = editMessstelle.value.messquerschnitte[0].hersteller;
-    }
-    return result;
 });
 
 const stadtbezirk: ComputedRef<string> = computed(() => {

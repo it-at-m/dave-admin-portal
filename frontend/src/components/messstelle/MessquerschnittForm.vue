@@ -48,7 +48,7 @@
                         md="4"
                     >
                         <lhm-text-field
-                            :text="selectedMessquerschnitt.fahrzeugKlassen"
+                            :text="editMessstelle.fahrzeugKlassen"
                             caption="FZ-Klassen"
                         />
                     </v-col>
