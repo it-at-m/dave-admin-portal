@@ -43,15 +43,7 @@
                             caption="Fahrtrichtung"
                         />
                     </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <lhm-text-field
-                            :text="editMessstelle.fahrzeugKlassen"
-                            caption="FZ-Klassen"
-                        />
-                    </v-col>
+                    <v-spacer />
                 </v-row>
                 <v-row dense>
                     <v-col

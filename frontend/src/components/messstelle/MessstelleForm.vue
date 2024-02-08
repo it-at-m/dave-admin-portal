@@ -90,11 +90,23 @@
                         cols="12"
                         md="4"
                     >
+                        <lhm-text-field
+                            :text="editMessstelle.fahrzeugKlassen"
+                            caption="FZ-Klassen"
+                        />
+                    </v-col>
+                </v-row>
+                <v-row dense>
+                    <v-col
+                        cols="12"
+                        md="12"
+                    >
                         <v-checkbox
                             v-model="editMessstelle.sichtbarDatenportal"
                             color="grey darken-1"
                             dense
                             hide-details
+                            class="mb-5"
                         >
                             <template #label>
                                 <v-icon
