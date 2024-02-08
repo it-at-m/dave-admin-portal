@@ -65,7 +65,7 @@ const geplanteMessstellenHeader: ComputedRef<string> = computed(() => {
     return `Geplante Messstellen: ${geplanteMessstellen.value.length}`;
 });
 const neuUmgesetzteMessstellenHeader: ComputedRef<string> = computed(() => {
-    return `Neu umgesetzte Messstellen: ${neuUmgesetztMessstellen.value.length}`;
+    return `Neue Messstellen: ${neuUmgesetztMessstellen.value.length}`;
 });
 const nichtSichtbareMessstellenHeader: ComputedRef<string> = computed(() => {
     return `Nicht sichtbare Messstellen: ${nichtSichtbareMessstellen.value.length}`;
