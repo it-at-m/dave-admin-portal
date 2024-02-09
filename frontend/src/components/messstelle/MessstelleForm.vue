@@ -13,7 +13,7 @@
                         md="4"
                     >
                         <lhm-text-field
-                            caption="MessstellenId"
+                            caption="ID Messstelle"
                             :text="editMessstelle.mstId"
                         />
                     </v-col>
