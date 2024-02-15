@@ -13,7 +13,7 @@
                         md="4"
                     >
                         <lhm-text-field
-                            caption="MessstellenId"
+                            caption="ID Messstelle"
                             :text="editMessstelle.mstId"
                         />
                     </v-col>
@@ -132,8 +132,8 @@
                             dense
                             rows="2"
                             row-height="10"
-                            counter="255"
-                            maxlength="255"
+                            counter="60"
+                            maxlength="60"
                         ></v-textarea>
                     </v-col>
                 </v-row>

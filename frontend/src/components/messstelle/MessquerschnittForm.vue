@@ -52,7 +52,7 @@
                     >
                         <lhm-text-field
                             :text="selectedMessquerschnitt.lageMessquerschnitt"
-                            caption="Lage"
+                            caption="Lage Messquerschnitt"
                         />
                     </v-col>
                     <v-col
