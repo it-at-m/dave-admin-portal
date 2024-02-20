@@ -6,7 +6,7 @@
             >{{ caption }}</span
         ><br />
         <span class="text text-info">{{ text }}</span
-        ><br /><br />
+        ><br /><br v-if="fahrbeziehung" />
     </div>
 </template>
 
@@ -17,6 +17,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class LhmTextField extends Vue {
     @Prop({ default: "" }) readonly caption!: string;
     @Prop({ default: "" }) readonly text!: string;
+    @Prop({ default: false }) readonly fahrbeziehung?: boolean;
 
     get showCaption(): boolean {
         return this.caption !== "";

@@ -55,7 +55,7 @@ import UpdateMessstelleDialog from "@/components/messstelle/UpdateMessstelleDial
 import MessstelleInfoDTO from "@/domain/dto/messstelle/MessstelleInfoDTO";
 
 const reloadMessstelleMap: Ref<boolean> = ref(false);
-const showUpdateMessstelleDialog: Ref<boolean> = ref(false);
+const showUpdateMessstelleDialog: Ref<boolean> = ref(true);
 const messstelle: Ref<MessstelleInfoDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleInfoDTO()
 );
