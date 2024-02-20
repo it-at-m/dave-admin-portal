@@ -184,6 +184,7 @@ import {
     MessstelleStatus,
     messstelleStatusText,
 } from "@/domain/enums/MessstelleStatus";
+import { useDateUtils } from "@/util/DateUtils";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -516,13 +517,19 @@ export default class ZaehlstelleMap extends Vue {
             tooltip = `${tooltip}${tooltipDto.stadtbezirk}<br/>`;
         }
         if (tooltipDto.realisierungsdatum) {
-            tooltip = `${tooltip} Aufbau: ${tooltipDto.realisierungsdatum}<br/>`;
+            tooltip = `${tooltip} Aufbau: ${useDateUtils().formatDate(
+                tooltipDto.realisierungsdatum
+            )}<br/>`;
         }
         if (tooltipDto.abbaudatum) {
-            tooltip = `${tooltip}Abbau: ${tooltipDto.abbaudatum}<br/>`;
+            tooltip = `${tooltip}Abbau: ${useDateUtils().formatDate(
+                tooltipDto.abbaudatum
+            )}<br/>`;
         }
         if (tooltipDto.datumLetztePlausibleMessung) {
-            tooltip = `${tooltip}Letzte plausible Messung: ${tooltipDto.datumLetztePlausibleMessung}<br/>`;
+            tooltip = `${tooltip}Letzte plausible Messung: ${useDateUtils().formatDate(
+                tooltipDto.datumLetztePlausibleMessung
+            )}<br/>`;
         }
 
         tooltip = `${tooltip}</div>`;
