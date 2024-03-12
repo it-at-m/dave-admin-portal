@@ -40,7 +40,7 @@
                     >
                         <lhm-text-field
                             :text="
-                                himmelsRichtungen.get(
+                                himmelsRichtungenTextLong.get(
                                     selectedMessquerschnitt.fahrtrichtung
                                 )
                             "
@@ -106,6 +106,7 @@ import { computed, ComputedRef, ref, Ref } from "vue";
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import MessquerschnittEditDTO from "@/domain/dto/messstelle/MessquerschnittEditDTO";
+import { himmelsRichtungenTextLong } from "@/domain/enums/Himmelsrichtungen";
 
 /* eslint-enable no-unused-vars */
 
@@ -134,11 +135,4 @@ const selectedMessquerschnitt: Ref<MessquerschnittEditDTO> = ref(
 const stadtbezirk: ComputedRef<string> = computed(() => {
     return `${editMessstelle.value.stadtbezirkNummer} - ${editMessstelle.value.stadtbezirk}`;
 });
-
-const himmelsRichtungen: Map<string, string> = new Map<string, string>([
-    ["N", "Nord"],
-    ["O", "Ost"],
-    ["S", "Süd"],
-    ["W", "West"],
-]);
 </script>
