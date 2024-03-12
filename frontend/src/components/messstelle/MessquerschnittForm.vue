@@ -39,7 +39,11 @@
                         md="4"
                     >
                         <lhm-text-field
-                            :text="selectedMessquerschnitt.fahrtrichtung"
+                            :text="
+                                himmelsRichtungen.get(
+                                    selectedMessquerschnitt.fahrtrichtung
+                                )
+                            "
                             caption="Fahrtrichtung"
                         />
                     </v-col>
@@ -130,4 +134,11 @@ const selectedMessquerschnitt: Ref<MessquerschnittEditDTO> = ref(
 const stadtbezirk: ComputedRef<string> = computed(() => {
     return `${editMessstelle.value.stadtbezirkNummer} - ${editMessstelle.value.stadtbezirk}`;
 });
+
+const himmelsRichtungen: Map<string, string> = new Map<string, string>([
+    ["N", "Nord"],
+    ["O", "Ost"],
+    ["S", "Süd"],
+    ["W", "west"],
+]);
 </script>
