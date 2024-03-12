@@ -139,6 +139,6 @@ const himmelsRichtungen: Map<string, string> = new Map<string, string>([
     ["N", "Nord"],
     ["O", "Ost"],
     ["S", "Süd"],
-    ["W", "west"],
+    ["W", "West"],
 ]);
 </script>
