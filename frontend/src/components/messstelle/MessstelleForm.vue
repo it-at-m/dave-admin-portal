@@ -107,6 +107,7 @@
                             dense
                             hide-details
                             class="mb-5"
+                            :disabled="disabled"
                         >
                             <template #label>
                                 <v-icon
@@ -128,6 +129,7 @@
                         <v-textarea
                             v-model="editMessstelle.standort"
                             label="Standort MS"
+                            :disabled="disabled"
                             outlined
                             dense
                             rows="2"
@@ -146,7 +148,7 @@
                             v-model="editMessstelle.bemerkung"
                             label="Bemerkung"
                             outlined
-                            readonly
+                            disabled
                             dense
                             rows="1"
                             row-height="10"
@@ -162,6 +164,7 @@
                             v-model="editMessstelle.customSuchwoerter"
                             multiple
                             label="Suchwörter"
+                            :disabled="disabled"
                             outlined
                             dense
                             small-chips
@@ -184,6 +187,7 @@
                         <v-textarea
                             v-model="editMessstelle.kommentar"
                             label="Kommentar"
+                            :disabled="disabled"
                             outlined
                             dense
                             rows="2"
@@ -209,6 +213,7 @@ import { messstelleStatusText } from "@/domain/enums/MessstelleStatus";
 
 interface Props {
     height: string;
+    disabled: boolean;
     value: MessstelleEditDTO;
 }
 

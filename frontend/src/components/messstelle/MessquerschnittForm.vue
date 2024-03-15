@@ -92,6 +92,7 @@
                             row-height="10"
                             counter="255"
                             maxlength="255"
+                            :disabled="disabled"
                         ></v-textarea>
                     </v-col>
                 </v-row>
@@ -112,6 +113,7 @@ import { himmelsRichtungenTextLong } from "@/domain/enums/Himmelsrichtungen";
 
 interface Props {
     height: string;
+    disabled: boolean;
     value: MessstelleEditDTO;
 }
 

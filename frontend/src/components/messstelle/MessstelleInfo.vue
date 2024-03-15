@@ -5,7 +5,6 @@
         :min-height="minheight"
         color="transparent"
         class="pa-4"
-        @click="$emit('edit-messstelle')"
     >
         <span class="text-caption">Messstelle</span><br />
         <span class="text-h5">{{ messstelle.mstId }}</span>
@@ -28,7 +27,5 @@ interface Props {
 withDefaults(defineProps<Props>(), {
     minheight: "160px",
 });
-
-defineEmits<(e: "edit-messstelle") => void>();
 </script>
 

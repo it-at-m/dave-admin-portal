@@ -22,6 +22,25 @@
                 <v-icon>mdi-routes</v-icon>
             </v-tab>
         </v-tabs>
+        <div v-if="isMessstelleInPlanung">
+            <v-row
+                dense
+                justify="center"
+            >
+                <v-banner single-line>
+                    <template #icon>
+                        <v-icon
+                            color="error"
+                            size="36"
+                        >
+                            mdi-alert-decagram-outline
+                        </v-icon>
+                    </template>
+                    <div v-html="tooltipText" />
+                </v-banner>
+            </v-row>
+            <v-divider />
+        </div>
         <v-tabs-items
             v-model="activeTab"
             class="d-flex flex-column align-stretch"
@@ -31,21 +50,22 @@
                 <messstelle-form
                     v-model="messstelle"
                     :height="SHEETHEIGHT"
+                    :disabled="isMessstelleInPlanung"
                 />
             </v-tab-item>
             <v-tab-item ref="messquerschnittform">
                 <messquerschnitt-form
                     v-model="messstelle"
                     :height="SHEETHEIGHT"
+                    :disabled="isMessstelleInPlanung"
                 />
             </v-tab-item>
         </v-tabs-items>
 
-        <v-card-actions>
+        <v-card-actions v-if="!isMessstelleInPlanung">
             <v-spacer />
             <v-btn
                 color="secondary"
-                :disabled="isMessstelleInPlanung"
                 @click="save()"
             >
                 Speichern
@@ -72,7 +92,7 @@ import { useRoute } from "vue-router/composables";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 
-const SHEETHEIGHT: Ref<string> = ref("600px");
+const SHEETHEIGHT: Ref<string> = ref("589px");
 const activeTab: Ref<number> = ref(0);
 const messstelle: Ref<MessstelleEditDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleEditDTO()
@@ -80,11 +100,6 @@ const messstelle: Ref<MessstelleEditDTO> = ref(
 
 const store = useStore();
 const route = useRoute();
-
-const emits = defineEmits<{
-    (e: "cancel"): void;
-    (e: "saved"): void;
-}>();
 
 const isMessstelleInPlanung: ComputedRef<boolean> = computed(() => {
     return messstelle.value.status === MessstelleStatus.IN_PLANUNG;
@@ -101,20 +116,19 @@ function save(): void {
                 level: Levels.INFO,
                 snackbarTextPart1: `Die Messstelle ${messstelle.value.mstId} wurde erfolgreich aktualisiert.`,
             });
-            emits("saved");
         })
         .catch((error: ApiError) => {
             store.dispatch("snackbar/showError", error);
         })
         .finally(() => {
             activeTab.value = 0;
+            loadMessstelle();
         });
 }
 
 function cancel(): void {
     activeTab.value = 0;
-    messstelle.value = DefaultObjectCreator.createDefaultMessstelleEditDTO();
-    emits("cancel");
+    loadMessstelle();
 }
 
 function loadMessstelle(): void {
@@ -125,4 +139,13 @@ function loadMessstelle(): void {
         }
     );
 }
+
+const tooltipText: ComputedRef<string> = computed(() => {
+    let text = "";
+    if (isMessstelleInPlanung) {
+        text =
+            "Solange eine Messstelle den Status <strong>In Planung</strong> hat, kann diese nicht bearbeitet werden.";
+    }
+    return text;
+});
 </script>

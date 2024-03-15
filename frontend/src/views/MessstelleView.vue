@@ -16,8 +16,6 @@
                         :height="headerHeightVh"
                         :minheight="headerHeightVh"
                         :messstelle="messstelle"
-                        :style="{ cursor: 'pointer' }"
-                        @edit-messstelle="editMessstelle"
                     >
                     </messstelle-info>
                 </v-sheet>
@@ -36,11 +34,12 @@
             </v-col>
         </v-row>
 
-        <update-messstelle-dialog
-            v-model="showUpdateMessstelleDialog"
-            @saved="reloadDataAndCloseDialog"
-            @cancel="cancelUpdateMessstelleDialog"
-        />
+        <v-row
+            dense
+            class="ma-2"
+        >
+            <update-messstelle-form />
+        </v-row>
     </v-container>
 </template>
 <script setup lang="ts">
@@ -51,11 +50,10 @@ import { useRoute } from "vue-router/composables";
 import MessstelleInfo from "@/components/messstelle/MessstelleInfo.vue";
 import { useVuetify } from "@/util/useVuetify";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import UpdateMessstelleDialog from "@/components/messstelle/UpdateMessstelleDialog.vue";
 import MessstelleInfoDTO from "@/domain/dto/messstelle/MessstelleInfoDTO";
+import UpdateMessstelleForm from "@/components/messstelle/UpdateMessstelleForm.vue";
 
 const reloadMessstelleMap: Ref<boolean> = ref(false);
-const showUpdateMessstelleDialog: Ref<boolean> = ref(true);
 const messstelle: Ref<MessstelleInfoDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleInfoDTO()
 );
@@ -75,7 +73,6 @@ const headerHeightVh: ComputedRef<string> = computed(() => {
 });
 
 const messstelleId: ComputedRef<string> = computed(() => {
-    const route = useRoute();
     const messstelleId = route.params.messstelleId;
     if (!messstelleId) {
         return "";
@@ -102,20 +99,5 @@ function loadMessstelle(): void {
     MessstelleService.getMessstelleInfo(messstelleId).then((messstelleById) => {
         messstelle.value = messstelleById;
     });
-}
-
-function editMessstelle(): void {
-    showUpdateMessstelleDialog.value = true;
-}
-
-function reloadDataAndCloseDialog() {
-    loadMessstelle();
-    reloadMessstelleMap.value = !reloadMessstelleMap.value;
-    showUpdateMessstelleDialog.value = false;
-}
-
-function cancelUpdateMessstelleDialog() {
-    showUpdateMessstelleDialog.value = false;
-    loadMessstelle();
 }
 </script>
