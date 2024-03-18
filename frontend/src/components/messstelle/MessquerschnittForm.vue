@@ -39,7 +39,11 @@
                         md="4"
                     >
                         <lhm-text-field
-                            :text="selectedMessquerschnitt.fahrtrichtung"
+                            :text="
+                                himmelsRichtungenTextLong.get(
+                                    selectedMessquerschnitt.fahrtrichtung
+                                )
+                            "
                             caption="Fahrtrichtung"
                         />
                     </v-col>
@@ -102,6 +106,7 @@ import { computed, ComputedRef, ref, Ref } from "vue";
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import MessquerschnittEditDTO from "@/domain/dto/messstelle/MessquerschnittEditDTO";
+import { himmelsRichtungenTextLong } from "@/domain/enums/Himmelsrichtungen";
 
 /* eslint-enable no-unused-vars */
 
