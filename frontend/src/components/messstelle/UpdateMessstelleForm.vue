@@ -21,6 +21,10 @@
                 Messquerschnitt
                 <v-icon>mdi-routes</v-icon>
             </v-tab>
+            <v-tab>
+                Lagepläne
+                <v-icon>mdi-map-outline</v-icon>
+            </v-tab>
         </v-tabs>
         <div v-if="isMessstelleInPlanung">
             <v-row
@@ -59,6 +63,15 @@
                     :height="SHEETHEIGHT"
                     :disabled="isMessstelleInPlanung"
                 />
+            </v-tab-item>
+            <v-tab-item ref="lageplaene">
+                <v-card>
+                    <v-card-title class="justify-center">
+                        <v-icon>mdi-account-hard-hat-outline</v-icon>
+                        Under Construction
+                        <v-icon>mdi-car-wrench</v-icon>
+                    </v-card-title>
+                </v-card>
             </v-tab-item>
         </v-tabs-items>
 

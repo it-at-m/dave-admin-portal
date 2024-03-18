@@ -80,6 +80,7 @@ declare module '@vue/runtime-core' {
     VFadeTransition: typeof import('vuetify/lib')['VFadeTransition']
     VForm: typeof import('vuetify/lib')['VForm']
     VIcon: typeof import('vuetify/lib')['VIcon']
+    VItabItem: typeof import('vuetify/lib')['VItabItem']
     VList: typeof import('vuetify/lib')['VList']
     VListItem: typeof import('vuetify/lib')['VListItem']
     VListItemContent: typeof import('vuetify/lib')['VListItemContent']
