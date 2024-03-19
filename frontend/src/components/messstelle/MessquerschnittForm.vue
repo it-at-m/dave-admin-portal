@@ -90,8 +90,8 @@
                             dense
                             rows="2"
                             row-height="10"
-                            counter="255"
-                            maxlength="255"
+                            counter="60"
+                            maxlength="60"
                             :disabled="disabled"
                         ></v-textarea>
                     </v-col>
