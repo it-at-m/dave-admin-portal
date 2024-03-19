@@ -65,13 +65,7 @@
                 />
             </v-tab-item>
             <v-tab-item ref="lageplaene">
-                <v-card>
-                    <v-card-title class="justify-center">
-                        <v-icon>mdi-account-hard-hat-outline</v-icon>
-                        Under Construction
-                        <v-icon>mdi-car-wrench</v-icon>
-                    </v-card-title>
-                </v-card>
+                <lageplan-form :height="SHEETHEIGHT" />
             </v-tab-item>
         </v-tabs-items>
 
@@ -104,6 +98,7 @@ import { useStore } from "@/util/useStore";
 import { useRoute } from "vue-router/composables";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
+import LageplanForm from "@/components/messstelle/LageplanForm.vue";
 
 const SHEETHEIGHT: Ref<string> = ref("589px");
 const activeTab: Ref<number> = ref(0);

@@ -35,6 +35,7 @@ declare module '@vue/runtime-core' {
     FahrzeugeForm: typeof import('./src/components/zaehlung/form/FahrzeugeForm.vue')['default']
     KnotenLageForm: typeof import('./src/components/zaehlung/form/KnotenLageForm.vue')['default']
     KontaktForm: typeof import('./src/components/zaehlung/form/KontaktForm.vue')['default']
+    LageplanForm: typeof import('./src/components/messstelle/LageplanForm.vue')['default']
     LhmTextField: typeof import('./src/components/common/LhmTextField.vue')['default']
     MessquerschnittForm: typeof import('./src/components/messstelle/MessquerschnittForm.vue')['default']
     MessstelleForm: typeof import('./src/components/messstelle/MessstelleForm.vue')['default']
