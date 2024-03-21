@@ -6,7 +6,7 @@
         class="overflow-y-auto"
     >
         <v-card-text>
-            <v-form>
+            <v-form v-model="isFormValid">
                 <v-row dense>
                     <v-col
                         cols="12"
@@ -132,6 +132,7 @@
                             :disabled="disabled"
                             outlined
                             dense
+                            :rules="[validationUtils.pflichtfeld]"
                             rows="2"
                             row-height="10"
                             counter="60"
@@ -204,28 +205,34 @@
 
 <script setup lang="ts">
 import { computed, ComputedRef, ref, Ref } from "vue";
-/* eslint-disable no-unused-vars */
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import { messstelleStatusText } from "@/domain/enums/MessstelleStatus";
+import { useValidationUtils } from "@/util/validationUtils";
 
-/* eslint-enable no-unused-vars */
-
+const validationUtils = useValidationUtils();
 interface Props {
     height: string;
     disabled: boolean;
     value: MessstelleEditDTO;
+    valid: boolean;
 }
 
 const props = defineProps<Props>();
 
 const emits = defineEmits<{
     (e: "input", v: MessstelleEditDTO): void;
+    (e: "update:valid", v: boolean): void;
 }>();
 
 const editMessstelle = computed({
     get: () => props.value,
     set: (v) => emits("input", v),
+});
+
+const isFormValid = computed({
+    get: () => props.valid,
+    set: (v) => emits("update:valid", v),
 });
 
 const stadtbezirk: ComputedRef<string> = computed(() => {

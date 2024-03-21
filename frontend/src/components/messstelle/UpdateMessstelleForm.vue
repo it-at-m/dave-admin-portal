@@ -50,16 +50,18 @@
             class="d-flex flex-column align-stretch"
         >
             <!-- Inhalte -->
-            <v-tab-item ref="messstelleform">
+            <v-tab-item>
                 <messstelle-form
                     v-model="messstelle"
+                    :valid.sync="validMst"
                     :height="SHEETHEIGHT"
                     :disabled="isMessstelleInPlanung"
                 />
             </v-tab-item>
-            <v-tab-item ref="messquerschnittform">
+            <v-tab-item>
                 <messquerschnitt-form
                     v-model="messstelle"
+                    :valid.sync="validMqs"
                     :height="SHEETHEIGHT"
                     :disabled="isMessstelleInPlanung"
                 />
@@ -102,6 +104,8 @@ import LageplanForm from "@/components/messstelle/LageplanForm.vue";
 
 const SHEETHEIGHT: Ref<string> = ref("589px");
 const activeTab: Ref<number> = ref(0);
+const validMst: Ref<boolean> = ref(false);
+const validMqs: Ref<Map<string, boolean>> = ref(new Map<string, boolean>());
 const messstelle: Ref<MessstelleEditDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
@@ -118,20 +122,48 @@ onMounted(() => {
 });
 
 function save(): void {
-    MessstelleService.saveMessstelle(messstelle.value)
-        .then(() => {
-            store.dispatch("snackbar/showToast", {
-                level: Levels.INFO,
-                snackbarTextPart1: `Die Messstelle ${messstelle.value.mstId} wurde erfolgreich aktualisiert.`,
+    // const inValidMqs: Array<string> = [];
+    // validMqs.value.forEach((value, key) => {
+    //     if (!value) {
+    //         inValidMqs.push(key);
+    //     }
+    // });
+    if (areAllFormsValid()) {
+        MessstelleService.saveMessstelle(messstelle.value)
+            .then(() => {
+                store.dispatch("snackbar/showToast", {
+                    level: Levels.INFO,
+                    snackbarTextPart1: `Die Messstelle ${messstelle.value.mstId} wurde erfolgreich aktualisiert.`,
+                });
+            })
+            .catch((error: ApiError) => {
+                store.dispatch("snackbar/showError", error);
+            })
+            .finally(() => {
+                activeTab.value = 0;
+                loadMessstelle();
             });
-        })
-        .catch((error: ApiError) => {
-            store.dispatch("snackbar/showError", error);
-        })
-        .finally(() => {
-            activeTab.value = 0;
-            loadMessstelle();
-        });
+        // } else {
+        //     let errorText = "Der Standort";
+        //     if (!validMst.value) {
+        //         errorText = `${errorText} der Messstelle ${messstelle.value.mstId}`;
+        //         if (inValidMqs.length > 0) {
+        //             errorText = `${errorText} und`;
+        //         }
+        //     }
+        //     if (inValidMqs.length === 1) {
+        //         errorText = `${errorText} des Messquerschnittes ${inValidMqs[0]}`;
+        //     } else if (inValidMqs.length > 1) {
+        //         errorText = `${errorText} der Messquerschnitte ${inValidMqs.join(
+        //             ", "
+        //         )}`;
+        //     }
+        //     errorText = `${errorText} wurde nicht ausgefüllt.`;
+        //     store.dispatch("snackbar/showToast", {
+        //         level: Levels.ERROR,
+        //         snackbarTextPart1: errorText,
+        //     });
+    }
 }
 
 function cancel(): void {
@@ -144,6 +176,9 @@ function loadMessstelle(): void {
     MessstelleService.getMessstelleToEdit(messstelleId).then(
         (messstelleById) => {
             messstelle.value = messstelleById;
+            messstelleById.messquerschnitte.forEach((value) =>
+                validMqs.value.set(value.mqId, false)
+            );
         }
     );
 }
@@ -156,4 +191,36 @@ const tooltipText: ComputedRef<string> = computed(() => {
     }
     return text;
 });
+
+function areAllFormsValid(): boolean {
+    const inValidMqs: Array<string> = [];
+    validMqs.value.forEach((value, key) => {
+        if (!value) {
+            inValidMqs.push(key);
+        }
+    });
+    const areAllFormsValid: boolean = validMst.value && inValidMqs.length === 0;
+    if (!areAllFormsValid) {
+        let errorText = "Der Standort";
+        if (!validMst.value) {
+            errorText = `${errorText} der Messstelle ${messstelle.value.mstId}`;
+            if (inValidMqs.length > 0) {
+                errorText = `${errorText} und`;
+            }
+        }
+        if (inValidMqs.length === 1) {
+            errorText = `${errorText} des Messquerschnittes ${inValidMqs[0]}`;
+        } else if (inValidMqs.length > 1) {
+            errorText = `${errorText} der Messquerschnitte ${inValidMqs.join(
+                ", "
+            )}`;
+        }
+        errorText = `${errorText} wurde nicht ausgefüllt.`;
+        store.dispatch("snackbar/showToast", {
+            level: Levels.ERROR,
+            snackbarTextPart1: errorText,
+        });
+    }
+    return areAllFormsValid;
+}
 </script>
