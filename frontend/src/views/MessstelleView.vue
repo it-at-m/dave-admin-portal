@@ -42,7 +42,7 @@
         >
             <update-messstelle-form
                 :height="rightHeightVh"
-                :content-height="rightContentHeightVh"
+                :content-height="rightContentHeight"
             />
         </v-row>
     </v-container>
@@ -101,7 +101,7 @@ const rightHeightVh = computed(() => {
 /**
  * Berechnet die Höhe der Fläche unter den Tabs (72px hoch) in "vh"
  */
-const rightContentHeightVh = computed(() => {
+const rightContentHeight = computed(() => {
     return (
         100 -
         headerHeight.value -
