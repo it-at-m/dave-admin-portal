@@ -40,7 +40,11 @@
                             mdi-alert-decagram-outline
                         </v-icon>
                     </template>
-                    <div v-html="tooltipText" />
+                    <div>
+                        Solange eine Messstelle den Status
+                        <strong>In Planung</strong> hat, kann diese nicht
+                        bearbeitet werden.
+                    </div>
                 </v-banner>
             </v-row>
             <v-divider />
@@ -147,13 +151,4 @@ function loadMessstelle(): void {
         }
     );
 }
-
-const tooltipText: ComputedRef<string> = computed(() => {
-    let text = "";
-    if (isMessstelleInPlanung) {
-        text =
-            "Solange eine Messstelle den Status <strong>In Planung</strong> hat, kann diese nicht bearbeitet werden.";
-    }
-    return text;
-});
 </script>
