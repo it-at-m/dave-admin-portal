@@ -1,7 +1,7 @@
 <template>
     <v-sheet
         width="100%"
-        class="d-flex flex-column"
+        :min-height="height"
     >
         <v-tabs
             v-model="activeTab"
@@ -21,7 +21,34 @@
                 Messquerschnitt
                 <v-icon>mdi-routes</v-icon>
             </v-tab>
+            <v-tab>
+                Lagepläne
+                <v-icon>mdi-map-outline</v-icon>
+            </v-tab>
         </v-tabs>
+        <div v-if="isMessstelleInPlanung">
+            <v-row
+                dense
+                justify="center"
+            >
+                <v-banner single-line>
+                    <template #icon>
+                        <v-icon
+                            color="error"
+                            size="36"
+                        >
+                            mdi-alert-decagram-outline
+                        </v-icon>
+                    </template>
+                    <div>
+                        Solange eine Messstelle den Status
+                        <strong>In Planung</strong> hat, kann diese nicht
+                        bearbeitet werden.
+                    </div>
+                </v-banner>
+            </v-row>
+            <v-divider />
+        </div>
         <v-tabs-items
             v-model="activeTab"
             class="d-flex flex-column align-stretch"
@@ -30,22 +57,26 @@
             <v-tab-item ref="messstelleform">
                 <messstelle-form
                     v-model="messstelle"
-                    :height="SHEETHEIGHT"
+                    :height="contentHeightVh"
+                    :disabled="isMessstelleInPlanung"
                 />
             </v-tab-item>
             <v-tab-item ref="messquerschnittform">
                 <messquerschnitt-form
                     v-model="messstelle"
-                    :height="SHEETHEIGHT"
+                    :height="contentHeightVh"
+                    :disabled="isMessstelleInPlanung"
                 />
+            </v-tab-item>
+            <v-tab-item ref="lageplaene">
+                <lageplan-form :height="contentHeightVh" />
             </v-tab-item>
         </v-tabs-items>
 
-        <v-card-actions>
+        <v-card-actions v-if="!isMessstelleInPlanung">
             <v-spacer />
             <v-btn
                 color="secondary"
-                :disabled="isMessstelleInPlanung"
                 @click="save()"
             >
                 Speichern
@@ -71,23 +102,30 @@ import { useStore } from "@/util/useStore";
 import { useRoute } from "vue-router/composables";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
+import LageplanForm from "@/components/messstelle/LageplanForm.vue";
+import { useVuetify } from "@/util/useVuetify";
 
-const SHEETHEIGHT: Ref<string> = ref("600px");
 const activeTab: Ref<number> = ref(0);
 const messstelle: Ref<MessstelleEditDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
 
+interface Props {
+    height: string;
+    contentHeight: number;
+}
+
+const props = defineProps<Props>();
+
 const store = useStore();
 const route = useRoute();
-
-const emits = defineEmits<{
-    (e: "cancel"): void;
-    (e: "saved"): void;
-}>();
+const vuetify = useVuetify();
 
 const isMessstelleInPlanung: ComputedRef<boolean> = computed(() => {
     return messstelle.value.status === MessstelleStatus.IN_PLANUNG;
+});
+const contentHeightVh: ComputedRef<string> = computed(() => {
+    return props.contentHeight - 70 / (vuetify.breakpoint.height / 100) + "vh";
 });
 
 onMounted(() => {
@@ -101,20 +139,19 @@ function save(): void {
                 level: Levels.INFO,
                 snackbarTextPart1: `Die Messstelle ${messstelle.value.mstId} wurde erfolgreich aktualisiert.`,
             });
-            emits("saved");
         })
         .catch((error: ApiError) => {
             store.dispatch("snackbar/showError", error);
         })
         .finally(() => {
             activeTab.value = 0;
+            loadMessstelle();
         });
 }
 
 function cancel(): void {
     activeTab.value = 0;
-    messstelle.value = DefaultObjectCreator.createDefaultMessstelleEditDTO();
-    emits("cancel");
+    loadMessstelle();
 }
 
 function loadMessstelle(): void {

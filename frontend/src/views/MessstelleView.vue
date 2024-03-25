@@ -7,6 +7,7 @@
             <v-col cols="3">
                 <v-sheet
                     :min-height="headerHeightVh"
+                    :max-height="headerHeightVh"
                     width="100%"
                     color="grey lighten-3"
                     class="d-flex flex-column"
@@ -16,8 +17,6 @@
                         :height="headerHeightVh"
                         :minheight="headerHeightVh"
                         :messstelle="messstelle"
-                        :style="{ cursor: 'pointer' }"
-                        @edit-messstelle="editMessstelle"
                     >
                     </messstelle-info>
                 </v-sheet>
@@ -36,11 +35,16 @@
             </v-col>
         </v-row>
 
-        <update-messstelle-dialog
-            v-model="showUpdateMessstelleDialog"
-            @saved="reloadDataAndCloseDialog"
-            @cancel="cancelUpdateMessstelleDialog"
-        />
+        <v-row
+            dense
+            class="ma-2"
+            no-gutters
+        >
+            <update-messstelle-form
+                :height="heightVh"
+                :content-height="contentHeight"
+            />
+        </v-row>
     </v-container>
 </template>
 <script setup lang="ts">
@@ -51,11 +55,10 @@ import { useRoute } from "vue-router/composables";
 import MessstelleInfo from "@/components/messstelle/MessstelleInfo.vue";
 import { useVuetify } from "@/util/useVuetify";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import UpdateMessstelleDialog from "@/components/messstelle/UpdateMessstelleDialog.vue";
 import MessstelleInfoDTO from "@/domain/dto/messstelle/MessstelleInfoDTO";
+import UpdateMessstelleForm from "@/components/messstelle/UpdateMessstelleForm.vue";
 
 const reloadMessstelleMap: Ref<boolean> = ref(false);
-const showUpdateMessstelleDialog: Ref<boolean> = ref(true);
 const messstelle: Ref<MessstelleInfoDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleInfoDTO()
 );
@@ -74,8 +77,40 @@ const headerHeightVh: ComputedRef<string> = computed(() => {
     return headerHeight.value + "vh";
 });
 
+const appBarHeight = computed(() => {
+    return 65 / (vuetify.breakpoint.height / 100);
+});
+
+const marginContentHeight = computed(() => {
+    return 16 / (vuetify.breakpoint.height / 100);
+});
+
+/**
+ * Berechnet die Höhe der Inhaltsfläche "vh" - ohne Karte
+ */
+const heightVh = computed(() => {
+    return (
+        100 -
+        headerHeight.value -
+        appBarHeight.value -
+        marginContentHeight.value +
+        "vh"
+    );
+});
+
+/**
+ * Berechnet die Höhe der Fläche unter den Tabs (72px hoch) in "vh"
+ */
+const contentHeight = computed(() => {
+    return (
+        100 -
+        headerHeight.value -
+        appBarHeight.value -
+        72 / (vuetify.breakpoint.height / 100)
+    );
+});
+
 const messstelleId: ComputedRef<string> = computed(() => {
-    const route = useRoute();
     const messstelleId = route.params.messstelleId;
     if (!messstelleId) {
         return "";
@@ -102,20 +137,5 @@ function loadMessstelle(): void {
     MessstelleService.getMessstelleInfo(messstelleId).then((messstelleById) => {
         messstelle.value = messstelleById;
     });
-}
-
-function editMessstelle(): void {
-    showUpdateMessstelleDialog.value = true;
-}
-
-function reloadDataAndCloseDialog() {
-    loadMessstelle();
-    reloadMessstelleMap.value = !reloadMessstelleMap.value;
-    showUpdateMessstelleDialog.value = false;
-}
-
-function cancelUpdateMessstelleDialog() {
-    showUpdateMessstelleDialog.value = false;
-    loadMessstelle();
 }
 </script>

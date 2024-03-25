@@ -1,102 +1,107 @@
 <template>
     <v-sheet
         width="100%"
-        :height="height"
+        :min-height="height"
         :max-height="height"
         class="overflow-y-auto"
     >
-        <v-card-text>
-            <v-form>
-                <v-row dense>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-autocomplete
-                            v-model="selectedMessquerschnitt"
-                            outlined
-                            :items="editMessstelle.messquerschnitte"
-                            item-text="mqId"
-                            return-object
-                            dense
-                            label="ID Messquerschnitt"
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-spacer />
-                </v-row>
-                <v-row dense>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <lhm-text-field
-                            :text="selectedMessquerschnitt.strassenname"
-                            caption="Straßenname"
-                        />
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <lhm-text-field
-                            :text="
-                                himmelsRichtungenTextLong.get(
-                                    selectedMessquerschnitt.fahrtrichtung
-                                )
-                            "
-                            caption="Fahrtrichtung"
-                        />
-                    </v-col>
-                    <v-spacer />
-                </v-row>
-                <v-row dense>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <lhm-text-field
-                            :text="selectedMessquerschnitt.lageMessquerschnitt"
-                            caption="Lage Messquerschnitt"
-                        />
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <lhm-text-field
-                            :text="`${selectedMessquerschnitt.anzahlFahrspuren}`"
-                            caption="Anzahl Fahrstreifen"
-                        />
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <lhm-text-field
-                            :text="`${selectedMessquerschnitt.anzahlDetektoren}`"
-                            caption="Anzahl Detektoren"
-                        />
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col
-                        cols="12"
-                        md="12"
-                    >
-                        <v-textarea
-                            v-model="selectedMessquerschnitt.standort"
-                            label="Standort MQ"
-                            outlined
-                            dense
-                            rows="2"
-                            row-height="10"
-                            counter="255"
-                            maxlength="255"
-                        ></v-textarea>
-                    </v-col>
-                </v-row>
-            </v-form>
-        </v-card-text>
+        <v-card>
+            <v-card-text>
+                <v-form>
+                    <v-row dense>
+                        <v-col
+                            cols="12"
+                            md="4"
+                        >
+                            <v-autocomplete
+                                v-model="selectedMessquerschnitt"
+                                outlined
+                                :items="editMessstelle.messquerschnitte"
+                                item-text="mqId"
+                                return-object
+                                dense
+                                label="ID Messquerschnitt"
+                            ></v-autocomplete>
+                        </v-col>
+                        <v-spacer />
+                    </v-row>
+                    <v-row dense>
+                        <v-col
+                            cols="12"
+                            md="4"
+                        >
+                            <lhm-text-field
+                                :text="selectedMessquerschnitt.strassenname"
+                                caption="Straßenname"
+                            />
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            md="4"
+                        >
+                            <lhm-text-field
+                                :text="
+                                    himmelsRichtungenTextLong.get(
+                                        selectedMessquerschnitt.fahrtrichtung
+                                    )
+                                "
+                                caption="Fahrtrichtung"
+                            />
+                        </v-col>
+                        <v-spacer />
+                    </v-row>
+                    <v-row dense>
+                        <v-col
+                            cols="12"
+                            md="4"
+                        >
+                            <lhm-text-field
+                                :text="
+                                    selectedMessquerschnitt.lageMessquerschnitt
+                                "
+                                caption="Lage Messquerschnitt"
+                            />
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            md="4"
+                        >
+                            <lhm-text-field
+                                :text="`${selectedMessquerschnitt.anzahlFahrspuren}`"
+                                caption="Anzahl Fahrstreifen"
+                            />
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            md="4"
+                        >
+                            <lhm-text-field
+                                :text="`${selectedMessquerschnitt.anzahlDetektoren}`"
+                                caption="Anzahl Detektoren"
+                            />
+                        </v-col>
+                    </v-row>
+                    <v-row dense>
+                        <v-col
+                            cols="12"
+                            md="12"
+                        >
+                            <v-textarea
+                                v-model="selectedMessquerschnitt.standort"
+                                label="Standort MQ"
+                                outlined
+                                dense
+                                rows="2"
+                                row-height="10"
+                                counter="60"
+                                maxlength="60"
+                                :disabled="disabled"
+                            ></v-textarea>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-card-text>
+        </v-card>
     </v-sheet>
 </template>
 
@@ -112,6 +117,7 @@ import { himmelsRichtungenTextLong } from "@/domain/enums/Himmelsrichtungen";
 
 interface Props {
     height: string;
+    disabled: boolean;
     value: MessstelleEditDTO;
 }
 
