@@ -1,7 +1,7 @@
 <template>
     <v-sheet
         width="100%"
-        class="d-flex flex-column"
+        :min-height="height"
     >
         <v-tabs
             v-model="activeTab"
@@ -57,19 +57,19 @@
             <v-tab-item ref="messstelleform">
                 <messstelle-form
                     v-model="messstelle"
-                    :height="SHEETHEIGHT"
+                    :height="contentHeightVh"
                     :disabled="isMessstelleInPlanung"
                 />
             </v-tab-item>
             <v-tab-item ref="messquerschnittform">
                 <messquerschnitt-form
                     v-model="messstelle"
-                    :height="SHEETHEIGHT"
+                    :height="contentHeightVh"
                     :disabled="isMessstelleInPlanung"
                 />
             </v-tab-item>
             <v-tab-item ref="lageplaene">
-                <lageplan-form :height="SHEETHEIGHT" />
+                <lageplan-form :height="contentHeightVh" />
             </v-tab-item>
         </v-tabs-items>
 
@@ -103,18 +103,31 @@ import { useRoute } from "vue-router/composables";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import LageplanForm from "@/components/messstelle/LageplanForm.vue";
+import { useVuetify } from "@/util/useVuetify";
 
-const SHEETHEIGHT: Ref<string> = ref("589px");
+// Umstellen auf vh
+// const sheetheight: Ref<string> = ref("589px");
 const activeTab: Ref<number> = ref(0);
 const messstelle: Ref<MessstelleEditDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
 
+interface Props {
+    height: string;
+    contentHeight: number;
+}
+
+const props = defineProps<Props>();
+
 const store = useStore();
 const route = useRoute();
+const vuetify = useVuetify();
 
 const isMessstelleInPlanung: ComputedRef<boolean> = computed(() => {
     return messstelle.value.status === MessstelleStatus.IN_PLANUNG;
+});
+const contentHeightVh: ComputedRef<string> = computed(() => {
+    return props.contentHeight - 70 / (vuetify.breakpoint.height / 100) + "vh";
 });
 
 onMounted(() => {
