@@ -105,8 +105,6 @@ import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import LageplanForm from "@/components/messstelle/LageplanForm.vue";
 import { useVuetify } from "@/util/useVuetify";
 
-// Umstellen auf vh
-// const sheetheight: Ref<string> = ref("589px");
 const activeTab: Ref<number> = ref(0);
 const messstelle: Ref<MessstelleEditDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleEditDTO()

@@ -41,8 +41,8 @@
             no-gutters
         >
             <update-messstelle-form
-                :height="rightHeightVh"
-                :content-height="rightContentHeight"
+                :height="heightVh"
+                :content-height="contentHeight"
             />
         </v-row>
     </v-container>
@@ -88,7 +88,7 @@ const marginContentHeight = computed(() => {
 /**
  * Berechnet die Höhe der Inhaltsfläche "vh" - ohne Karte
  */
-const rightHeightVh = computed(() => {
+const heightVh = computed(() => {
     return (
         100 -
         headerHeight.value -
@@ -101,7 +101,7 @@ const rightHeightVh = computed(() => {
 /**
  * Berechnet die Höhe der Fläche unter den Tabs (72px hoch) in "vh"
  */
-const rightContentHeight = computed(() => {
+const contentHeight = computed(() => {
     return (
         100 -
         headerHeight.value -
