@@ -1,19 +1,21 @@
 <template>
     <v-sheet
         width="100%"
-        :height="height"
+        :min-height="height"
         :max-height="height"
         class="overflow-y-auto"
     >
-        <v-card-text>
-            <v-form>
-                <v-card-title class="justify-center">
-                    <v-icon>mdi-account-hard-hat-outline</v-icon>
-                    Under Construction
-                    <v-icon>mdi-car-wrench</v-icon>
-                </v-card-title>
-            </v-form>
-        </v-card-text>
+        <v-card>
+            <v-card-text>
+                <v-form>
+                    <v-card-title class="justify-center">
+                        <v-icon>mdi-account-hard-hat-outline</v-icon>
+                        Under Construction
+                        <v-icon>mdi-car-wrench</v-icon>
+                    </v-card-title>
+                </v-form>
+            </v-card-text>
+        </v-card>
     </v-sheet>
 </template>
 

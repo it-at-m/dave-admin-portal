@@ -1,7 +1,7 @@
 <template>
     <v-sheet
         width="100%"
-        class="d-flex flex-column"
+        :min-height="height"
     >
         <v-tabs
             v-model="activeTab"
@@ -40,7 +40,11 @@
                             mdi-alert-decagram-outline
                         </v-icon>
                     </template>
-                    <div v-html="tooltipText" />
+                    <div>
+                        Solange eine Messstelle den Status
+                        <strong>In Planung</strong> hat, kann diese nicht
+                        bearbeitet werden.
+                    </div>
                 </v-banner>
             </v-row>
             <v-divider />
@@ -50,24 +54,24 @@
             class="d-flex flex-column align-stretch"
         >
             <!-- Inhalte -->
-            <v-tab-item>
+            <v-tab-item ref="messstelleform">
                 <messstelle-form
                     v-model="messstelle"
                     :valid.sync="validMst"
-                    :height="SHEETHEIGHT"
+                    :height="contentHeightVh"
                     :disabled="isMessstelleInPlanung"
                 />
             </v-tab-item>
-            <v-tab-item>
+            <v-tab-item ref="messquerschnittform">
                 <messquerschnitt-form
                     v-model="messstelle"
                     :valid.sync="validMqs"
-                    :height="SHEETHEIGHT"
+                    :height="contentHeightVh"
                     :disabled="isMessstelleInPlanung"
                 />
             </v-tab-item>
             <v-tab-item ref="lageplaene">
-                <lageplan-form :height="SHEETHEIGHT" />
+                <lageplan-form :height="contentHeightVh" />
             </v-tab-item>
         </v-tabs-items>
 
@@ -101,8 +105,8 @@ import { useRoute } from "vue-router/composables";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import LageplanForm from "@/components/messstelle/LageplanForm.vue";
+import { useVuetify } from "@/util/useVuetify";
 
-const SHEETHEIGHT: Ref<string> = ref("589px");
 const activeTab: Ref<number> = ref(0);
 const validMst: Ref<boolean> = ref(false);
 const validMqs: Ref<Map<string, boolean>> = ref(new Map<string, boolean>());
@@ -110,11 +114,22 @@ const messstelle: Ref<MessstelleEditDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
 
+interface Props {
+    height: string;
+    contentHeight: number;
+}
+
+const props = defineProps<Props>();
+
 const store = useStore();
 const route = useRoute();
+const vuetify = useVuetify();
 
 const isMessstelleInPlanung: ComputedRef<boolean> = computed(() => {
     return messstelle.value.status === MessstelleStatus.IN_PLANUNG;
+});
+const contentHeightVh: ComputedRef<string> = computed(() => {
+    return props.contentHeight - 70 / (vuetify.breakpoint.height / 100) + "vh";
 });
 
 onMounted(() => {
@@ -122,12 +137,6 @@ onMounted(() => {
 });
 
 function save(): void {
-    // const inValidMqs: Array<string> = [];
-    // validMqs.value.forEach((value, key) => {
-    //     if (!value) {
-    //         inValidMqs.push(key);
-    //     }
-    // });
     if (areAllFormsValid()) {
         MessstelleService.saveMessstelle(messstelle.value)
             .then(() => {
@@ -143,26 +152,6 @@ function save(): void {
                 activeTab.value = 0;
                 loadMessstelle();
             });
-        // } else {
-        //     let errorText = "Der Standort";
-        //     if (!validMst.value) {
-        //         errorText = `${errorText} der Messstelle ${messstelle.value.mstId}`;
-        //         if (inValidMqs.length > 0) {
-        //             errorText = `${errorText} und`;
-        //         }
-        //     }
-        //     if (inValidMqs.length === 1) {
-        //         errorText = `${errorText} des Messquerschnittes ${inValidMqs[0]}`;
-        //     } else if (inValidMqs.length > 1) {
-        //         errorText = `${errorText} der Messquerschnitte ${inValidMqs.join(
-        //             ", "
-        //         )}`;
-        //     }
-        //     errorText = `${errorText} wurde nicht ausgefüllt.`;
-        //     store.dispatch("snackbar/showToast", {
-        //         level: Levels.ERROR,
-        //         snackbarTextPart1: errorText,
-        //     });
     }
 }
 
@@ -182,15 +171,6 @@ function loadMessstelle(): void {
         }
     );
 }
-
-const tooltipText: ComputedRef<string> = computed(() => {
-    let text = "";
-    if (isMessstelleInPlanung) {
-        text =
-            "Solange eine Messstelle den Status <strong>In Planung</strong> hat, kann diese nicht bearbeitet werden.";
-    }
-    return text;
-});
 
 function areAllFormsValid(): boolean {
     const inValidMqs: Array<string> = [];

@@ -7,6 +7,7 @@
             <v-col cols="3">
                 <v-sheet
                     :min-height="headerHeightVh"
+                    :max-height="headerHeightVh"
                     width="100%"
                     color="grey lighten-3"
                     class="d-flex flex-column"
@@ -37,8 +38,12 @@
         <v-row
             dense
             class="ma-2"
+            no-gutters
         >
-            <update-messstelle-form />
+            <update-messstelle-form
+                :height="heightVh"
+                :content-height="contentHeight"
+            />
         </v-row>
     </v-container>
 </template>
@@ -70,6 +75,39 @@ const headerHeight: ComputedRef<number> = computed(() => {
 
 const headerHeightVh: ComputedRef<string> = computed(() => {
     return headerHeight.value + "vh";
+});
+
+const appBarHeight = computed(() => {
+    return 65 / (vuetify.breakpoint.height / 100);
+});
+
+const marginContentHeight = computed(() => {
+    return 16 / (vuetify.breakpoint.height / 100);
+});
+
+/**
+ * Berechnet die Höhe der Inhaltsfläche "vh" - ohne Karte
+ */
+const heightVh = computed(() => {
+    return (
+        100 -
+        headerHeight.value -
+        appBarHeight.value -
+        marginContentHeight.value +
+        "vh"
+    );
+});
+
+/**
+ * Berechnet die Höhe der Fläche unter den Tabs (72px hoch) in "vh"
+ */
+const contentHeight = computed(() => {
+    return (
+        100 -
+        headerHeight.value -
+        appBarHeight.value -
+        72 / (vuetify.breakpoint.height / 100)
+    );
 });
 
 const messstelleId: ComputedRef<string> = computed(() => {
