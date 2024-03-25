@@ -5,7 +5,7 @@
         :max-height="height"
         class="overflow-y-auto"
     >
-        <v-card>
+        <v-card elevation="0">
             <v-card-text>
                 <v-form
                     ref="messquerschnittform"
