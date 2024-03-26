@@ -173,25 +173,25 @@ function loadMessstelle(): void {
 }
 
 function areAllFormsValid(): boolean {
-    const inValidMqs: Array<string> = [];
+    const invalidMqs: Array<string> = [];
     validMqs.value.forEach((value, key) => {
         if (!value) {
-            inValidMqs.push(key);
+            invalidMqs.push(key);
         }
     });
-    const areAllFormsValid: boolean = validMst.value && inValidMqs.length === 0;
+    const areAllFormsValid: boolean = validMst.value && invalidMqs.length === 0;
     if (!areAllFormsValid) {
         let errorText = "Der Standort";
         if (!validMst.value) {
             errorText = `${errorText} der Messstelle ${messstelle.value.mstId}`;
-            if (inValidMqs.length > 0) {
+            if (invalidMqs.length > 0) {
                 errorText = `${errorText} und`;
             }
         }
-        if (inValidMqs.length === 1) {
-            errorText = `${errorText} des Messquerschnittes ${inValidMqs[0]}`;
-        } else if (inValidMqs.length > 1) {
-            errorText = `${errorText} der Messquerschnitte ${inValidMqs.join(
+        if (invalidMqs.length === 1) {
+            errorText = `${errorText} des Messquerschnittes ${invalidMqs[0]}`;
+        } else if (invalidMqs.length > 1) {
+            errorText = `${errorText} der Messquerschnitte ${invalidMqs.join(
                 ", "
             )}`;
         }
