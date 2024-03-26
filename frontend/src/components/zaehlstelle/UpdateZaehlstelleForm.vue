@@ -17,7 +17,7 @@
                             <span class="text-caption">Zählstellennummer</span
                             ><br />
                             <span class="text text-info">{{
-                                zaehlstelle.nummer
+                                cloneOfZaehlstelle.nummer
                             }}</span
                             ><br />
                         </v-col>
@@ -53,7 +53,7 @@
                             md="12"
                         >
                             <v-textarea
-                                v-model="zaehlstelle.kommentar"
+                                v-model="cloneOfZaehlstelle.kommentar"
                                 label="Kommentar"
                                 outlined
                                 dense
@@ -70,7 +70,7 @@
                             md="12"
                         >
                             <v-combobox
-                                v-model="zaehlstelle.customSuchwoerter"
+                                v-model="cloneOfZaehlstelle.customSuchwoerter"
                                 multiple
                                 label="Suchwörter"
                                 outlined
@@ -93,7 +93,7 @@
                             md="12"
                         >
                             <v-checkbox
-                                v-model="zaehlstelle.sichtbarDatenportal"
+                                v-model="cloneOfZaehlstelle.sichtbarDatenportal"
                                 color="grey darken-1"
                                 hide-details
                                 dense
@@ -164,9 +164,15 @@ export default class UpdateZaehlstelleForm extends Vue {
 
     newSuchwort = "";
 
+    get cloneOfZaehlstelle(): ZaehlstelleDTO {
+        return _.cloneDeep(this.zaehlstelle);
+    }
+
     get getStadtbezirksnummer(): string {
         const stadtbezirksnummer: string | undefined =
-            StadtbezirkToBeschreibung.get(this.zaehlstelle.stadtbezirkNummer);
+            StadtbezirkToBeschreibung.get(
+                this.cloneOfZaehlstelle.stadtbezirkNummer
+            );
         if (stadtbezirksnummer != undefined) {
             return stadtbezirksnummer;
         }
@@ -176,7 +182,7 @@ export default class UpdateZaehlstelleForm extends Vue {
     get getStadtbezirksviertel(): string {
         const stadtbezirksviertelMap: Map<number, string> | undefined =
             StadtbezirksviertelToBeschreibung.get(
-                this.zaehlstelle.stadtbezirkNummer
+                this.cloneOfZaehlstelle.stadtbezirkNummer
             );
         if (stadtbezirksviertelMap != undefined) {
             const stadtbezirksviertelnummer: string | undefined =
@@ -189,11 +195,11 @@ export default class UpdateZaehlstelleForm extends Vue {
     }
 
     get getStadtbezirksviertelNummer(): number {
-        if (this.zaehlstelle.nummer != null) {
-            if (this.zaehlstelle.nummer.length == 5) {
-                return parseInt(this.zaehlstelle.nummer.substr(1, 2));
-            } else if (this.zaehlstelle.nummer.length == 6) {
-                return parseInt(this.zaehlstelle.nummer.substr(2, 2));
+        if (this.cloneOfZaehlstelle.nummer != null) {
+            if (this.cloneOfZaehlstelle.nummer.length == 5) {
+                return parseInt(this.cloneOfZaehlstelle.nummer.substr(1, 2));
+            } else if (this.cloneOfZaehlstelle.nummer.length == 6) {
+                return parseInt(this.cloneOfZaehlstelle.nummer.substr(2, 2));
             }
         }
         return -1;
@@ -201,16 +207,20 @@ export default class UpdateZaehlstelleForm extends Vue {
 
     // Fuegt das eingegebene Wort den Suchwoertern hinzu
     addSuchwortToList() {
-        if (_.isNil(this.zaehlstelle.customSuchwoerter)) {
-            this.zaehlstelle.customSuchwoerter = [];
+        if (_.isNil(this.cloneOfZaehlstelle.customSuchwoerter)) {
+            this.cloneOfZaehlstelle.customSuchwoerter = [];
         }
 
         if (this.newSuchwort == null || this.newSuchwort.trim() === "") {
             return;
         }
 
-        if (!this.zaehlstelle.customSuchwoerter.includes(this.newSuchwort)) {
-            this.zaehlstelle.customSuchwoerter.push(
+        if (
+            !this.cloneOfZaehlstelle.customSuchwoerter.includes(
+                this.newSuchwort
+            )
+        ) {
+            this.cloneOfZaehlstelle.customSuchwoerter.push(
                 ...this.newSuchwort.split(",")
             );
         }
@@ -218,7 +228,7 @@ export default class UpdateZaehlstelleForm extends Vue {
     }
 
     save(): void {
-        ZaehlstellenService.saveZaehlstelle(this.zaehlstelle)
+        ZaehlstellenService.saveZaehlstelle(this.cloneOfZaehlstelle)
             .then(() => {
                 this.$emit("saved");
             })
@@ -232,18 +242,18 @@ export default class UpdateZaehlstelleForm extends Vue {
     }
 
     get coords(): LatLng {
-        let punkt: GeoPoint = this.zaehlstelle.punkt;
+        let punkt: GeoPoint = this.cloneOfZaehlstelle.punkt;
         if (punkt)
             return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
         else return DefaultObjectCreator.createCenterOfMunichLatLng();
     }
 
     updateZaehlstellenCoords(newCoords: LatLng): void {
-        if (!this.zaehlstelle.punkt) {
-            this.zaehlstelle.punkt = {} as GeoPoint;
+        if (!this.cloneOfZaehlstelle.punkt) {
+            this.cloneOfZaehlstelle.punkt = {} as GeoPoint;
         }
-        this.zaehlstelle.punkt.lat = newCoords.lat.toString();
-        this.zaehlstelle.punkt.lon = newCoords.lng.toString();
+        this.cloneOfZaehlstelle.punkt.lat = newCoords.lat.toString();
+        this.cloneOfZaehlstelle.punkt.lon = newCoords.lng.toString();
     }
 }
 </script>
