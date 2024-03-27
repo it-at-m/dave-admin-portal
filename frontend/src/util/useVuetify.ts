@@ -1,4 +1,4 @@
-import { getCurrentInstance } from "vue";
+import Vue, { getCurrentInstance } from "vue";
 
 export function useVuetify() {
     const instance = getCurrentInstance();
@@ -7,3 +7,5 @@ export function useVuetify() {
     }
     return instance.proxy.$vuetify;
 }
+
+export type VForm = Vue & { validate: () => boolean };
