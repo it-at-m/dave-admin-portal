@@ -166,7 +166,7 @@ function loadMessstelle(): void {
         (messstelleById) => {
             messstelle.value = messstelleById;
             messstelleById.messquerschnitte.forEach((value) =>
-                validMqs.value.set(value.mqId, false)
+                validMqs.value.set(value.mqId, !!value.standort)
             );
         }
     );
