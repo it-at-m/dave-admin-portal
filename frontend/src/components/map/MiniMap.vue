@@ -6,18 +6,14 @@
     >
         <div
             id="map"
-            :style="{
-                height: height,
-                width: width,
-                minheight: minheight,
-            }"
+            :style="mapStyle"
         />
     </v-sheet>
 </template>
 
 <script setup lang="ts">
 import L, { Icon, LatLng, Marker } from "leaflet";
-import { onMounted } from "vue";
+import { computed, ComputedRef, onMounted } from "vue";
 import markerIconRed from "@/assets/marker-icon-red.png";
 
 interface Props {
@@ -156,6 +152,10 @@ function createMarker(): Marker {
 
     return marker;
 }
+
+const mapStyle: ComputedRef<string> = computed(() => {
+    return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}`;
+});
 </script>
 
 <style lang="css">
