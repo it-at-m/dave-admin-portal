@@ -30,7 +30,7 @@
                 <v-icon>mdi-map-outline</v-icon>
             </v-tab>
         </v-tabs>
-        <div v-if="isMessstelleInPlanung">
+        <div v-if="isMessstelleReadonly">
             <v-row
                 dense
                 justify="center"
@@ -63,7 +63,7 @@
                     v-model="messstelle"
                     :valid.sync="validMst"
                     :height="contentHeightVh"
-                    :disabled="isMessstelleInPlanung"
+                    :disabled="isMessstelleReadonly"
                 />
             </v-tab-item>
             <v-tab-item ref="messquerschnittform">
@@ -71,7 +71,7 @@
                     v-model="messstelle"
                     :valid.sync="validMqs"
                     :height="contentHeightVh"
-                    :disabled="isMessstelleInPlanung"
+                    :disabled="isMessstelleReadonly"
                 />
             </v-tab-item>
             <v-tab-item ref="standort">
@@ -80,6 +80,7 @@
                     :height="contentHeightVh"
                     :height-map="mapHeightVh"
                     :reset-marker="resetMarker"
+                    :draggable="!isMessstelleReadonly"
                 />
             </v-tab-item>
             <v-tab-item ref="lageplaene">
@@ -87,7 +88,7 @@
             </v-tab-item>
         </v-tabs-items>
 
-        <v-card-actions v-if="!isMessstelleInPlanung">
+        <v-card-actions v-if="!isMessstelleReadonly">
             <v-spacer />
             <v-btn
                 color="secondary"
@@ -139,7 +140,7 @@ const store = useStore();
 const route = useRoute();
 const vuetify = useVuetify();
 
-const isMessstelleInPlanung: ComputedRef<boolean> = computed(() => {
+const isMessstelleReadonly: ComputedRef<boolean> = computed(() => {
     return messstelle.value.status === MessstelleStatus.IN_PLANUNG;
 });
 const contentHeightVh: ComputedRef<string> = computed(() => {

@@ -24,6 +24,7 @@ interface Props {
     minheight?: string;
     isMessstelle?: boolean;
     resetMarker?: boolean;
+    draggable?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -32,6 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
     minheight: "160px",
     isMessstelle: false,
     resetMarker: false,
+    draggable: true,
 });
 
 const emit = defineEmits<(e: "updateZaehlstellenCoords", v: LatLng) => void>();
@@ -182,7 +184,7 @@ function createMarker(): L.Marker {
     const marker = L.marker(props.coords, {
         icon: defaultIcon,
         opacity: 1.0,
-        draggable: true,
+        draggable: props.draggable,
     });
 
     marker.on("dragend", () => {

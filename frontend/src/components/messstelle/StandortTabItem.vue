@@ -14,6 +14,7 @@
                     :is-messstelle="true"
                     :show-attribution="true"
                     :reset-marker="resetMarker"
+                    :draggable="draggable"
                     @updateZaehlstellenCoords="updateZaehlstellenCoords"
                 />
             </v-card-text>
@@ -32,6 +33,7 @@ interface Props {
     height: string;
     heightMap: string;
     resetMarker: boolean;
+    draggable: boolean;
     value: MessstelleEditDTO;
 }
 
