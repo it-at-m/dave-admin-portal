@@ -195,7 +195,7 @@ function createMarker(): L.Marker {
 }
 
 const mapStyle: ComputedRef<string> = computed(() => {
-    return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}`;
+    return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}; z-index: 1`;
 });
 </script>
 
