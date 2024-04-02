@@ -22,6 +22,10 @@
                 <v-icon>mdi-routes</v-icon>
             </v-tab>
             <v-tab>
+                Standort
+                <v-icon>mdi-map-marker-outline</v-icon>
+            </v-tab>
+            <v-tab>
                 Lagepläne
                 <v-icon>mdi-map-outline</v-icon>
             </v-tab>
@@ -70,6 +74,14 @@
                     :disabled="isMessstelleInPlanung"
                 />
             </v-tab-item>
+            <v-tab-item ref="standort">
+                <standort-tab-item
+                    v-model="messstelle"
+                    :height="contentHeightVh"
+                    :height-map="mapHeightVh"
+                    :reset-marker="resetMarker"
+                />
+            </v-tab-item>
             <v-tab-item ref="lageplaene">
                 <lageplan-form :height="contentHeightVh" />
             </v-tab-item>
@@ -106,6 +118,7 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import LageplanForm from "@/components/messstelle/LageplanForm.vue";
 import { useVuetify } from "@/util/useVuetify";
+import StandortTabItem from "@/components/messstelle/StandortTabItem.vue";
 
 const activeTab: Ref<number> = ref(0);
 const validMst: Ref<boolean> = ref(false);
@@ -113,6 +126,7 @@ const validMqs: Ref<Map<string, boolean>> = ref(new Map<string, boolean>());
 const messstelle: Ref<MessstelleEditDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
+const resetMarker: Ref<boolean> = ref(false);
 
 interface Props {
     height: string;
@@ -132,6 +146,12 @@ const contentHeightVh: ComputedRef<string> = computed(() => {
     return props.contentHeight - 70 / (vuetify.breakpoint.height / 100) + "vh";
 });
 
+const mapHeightVh: ComputedRef<string> = computed(() => {
+    return props.contentHeight - 105 / (vuetify.breakpoint.height / 100) + "vh";
+});
+
+const emit = defineEmits<(e: "reload") => void>();
+
 onMounted(() => {
     loadMessstelle();
 });
@@ -150,14 +170,14 @@ function save(): void {
             })
             .finally(() => {
                 activeTab.value = 0;
-                loadMessstelle();
+                emit("reload");
             });
     }
 }
 
 function cancel(): void {
-    activeTab.value = 0;
     loadMessstelle();
+    emit("reload");
 }
 
 function loadMessstelle(): void {
@@ -168,6 +188,7 @@ function loadMessstelle(): void {
             messstelleById.messquerschnitte.forEach((value) =>
                 validMqs.value.set(value.mqId, !!value.standort)
             );
+            resetMarker.value = !resetMarker.value;
         }
     );
 }

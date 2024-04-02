@@ -48,6 +48,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SaveLeaveDialog: typeof import('./src/components/common/SaveLeaveDialog.vue')['default']
+    StandortTabItem: typeof import('./src/components/messstelle/StandortTabItem.vue')['default']
     TheSnackbar: typeof import('./src/components/common/TheSnackbar.vue')['default']
     TooltipWithIcon: typeof import('./src/components/icons/TooltipWithIcon.vue')['default']
     UnreadMessages: typeof import('./src/components/app/UnreadMessages.vue')['default']
