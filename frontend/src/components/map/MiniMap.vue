@@ -58,7 +58,7 @@ function initMap(): void {
     if (map.value) {
         map.value.setView(props.coords, 18);
 
-        createLayersAndAddToMap(map.value);
+        createLayersAndAddToMap();
 
         marker.value.addTo(map.value);
 
@@ -101,15 +101,16 @@ function createMap(): void {
     }
 }
 
-function createLayersAndAddToMap(map: L.Map): void {
-    const baseMaps = createBaseLayersAndAddDefaultToMap(map);
-    const overlayMaps = createOverlayLayers();
-    L.control.layers(baseMaps, overlayMaps).addTo(map);
+function createLayersAndAddToMap(): void {
+    if (map.value) {
+        const baseLayers = createBaseLayers();
+        const overlayLayers = createOverlayLayers();
+        baseLayers.Stadtkarte.addTo(map.value);
+        L.control.layers(baseLayers, overlayLayers).addTo(map.value);
+    }
 }
 
-function createBaseLayersAndAddDefaultToMap(
-    map: L.Map
-): L.Control.LayersObject {
+function createBaseLayers(): L.Control.LayersObject {
     const stadtkarteGesamt = L.tileLayer.wms(
         "https://geoportal.muenchen.de/geoserver/gsm/wms?",
         {
@@ -118,7 +119,6 @@ function createBaseLayersAndAddDefaultToMap(
             attribution: mapAttribution,
         }
     );
-    stadtkarteGesamt.addTo(map);
 
     const luftbild = L.tileLayer.wms(
         "https://geoportal.muenchen.de/geoserver/gsm/wms?",
