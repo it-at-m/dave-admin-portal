@@ -7,4 +7,6 @@ export default interface MessstelleOverviewDTO extends BaseEntity {
     status: MessstelleStatus;
     geprueft: boolean;
     sichtbarDatenportal: boolean;
+    stadtbezirk: string;
+    stadtbezirkNummer: string;
 }
