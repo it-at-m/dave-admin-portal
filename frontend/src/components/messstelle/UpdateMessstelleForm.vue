@@ -22,11 +22,15 @@
                 <v-icon>mdi-routes</v-icon>
             </v-tab>
             <v-tab>
+                Standort
+                <v-icon>mdi-map-marker-outline</v-icon>
+            </v-tab>
+            <v-tab>
                 Lagepläne
                 <v-icon>mdi-map-outline</v-icon>
             </v-tab>
         </v-tabs>
-        <div v-if="isMessstelleInPlanung">
+        <div v-if="isMessstelleReadonly">
             <v-row
                 dense
                 justify="center"
@@ -59,7 +63,7 @@
                     v-model="messstelle"
                     :valid.sync="validMst"
                     :height="contentHeightVh"
-                    :disabled="isMessstelleInPlanung"
+                    :disabled="isMessstelleReadonly"
                 />
             </v-tab-item>
             <v-tab-item ref="messquerschnittform">
@@ -67,7 +71,16 @@
                     v-model="messstelle"
                     :valid.sync="validMqs"
                     :height="contentHeightVh"
-                    :disabled="isMessstelleInPlanung"
+                    :disabled="isMessstelleReadonly"
+                />
+            </v-tab-item>
+            <v-tab-item ref="standort">
+                <standort-tab-item
+                    v-model="messstelle"
+                    :height="contentHeightVh"
+                    :height-map="mapHeightVh"
+                    :reset-marker="resetMarker"
+                    :draggable="!isMessstelleReadonly"
                 />
             </v-tab-item>
             <v-tab-item ref="lageplaene">
@@ -75,7 +88,7 @@
             </v-tab-item>
         </v-tabs-items>
 
-        <v-card-actions v-if="!isMessstelleInPlanung">
+        <v-card-actions v-if="!isMessstelleReadonly">
             <v-spacer />
             <v-btn
                 color="secondary"
@@ -106,6 +119,7 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import LageplanForm from "@/components/messstelle/LageplanForm.vue";
 import { useVuetify } from "@/util/useVuetify";
+import StandortTabItem from "@/components/messstelle/StandortTabItem.vue";
 
 const activeTab: Ref<number> = ref(0);
 const validMst: Ref<boolean> = ref(false);
@@ -113,6 +127,7 @@ const validMqs: Ref<Map<string, boolean>> = ref(new Map<string, boolean>());
 const messstelle: Ref<MessstelleEditDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
+const resetMarker: Ref<boolean> = ref(false);
 
 interface Props {
     height: string;
@@ -125,12 +140,18 @@ const store = useStore();
 const route = useRoute();
 const vuetify = useVuetify();
 
-const isMessstelleInPlanung: ComputedRef<boolean> = computed(() => {
+const isMessstelleReadonly: ComputedRef<boolean> = computed(() => {
     return messstelle.value.status === MessstelleStatus.IN_PLANUNG;
 });
 const contentHeightVh: ComputedRef<string> = computed(() => {
     return props.contentHeight - 70 / (vuetify.breakpoint.height / 100) + "vh";
 });
+
+const mapHeightVh: ComputedRef<string> = computed(() => {
+    return props.contentHeight - 105 / (vuetify.breakpoint.height / 100) + "vh";
+});
+
+const emit = defineEmits<(e: "reload") => void>();
 
 onMounted(() => {
     loadMessstelle();
@@ -150,14 +171,14 @@ function save(): void {
             })
             .finally(() => {
                 activeTab.value = 0;
-                loadMessstelle();
+                emit("reload");
             });
     }
 }
 
 function cancel(): void {
-    activeTab.value = 0;
     loadMessstelle();
+    emit("reload");
 }
 
 function loadMessstelle(): void {
@@ -168,6 +189,7 @@ function loadMessstelle(): void {
             messstelleById.messquerschnitte.forEach((value) =>
                 validMqs.value.set(value.mqId, !!value.standort)
             );
+            resetMarker.value = !resetMarker.value;
         }
     );
 }
