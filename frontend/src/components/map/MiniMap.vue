@@ -12,69 +12,107 @@
 </template>
 
 <script setup lang="ts">
-import L, { Icon, LatLng, Marker } from "leaflet";
-import { computed, ComputedRef, onMounted } from "vue";
+import L, { Icon, LatLng } from "leaflet";
+import { computed, ComputedRef, onMounted, Ref, ref, watch } from "vue";
 import markerIconRed from "@/assets/marker-icon-red.png";
+import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 
 interface Props {
     coords: LatLng;
     height?: string;
     width?: string;
     minheight?: string;
+    isMessstelle?: boolean;
+    resetMarker?: boolean;
+    draggable?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     height: "100%",
     width: "100%",
     minheight: "160px",
+    isMessstelle: false,
+    resetMarker: false,
+    draggable: true,
 });
 
 const emit = defineEmits<(e: "updateZaehlstellenCoords", v: LatLng) => void>();
 
 const mapAttribution =
     '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
+const map: Ref<L.Map | undefined> = ref(undefined);
+const marker = ref(createMarker());
 
-onMounted(() => {
-    const map = createMap();
-
-    createLayersAndAddToMap(map);
-
-    const marker = createMarker();
-    marker.addTo(map);
-
-    map.whenReady(() =>
-        setTimeout(() => {
-            map.invalidateSize();
-        }, 10)
-    );
+const resetMarkerSwitch: ComputedRef<boolean> = computed(() => {
+    return props.resetMarker;
 });
 
-function createMap(): L.Map {
-    const map = new L.Map("map", {
-        minZoom: 10,
-        maxZoom: 18,
-        preferCanvas: false,
-        attributionControl: false,
-        fullscreenControl: true,
-        fullscreenControlOptions: {
-            position: "topleft",
-        },
-    });
+watch(resetMarkerSwitch, () => {
+    resetMarker();
+});
 
-    map.setView(props.coords, 18);
+onMounted(() => {
+    createMap();
+    initMap();
+});
 
-    return map;
+function initMap(): void {
+    if (map.value) {
+        map.value.setView(props.coords, 18);
+
+        createLayersAndAddToMap();
+
+        marker.value.addTo(map.value);
+
+        map.value.whenReady(() =>
+            setTimeout(() => {
+                if (map.value) {
+                    map.value.invalidateSize();
+                    map.value.addControl(
+                        L.control.attribution({
+                            position: "bottomleft",
+                            prefix: "Leaflet",
+                        })
+                    );
+                }
+            }, 10)
+        );
+    }
 }
 
-function createLayersAndAddToMap(map: L.Map): void {
-    const baseMaps = createBaseLayersAndAddDefaultToMap(map);
-    const overlayMaps = createOverlayLayers();
-    L.control.layers(baseMaps, overlayMaps).addTo(map);
+function resetMarker(): void {
+    if (map.value) {
+        marker.value.removeFrom(map.value);
+        marker.value = createMarker();
+        marker.value.addTo(map.value);
+    }
 }
 
-function createBaseLayersAndAddDefaultToMap(
-    map: L.Map
-): L.Control.LayersObject {
+function createMap(): void {
+    if (!map.value) {
+        map.value = new L.Map("map", {
+            minZoom: 10,
+            maxZoom: 18,
+            preferCanvas: false,
+            attributionControl: false,
+            fullscreenControl: true,
+            fullscreenControlOptions: {
+                position: "topleft",
+            },
+        });
+    }
+}
+
+function createLayersAndAddToMap(): void {
+    if (map.value) {
+        const baseLayers = createBaseLayers();
+        const overlayLayers = createOverlayLayers();
+        baseLayers.Stadtkarte.addTo(map.value);
+        L.control.layers(baseLayers, overlayLayers).addTo(map.value);
+    }
+}
+
+function createBaseLayers(): L.Control.LayersObject {
     const stadtkarteGesamt = L.tileLayer.wms(
         "https://geoportal.muenchen.de/geoserver/gsm/wms?",
         {
@@ -83,7 +121,6 @@ function createBaseLayersAndAddDefaultToMap(
             attribution: mapAttribution,
         }
     );
-    stadtkarteGesamt.addTo(map);
 
     const luftbild = L.tileLayer.wms(
         "https://geoportal.muenchen.de/geoserver/gsm/wms?",
@@ -136,14 +173,18 @@ function createOverlayLayers(): L.Control.LayersObject {
     };
 }
 
-function createMarker(): Marker {
+function createMarker(): L.Marker {
     let defaultIcon = new Icon.Default();
-    defaultIcon.options.iconUrl = markerIconRed;
+    if (props.isMessstelle) {
+        defaultIcon.options.iconUrl = markerIconDiamondRed;
+    } else {
+        defaultIcon.options.iconUrl = markerIconRed;
+    }
 
     const marker = L.marker(props.coords, {
         icon: defaultIcon,
         opacity: 1.0,
-        draggable: true,
+        draggable: props.draggable,
     });
 
     marker.on("dragend", () => {
@@ -154,7 +195,7 @@ function createMarker(): Marker {
 }
 
 const mapStyle: ComputedRef<string> = computed(() => {
-    return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}`;
+    return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}; z-index: 1`;
 });
 </script>
 

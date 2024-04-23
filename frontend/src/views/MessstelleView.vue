@@ -43,6 +43,7 @@
             <update-messstelle-form
                 :height="heightVh"
                 :content-height="contentHeight"
+                @reload="loadMessstelle"
             />
         </v-row>
     </v-container>
@@ -136,6 +137,7 @@ function loadMessstelle(): void {
     const messstelleId = route.params.messstelleId;
     MessstelleService.getMessstelleInfo(messstelleId).then((messstelleById) => {
         messstelle.value = messstelleById;
+        reloadMessstelleMap.value = !reloadMessstelleMap.value;
     });
 }
 </script>
