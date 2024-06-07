@@ -1,6 +1,7 @@
 import BaseEntity from "@/domain/BaseEntity";
 import MessquerschnittEditDTO from "@/domain/dto/messstelle/MessquerschnittEditDTO";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
+import MessfaehigkeitDTO from "@/domain/dto/messstelle/MessfaehigkeitDTO";
 
 export default interface MessstelleEditDTO extends BaseEntity {
     mstId: string;
@@ -25,4 +26,5 @@ export default interface MessstelleEditDTO extends BaseEntity {
     sichtbarDatenportal: boolean;
 
     messquerschnitte: Array<MessquerschnittEditDTO>;
+    messfaehigkeiten: Array<MessfaehigkeitDTO>;
 }

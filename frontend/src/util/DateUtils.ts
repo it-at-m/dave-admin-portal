@@ -13,8 +13,16 @@ export function useDateUtils() {
         });
     }
 
+    function isDateAfter(
+        dateToCheck: string,
+        dateAfter: Date | string
+    ): boolean {
+        return new Date(dateToCheck).valueOf() > new Date(dateAfter).valueOf();
+    }
+
     return {
         sortDatesDescAsStrings,
         formatDate,
+        isDateAfter,
     };
 }

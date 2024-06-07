@@ -22,6 +22,10 @@
                 <v-icon>mdi-routes</v-icon>
             </v-tab>
             <v-tab>
+                Messfähigkeit
+                <v-icon>mdi-car-multiple</v-icon>
+            </v-tab>
+            <v-tab>
                 Standort
                 <v-icon>mdi-map-marker-outline</v-icon>
             </v-tab>
@@ -74,6 +78,12 @@
                     :disabled="isMessstelleReadonly"
                 />
             </v-tab-item>
+            <v-tab-item ref="messfaehigkeit">
+                <messfaehigkeit-form
+                    :messfahigkeiten="messstelle.messfaehigkeiten"
+                    :height="contentHeightVh"
+                />
+            </v-tab-item>
             <v-tab-item ref="standort">
                 <standort-tab-item
                     v-model="messstelle"
@@ -120,6 +130,7 @@ import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import LageplanForm from "@/components/messstelle/LageplanForm.vue";
 import { useVuetify } from "@/util/useVuetify";
 import StandortTabItem from "@/components/messstelle/StandortTabItem.vue";
+import MessfaehigkeitForm from "@/components/messstelle/MessfaehigkeitForm.vue";
 
 const activeTab: Ref<number> = ref(0);
 const validMst: Ref<boolean> = ref(false);
