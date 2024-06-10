@@ -3,5 +3,4 @@ export default interface MessfaehigkeitDTO {
     gueltigBis: string;
     intervall: string;
     fahrzeugklassen: string;
-    standort: string;
 }
