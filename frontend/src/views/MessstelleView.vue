@@ -29,7 +29,7 @@
                     :height="headerHeightVh"
                     :minheight="headerHeightVh"
                     show-marker="true"
-                    :reload="reloadMessstelleMap"
+                    :reload="reloadMessstelle"
                     width="100%"
                 />
             </v-col>
@@ -44,6 +44,7 @@
                 v-model="messstelle"
                 :height="heightVh"
                 :content-height="contentHeight"
+                :reload="reloadMessstelle"
                 @reload="loadMessstelle"
             />
         </v-row>
@@ -60,7 +61,7 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import UpdateMessstelleForm from "@/components/messstelle/UpdateMessstelleForm.vue";
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 
-const reloadMessstelleMap: Ref<boolean> = ref(false);
+const reloadMessstelle: Ref<boolean> = ref(false);
 const messstelle: Ref<MessstelleEditDTO> = ref(
     DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
@@ -139,7 +140,7 @@ function loadMessstelle(): void {
     MessstelleService.getMessstelleToEdit(messstelleId).then(
         (messstelleById) => {
             messstelle.value = messstelleById;
-            reloadMessstelleMap.value = !reloadMessstelleMap.value;
+            reloadMessstelle.value = !reloadMessstelle.value;
         }
     );
 }

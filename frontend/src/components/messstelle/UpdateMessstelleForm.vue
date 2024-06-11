@@ -74,6 +74,7 @@
                 <messquerschnitt-form
                     v-model="messstelleToEdit"
                     :valid.sync="validMqs"
+                    :reload="reload"
                     :height="contentHeightVh"
                     :disabled="isMessstelleReadonly"
                 />
@@ -89,7 +90,7 @@
                     v-model="messstelleToEdit"
                     :height="contentHeightVh"
                     :height-map="mapHeightVh"
-                    :reset-marker="resetMarker"
+                    :reset-marker="reload"
                     :draggable="!isMessstelleReadonly"
                 />
             </v-tab-item>
@@ -139,6 +140,7 @@ interface Props {
     value: MessstelleEditDTO;
     height: string;
     contentHeight: number;
+    reload: boolean;
 }
 
 const props = defineProps<Props>();
@@ -190,12 +192,15 @@ function cancel(): void {
     emits("reload");
 }
 
-watch(messstelleToEdit, () => {
-    messstelleToEdit.value.messquerschnitte.forEach((value) =>
-        validMqs.value.set(value.mqId, !!value.standort)
-    );
-    resetMarker.value = !resetMarker.value;
-});
+watch(
+    () => props.reload,
+    () => {
+        messstelleToEdit.value.messquerschnitte.forEach((value) =>
+            validMqs.value.set(value.mqId, !!value.standort)
+        );
+        resetMarker.value = !resetMarker.value;
+    }
+);
 
 function areAllFormsValid(): boolean {
     const invalidMqs: Array<string> = [];
