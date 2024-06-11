@@ -25,13 +25,13 @@
 </template>
 
 <script setup lang="ts">
-import MessfaehigkeitDTO from "@/domain/dto/messstelle/MessfaehigkeitDTO";
+import MessfaehigkeitEditDTO from "@/domain/dto/messstelle/MessfaehigkeitEditDTO";
 import { computed, ComputedRef } from "vue";
 import _ from "lodash";
 
 interface Props {
     height: string;
-    messfahigkeiten: Array<MessfaehigkeitDTO>;
+    messfahigkeiten: Array<MessfaehigkeitEditDTO>;
 }
 
 const props = defineProps<Props>();
@@ -39,7 +39,7 @@ const tableHeight: ComputedRef<string> = computed(() => {
     return parseInt(props.height.replace("px", "")) - 136 + "px";
 });
 
-function activeMessfaehigkeit(item: MessfaehigkeitDTO) {
+function activeMessfaehigkeit(item: MessfaehigkeitEditDTO) {
     return _.isEmpty(item.gueltigBis) ? "light-green lighten-3" : "";
 }
 

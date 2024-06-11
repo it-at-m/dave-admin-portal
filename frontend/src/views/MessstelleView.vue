@@ -41,6 +41,7 @@
             no-gutters
         >
             <update-messstelle-form
+                v-model="messstelle"
                 :height="heightVh"
                 :content-height="contentHeight"
                 @reload="loadMessstelle"
@@ -56,12 +57,12 @@ import { useRoute } from "vue-router/composables";
 import MessstelleInfo from "@/components/messstelle/MessstelleInfo.vue";
 import { useVuetify } from "@/util/useVuetify";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import MessstelleInfoDTO from "@/domain/dto/messstelle/MessstelleInfoDTO";
 import UpdateMessstelleForm from "@/components/messstelle/UpdateMessstelleForm.vue";
+import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 
 const reloadMessstelleMap: Ref<boolean> = ref(false);
-const messstelle: Ref<MessstelleInfoDTO> = ref(
-    DefaultObjectCreator.createDefaultMessstelleInfoDTO()
+const messstelle: Ref<MessstelleEditDTO> = ref(
+    DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
 const vuetify = useVuetify();
 const route = useRoute();
@@ -135,9 +136,11 @@ const latlng: ComputedRef<string[]> = computed(() => {
 
 function loadMessstelle(): void {
     const messstelleId = route.params.messstelleId;
-    MessstelleService.getMessstelleInfo(messstelleId).then((messstelleById) => {
-        messstelle.value = messstelleById;
-        reloadMessstelleMap.value = !reloadMessstelleMap.value;
-    });
+    MessstelleService.getMessstelleToEdit(messstelleId).then(
+        (messstelleById) => {
+            messstelle.value = messstelleById;
+            reloadMessstelleMap.value = !reloadMessstelleMap.value;
+        }
+    );
 }
 </script>
