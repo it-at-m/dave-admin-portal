@@ -5,7 +5,6 @@
         :min-height="minheight"
         color="transparent"
         class="pa-4"
-        @click="$emit('edit-messstelle')"
     >
         <span class="text-caption">Messstelle</span><br />
         <span class="text-h5">{{ messstelle.mstId }}</span>
@@ -17,10 +16,10 @@
     </v-sheet>
 </template>
 <script setup lang="ts">
-import MessstelleInfoDTO from "@/domain/dto/messstelle/MessstelleInfoDTO";
+import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 
 interface Props {
-    messstelle: MessstelleInfoDTO;
+    messstelle: MessstelleEditDTO;
     height: string;
     minheight: string;
 }
@@ -28,7 +27,4 @@ interface Props {
 withDefaults(defineProps<Props>(), {
     minheight: "160px",
 });
-
-defineEmits<(e: "edit-messstelle") => void>();
 </script>
-

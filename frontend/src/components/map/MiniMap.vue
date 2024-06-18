@@ -4,195 +4,199 @@
         :width="width"
         :min-height="minheight"
     >
-        <l-map
-            ref="minimap"
-            :options="mapOptions"
-            style="z-index: 1"
-            @ready="mapReady"
-        >
-            <l-control-layers />
-            <!--      Kartenlayers. Bei layer-type="base" muss bei der Default-Karte :visible auf true gesetzt werden. -->
-            <!--      layer-type="overlay" sind zusätzlich zuschaltbare Ansichten. -->
-
-            <!--      Standardkarte Geoportal -->
-            <l-wms-tile-layer
-                base-url="https://geoportal.muenchen.de/geoserver/gsm/wms?"
-                layers="gsm:g_stadtkarte_gesamt"
-                :visible="true"
-                name="Stadtkarte"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
-                layer-type="base"
-            />
-            <!--      Luftbild Geoportal -->
-            <l-wms-tile-layer
-                base-url="https://geoportal.muenchen.de/geoserver/gsm/wms?"
-                layers="gsm:g_luftbild"
-                :visible="false"
-                name="Luftbild"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
-                layer-type="base"
-            />
-            <!--      OpenStreetMap -->
-            <l-wms-tile-layer
-                :visible="false"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap-Mitwirkende</a> by terrestris'
-                base-url="https://ows.terrestris.de/osm/service?"
-                layer-type="base"
-                layers="OSM-WMS"
-                name="OpenStreetMaps"
-            />
-            <!--      Beginn der overlay Layers   -->
-            <l-wms-tile-layer
-                base-url="https://geoportal.muenchen.de/geoserver/gsm/wms?"
-                layers="gsm:stadtbezirk"
-                :visible="true"
-                :transparent="true"
-                format="image/png"
-                name="Stadtbezirke"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
-                layer-type="overlay"
-            />
-            <l-wms-tile-layer
-                :transparent="true"
-                :visible="true"
-                attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
-                base-url="https://geoportal.muenchen.de/geoserver/gsm/wms?"
-                format="image/png"
-                layer-type="overlay"
-                layers="gsm:vablock_viertel_dave"
-                name="Stadtviertel"
-            />
-        </l-map>
+        <div
+            id="map"
+            :style="mapStyle"
+        />
     </v-sheet>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Ref, Watch } from "vue-property-decorator";
-// imports for leaflet
-import {
-    LCircleMarker,
-    LControlLayers,
-    LIcon,
-    LLayerGroup,
-    LMap,
-    LMarker,
-    LTileLayer,
-    LTooltip,
-    LWMSTileLayer,
-} from "vue2-leaflet";
-// Api
-/* eslint-disable no-unused-vars */
-import { control, Icon, LatLng, Marker } from "leaflet";
-import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+<script setup lang="ts">
+import L, { Icon, LatLng } from "leaflet";
+import { computed, ComputedRef, onMounted, Ref, ref, watch } from "vue";
 import markerIconRed from "@/assets/marker-icon-red.png";
-/* eslint-enable no-unused-vars */
+import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 
-@Component({
-    components: {
-        LIcon,
-        LMap,
-        LTileLayer,
-        LMarker,
-        LCircleMarker,
-        LTooltip,
-        LControlLayers,
-        LLayerGroup,
-        "l-wms-tile-layer": LWMSTileLayer,
-    },
-})
-export default class MiniMap extends Vue {
-    @Prop({ default: "15vh" })
-    readonly height!: string;
+interface Props {
+    coords: LatLng;
+    height?: string;
+    width?: string;
+    minheight?: string;
+    isMessstelle?: boolean;
+    resetMarker?: boolean;
+    draggable?: boolean;
+}
 
-    @Prop({ default: "160px" })
-    readonly minheight!: string;
+const props = withDefaults(defineProps<Props>(), {
+    height: "100%",
+    width: "100%",
+    minheight: "160px",
+    isMessstelle: false,
+    resetMarker: false,
+    draggable: true,
+});
 
-    @Prop({ default: "100%" })
-    readonly width!: string;
-    @Prop({ default: DefaultObjectCreator.createCenterOfMunichLatLng() })
-    coords!: LatLng;
+const emit = defineEmits<(e: "updateZaehlstellenCoords", v: LatLng) => void>();
 
-    @Ref("minimap")
-    private readonly theMap!: LMap;
+const mapAttribution =
+    '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
+const map: Ref<L.Map | undefined> = ref(undefined);
+const marker = ref(createMarker());
 
-    private zoom = 18;
+const resetMarkerSwitch: ComputedRef<boolean> = computed(() => {
+    return props.resetMarker;
+});
 
-    private newMarker: Marker | null = null;
+watch(resetMarkerSwitch, () => {
+    resetMarker();
+});
 
-    /**
-     * Optionen fuer die Darstellung der Karte
-     */
-    mapOptions: object = {
-        minZoom: 10,
-        maxZoom: 18,
-        preferCanvas: false,
-        attributionControl: false,
-        fullscreenControl: true,
-        fullscreenControlOptions: {
-            position: "topleft",
-        },
-    };
+onMounted(() => {
+    createMap();
+    initMap();
+});
 
-    // Wenn es neue Koordinaten gibt, wird die Karte zurückgesetzt
-    // und der Marker neu eingezeichnet
-    @Watch("coords")
-    private resetMap() {
-        setTimeout(() => {
-            this.deleteNewMarker();
-            this.createMarkerForNewZaehlstelle(this.coords);
-            this.theMap.mapObject?.setView(this.coords, this.zoom);
-        }, 200);
-    }
+function initMap(): void {
+    if (map.value) {
+        map.value.setView(props.coords, 18);
 
-    // Legt einen neuen Marker an der Position coords an
-    // und fügt diesen der Karte hinzu
-    private createMarkerForNewZaehlstelle(coords: LatLng) {
-        let defaultIcon = new Icon.Default();
-        defaultIcon.options.iconUrl = markerIconRed;
-        this.newMarker = new Marker(coords, {
-            icon: defaultIcon,
-            opacity: 1.0,
-            draggable: true,
-        });
+        createLayersAndAddToMap();
 
-        this.newMarker.on("dragend", () => {
-            if (this.newMarker)
-                this.updateZaehlstellenCoords(this.newMarker.getLatLng());
-        });
+        marker.value.addTo(map.value);
 
-        this.newMarker.addTo(this.theMap.mapObject);
-    }
-
-    private updateZaehlstellenCoords(zaehlstellenCoords: LatLng) {
-        if (zaehlstellenCoords) {
-            this.$emit("updateZaehlstellenCoords", zaehlstellenCoords);
-        }
-    }
-
-    // Wenn ein neuer Marker existiert wird dieser gelöscht
-    // und der Anlegen-Modus wird verlassen
-    private deleteNewMarker() {
-        if (this.newMarker) {
-            this.theMap.mapObject.removeLayer(this.newMarker);
-            this.newMarker = null;
-        }
-    }
-
-    mapReady() {
-        this.theMap.mapObject.removeControl(control.attribution());
-        /*
-         * Wenn die Karte in einem Popup eingebettet ist,
-         * verhält diese sich glitchy, weil es zeitlich
-         * mit dem invalidateSize in onResize() kollidiert oder so.
-         */
-        setTimeout(() => {
-            this.deleteNewMarker();
-            this.createMarkerForNewZaehlstelle(this.coords);
-            this.theMap.mapObject?.setView(this.coords, this.zoom);
-        }, 200);
+        map.value.whenReady(() =>
+            setTimeout(() => {
+                if (map.value) {
+                    map.value.invalidateSize();
+                    map.value.addControl(
+                        L.control.attribution({
+                            position: "bottomleft",
+                            prefix: "Leaflet",
+                        })
+                    );
+                }
+            }, 10)
+        );
     }
 }
+
+function resetMarker(): void {
+    if (map.value) {
+        marker.value.removeFrom(map.value);
+        marker.value = createMarker();
+        marker.value.addTo(map.value);
+    }
+}
+
+function createMap(): void {
+    if (!map.value) {
+        map.value = new L.Map("map", {
+            minZoom: 10,
+            maxZoom: 18,
+            preferCanvas: false,
+            attributionControl: false,
+            fullscreenControl: true,
+            fullscreenControlOptions: {
+                position: "topleft",
+            },
+        });
+    }
+}
+
+function createLayersAndAddToMap(): void {
+    if (map.value) {
+        const baseLayers = createBaseLayers();
+        const overlayLayers = createOverlayLayers();
+        baseLayers.Stadtkarte.addTo(map.value);
+        L.control.layers(baseLayers, overlayLayers).addTo(map.value);
+    }
+}
+
+function createBaseLayers(): L.Control.LayersObject {
+    const stadtkarteGesamt = L.tileLayer.wms(
+        "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+        {
+            layers: "gsm:g_stadtkarte_gesamt",
+            className: "Stadtkarte",
+            attribution: mapAttribution,
+        }
+    );
+
+    const luftbild = L.tileLayer.wms(
+        "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+        {
+            layers: "gsm:g_luftbild",
+            className: "Luftbild",
+            attribution: mapAttribution,
+        }
+    );
+
+    const osm = L.tileLayer.wms("https://ows.terrestris.de/osm/service?", {
+        layers: "OSM-WMS",
+        className: "OpenStreetMaps",
+        attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap-Mitwirkende</a> by terrestris',
+    });
+
+    return {
+        Stadtkarte: stadtkarteGesamt,
+        Luftbild: luftbild,
+        OpenStreetMaps: osm,
+    };
+}
+
+function createOverlayLayers(): L.Control.LayersObject {
+    const stadtbezirke = L.tileLayer.wms(
+        "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+        {
+            layers: "gsm:stadtbezirk",
+            className: "Stadtbezirke",
+            transparent: true,
+            format: "image/png",
+            attribution: mapAttribution,
+        }
+    );
+    const stadtviertel = L.tileLayer.wms(
+        "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+        {
+            layers: "gsm:vablock_viertel_dave",
+            className: "Stadtviertel",
+            transparent: true,
+            format: "image/png",
+            attribution: mapAttribution,
+        }
+    );
+
+    return {
+        Stadtbezirke: stadtbezirke,
+        Stadtviertel: stadtviertel,
+    };
+}
+
+function createMarker(): L.Marker {
+    let defaultIcon = new Icon.Default();
+    if (props.isMessstelle) {
+        defaultIcon.options.iconUrl = markerIconDiamondRed;
+    } else {
+        defaultIcon.options.iconUrl = markerIconRed;
+    }
+
+    const marker = L.marker(props.coords, {
+        icon: defaultIcon,
+        opacity: 1.0,
+        draggable: props.draggable,
+    });
+
+    marker.on("dragend", () => {
+        emit("updateZaehlstellenCoords", marker.getLatLng());
+    });
+
+    return marker;
+}
+
+const mapStyle: ComputedRef<string> = computed(() => {
+    return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}; z-index: 1`;
+});
 </script>
 
 <style lang="css">

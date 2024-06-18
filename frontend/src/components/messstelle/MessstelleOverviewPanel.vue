@@ -56,7 +56,7 @@ defineProps<Props>();
 const router = useRouter();
 
 function getItemTitle(messstelle: MessstelleOverviewDTO): string {
-    return `${messstelle.mstId}, ${messstelle.name}`;
+    return `${messstelle.mstId}, ${messstelle.name}, Stadtbezirk ${messstelle.stadtbezirkNummer}, ${messstelle.stadtbezirk}`;
 }
 
 function openMessstelle(messstelle: MessstelleOverviewDTO): void {
