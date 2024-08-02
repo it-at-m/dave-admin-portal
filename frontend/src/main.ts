@@ -1,6 +1,6 @@
 import Vue, { VNode } from "vue";
 import Vuetify from "./plugins/vuetify";
-import store from "./store";
+import { createPinia, PiniaVuePlugin } from "pinia";
 import i18n from "./i18n";
 import App from "./App.vue";
 import router from "./router";
@@ -16,11 +16,14 @@ Vue.config.productionTip = false;
 
 Vue.use(validationRules);
 
+Vue.use(PiniaVuePlugin);
+const pinia = createPinia();
+
 moment.locale(window.navigator.language);
 
 new Vue({
     router,
-    store: store,
+    pinia,
     vuetify: Vuetify,
     i18n,
     render: (h): VNode => h(App),

@@ -123,13 +123,12 @@ import MessstelleForm from "@/components/messstelle/MessstelleForm.vue";
 import MessquerschnittForm from "@/components/messstelle/MessquerschnittForm.vue";
 import { computed, ComputedRef, ref, Ref, watch } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
-import { ApiError, Levels } from "@/api/error";
-import { useStore } from "@/util/useStore";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import LageplanForm from "@/components/messstelle/LageplanForm.vue";
 import { useVuetify } from "@/util/useVuetify";
 import StandortTabItem from "@/components/messstelle/StandortTabItem.vue";
 import MessfaehigkeitForm from "@/components/messstelle/MessfaehigkeitForm.vue";
+import { useSnackbarStore } from "@/store/snackbar";
 
 const activeTab: Ref<number> = ref(0);
 const validMst: Ref<boolean> = ref(false);
@@ -145,7 +144,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const store = useStore();
+const snackbarStore = useSnackbarStore();
 const vuetify = useVuetify();
 
 const emits = defineEmits<{
@@ -173,14 +172,11 @@ function save(): void {
     if (areAllFormsValid()) {
         MessstelleService.saveMessstelle(messstelleToEdit.value)
             .then(() => {
-                store.dispatch("snackbar/showToast", {
-                    level: Levels.INFO,
-                    snackbarTextPart1: `Die Messstelle ${messstelleToEdit.value.mstId} wurde erfolgreich aktualisiert.`,
-                });
+                snackbarStore.showInfo(
+                    `Die Messstelle ${messstelleToEdit.value.mstId} wurde erfolgreich aktualisiert.`
+                );
             })
-            .catch((error: ApiError) => {
-                store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => snackbarStore.showApiError(error))
             .finally(() => {
                 activeTab.value = 0;
                 emits("reload");
@@ -226,10 +222,7 @@ function areAllFormsValid(): boolean {
             )}`;
         }
         errorText = `${errorText} wurde nicht ausgefüllt.`;
-        store.dispatch("snackbar/showToast", {
-            level: Levels.ERROR,
-            snackbarTextPart1: errorText,
-        });
+        snackbarStore.showError(errorText);
     }
     return areAllFormsValid;
 }

@@ -185,6 +185,7 @@ import {
     messstelleStatusText,
 } from "@/domain/enums/MessstelleStatus";
 import { useDateUtils } from "@/util/DateUtils";
+import {useSnackbarStore} from "@/store/snackbar";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -216,6 +217,8 @@ export default class ZaehlstelleMap extends Vue {
 
     @Ref("map")
     private readonly theMap!: LMap;
+
+    private snackbarStore = useSnackbarStore();
 
     private static readonly MUNICH_CENTER_LATITUDE: string = "48.137227";
 
@@ -342,9 +345,7 @@ export default class ZaehlstelleMap extends Vue {
             .then((result) => {
                 this.$store.commit("search/result", result);
             })
-            .catch((error) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.setMarkerToMap();
             });
@@ -630,11 +631,9 @@ export default class ZaehlstelleMap extends Vue {
             this.showCreateZaehlstelleDialog = true;
         } else {
             // Fehler Toast, dass kein Marker vorhanden
-            this.$store.dispatch("snackbar/showToast", {
-                level: Levels.WARNING,
-                snackbarTextPart1:
-                    "Es wurde keine neue Zählstelle auf der Karte markiert.",
-            });
+            this.snackbarStore.showWarning(
+                "Es wurde keine neue Zählstelle auf der Karte markiert."
+            );
         }
     }
 

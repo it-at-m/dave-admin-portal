@@ -146,9 +146,7 @@ export default class ZaehlungForm extends Vue {
             .then(() => {
                 this.$emit("saved");
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.activeTab = 0;
                 this.$store.dispatch("setResetformevent", true);

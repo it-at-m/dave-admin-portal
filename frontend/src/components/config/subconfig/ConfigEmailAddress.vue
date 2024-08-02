@@ -153,15 +153,17 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 /* eslint-disable no-unused-vars */
 import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
-import { ApiError, Levels } from "@/api/error";
 import EmailAddressService from "@/api/service/EmailAddressService";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import _ from "lodash";
+import { useSnackbarStore } from "@/store/snackbar";
 /* eslint-enable no-unused-vars */
 
 @Component
 export default class ConfigEmailAddress extends Vue {
     @Prop() readonly height!: string;
+
+    private snackbarStore = useSnackbarStore();
 
     showEditDialog = false;
     showDeleteDialog = false;
@@ -193,9 +195,7 @@ export default class ConfigEmailAddress extends Vue {
                     });
                 }
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            });
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     // Löschen
@@ -221,18 +221,12 @@ export default class ConfigEmailAddress extends Vue {
         if (this.editIndex > -1 && this.editEmailaddress) {
             EmailAddressService.delete(this.editEmailaddress)
                 .then(() => {
-                    this.$store.dispatch(
-                        "snackbar/showError",
-                        new ApiError(
-                            Levels.SUCCESS,
-                            "Gelöscht",
-                            "Die E-Mail-Adresse wurde erfolgreich gelöscht."
-                        )
+                    this.snackbarStore.showSuccess(
+                        "Gelöscht",
+                        "Die E-Mail-Adresse wurde erfolgreich gelöscht."
                     );
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                })
+                .catch((error) => this.snackbarStore.showApiError(error))
                 .finally(() => {
                     this.loadMobilitaetsreferatEmailAddress();
                 });
@@ -276,18 +270,12 @@ export default class ConfigEmailAddress extends Vue {
             // Bestehende Email
             EmailAddressService.update(this.editEmailaddress)
                 .then(() => {
-                    this.$store.dispatch(
-                        "snackbar/showError",
-                        new ApiError(
-                            Levels.SUCCESS,
-                            "Aktualisiert",
-                            "Die E-Mail-Adresse wurde erfolgreich aktualisiert."
-                        )
+                    this.snackbarStore.showSuccess(
+                        "Aktualisiert",
+                        "Die E-Mail-Adresse wurde erfolgreich aktualisiert."
                     );
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                })
+                .catch((error) => this.snackbarStore.showApiError(error))
                 .finally(() => {
                     this.loadMobilitaetsreferatEmailAddress();
                 });
@@ -295,18 +283,12 @@ export default class ConfigEmailAddress extends Vue {
             // Neue Email
             EmailAddressService.save(this.editEmailaddress)
                 .then(() => {
-                    this.$store.dispatch(
-                        "snackbar/showError",
-                        new ApiError(
-                            Levels.SUCCESS,
-                            "Gespeichert",
-                            "Die E-Mail-Addresse wurde erfolgreich gespeichert."
-                        )
+                    this.snackbarStore.showSuccess(
+                        "Gespeichert",
+                        "Die E-Mail-Addresse wurde erfolgreich gespeichert."
                     );
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                })
+                .catch((error) => this.snackbarStore.showApiError(error))
                 .finally(() => {
                     this.loadMobilitaetsreferatEmailAddress();
                 });

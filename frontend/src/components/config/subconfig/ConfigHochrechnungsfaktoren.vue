@@ -229,12 +229,14 @@ import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService";
 import _ from "lodash";
-import { ApiError, Levels } from "@/api/error";
+import { useSnackbarStore } from "@/store/snackbar";
 /* eslint-enable no-unused-vars */
 
 @Component
 export default class ConfigHochrechnungsfaktoren extends Vue {
     @Prop() readonly height!: string;
+
+    private snackbarStore = useSnackbarStore();
 
     filterMatrix = "";
 
@@ -381,18 +383,12 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
                 this.editHochrechnungsfaktor
             )
                 .then(() => {
-                    this.$store.dispatch(
-                        "snackbar/showError",
-                        new ApiError(
-                            Levels.SUCCESS,
-                            "Gelöscht",
-                            "Der Hochrechnungsfaktor wurde erfolgreich gelöscht."
-                        )
+                    this.snackbarStore.showSuccess(
+                        "Gelöscht",
+                        "Der Hochrechnungsfaktor wurde erfolgreich gelöscht."
                     );
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                })
+                .catch((error) => this.snackbarStore.showApiError(error))
                 .finally(() => {
                     this.getAllHochrechnungsfaktoren();
                 });
@@ -439,18 +435,12 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
                 this.editHochrechnungsfaktor
             )
                 .then(() => {
-                    this.$store.dispatch(
-                        "snackbar/showError",
-                        new ApiError(
-                            Levels.SUCCESS,
-                            "Aktualisiert",
-                            "Der Hochrechnungsfaktor wurde erfolgreich aktualisiert."
-                        )
+                    this.snackbarStore.showSuccess(
+                        "Aktualisiert",
+                        "Der Hochrechnungsfaktor wurde erfolgreich aktualisiert."
                     );
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                })
+                .catch((error) => this.snackbarStore.showApiError(error))
                 .finally(() => {
                     this.getAllHochrechnungsfaktoren();
                 });
@@ -460,18 +450,12 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
                 this.editHochrechnungsfaktor
             )
                 .then(() => {
-                    this.$store.dispatch(
-                        "snackbar/showError",
-                        new ApiError(
-                            Levels.SUCCESS,
-                            "Gespeichert",
-                            "Der Hochrechnungsfaktor wurde erfolgreich gespeichert."
-                        )
+                    this.snackbarStore.showSuccess(
+                        "Gespeichert",
+                        "Der Hochrechnungsfaktor wurde erfolgreich gespeichert."
                     );
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                })
+                .catch((error) => this.snackbarStore.showApiError(error))
                 .finally(() => {
                     this.getAllHochrechnungsfaktoren();
                 });
@@ -503,9 +487,7 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
                     this.$store.getters.getHochrechnungsfaktoren;
                 this.initDataStructureForInputValidation();
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            });
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     get disableSpeicherButton(): boolean {

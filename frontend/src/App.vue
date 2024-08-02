@@ -205,6 +205,8 @@ import SucheZaehlstelleSuggestDTO from "@/domain/dto/suche/SucheZaehlstelleSugge
 import SucheMessstelleSuggestDTO from "@/domain/dto/suche/SucheMessstelleSuggestDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
+import { useUserStore } from "@/store/user";
+import {useSnackbarStore} from "@/store/snackbar";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -241,14 +243,17 @@ export default class App extends Vue {
     selectedSuggestion: Suggest | null =
         DefaultObjectCreator.createDefaultSuggestion();
 
+    private userStore = useUserStore();
+    private snackbarStore = useSnackbarStore();
+
     get isFachadmin() {
         if (
             BaseUrlProvider.isDevelopment() &&
-            this.$store.getters["user/hasNoAuthorities"]
+            this.userStore.hasNoAuthorities
         ) {
             return true;
         } else {
-            return this.$store.getters["user/isFachadmin"];
+            return this.userStore.isFachadmin;
         }
     }
 
@@ -276,11 +281,8 @@ export default class App extends Vue {
     created() {
         SsoUserInfoService.getUserInfo()
             .then((ssoUserInfoResponse: SsoUserInfoResponse) => {
-                this.$store.dispatch(
-                    "user/setSsoUserInfoResponse",
-                    ssoUserInfoResponse
-                );
-                this.loggedInUser = this.$store.getters["user/getName"];
+                this.userStore.setSsoUserInfoResponse(ssoUserInfoResponse);
+                this.loggedInUser = this.userStore.getName;
             })
             .catch(() => {
                 return false;
@@ -376,9 +378,7 @@ export default class App extends Vue {
                         }
                     );
                 })
-                .catch((error) =>
-                    this.$store.dispatch("snackbar/showError", error)
-                );
+                .catch((error) => this.snackbarStore.showApiError(error));
         } else {
             if (this.lastSuggestQuery !== "" && this.lastSuggestQuery != null) {
                 this.lastSuggestQuery = query;
@@ -437,9 +437,7 @@ export default class App extends Vue {
             .then((result) => {
                 this.$store.commit("search/result", result);
             })
-            .catch((error) => {
-                this.$store.dispatch("snackbar/showError", error);
-            });
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     searchForSuggestion(query: string) {

@@ -224,6 +224,8 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import _ from "lodash";
 import { zaehlartText } from "@/domain/enums/Zaehlart";
 import { wetterText } from "@/domain/enums/Wetter";
+import { useSnackbarStore } from "@/store/snackbar";
+import { usePkweinheitStore } from "@/store/pkweinheit";
 
 @Component({
     components: {
@@ -236,6 +238,8 @@ import { wetterText } from "@/domain/enums/Wetter";
     },
 })
 export default class ZaehlstelleView extends Vue {
+    private snackbarStore = useSnackbarStore();
+    private pkweinheitStore = usePkweinheitStore();
     // Die Basisinformationen zur Zählstelle
     zaehlstelle: ZaehlstelleDTO =
         DefaultObjectCreator.createDefaultZaehlstelleDTO();
@@ -275,19 +279,15 @@ export default class ZaehlstelleView extends Vue {
                     _.cloneDeep(faktoren)
                 );
             })
-            .catch((error) =>
-                this.$store.dispatch("snackbar/showError", error)
-            );
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     private loadPkwEinheiten() {
         PkwEinheitenService.getPkweinheiten()
             .then((latest: PkwEinheitDTO) => {
-                this.$store.dispatch("setPkwEinheit", _.cloneDeep(latest));
+                this.pkweinheitStore.setPkwEinheit(_.cloneDeep(latest));
             })
-            .catch((error) =>
-                this.$store.dispatch("snackbar/showError", error)
-            );
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     get fabColor(): string {
@@ -377,9 +377,7 @@ export default class ZaehlstelleView extends Vue {
                     ZaehlungCardObjectComparator.sortByDatumDesc
                 );
             })
-            .catch((error) =>
-                this.$store.dispatch("snackbar/showError", error)
-            );
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     get hasNoZaehlung(): boolean {

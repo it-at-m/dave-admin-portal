@@ -85,12 +85,15 @@ import Fahrzeug from "@/domain/enums/Fahrzeug";
 import _ from "lodash";
 import PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import {usePkweinheitStore} from "@/store/pkweinheit";
 /* eslint-enable no-unused-vars */
 
 @Component
 export default class FahrzeugeForm extends Vue {
     @Prop()
     readonly height!: string;
+
+    private pkweinheitStore = usePkweinheitStore();
 
     // Variablen für die Checkboxen
     pkw = false;
@@ -115,7 +118,7 @@ export default class FahrzeugeForm extends Vue {
     }
 
     get pkwEinheitenStore(): PkwEinheitDTO {
-        return this.$store.getters.getPkwEinheit;
+        return this.pkweinheitStore.getPkwEinheit;
     }
 
     get labelSelectOrDeselectAll(): string {

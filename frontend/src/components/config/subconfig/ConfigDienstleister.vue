@@ -398,11 +398,14 @@ import DienstleisterService from "@/api/service/DienstleisterService";
 import _ from "lodash";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
+import { useSnackbarStore } from "@/store/snackbar";
 /* eslint-enable no-unused-vars */
 
 @Component
 export default class ConfigDienstleister extends Vue {
     @Prop() readonly height!: string;
+
+    private snackbarStore = useSnackbarStore();
 
     // Dienstleister
     private dienstleister: Array<DienstleisterDTO> = [];
@@ -509,9 +512,7 @@ export default class ConfigDienstleister extends Vue {
             .then((dienstleisterDTOS: Array<DienstleisterDTO>) => {
                 this.dienstleister = dienstleisterDTOS;
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.dienstleisterIsLoading = false;
                 this.initDataStructureForInputValidation();
@@ -597,18 +598,12 @@ export default class ConfigDienstleister extends Vue {
             // Bestehender Dienstleister
             DienstleisterService.update(this.dienstleisterToEdit)
                 .then(() => {
-                    this.$store.dispatch(
-                        "snackbar/showError",
-                        new ApiError(
-                            Levels.SUCCESS,
-                            "Aktualisiert",
-                            "Der Dienstleister wurde erfolgreich aktualisiert."
-                        )
+                    this.snackbarStore.showSuccess(
+                        "Aktualisiert",
+                        "Der Dienstleister wurde erfolgreich aktualisiert."
                     );
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                })
+                .catch((error) => this.snackbarStore.showApiError(error))
                 .finally(() => {
                     this.loadAllDienstleister();
                 });
@@ -616,18 +611,12 @@ export default class ConfigDienstleister extends Vue {
             // Neuer Dienstleister
             DienstleisterService.save(this.dienstleisterToEdit)
                 .then(() => {
-                    this.$store.dispatch(
-                        "snackbar/showError",
-                        new ApiError(
-                            Levels.SUCCESS,
-                            "Gespeichert",
-                            "Der Dienstleister wurde erfolgreich gespeichert."
-                        )
+                    this.snackbarStore.showSuccess(
+                        "Gespeichert",
+                        "Der Dienstleister wurde erfolgreich gespeichert."
                     );
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                })
+                .catch((error) => this.snackbarStore.showApiError(error))
                 .finally(() => {
                     this.loadAllDienstleister();
                 });
@@ -657,18 +646,12 @@ export default class ConfigDienstleister extends Vue {
         if (this.editDienstleisterIndex > -1 && this.dienstleisterToEdit) {
             DienstleisterService.delete(this.dienstleisterToEdit)
                 .then(() => {
-                    this.$store.dispatch(
-                        "snackbar/showError",
-                        new ApiError(
-                            Levels.SUCCESS,
-                            "Gelöscht",
-                            "Der Dienstleister wurde erfolgreich gelöscht."
-                        )
+                    this.snackbarStore.showSuccess(
+                        "Gelöscht",
+                        "Der Dienstleister wurde erfolgreich gelöscht."
                     );
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                })
+                .catch((error) => this.snackbarStore.showApiError(error))
                 .finally(() => {
                     this.loadAllDienstleister();
                 });

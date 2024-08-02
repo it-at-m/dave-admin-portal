@@ -155,12 +155,15 @@ import { LatLng } from "leaflet";
 import GeoPoint from "@/domain/GeoPoint";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import MiniMap from "@/components/map/MiniMap.vue";
+import {useSnackbarStore} from "@/store/snackbar";
 /* eslint-enable no-unused-vars */
 @Component({
     components: { MiniMap },
 })
 export default class UpdateZaehlstelleForm extends Vue {
     @Prop({ default: {} }) zaehlstelle!: ZaehlstelleDTO;
+
+    private snackbarStore = useSnackbarStore();
 
     newSuchwort = "";
 
@@ -232,9 +235,7 @@ export default class UpdateZaehlstelleForm extends Vue {
             .then(() => {
                 this.$emit("saved");
             })
-            .catch((error) => {
-                this.$store.dispatch("snackbar/showError", error);
-            });
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     cancel(): void {

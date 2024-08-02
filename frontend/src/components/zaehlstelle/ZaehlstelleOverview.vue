@@ -48,15 +48,15 @@
 
 <script setup lang="ts">
 import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
-import { useStore } from "@/util/useStore";
 import OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
 import IconOptions from "@/components/icons/IconOptions";
 import Status, { statusIcon } from "@/domain/enums/Status";
 import ZaehlungService from "@/api/service/ZaehlungService";
 import ZaehlungComparator from "@/util/ZaehlungComparator";
 import OpenZaehlungPanel from "@/components/zaehlung/OpenZaehlungPanel.vue";
+import { useSnackbarStore } from "@/store/snackbar";
 
-const store = useStore();
+const snackbarStore = useSnackbarStore();
 
 const hasOpenZaehlungen: Ref<boolean> = ref(false);
 
@@ -139,7 +139,7 @@ function loadOpenZaehlungen(): void {
             hasOpenZaehlungen.value = zaehlungen.length > 0;
             sortDataArraysZaehlstelle();
         })
-        .catch((error) => store.dispatch("snackbar/showError", error));
+        .catch((error) => snackbarStore.showApiError(error));
 }
 
 function sortDataArraysZaehlstelle(): void {

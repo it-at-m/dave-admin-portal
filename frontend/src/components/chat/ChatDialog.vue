@@ -70,6 +70,7 @@ import ChatMessageDTO from "@/domain/dto/ChatMessageDTO";
 import { ApiError } from "@/api/error";
 import accountTieUrl from "@/assets/account-tie.png";
 import kindlUrl from "@/assets/kindl.jpg";
+import { useSnackbarStore } from "@/store/snackbar";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -79,6 +80,8 @@ export default class ChatDialog extends Vue {
     @Prop() showDialog!: boolean;
     messages: Message[] = [];
     private zaehlungId = "";
+
+    private snackbarStore = useSnackbarStore();
 
     public static DIENSTLEISTER_ID = 1;
     public static MOBILITAETSREFERAT_ID = 2;
@@ -216,9 +219,7 @@ export default class ChatDialog extends Vue {
             .then((message) => {
                 message.uploaded = true;
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            });
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     onClose() {
@@ -256,9 +257,7 @@ export default class ChatDialog extends Vue {
                         });
                     });
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                });
+                .catch((error) => this.snackbarStore.showApiError(error));
 
             ChatMessageService.updateUnreadMessages(
                 this.zaehlungId,
@@ -267,9 +266,7 @@ export default class ChatDialog extends Vue {
                 .then(() => {
                     this.$store.dispatch("triggerResetNotificationsEvent");
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                });
+                .catch((error) => this.snackbarStore.showApiError(error));
         } else {
             this.messages = [];
             this.zaehlungId = "";

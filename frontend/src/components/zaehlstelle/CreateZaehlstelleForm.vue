@@ -149,16 +149,17 @@ import { stadtbezirksviertel } from "@/domain/enums/Stadtbezirksviertel";
 import KeyVal from "@/domain/KeyVal";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import NextZaehlstellennummerDTO from "@/domain/dto/laden/NextZaehlstellennummerDTO";
-import { ApiError, Levels } from "@/api/error";
 import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import GeoPoint from "@/domain/GeoPoint";
 import MiniMap from "@/components/map/MiniMap.vue";
+import { useSnackbarStore } from "@/store/snackbar";
 /* eslint-enable no-unused-vars */
 @Component({
     components: { MiniMap },
 })
 export default class ZaehlstelleForm extends Vue {
+    private snackbarStore = useSnackbarStore();
     validZaehlstelle = false;
 
     zaehlstelle: ZaehlstelleDTO =
@@ -220,9 +221,7 @@ export default class ZaehlstelleForm extends Vue {
                     this.zaehlstelle.nummer = result.nummer;
                     this.laufendeNummer = result.nummer;
                 })
-                .catch((error: ApiError) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                });
+                .catch((error) => this.snackbarStore.showApiError(error));
         }
     }
 
@@ -248,16 +247,12 @@ export default class ZaehlstelleForm extends Vue {
                     this.resetZaehlstelle();
                     this.$emit("saved", backendIdDTO);
                 })
-                .catch((error) => {
-                    this.$store.dispatch("snackbar/showError", error);
-                });
+                .catch((error) => this.snackbarStore.showApiError(error));
         } else {
             // Fehler Toast, dass kein Marker vorhanden
-            this.$store.dispatch("snackbar/showToast", {
-                level: Levels.WARNING,
-                snackbarTextPart1:
-                    "Es wurde nicht alle Pflichtfelder ausgefüllt.",
-            });
+            this.snackbarStore.showWarning(
+                "Es wurde nicht alle Pflichtfelder ausgefüllt."
+            );
         }
     }
 
