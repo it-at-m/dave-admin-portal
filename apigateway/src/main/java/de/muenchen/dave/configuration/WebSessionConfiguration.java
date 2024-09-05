@@ -1,11 +1,12 @@
 /*
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
- * der Landeshauptstadt München, 2023
+ * der Landeshauptstadt München, 2022
  */
 package de.muenchen.dave.configuration;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.config.EvictionPolicy;
+import com.hazelcast.config.IntegrityCheckerConfig;
 import com.hazelcast.config.MapConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
@@ -46,15 +47,22 @@ public class WebSessionConfiguration {
     }
 
     @Bean
-    public ReactiveSessionRepository<MapSession> reactiveSessionRepository(@Qualifier("hazelcastInstance") @Autowired HazelcastInstance hazelcastInstance) {
-        final IMap<String, Session> map = hazelcastInstance.getMap(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME);
+    public ReactiveSessionRepository<MapSession> reactiveSessionRepository(
+            @Qualifier("hazelcastInstance") @Autowired final HazelcastInstance hazelcastInstance) {
+        final IMap<String, Session> map = hazelcastInstance.getMap(
+                HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME);
         return new ReactiveMapSessionRepository(map);
     }
 
     @Bean
-    @Profile({ "local", "test" })
-    public Config localConfig(@Value("${spring.session.timeout}") int timeout) {
+    @Profile({ "local", "docker", "unittest" })
+    public Config localConfig(@Value("${spring.session.timeout}") final int timeout) {
         final var hazelcastConfig = new Config();
+        // Integrity Check
+        final var integrityCheckerConfig = new IntegrityCheckerConfig();
+        integrityCheckerConfig.setEnabled(true);
+        hazelcastConfig.setIntegrityCheckerConfig(integrityCheckerConfig);
+        // Config
         hazelcastConfig.setInstanceName(hazelcastInstanceName);
         hazelcastConfig.setClusterName(groupConfigName);
 
@@ -64,24 +72,31 @@ public class WebSessionConfiguration {
 
         final var joinConfig = networkConfig.getJoin();
         joinConfig.getMulticastConfig().setEnabled(false);
-        joinConfig.getTcpIpConfig()
-                .setEnabled(true)
-                .addMember("127.0.0.1");
+        joinConfig.getTcpIpConfig().setEnabled(true).addMember("127.0.0.1");
 
         return hazelcastConfig;
     }
 
     @Bean
     @Profile({ "dev", "kon", "demo", "prod" })
-    public Config config(@Value("${spring.session.timeout}") int timeout) {
+    public Config config(@Value("${spring.session.timeout}") final int timeout) {
         final var hazelcastConfig = new Config();
+        // Integrity Check
+        final var integrityCheckerConfig = new IntegrityCheckerConfig();
+        integrityCheckerConfig.setEnabled(true);
+        hazelcastConfig.setIntegrityCheckerConfig(integrityCheckerConfig);
+        // Config
         hazelcastConfig.setInstanceName(hazelcastInstanceName);
         hazelcastConfig.setClusterName(groupConfigName);
 
         addSessionTimeoutToHazelcastConfig(hazelcastConfig, timeout);
 
         hazelcastConfig.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
-        hazelcastConfig.getNetworkConfig().getJoin().getKubernetesConfig().setEnabled(true)
+        hazelcastConfig
+                .getNetworkConfig()
+                .getJoin()
+                .getKubernetesConfig()
+                .setEnabled(true)
                 //If we dont set a specific name, it would call -all- services within a namespace
                 .setProperty("service-name", openshiftServiceName);
 
@@ -105,5 +120,4 @@ public class WebSessionConfiguration {
 
         hazelcastConfig.addMapConfig(sessionConfig);
     }
-
 }
