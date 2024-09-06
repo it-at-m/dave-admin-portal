@@ -56,7 +56,6 @@
     </v-dialog>
 </template>
 
-
 <script lang="ts">
 import Vue from "vue";
 import { Chat } from "vue-quick-chat";
@@ -67,10 +66,11 @@ import Participant from "@/domain/chat/Participant";
 import ChatMessageService from "@/api/service/ChatMessageService";
 import Message from "@/domain/chat/Message";
 import ChatMessageDTO from "@/domain/dto/ChatMessageDTO";
-import { ApiError } from "@/api/error";
 import accountTieUrl from "@/assets/account-tie.png";
 import kindlUrl from "@/assets/kindl.jpg";
-import { useSnackbarStore } from "@/store/snackbar";
+import { useSnackbarStore } from "@/store/snackbarStore";
+import { useChatStore } from "@/store/chatStore";
+import { useZaehlungStore } from "@/store/zaehlungStore";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -82,6 +82,8 @@ export default class ChatDialog extends Vue {
     private zaehlungId = "";
 
     private snackbarStore = useSnackbarStore();
+    private chatStore = useChatStore();
+    private zaehlungStore = useZaehlungStore();
 
     public static DIENSTLEISTER_ID = 1;
     public static MOBILITAETSREFERAT_ID = 2;
@@ -227,7 +229,7 @@ export default class ChatDialog extends Vue {
     }
 
     get chatTitle() {
-        let zaehlung = this.$store.getters.getZaehlung;
+        let zaehlung = this.zaehlungStore.getZaehlung;
         let chatTitle = "Chat";
         if (zaehlung.datum) {
             chatTitle =
@@ -241,7 +243,7 @@ export default class ChatDialog extends Vue {
     @Watch("showDialog")
     private loadMessages() {
         if (this.showDialog) {
-            this.zaehlungId = this.$store.getters.getZaehlung.id;
+            this.zaehlungId = this.zaehlungStore.getZaehlung.id;
             this.messages = [];
             ChatMessageService.getAllByZaehlungId(this.zaehlungId)
                 .then((messageDTOs) => {
@@ -264,7 +266,7 @@ export default class ChatDialog extends Vue {
                 this.mobilitaetsreferat.id
             )
                 .then(() => {
-                    this.$store.dispatch("triggerResetNotificationsEvent");
+                    this.chatStore.resetNotificationsEventSwitch();
                 })
                 .catch((error) => this.snackbarStore.showApiError(error));
         } else {

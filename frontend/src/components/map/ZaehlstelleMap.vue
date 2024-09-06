@@ -185,7 +185,9 @@ import {
     messstelleStatusText,
 } from "@/domain/enums/MessstelleStatus";
 import { useDateUtils } from "@/util/DateUtils";
-import {useSnackbarStore} from "@/store/snackbar";
+import { useSnackbarStore } from "@/store/snackbarStore";
+import { useSearchStore } from "@/store/searchStore";
+import _ from "lodash";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -219,6 +221,7 @@ export default class ZaehlstelleMap extends Vue {
     private readonly theMap!: LMap;
 
     private snackbarStore = useSnackbarStore();
+    private searchStore = useSearchStore();
 
     private static readonly MUNICH_CENTER_LATITUDE: string = "48.137227";
 
@@ -271,7 +274,7 @@ export default class ZaehlstelleMap extends Vue {
     }
 
     get getErhebungsstellenKarteFromStore(): AnzeigeKarteDTO[] {
-        return this.$store.getters["search/result"];
+        return this.searchStore.getSearchResult;
     }
 
     get showSpeedDial(): boolean {
@@ -329,7 +332,7 @@ export default class ZaehlstelleMap extends Vue {
         }
     }
 
-    @Watch("$store.state.search.result")
+    @Watch("getErhebungsstellenKarteFromStore")
     private resetMarker() {
         // Alte Layer entfernen bevor neue eingezeichnet werden
         this.theMap.mapObject.removeLayer(this.mapMarkerClusterGroup);
@@ -339,11 +342,9 @@ export default class ZaehlstelleMap extends Vue {
 
     @Watch("reload")
     private searchErhebungsstelle() {
-        SucheService.searchErhebungsstelle(
-            this.$store.getters["search/lastSearchQuery"]
-        )
+        SucheService.searchErhebungsstelle(this.searchStore.getLastSearchQuery)
             .then((result) => {
-                this.$store.commit("search/result", result);
+                this.searchStore.setSearchResult(_.cloneDeep(result));
             })
             .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {

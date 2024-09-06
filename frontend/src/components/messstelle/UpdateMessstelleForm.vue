@@ -128,7 +128,7 @@ import LageplanForm from "@/components/messstelle/LageplanForm.vue";
 import { useVuetify } from "@/util/useVuetify";
 import StandortTabItem from "@/components/messstelle/StandortTabItem.vue";
 import MessfaehigkeitForm from "@/components/messstelle/MessfaehigkeitForm.vue";
-import { useSnackbarStore } from "@/store/snackbar";
+import { useSnackbarStore } from "@/store/snackbarStore";
 
 const activeTab: Ref<number> = ref(0);
 const validMst: Ref<boolean> = ref(false);

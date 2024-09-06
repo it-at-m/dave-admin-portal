@@ -153,7 +153,7 @@ import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import GeoPoint from "@/domain/GeoPoint";
 import MiniMap from "@/components/map/MiniMap.vue";
-import { useSnackbarStore } from "@/store/snackbar";
+import { useSnackbarStore } from "@/store/snackbarStore";
 /* eslint-enable no-unused-vars */
 @Component({
     components: { MiniMap },

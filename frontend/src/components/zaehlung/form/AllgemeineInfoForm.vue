@@ -257,15 +257,14 @@
 
 <script lang="ts">
 import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 import { zaehlartenDropDown } from "@/domain/enums/Zaehlart";
 import KeyVal from "@/domain/KeyVal";
 import { zaehldauerDropDown } from "@/domain/enums/Zaehldauer";
 import { quelleDropDown } from "@/domain/enums/Quelle";
-import _ from "lodash";
+import { cloneDeep } from "lodash";
 import Status from "@/domain/enums/Status";
-/* eslint-enable no-unused-vars */
+import { useZaehlungStore } from "@/store/zaehlungStore";
 
 @Component
 export default class AllgemeineInfoForm extends Vue {
@@ -281,6 +280,8 @@ export default class AllgemeineInfoForm extends Vue {
 
     zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
 
+    private zaehlungStore = useZaehlungStore();
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Ref("menu") private vMenu: any;
 
@@ -289,8 +290,8 @@ export default class AllgemeineInfoForm extends Vue {
         this.updateWorkingCopy();
     }
 
-    get zaehlungStore(): ZaehlungDTO {
-        return this.$store.getters.getZaehlung;
+    get zaehlungOfStore(): ZaehlungDTO {
+        return this.zaehlungStore.getZaehlung;
     }
 
     get showZaehlsituation(): boolean {
@@ -300,12 +301,12 @@ export default class AllgemeineInfoForm extends Vue {
             Status.CORRECTION,
             Status.COUNTING,
         ];
-        return possibleStatus.includes(this.zaehlungStore.status);
+        return possibleStatus.includes(this.zaehlungOfStore.status);
     }
 
     @Watch("zaehlungStore")
     updateWorkingCopy(): void {
-        this.zaehlung = _.cloneDeep(this.zaehlungStore);
+        this.zaehlung = cloneDeep(this.zaehlungOfStore);
         this.resetDatum();
     }
 
@@ -315,7 +316,7 @@ export default class AllgemeineInfoForm extends Vue {
     }
 
     updateStore(): void {
-        this.$store.dispatch("setZaehlung", _.cloneDeep(this.zaehlung));
+        this.zaehlungStore.setZaehlung(cloneDeep(this.zaehlung));
     }
 
     get computedDateFormatted(): string | null {

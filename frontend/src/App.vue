@@ -205,8 +205,10 @@ import SucheZaehlstelleSuggestDTO from "@/domain/dto/suche/SucheZaehlstelleSugge
 import SucheMessstelleSuggestDTO from "@/domain/dto/suche/SucheMessstelleSuggestDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
-import { useUserStore } from "@/store/user";
-import {useSnackbarStore} from "@/store/snackbar";
+import { useUserStore } from "@/store/userStore";
+import { useSnackbarStore } from "@/store/snackbarStore";
+import { useSearchStore } from "@/store/searchStore";
+import _ from "lodash";
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -245,6 +247,7 @@ export default class App extends Vue {
 
     private userStore = useUserStore();
     private snackbarStore = useSnackbarStore();
+    private searchStore = useSearchStore();
 
     get isFachadmin() {
         if (
@@ -391,7 +394,7 @@ export default class App extends Vue {
         this.searchQuery = "";
         this.selectedSuggestion =
             DefaultObjectCreator.createDefaultSuggestion();
-        this.$store.commit("search/lastSearchQuery", this.searchQuery);
+        this.searchStore.setLastSearchQuery(this.searchQuery);
         this.search();
     }
 
@@ -424,7 +427,7 @@ export default class App extends Vue {
             this.searchQuery = "";
         }
 
-        this.$store.commit("search/lastSearchQuery", this.searchQuery);
+        this.searchStore.setLastSearchQuery(this.searchQuery);
         if (
             (this.$route.name === "zaehlstelle" ||
                 this.$route.name === "messstelle") &&
@@ -435,7 +438,7 @@ export default class App extends Vue {
 
         SucheService.searchErhebungsstelle(this.searchQuery)
             .then((result) => {
-                this.$store.commit("search/result", result);
+                this.searchStore.setSearchResult(_.cloneDeep(result));
             })
             .catch((error) => this.snackbarStore.showApiError(error));
     }

@@ -156,7 +156,7 @@ import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
 import EmailAddressService from "@/api/service/EmailAddressService";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import _ from "lodash";
-import { useSnackbarStore } from "@/store/snackbar";
+import { useSnackbarStore } from "@/store/snackbarStore";
 /* eslint-enable no-unused-vars */
 
 @Component

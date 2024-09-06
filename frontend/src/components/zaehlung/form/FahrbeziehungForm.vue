@@ -40,17 +40,17 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
 import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
 import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
 import FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
 import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
-import _ from "lodash";
+import { cloneDeep, isNil } from "lodash";
 import KnotenarmDTO from "@/domain/KnotenarmDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import ObjectToTextTranslator from "@/util/ObjectToTextTranslator";
 import FahrbeziehungComparator from "@/util/FahrbeziehungComparator";
-/* eslint-enable no-unused-vars */
+import { useHochrechnungsfaktorStore } from "@/store/hochrechnungsfaktorStore";
+import { useZaehlungStore } from "@/store/zaehlungStore";
 @Component({
     components: {
         LhmTextField,
@@ -66,33 +66,36 @@ export default class FahrbeziehungForm extends Vue {
 
     allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
 
+    private hochrechnungsfaktorenStore = useHochrechnungsfaktorStore();
+    private zaehlungStore = useZaehlungStore();
+
     mounted() {
         this.updateWorkingCopy();
     }
 
     get isHochrechnungsfaktorEditable(): boolean {
-        return this.$store.getters.isHochrechnungsfaktorEditable;
+        return this.zaehlungStore.isHochrechnungsfaktorEditable;
     }
 
     get fahrbeziehungStore(): Array<FahrbeziehungDTO> {
-        return this.$store.getters.getFahrbeziehungen;
+        return this.zaehlungStore.getFahrbeziehungen;
     }
 
     get knotenarmStore(): Array<KnotenarmDTO> {
-        return this.$store.getters.getKnotenarme;
+        return this.zaehlungStore.getKnotenarme;
     }
 
     @Watch("knotenarmStore", { deep: true, immediate: true })
     updateWorkingCopy(): void {
         this.selectedFahrbeziehungen = [];
-        this.allPossibleFahrbeziehungen = _.cloneDeep(
+        this.allPossibleFahrbeziehungen = cloneDeep(
             this.calculatePossibleFahrbeziehungen()
         );
-        this.fahrbeziehungen = _.cloneDeep(this.fahrbeziehungStore);
+        this.fahrbeziehungen = cloneDeep(this.fahrbeziehungStore);
         this.allPossibleFahrbeziehungen.forEach((pos: FahrbeziehungDTO) => {
             this.fahrbeziehungen.forEach((fahr: FahrbeziehungDTO) => {
                 if (pos.von === fahr.von && pos.nach === fahr.nach) {
-                    pos.hochrechnungsfaktor = _.cloneDeep(
+                    pos.hochrechnungsfaktor = cloneDeep(
                         fahr.hochrechnungsfaktor
                     );
                     if (fahr.id) {
@@ -103,14 +106,14 @@ export default class FahrbeziehungForm extends Vue {
                 }
             });
             if (pos.active) {
-                this.selectedFahrbeziehungen.push(_.cloneDeep(pos));
+                this.selectedFahrbeziehungen.push(cloneDeep(pos));
             }
         });
     }
 
     private calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
         let standardFaktor: HochrechnungsfaktorDTO =
-            this.$store.getters.getStandardHochrechnungsfaktor;
+            this.hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
         let allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
         let possibleArms: Array<number> = [];
         this.knotenarmStore.forEach((arm: KnotenarmDTO) => {
@@ -122,7 +125,7 @@ export default class FahrbeziehungForm extends Vue {
                 newFzVon.von = vonNummer;
                 newFzVon.nach = nachNummer;
                 newFzVon.active = false;
-                newFzVon.hochrechnungsfaktor = _.cloneDeep(standardFaktor);
+                newFzVon.hochrechnungsfaktor = cloneDeep(standardFaktor);
                 newFzVon.indexKey = `${vonNummer}${nachNummer}`;
                 allPossibleFahrbeziehungen.push(newFzVon);
             });
@@ -131,10 +134,6 @@ export default class FahrbeziehungForm extends Vue {
             FahrbeziehungComparator.sortByVonAndNach
         );
         return allPossibleFahrbeziehungen;
-    }
-
-    get hochrechnungsfaktorenStore(): Array<HochrechnungsfaktorDTO> {
-        return this.$store.getters.getHochrechnungsfaktoren;
     }
 
     /**
@@ -147,10 +146,10 @@ export default class FahrbeziehungForm extends Vue {
      */
     get hochrechnungsfaktoreDropDown(): Array<HochrechnungsfaktorDTO> {
         const dropDown: Array<HochrechnungsfaktorDTO> = [];
-        this.hochrechnungsfaktorenStore.forEach(
+        this.hochrechnungsfaktorenStore.getHochrechnungsfaktoren.forEach(
             (faktor: HochrechnungsfaktorDTO) => {
                 if (faktor.active) {
-                    const copy: HochrechnungsfaktorDTO = _.cloneDeep(faktor);
+                    const copy: HochrechnungsfaktorDTO = cloneDeep(faktor);
                     dropDown.push(copy);
                 }
             }
@@ -160,12 +159,10 @@ export default class FahrbeziehungForm extends Vue {
         this.allPossibleFahrbeziehungen.forEach(
             (fahrbeziehung: FahrbeziehungDTO) => {
                 if (
-                    !_.isNil(fahrbeziehung.hochrechnungsfaktor) &&
+                    !isNil(fahrbeziehung.hochrechnungsfaktor) &&
                     !dropDown.includes(fahrbeziehung.hochrechnungsfaktor)
                 ) {
-                    dropDown.push(
-                        _.cloneDeep(fahrbeziehung.hochrechnungsfaktor)
-                    );
+                    dropDown.push(cloneDeep(fahrbeziehung.hochrechnungsfaktor));
                 }
             }
         );
@@ -175,16 +172,10 @@ export default class FahrbeziehungForm extends Vue {
     updateFahrbeziehung(fahrbeziehung: FahrbeziehungDTO): void {
         if (fahrbeziehung.active) {
             // aktualisieren
-            this.$store.dispatch(
-                "updateFahrbeziehung",
-                _.cloneDeep(fahrbeziehung)
-            );
+            this.zaehlungStore.updateFahrbeziehung(cloneDeep(fahrbeziehung));
         } else {
             // löschen
-            this.$store.dispatch(
-                "deleteFahrbeziehung",
-                _.cloneDeep(fahrbeziehung)
-            );
+            this.zaehlungStore.deleteFahrbeziehung(cloneDeep(fahrbeziehung));
         }
         this.updateWorkingCopy();
     }
@@ -217,7 +208,7 @@ export default class FahrbeziehungForm extends Vue {
     selectItem(event: any) {
         if (event.item) {
             event.item.active = event.value;
-            this.selectedFahrbeziehungen.push(_.cloneDeep(event.item));
+            this.selectedFahrbeziehungen.push(cloneDeep(event.item));
             this.updateFahrbeziehung(event.item);
         }
     }

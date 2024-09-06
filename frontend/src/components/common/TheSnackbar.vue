@@ -28,7 +28,7 @@
 <script lang="ts" setup>
 import { Ref, ref, watch } from "vue";
 import { Levels } from "@/api/error";
-import { useSnackbarStore } from "@/store/snackbar";
+import { useSnackbarStore } from "@/store/snackbarStore";
 
 const defaultTimeout = 6000;
 

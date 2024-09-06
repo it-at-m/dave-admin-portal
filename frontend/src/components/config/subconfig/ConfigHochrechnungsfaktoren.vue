@@ -224,19 +224,19 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
 import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService";
 import _ from "lodash";
-import { useSnackbarStore } from "@/store/snackbar";
-/* eslint-enable no-unused-vars */
+import { useSnackbarStore } from "@/store/snackbarStore";
+import { useHochrechnungsfaktorStore } from "@/store/hochrechnungsfaktorStore";
 
 @Component
 export default class ConfigHochrechnungsfaktoren extends Vue {
     @Prop() readonly height!: string;
 
     private snackbarStore = useSnackbarStore();
+    private hochrechnungsfaktorStore = useHochrechnungsfaktorStore();
 
     filterMatrix = "";
 
@@ -479,12 +479,11 @@ export default class ConfigHochrechnungsfaktoren extends Vue {
     private getAllHochrechnungsfaktoren() {
         HochrechnungsfaktorService.getAllHochrechnungsfaktoren()
             .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
-                this.$store.dispatch(
-                    "setHochrechnungsfaktoren",
+                this.hochrechnungsfaktorStore.setHochrechnungsfaktoren(
                     _.cloneDeep(faktoren)
                 );
                 this.hochrechnungsfaktoren =
-                    this.$store.getters.getHochrechnungsfaktoren;
+                    this.hochrechnungsfaktorStore.getHochrechnungsfaktoren;
                 this.initDataStructureForInputValidation();
             })
             .catch((error) => this.snackbarStore.showApiError(error));

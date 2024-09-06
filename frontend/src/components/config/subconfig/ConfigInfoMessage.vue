@@ -171,7 +171,7 @@ import { ApiError, Levels } from "@/api/error";
 import InfoMessageDTO from "@/domain/dto/InfoMessageDTO";
 import InfoMessageService from "@/api/service/InfoMessageService";
 import _ from "lodash";
-import {useSnackbarStore} from "@/store/snackbar";
+import { useSnackbarStore } from "@/store/snackbarStore";
 /* eslint-enable no-unused-vars */
 
 @Component
@@ -309,7 +309,9 @@ export default class ConfigInfoMessage extends Vue {
                 this.setInactiveInfoMessages(
                     _.takeRight(infoMessages, infoMessages.length - 1)
                 );
-              this.snackbarStore.showSuccess("Die Infonachricht wurde gespeichert.");
+                this.snackbarStore.showSuccess(
+                    "Die Infonachricht wurde gespeichert."
+                );
             })
             .catch((error) => this.snackbarStore.showApiError(error));
     }
