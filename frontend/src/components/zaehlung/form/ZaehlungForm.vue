@@ -102,6 +102,8 @@ import ZaehlungService from "@/api/service/ZaehlungService";
 // Util
 import _ from "lodash";
 import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/FahrbeziehungKreisverkehrForm.vue";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 
 @Component({
     components: {
@@ -121,6 +123,9 @@ export default class ZaehlungForm extends Vue {
     activeTab = 0;
     private isAllgemeinFormValid = false;
 
+    private zaehlungStore = useZaehlungStore();
+    private snackbarStore = useSnackbarStore();
+
     /**
      * Erzeugt eine vorübergehende ID, um die Knotenarme identifizieren zu können.
      * Diese ID wird vor dem Speichern gelöscht
@@ -134,7 +139,7 @@ export default class ZaehlungForm extends Vue {
     }
 
     save(): void {
-        let copy: ZaehlungDTO = _.cloneDeep(this.$store.getters.getZaehlung);
+        let copy: ZaehlungDTO = _.cloneDeep(this.zaehlungStore.getZaehlung);
         let selfIdLength: number = ZaehlungForm.generateId().length;
         copy.knotenarme.forEach((arm: KnotenarmDTO) => {
             // Alle Id's entfernen, die ich selber gesetzt habe
@@ -146,18 +151,16 @@ export default class ZaehlungForm extends Vue {
             .then(() => {
                 this.$emit("saved");
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.activeTab = 0;
-                this.$store.dispatch("setResetformevent", true);
+                this.zaehlungStore.setResetformevent(true);
             });
     }
 
     cancel(): void {
         this.activeTab = 0;
-        this.$store.dispatch("setResetformevent", true);
+        this.zaehlungStore.setResetformevent(true);
         this.$emit("cancel");
     }
 
@@ -170,7 +173,7 @@ export default class ZaehlungForm extends Vue {
     }
 
     get isKreisverkehr(): boolean {
-        return this.$store.getters.getZaehlung.kreisverkehr;
+        return this.zaehlungStore.getZaehlung.kreisverkehr;
     }
 }
 </script>

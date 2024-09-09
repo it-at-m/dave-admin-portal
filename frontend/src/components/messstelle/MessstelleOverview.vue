@@ -45,9 +45,9 @@ import MessstelleOverviewPanel from "@/components/messstelle/MessstelleOverviewP
 import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
-import { useStore } from "@/util/useStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 
-const store = useStore();
+const snackbarStore = useSnackbarStore();
 
 const hasMessstellen: Ref<boolean> = ref(false);
 
@@ -93,7 +93,7 @@ function loadOpenMessstellen(): void {
                 hasMessstellen.value || messstellen.length > 0;
             sortDataArraysMessstelle();
         })
-        .catch((error) => store.dispatch("snackbar/showError", error));
+        .catch((error) => snackbarStore.showApiError(error));
 }
 
 function sortDataArraysMessstelle(): void {

@@ -221,9 +221,13 @@ import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 // Util
 import ZaehlungCardObjectComparator from "@/util/ZaehlungCardObjectComparator";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import _ from "lodash";
+import { cloneDeep } from "lodash";
 import { zaehlartText } from "@/domain/enums/Zaehlart";
 import { wetterText } from "@/domain/enums/Wetter";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { usePkweinheitStore } from "@/store/PkweinheitStore";
+import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 
 @Component({
     components: {
@@ -236,6 +240,10 @@ import { wetterText } from "@/domain/enums/Wetter";
     },
 })
 export default class ZaehlstelleView extends Vue {
+    private snackbarStore = useSnackbarStore();
+    private pkweinheitStore = usePkweinheitStore();
+    private hochrechnungsfaktorStore = useHochrechnungsfaktorStore();
+    private zaehlungStore = useZaehlungStore();
     // Die Basisinformationen zur Zählstelle
     zaehlstelle: ZaehlstelleDTO =
         DefaultObjectCreator.createDefaultZaehlstelleDTO();
@@ -270,24 +278,19 @@ export default class ZaehlstelleView extends Vue {
     private loadHochrechnungsfaktoren() {
         HochrechnungsfaktorService.getAllHochrechnungsfaktoren()
             .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
-                this.$store.dispatch(
-                    "setHochrechnungsfaktoren",
-                    _.cloneDeep(faktoren)
+                this.hochrechnungsfaktorStore.setHochrechnungsfaktoren(
+                    cloneDeep(faktoren)
                 );
             })
-            .catch((error) =>
-                this.$store.dispatch("snackbar/showError", error)
-            );
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     private loadPkwEinheiten() {
         PkwEinheitenService.getPkweinheiten()
             .then((latest: PkwEinheitDTO) => {
-                this.$store.dispatch("setPkwEinheit", _.cloneDeep(latest));
+                this.pkweinheitStore.setPkwEinheit(cloneDeep(latest));
             })
-            .catch((error) =>
-                this.$store.dispatch("snackbar/showError", error)
-            );
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     get fabColor(): string {
@@ -348,7 +351,7 @@ export default class ZaehlstelleView extends Vue {
     private createDefaultZaehlungDTO(): ZaehlungDTO {
         let zaehlung: ZaehlungDTO =
             DefaultObjectCreator.createDefaultZaehlungDTO();
-        zaehlung.punkt = _.cloneDeep(this.zaehlstelle.punkt);
+        zaehlung.punkt = cloneDeep(this.zaehlstelle.punkt);
         zaehlung.zaehlIntervall = 15;
         let time = new Date().toLocaleTimeString(navigator.language, {
             hour: "2-digit",
@@ -377,9 +380,7 @@ export default class ZaehlstelleView extends Vue {
                     ZaehlungCardObjectComparator.sortByDatumDesc
                 );
             })
-            .catch((error) =>
-                this.$store.dispatch("snackbar/showError", error)
-            );
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     get hasNoZaehlung(): boolean {
@@ -415,9 +416,8 @@ export default class ZaehlstelleView extends Vue {
     }
 
     createZaehlung() {
-        this.$store.dispatch(
-            "setZaehlung",
-            _.cloneDeep(this.createDefaultZaehlungDTO())
+        this.zaehlungStore.setZaehlung(
+            cloneDeep(this.createDefaultZaehlungDTO())
         );
         this.showZaehlungDialog = true;
     }
@@ -440,10 +440,7 @@ export default class ZaehlstelleView extends Vue {
     private openZaehlungWithId(zaehlungId: string): void {
         this.zaehlungCards.forEach((cardObject: ZaehlungCardObject) => {
             if (cardObject.zaehlung.id === zaehlungId) {
-                this.$store.dispatch(
-                    "setZaehlung",
-                    _.cloneDeep(cardObject.zaehlung)
-                );
+                this.zaehlungStore.setZaehlung(cloneDeep(cardObject.zaehlung));
                 this.openZaehlungDialog();
             }
         });

@@ -47,16 +47,17 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
-/* eslint-disable no-unused-vars */
 import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-/* eslint-enable no-unused-vars */
+import { useChatStore } from "@/store/ChatStore";
 
 @Component
 export default class UnreadMessages extends Vue {
     zaehlstellenWithUnreadMessages: ZaehlstelleDTO[] = [];
 
     private static readonly PARTICIPANT_ID_MOBILITAETSREFERAT: number = 2;
+
+    private chatStore = useChatStore();
 
     mounted() {
         this.loadZaehlstellenWithUnreadMessages();
@@ -78,12 +79,12 @@ export default class UnreadMessages extends Vue {
         });
     }
 
-    get resetNotificationsEvent(): number {
-        return this.$store.getters.getResetNotificationsEvent;
+    get notificationsEventSwitch(): boolean {
+        return this.chatStore.getNotificationsEventSwitch;
     }
 
-    @Watch("resetNotificationsEvent")
-    private resetNotifications(): void {
+    @Watch("notificationsEventSwitch")
+    private realoadNotifications(): void {
         this.loadZaehlstellenWithUnreadMessages();
     }
 

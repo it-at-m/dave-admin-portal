@@ -171,11 +171,14 @@ import { ApiError, Levels } from "@/api/error";
 import InfoMessageDTO from "@/domain/dto/InfoMessageDTO";
 import InfoMessageService from "@/api/service/InfoMessageService";
 import _ from "lodash";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 /* eslint-enable no-unused-vars */
 
 @Component
 export default class ConfigInfoMessage extends Vue {
     @Prop() readonly height!: string;
+
+    private snackbarStore = useSnackbarStore();
 
     private showHistory = false;
 
@@ -201,9 +204,7 @@ export default class ConfigInfoMessage extends Vue {
                     _.takeRight(infoMessages, infoMessages.length - 1)
                 );
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            });
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     private setActiveInfoMessage(infoMessage: InfoMessageDTO): void {
@@ -308,27 +309,21 @@ export default class ConfigInfoMessage extends Vue {
                 this.setInactiveInfoMessages(
                     _.takeRight(infoMessages, infoMessages.length - 1)
                 );
-                this.$store.dispatch("snackbar/showToast", {
-                    level: Levels.SUCCESS,
-                    snackbarTextPart1: "Die Infonachricht wurde gespeichert.",
-                });
+                this.snackbarStore.showSuccess(
+                    "Die Infonachricht wurde gespeichert."
+                );
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            });
+            .catch((error) => this.snackbarStore.showApiError(error));
     }
 
     inactivateInfoMessage(): void {
         InfoMessageService.setAllInfoMessagesInactive()
             .then(() => {
-                this.$store.dispatch("snackbar/showToast", {
-                    level: Levels.SUCCESS,
-                    snackbarTextPart1: `Die Infonachricht wurde inaktiviert.`,
-                });
+                this.snackbarStore.showSuccess(
+                    `Die Infonachricht wurde inaktiviert.`
+                );
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.loadInfoMessages();
             });

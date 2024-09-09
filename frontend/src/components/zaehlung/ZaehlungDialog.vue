@@ -41,6 +41,8 @@ import ZaehlstelleForm from "@/components/zaehlstelle/CreateZaehlstelleForm.vue"
 import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import ZaehlungForm from "@/components/zaehlung/form/ZaehlungForm.vue";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
+import { isEmpty } from "lodash";
 /* eslint-enable no-unused-vars */
 @Component({
     components: {
@@ -55,8 +57,10 @@ export default class ZaehlungDialog extends Vue {
     @Prop() showDialog!: boolean;
     @Prop() zaehlstelle!: ZaehlstelleDTO;
 
+    private zaehlungStore = useZaehlungStore();
+
     get editZaehlung(): boolean {
-        return this.$store.getters.getZaehlung.id;
+        return !isEmpty(this.zaehlungStore.getZaehlung.id);
     }
 
     get dialogtitle(): string {
@@ -71,7 +75,7 @@ export default class ZaehlungDialog extends Vue {
     openOrCloseDialog() {
         // value === true, if open
         // value === false, if close
-        this.$store.dispatch("setResetformevent", !this.showDialog);
+        this.zaehlungStore.setResetformevent(!this.showDialog);
     }
 
     cancelCreate(): void {
