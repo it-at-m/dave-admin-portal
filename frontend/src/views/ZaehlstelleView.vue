@@ -224,10 +224,10 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { cloneDeep } from "lodash";
 import { zaehlartText } from "@/domain/enums/Zaehlart";
 import { wetterText } from "@/domain/enums/Wetter";
-import { useSnackbarStore } from "@/store/snackbarStore";
-import { usePkweinheitStore } from "@/store/pkweinheitStore";
-import { useHochrechnungsfaktorStore } from "@/store/hochrechnungsfaktorStore";
-import { useZaehlungStore } from "@/store/zaehlungStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { usePkweinheitStore } from "@/store/PkweinheitStore";
+import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 
 @Component({
     components: {

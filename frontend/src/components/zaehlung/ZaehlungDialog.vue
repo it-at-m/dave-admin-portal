@@ -41,7 +41,7 @@ import ZaehlstelleForm from "@/components/zaehlstelle/CreateZaehlstelleForm.vue"
 import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import ZaehlungForm from "@/components/zaehlung/form/ZaehlungForm.vue";
-import { useZaehlungStore } from "@/store/zaehlungStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 import { isEmpty } from "lodash";
 /* eslint-enable no-unused-vars */
 @Component({

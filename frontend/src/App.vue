@@ -205,9 +205,9 @@ import SucheZaehlstelleSuggestDTO from "@/domain/dto/suche/SucheZaehlstelleSugge
 import SucheMessstelleSuggestDTO from "@/domain/dto/suche/SucheMessstelleSuggestDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
-import { useUserStore } from "@/store/userStore";
-import { useSnackbarStore } from "@/store/snackbarStore";
-import { useSearchStore } from "@/store/searchStore";
+import { useUserStore } from "@/store/UserStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useSearchStore } from "@/store/SearchStore";
 import _ from "lodash";
 /* eslint-enable no-unused-vars */
 

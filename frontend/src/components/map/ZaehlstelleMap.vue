@@ -185,8 +185,8 @@ import {
     messstelleStatusText,
 } from "@/domain/enums/MessstelleStatus";
 import { useDateUtils } from "@/util/DateUtils";
-import { useSnackbarStore } from "@/store/snackbarStore";
-import { useSearchStore } from "@/store/searchStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useSearchStore } from "@/store/SearchStore";
 import _ from "lodash";
 /* eslint-enable no-unused-vars */
 

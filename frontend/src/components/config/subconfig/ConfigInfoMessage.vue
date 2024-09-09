@@ -171,7 +171,7 @@ import { ApiError, Levels } from "@/api/error";
 import InfoMessageDTO from "@/domain/dto/InfoMessageDTO";
 import InfoMessageService from "@/api/service/InfoMessageService";
 import _ from "lodash";
-import { useSnackbarStore } from "@/store/snackbarStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 /* eslint-enable no-unused-vars */
 
 @Component

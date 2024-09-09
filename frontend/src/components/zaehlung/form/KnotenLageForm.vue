@@ -207,7 +207,7 @@ import GeoPoint from "@/domain/GeoPoint";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
 import { cloneDeep } from "lodash";
-import { useZaehlungStore } from "@/store/zaehlungStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 @Component({
     components: {
         ZaehlungCardMap,

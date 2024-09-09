@@ -49,7 +49,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import { useChatStore } from "@/store/chatStore";
+import { useChatStore } from "@/store/ChatStore";
 
 @Component
 export default class UnreadMessages extends Vue {
@@ -84,7 +84,7 @@ export default class UnreadMessages extends Vue {
     }
 
     @Watch("notificationsEventSwitch")
-    private resetNotifications(): void {
+    private realoadNotifications(): void {
         this.loadZaehlstellenWithUnreadMessages();
     }
 

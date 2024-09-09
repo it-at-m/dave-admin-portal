@@ -228,8 +228,8 @@ import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService";
 import _ from "lodash";
-import { useSnackbarStore } from "@/store/snackbarStore";
-import { useHochrechnungsfaktorStore } from "@/store/hochrechnungsfaktorStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
 
 @Component
 export default class ConfigHochrechnungsfaktoren extends Vue {

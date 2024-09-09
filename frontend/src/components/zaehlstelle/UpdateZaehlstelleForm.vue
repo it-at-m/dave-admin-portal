@@ -155,7 +155,7 @@ import { LatLng } from "leaflet";
 import GeoPoint from "@/domain/GeoPoint";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import MiniMap from "@/components/map/MiniMap.vue";
-import { useSnackbarStore } from "@/store/snackbarStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 /* eslint-enable no-unused-vars */
 @Component({
     components: { MiniMap },

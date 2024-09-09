@@ -84,8 +84,8 @@ import Fahrzeug from "@/domain/enums/Fahrzeug";
 import { cloneDeep } from "lodash";
 import PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import { usePkweinheitStore } from "@/store/pkweinheitStore";
-import { useZaehlungStore } from "@/store/zaehlungStore";
+import { usePkweinheitStore } from "@/store/PkweinheitStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 /* eslint-enable no-unused-vars */
 
 @Component

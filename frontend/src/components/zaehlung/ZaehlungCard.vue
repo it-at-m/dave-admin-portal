@@ -331,8 +331,8 @@ import FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
 import UpdateStatusDTO from "@/domain/dto/bearbeiten/UpdateStatusDTO";
 import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
 import BeauftrageZaehlungDialog from "@/components/zaehlung/BeauftrageZaehlungDialog.vue";
-import { useSnackbarStore } from "@/store/snackbarStore";
-import { useZaehlungStore } from "@/store/zaehlungStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 @Component({
     components: {
         BeauftrageZaehlungDialog,

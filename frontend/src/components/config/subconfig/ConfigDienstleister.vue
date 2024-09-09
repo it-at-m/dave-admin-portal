@@ -398,7 +398,7 @@ import DienstleisterService from "@/api/service/DienstleisterService";
 import _ from "lodash";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
-import { useSnackbarStore } from "@/store/snackbarStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 /* eslint-enable no-unused-vars */
 
 @Component

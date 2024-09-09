@@ -54,7 +54,7 @@ import Status, { statusIcon } from "@/domain/enums/Status";
 import ZaehlungService from "@/api/service/ZaehlungService";
 import ZaehlungComparator from "@/util/ZaehlungComparator";
 import OpenZaehlungPanel from "@/components/zaehlung/OpenZaehlungPanel.vue";
-import { useSnackbarStore } from "@/store/snackbarStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 
 const snackbarStore = useSnackbarStore();
 

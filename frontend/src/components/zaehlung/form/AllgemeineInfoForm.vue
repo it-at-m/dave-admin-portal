@@ -264,7 +264,7 @@ import { zaehldauerDropDown } from "@/domain/enums/Zaehldauer";
 import { quelleDropDown } from "@/domain/enums/Quelle";
 import { cloneDeep } from "lodash";
 import Status from "@/domain/enums/Status";
-import { useZaehlungStore } from "@/store/zaehlungStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 
 @Component
 export default class AllgemeineInfoForm extends Vue {

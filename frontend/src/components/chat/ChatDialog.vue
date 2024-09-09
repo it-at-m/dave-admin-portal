@@ -68,9 +68,9 @@ import Message from "@/domain/chat/Message";
 import ChatMessageDTO from "@/domain/dto/ChatMessageDTO";
 import accountTieUrl from "@/assets/account-tie.png";
 import kindlUrl from "@/assets/kindl.jpg";
-import { useSnackbarStore } from "@/store/snackbarStore";
-import { useChatStore } from "@/store/chatStore";
-import { useZaehlungStore } from "@/store/zaehlungStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useChatStore } from "@/store/ChatStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 /* eslint-enable no-unused-vars */
 
 @Component({

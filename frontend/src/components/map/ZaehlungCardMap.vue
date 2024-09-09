@@ -57,7 +57,7 @@ import {
     MarkerOptions,
 } from "leaflet";
 import markerIconRed from "@/assets/marker-icon-red.png";
-import { useZaehlungStore } from "@/store/zaehlungStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 /* eslint-enable no-unused-vars */
 
 @Component({

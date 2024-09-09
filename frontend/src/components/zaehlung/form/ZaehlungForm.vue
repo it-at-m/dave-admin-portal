@@ -102,8 +102,8 @@ import ZaehlungService from "@/api/service/ZaehlungService";
 // Util
 import _ from "lodash";
 import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/FahrbeziehungKreisverkehrForm.vue";
-import { useZaehlungStore } from "@/store/zaehlungStore";
-import { useSnackbarStore } from "@/store/snackbarStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 
 @Component({
     components: {

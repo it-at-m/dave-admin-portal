@@ -78,7 +78,7 @@ import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
 import DienstleisterService from "@/api/service/DienstleisterService";
 import { ApiError } from "@/api/error";
 import _ from "lodash";
-import { useSnackbarStore } from "@/store/snackbarStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 /* eslint-enable no-unused-vars */
 @Component
 export default class BeauftrageZaehlungDialog extends Vue {

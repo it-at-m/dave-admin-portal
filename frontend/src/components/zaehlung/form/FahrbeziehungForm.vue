@@ -49,8 +49,8 @@ import KnotenarmDTO from "@/domain/KnotenarmDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import ObjectToTextTranslator from "@/util/ObjectToTextTranslator";
 import FahrbeziehungComparator from "@/util/FahrbeziehungComparator";
-import { useHochrechnungsfaktorStore } from "@/store/hochrechnungsfaktorStore";
-import { useZaehlungStore } from "@/store/zaehlungStore";
+import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 @Component({
     components: {
         LhmTextField,
