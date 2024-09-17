@@ -22,6 +22,10 @@
                 <v-icon>mdi-routes</v-icon>
             </v-tab>
             <v-tab>
+                Messfähigkeit
+                <v-icon>mdi-car-multiple</v-icon>
+            </v-tab>
+            <v-tab>
                 Standort
                 <v-icon>mdi-map-marker-outline</v-icon>
             </v-tab>
@@ -60,7 +64,7 @@
             <!-- Inhalte -->
             <v-tab-item ref="messstelleform">
                 <messstelle-form
-                    v-model="messstelle"
+                    v-model="messstelleToEdit"
                     :valid.sync="validMst"
                     :height="contentHeightVh"
                     :disabled="isMessstelleReadonly"
@@ -68,18 +72,25 @@
             </v-tab-item>
             <v-tab-item ref="messquerschnittform">
                 <messquerschnitt-form
-                    v-model="messstelle"
+                    v-model="messstelleToEdit"
                     :valid.sync="validMqs"
+                    :reload="reload"
                     :height="contentHeightVh"
                     :disabled="isMessstelleReadonly"
                 />
             </v-tab-item>
+            <v-tab-item ref="messfaehigkeit">
+                <messfaehigkeit-form
+                    :messfahigkeiten="messstelleToEdit.messfaehigkeiten"
+                    :height="contentHeightVh"
+                />
+            </v-tab-item>
             <v-tab-item ref="standort">
                 <standort-tab-item
-                    v-model="messstelle"
+                    v-model="messstelleToEdit"
                     :height="contentHeightVh"
                     :height-map="mapHeightVh"
-                    :reset-marker="resetMarker"
+                    :reset-marker="reload"
                     :draggable="!isMessstelleReadonly"
                 />
             </v-tab-item>
@@ -110,38 +121,44 @@
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import MessstelleForm from "@/components/messstelle/MessstelleForm.vue";
 import MessquerschnittForm from "@/components/messstelle/MessquerschnittForm.vue";
-import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
+import { computed, ComputedRef, ref, Ref, watch } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
-import { ApiError, Levels } from "@/api/error";
-import { useStore } from "@/util/useStore";
-import { useRoute } from "vue-router/composables";
-import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import LageplanForm from "@/components/messstelle/LageplanForm.vue";
 import { useVuetify } from "@/util/useVuetify";
 import StandortTabItem from "@/components/messstelle/StandortTabItem.vue";
+import MessfaehigkeitForm from "@/components/messstelle/MessfaehigkeitForm.vue";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 
 const activeTab: Ref<number> = ref(0);
 const validMst: Ref<boolean> = ref(false);
 const validMqs: Ref<Map<string, boolean>> = ref(new Map<string, boolean>());
-const messstelle: Ref<MessstelleEditDTO> = ref(
-    DefaultObjectCreator.createDefaultMessstelleEditDTO()
-);
 const resetMarker: Ref<boolean> = ref(false);
 
 interface Props {
+    value: MessstelleEditDTO;
     height: string;
     contentHeight: number;
+    reload: boolean;
 }
 
 const props = defineProps<Props>();
 
-const store = useStore();
-const route = useRoute();
+const snackbarStore = useSnackbarStore();
 const vuetify = useVuetify();
 
+const emits = defineEmits<{
+    (e: "input", v: MessstelleEditDTO): void;
+    (e: "reload"): void;
+}>();
+
+const messstelleToEdit = computed({
+    get: () => props.value,
+    set: (payload: MessstelleEditDTO) => emits("input", payload),
+});
+
 const isMessstelleReadonly: ComputedRef<boolean> = computed(() => {
-    return messstelle.value.status === MessstelleStatus.IN_PLANUNG;
+    return messstelleToEdit.value.status === MessstelleStatus.IN_PLANUNG;
 });
 const contentHeightVh: ComputedRef<string> = computed(() => {
     return props.contentHeight - 70 / (vuetify.breakpoint.height / 100) + "vh";
@@ -151,48 +168,35 @@ const mapHeightVh: ComputedRef<string> = computed(() => {
     return props.contentHeight - 105 / (vuetify.breakpoint.height / 100) + "vh";
 });
 
-const emit = defineEmits<(e: "reload") => void>();
-
-onMounted(() => {
-    loadMessstelle();
-});
-
 function save(): void {
     if (areAllFormsValid()) {
-        MessstelleService.saveMessstelle(messstelle.value)
+        MessstelleService.saveMessstelle(messstelleToEdit.value)
             .then(() => {
-                store.dispatch("snackbar/showToast", {
-                    level: Levels.INFO,
-                    snackbarTextPart1: `Die Messstelle ${messstelle.value.mstId} wurde erfolgreich aktualisiert.`,
-                });
+                snackbarStore.showInfo(
+                    `Die Messstelle ${messstelleToEdit.value.mstId} wurde erfolgreich aktualisiert.`
+                );
             })
-            .catch((error: ApiError) => {
-                store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => snackbarStore.showApiError(error))
             .finally(() => {
                 activeTab.value = 0;
-                emit("reload");
+                emits("reload");
             });
     }
 }
 
 function cancel(): void {
-    loadMessstelle();
-    emit("reload");
+    emits("reload");
 }
 
-function loadMessstelle(): void {
-    const messstelleId = route.params.messstelleId;
-    MessstelleService.getMessstelleToEdit(messstelleId).then(
-        (messstelleById) => {
-            messstelle.value = messstelleById;
-            messstelleById.messquerschnitte.forEach((value) =>
-                validMqs.value.set(value.mqId, !!value.standort)
-            );
-            resetMarker.value = !resetMarker.value;
-        }
-    );
-}
+watch(
+    () => props.reload,
+    () => {
+        messstelleToEdit.value.messquerschnitte.forEach((value) =>
+            validMqs.value.set(value.mqId, !!value.standort)
+        );
+        resetMarker.value = !resetMarker.value;
+    }
+);
 
 function areAllFormsValid(): boolean {
     const invalidMqs: Array<string> = [];
@@ -205,7 +209,7 @@ function areAllFormsValid(): boolean {
     if (!areAllFormsValid) {
         let errorText = "Der Standort";
         if (!validMst.value) {
-            errorText = `${errorText} der Messstelle ${messstelle.value.mstId}`;
+            errorText = `${errorText} der Messstelle ${messstelleToEdit.value.mstId}`;
             if (invalidMqs.length > 0) {
                 errorText = `${errorText} und`;
             }
@@ -218,10 +222,7 @@ function areAllFormsValid(): boolean {
             )}`;
         }
         errorText = `${errorText} wurde nicht ausgefüllt.`;
-        store.dispatch("snackbar/showToast", {
-            level: Levels.ERROR,
-            snackbarTextPart1: errorText,
-        });
+        snackbarStore.showError(errorText);
     }
     return areAllFormsValid;
 }

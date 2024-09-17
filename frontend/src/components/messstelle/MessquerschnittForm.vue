@@ -110,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
+import { computed, onMounted, ref, Ref, watch } from "vue";
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import MessquerschnittEditDTO from "@/domain/dto/messstelle/MessquerschnittEditDTO";
@@ -120,13 +120,14 @@ import type { VForm } from "@/util/useVuetify";
 
 const validationUtils = useValidationUtils();
 
-onMounted(validate);
+onMounted(() => validate());
 
 interface Props {
     height: string;
     disabled: boolean;
     value: MessstelleEditDTO;
     valid: Map<string, boolean>;
+    reload: boolean;
 }
 
 const props = defineProps<Props>();
@@ -158,11 +159,15 @@ const selectedMessquerschnitt: Ref<MessquerschnittEditDTO> = ref(
     editMessstelle.value.messquerschnitte[0]
 );
 
-const stadtbezirk: ComputedRef<string> = computed(() => {
-    return `${editMessstelle.value.stadtbezirkNummer} - ${editMessstelle.value.stadtbezirk}`;
-});
-
 function validate() {
     if (messquerschnittform.value) messquerschnittform.value.validate();
 }
+
+watch(
+    () => props.reload,
+    () => {
+        selectedMessquerschnitt.value =
+            editMessstelle.value.messquerschnitte[0];
+    }
+);
 </script>

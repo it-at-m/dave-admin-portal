@@ -9,7 +9,6 @@ import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
 import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
 import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
-import MessstelleInfoDTO from "@/domain/dto/messstelle/MessstelleInfoDTO";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 
 export default class DefaultObjectCreator {
@@ -61,10 +60,6 @@ export default class DefaultObjectCreator {
         messstelle.customSuchwoerter = [];
         messstelle.messquerschnitte = [];
         return messstelle;
-    }
-
-    public static createDefaultMessstelleInfoDTO(): MessstelleInfoDTO {
-        return {} as MessstelleInfoDTO;
     }
 
     public static createDefaultHochrechnungsfaktor(): HochrechnungsfaktorDTO {
