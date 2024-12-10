@@ -40,7 +40,7 @@ const tableHeight: ComputedRef<string> = computed(() => {
 });
 
 function activeMessfaehigkeit(item: MessfaehigkeitEditDTO) {
-    return _.isEmpty(item.gueltigBis) ? "blue darken-3" : "";
+    return _.isEmpty(item.gueltigBis) ? "indigo lighten-5" : "";
 }
 
 const header = computed(() => {
