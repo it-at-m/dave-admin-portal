@@ -78,6 +78,7 @@ import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
 import DienstleisterService from "@/api/service/DienstleisterService";
 import { ApiError } from "@/api/error";
 import _ from "lodash";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 /* eslint-enable no-unused-vars */
 @Component
 export default class BeauftrageZaehlungDialog extends Vue {
@@ -87,6 +88,8 @@ export default class BeauftrageZaehlungDialog extends Vue {
     @Prop() showDialog!: boolean;
     @Prop({ default: "" }) dienstleisterkennung?: string;
     @Prop() isBeauftragen!: boolean;
+
+    private snackbarStore = useSnackbarStore();
 
     filterDienstleister = "";
     dienstleisterIsLoading = false;
@@ -146,9 +149,7 @@ export default class BeauftrageZaehlungDialog extends Vue {
                     });
                 }
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.dienstleisterIsLoading = false;
             });

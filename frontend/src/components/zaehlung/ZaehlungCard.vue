@@ -308,7 +308,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
 import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
@@ -324,16 +323,16 @@ import Status, { statusIcon } from "@/domain/enums/Status";
 import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
 import IconOptions from "@/components/icons/IconOptions";
 import ZaehlungService from "@/api/service/ZaehlungService";
-import { ApiError, Levels } from "@/api/error";
 import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import _ from "lodash";
+import { cloneDeep } from "lodash";
 import DeleteZaehlungDialog from "@/components/zaehlung/DeleteZaehlungDialog.vue";
 import Wetter from "@/domain/enums/Wetter";
 import FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
 import UpdateStatusDTO from "@/domain/dto/bearbeiten/UpdateStatusDTO";
 import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
 import BeauftrageZaehlungDialog from "@/components/zaehlung/BeauftrageZaehlungDialog.vue";
-/* eslint-enable no-unused-vars */
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 @Component({
     components: {
         BeauftrageZaehlungDialog,
@@ -356,6 +355,9 @@ export default class ZaehlungCard extends Vue {
     isBeauftragen = true;
 
     showBeauftragenDialog = false;
+
+    private snackbarStore = useSnackbarStore();
+    private zaehlungStore = useZaehlungStore();
 
     @Prop()
     readonly zaehlung!: ZaehlungDTO;
@@ -471,15 +473,12 @@ export default class ZaehlungCard extends Vue {
         update.dienstleisterkennung = dienstleister.kennung;
         ZaehlungService.updateStatus(update)
             .then((backendIdDTO) => {
-                this.$store.dispatch("snackbar/showToast", {
-                    level: Levels.INFO,
-                    snackbarTextPart1: `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${this.getZaehlung.projektName} durchzuführen.`,
-                });
+                this.snackbarStore.showInfo(
+                    `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${this.getZaehlung.projektName} durchzuführen.`
+                );
                 this.$emit("saved", backendIdDTO);
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.loading = false;
                 this.isBeauftragen = true;
@@ -497,21 +496,17 @@ export default class ZaehlungCard extends Vue {
         ZaehlungService.deleteZaehlungById(this.zaehlung.id)
             .then((isDeleted: boolean) => {
                 if (isDeleted) {
-                    this.$store.dispatch("snackbar/showToast", {
-                        level: Levels.INFO,
-                        snackbarTextPart1: `Die Zählung vom ${this.datum} wurde gelöscht.`,
-                    });
+                    this.snackbarStore.showInfo(
+                        `Die Zählung vom ${this.datum} wurde gelöscht.`
+                    );
                     this.$emit("deleted");
                 } else {
-                    this.$store.dispatch("snackbar/showToast", {
-                        level: Levels.ERROR,
-                        snackbarTextPart1: `Die Zählung vom ${this.datum} konnte nicht gelöscht werden.`,
-                    });
+                    this.snackbarStore.showError(
+                        `Die Zählung vom ${this.datum} konnte nicht gelöscht werden.`
+                    );
                 }
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.loading = false;
             });
@@ -524,15 +519,12 @@ export default class ZaehlungCard extends Vue {
         update.status = Status.ACTIVE;
         ZaehlungService.updateStatus(update)
             .then((backendIdDTO) => {
-                this.$store.dispatch("snackbar/showToast", {
-                    level: Levels.INFO,
-                    snackbarTextPart1: `Die Zählung vom ${this.datum} wurde freigegeben.`,
-                });
+                this.snackbarStore.showInfo(
+                    `Die Zählung vom ${this.datum} wurde freigegeben.`
+                );
                 this.$emit("saved", backendIdDTO);
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.loading = false;
             });
@@ -545,22 +537,19 @@ export default class ZaehlungCard extends Vue {
         update.status = Status.CORRECTION;
         ZaehlungService.updateStatus(update)
             .then((backendIdDTO) => {
-                this.$store.dispatch("snackbar/showToast", {
-                    level: Levels.INFO,
-                    snackbarTextPart1: `Die Zählung vom ${this.datum} wurde dem Zähldienstleister zur Korrektur übermittelt.`,
-                });
+                this.snackbarStore.showInfo(
+                    `Die Zählung vom ${this.datum} wurde dem Zähldienstleister zur Korrektur übermittelt.`
+                );
                 this.$emit("saved", backendIdDTO);
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.loading = false;
             });
     }
 
     openZaehlungDialog() {
-        this.$store.dispatch("setZaehlung", _.cloneDeep(this.zaehlung));
+        this.zaehlungStore.setZaehlung(cloneDeep(this.zaehlung));
         this.$emit("openZaehlungDialog");
     }
 
@@ -570,7 +559,7 @@ export default class ZaehlungCard extends Vue {
 
     zaehlungKopieren() {
         this.loading = true;
-        let zaehlungCopy: ZaehlungDTO = _.cloneDeep(this.zaehlung);
+        let zaehlungCopy: ZaehlungDTO = cloneDeep(this.zaehlung);
         zaehlungCopy.id = "";
         zaehlungCopy.kommentar = "";
         zaehlungCopy.zaehlsituation = "";
@@ -588,22 +577,19 @@ export default class ZaehlungCard extends Vue {
         });
         ZaehlungService.saveZaehlung(zaehlungCopy, this.zaehlstelleId)
             .then((backendIdDTO: BackendIdDTO) => {
-                this.$store.dispatch("snackbar/showToast", {
-                    level: Levels.INFO,
-                    snackbarTextPart1: `Die Zählung vom ${this.datum} wurde kopiert.`,
-                });
+                this.snackbarStore.showInfo(
+                    `Die Zählung vom ${this.datum} wurde kopiert.`
+                );
                 this.$emit("saved", backendIdDTO);
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.loading = false;
             });
     }
 
     openChatDialog() {
-        this.$store.dispatch("setZaehlung", _.cloneDeep(this.zaehlung));
+        this.zaehlungStore.setZaehlung(cloneDeep(this.zaehlung));
         this.zaehlung.unreadMessagesMobilitaetsreferat = false;
         this.$emit("openChatDialog", this.zaehlung.id);
     }
@@ -615,15 +601,12 @@ export default class ZaehlungCard extends Vue {
             dienstleister
         )
             .then((backendIdDTO) => {
-                this.$store.dispatch("snackbar/showToast", {
-                    level: Levels.INFO,
-                    snackbarTextPart1: `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${this.getZaehlung.projektName} durchzuführen. (Korrektur)`,
-                });
+                this.snackbarStore.showInfo(
+                    `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${this.getZaehlung.projektName} durchzuführen. (Korrektur)`
+                );
                 this.$emit("saved", backendIdDTO);
             })
-            .catch((error: ApiError) => {
-                this.$store.dispatch("snackbar/showError", error);
-            })
+            .catch((error) => this.snackbarStore.showApiError(error))
             .finally(() => {
                 this.loading = false;
                 this.isBeauftragen = true;

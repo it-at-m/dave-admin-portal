@@ -80,17 +80,21 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
 import Fahrzeug from "@/domain/enums/Fahrzeug";
-import _ from "lodash";
+import { cloneDeep } from "lodash";
 import PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import { usePkweinheitStore } from "@/store/PkweinheitStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 /* eslint-enable no-unused-vars */
 
 @Component
 export default class FahrzeugeForm extends Vue {
     @Prop()
     readonly height!: string;
+
+    private pkweinheitStore = usePkweinheitStore();
+    private zaehlungStore = useZaehlungStore();
 
     // Variablen für die Checkboxen
     pkw = false;
@@ -106,16 +110,16 @@ export default class FahrzeugeForm extends Vue {
         this.resetForm();
     }
 
-    get zaehlungStore(): ZaehlungDTO {
-        return this.$store.getters.getZaehlung;
+    get zaehlungOfStore(): ZaehlungDTO {
+        return this.zaehlungStore.getZaehlung;
     }
 
-    get kategorienStore(): Array<Fahrzeug> {
-        return this.$store.getters.getKategorien;
+    get kategorienStore(): Array<string> {
+        return this.zaehlungStore.getKategorien;
     }
 
     get pkwEinheitenStore(): PkwEinheitDTO {
-        return this.$store.getters.getPkwEinheit;
+        return this.pkweinheitStore.getPkwEinheit;
     }
 
     get labelSelectOrDeselectAll(): string {
@@ -236,27 +240,27 @@ export default class FahrzeugeForm extends Vue {
             allFahrzeuge.push(Fahrzeug.KRAD);
             allFahrzeuge.push(Fahrzeug.RAD);
             allFahrzeuge.push(Fahrzeug.FUSS);
-            this.$store.dispatch("addAllKategorien", allFahrzeuge);
+            this.zaehlungStore.addAllKategorien(allFahrzeuge);
         } else {
-            this.$store.dispatch("deleteAllKategorien");
+            this.zaehlungStore.deleteAllKategorien();
         }
     }
 
     private addKategorie(kategorie: Fahrzeug) {
-        this.$store.dispatch("addKategorie", _.cloneDeep(kategorie));
+        this.zaehlungStore.addKategorie(cloneDeep(kategorie));
     }
 
     private removeKategorie(kategorie: Fahrzeug) {
-        this.$store.dispatch("deleteKategorie", _.cloneDeep(kategorie));
+        this.zaehlungStore.deleteKategorie(cloneDeep(kategorie));
     }
 
     get resetFormEvent(): boolean {
-        return this.$store.getters.getResetformevent;
+        return this.zaehlungStore.getResetformevent;
     }
 
     @Watch("resetFormEvent")
     private resetForm() {
-        let zaehlung: ZaehlungDTO = this.zaehlungStore;
+        let zaehlung: ZaehlungDTO = this.zaehlungOfStore;
         this.pkw = zaehlung.kategorien.includes(Fahrzeug.PKW);
         this.lkw = zaehlung.kategorien.includes(Fahrzeug.LKW);
         this.lz = zaehlung.kategorien.includes(Fahrzeug.LZ);

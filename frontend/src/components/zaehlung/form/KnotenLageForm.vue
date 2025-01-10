@@ -198,7 +198,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
@@ -207,9 +206,8 @@ import { LatLng } from "leaflet";
 import GeoPoint from "@/domain/GeoPoint";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
-import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
-import _ from "lodash";
-/* eslint-enable no-unused-vars */
+import { cloneDeep } from "lodash";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 @Component({
     components: {
         ZaehlungCardMap,
@@ -227,24 +225,22 @@ export default class KnotenLageForm extends Vue {
 
     strassen: Array<string> = [];
 
+    private zaehlungStore = useZaehlungStore();
+
     mounted() {
         this.updateWorkingCopy();
     }
 
-    get zaehlungStore(): ZaehlungDTO {
-        return this.$store.getters.getZaehlung;
+    get zaehlungOfStore(): ZaehlungDTO {
+        return this.zaehlungStore.getZaehlung;
     }
 
     get knotenarmeStore(): Array<KnotenarmDTO> {
-        return this.$store.getters.getKnotenarme;
-    }
-
-    get defaultHochrechnungsfaktorStore(): HochrechnungsfaktorDTO {
-        return this.$store.getters.getStandardHochrechnungsfaktor;
+        return this.zaehlungStore.getKnotenarme;
     }
 
     get resetFormEvent(): boolean {
-        return this.$store.getters.getResetformevent;
+        return this.zaehlungStore.getResetformevent;
     }
 
     @Watch("resetFormEvent")
@@ -253,48 +249,42 @@ export default class KnotenLageForm extends Vue {
         this.strassen = ["", "", "", "", "", "", "", ""];
 
         // Straßennamen neu setzen, wenn vorhanden
-        let zaehlung: ZaehlungDTO = this.zaehlungStore;
+        let zaehlung: ZaehlungDTO = this.zaehlungOfStore;
         zaehlung.knotenarme.forEach((arm: KnotenarmDTO) => {
             this.strassen[arm.nummer - 1] = arm.strassenname;
         });
     }
 
-    @Watch("zaehlungStore", { deep: true, immediate: true })
+    @Watch("zaehlungOfStore", { deep: true, immediate: true })
     updateWorkingCopy(): void {
         this.resetForm();
-        this.zaehlung = _.cloneDeep(this.zaehlungStore);
+        this.zaehlung = cloneDeep(this.zaehlungOfStore);
     }
 
     addOrUpdateStrassenname(nummer: number, name: string) {
         // Kein Text mehr => löschen
         if (name === null || name === undefined || name.trim() === "") {
             // Knotenarm entfernen
-            this.$store.dispatch("deleteKnotenarm", nummer);
+            this.zaehlungStore.deleteKnotenarm(nummer);
             // Fahrbeziehung entfernen
-            this.$store.dispatch(
-                "deleteFahrbeziehungByKnotenarmnummer",
-                nummer
-            );
+            this.zaehlungStore.deleteFahrbeziehungByKnotenarmnummer(nummer);
         } else {
             // hinzufügen oder aktualisieren
             let knotenarm: KnotenarmDTO = {} as KnotenarmDTO;
             knotenarm.nummer = nummer;
             knotenarm.strassenname = name.trim();
-            this.$store.dispatch(
-                "addOrUpdateKnotenarm",
-                _.cloneDeep(knotenarm)
-            );
+            this.zaehlungStore.addOrUpdateKnotenarm(cloneDeep(knotenarm));
         }
     }
 
     deleteKnotenarm(nummer: number) {
-        this.$store.dispatch("deleteKnotenarm", nummer);
+        this.zaehlungStore.deleteKnotenarm(nummer);
         // Fahrbeziehung entfernen
-        this.$store.dispatch("deleteFahrbeziehungByKnotenarmnummer", nummer);
+        this.zaehlungStore.deleteFahrbeziehungByKnotenarmnummer(nummer);
     }
 
     updateStore(): void {
-        this.$store.dispatch("setZaehlung", _.cloneDeep(this.zaehlung));
+        this.zaehlungStore.setZaehlung(cloneDeep(this.zaehlung));
     }
 
     get coordsZaehlstelle(): LatLng {
