@@ -215,7 +215,8 @@ import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import { messstelleStatusText } from "@/domain/enums/MessstelleStatus";
 import { useValidationUtils } from "@/util/validationUtils";
-import Fahrzeugklasse from "@/domain/enums/Fahrzeugklasse";
+import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
+import { isNil } from "lodash";
 
 const validationUtils = useValidationUtils();
 interface Props {
@@ -248,17 +249,13 @@ const stadtbezirk: ComputedRef<string> = computed(() => {
 
 const fahrzeugklassen: ComputedRef<string> = computed(() => {
     const fahrzeugklassen = editMessstelle.value.fahrzeugKlassen;
-    if (fahrzeugklassen === Fahrzeugklasse.ACHT_PLUS_EINS) {
-        return "8+1";
-    } else if (fahrzeugklassen === Fahrzeugklasse.SUMME_KFZ) {
-        return "Summe KFZ";
-    } else if (fahrzeugklassen === Fahrzeugklasse.ZWEI_PLUS_EINS) {
-        return "2+1";
-    } else if (fahrzeugklassen === Fahrzeugklasse.RAD) {
-        return "Rad";
-    } else {
-        return "Keine Fahrzeugklassen vorhanden";
+    let result = isNil(fahrzeugklassen)
+        ? undefined
+        : FahrzeugklasseToBeschreibung.get(fahrzeugklassen);
+    if (isNil(result)) {
+        result = "Keine Fahrzeugklassen vorhanden";
     }
+    return result;
 });
 
 const aufbaudatum: ComputedRef<string> = computed(() => {
