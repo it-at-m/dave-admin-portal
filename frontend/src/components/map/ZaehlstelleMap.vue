@@ -37,11 +37,10 @@
             <!--      OpenStreetMap -->
             <l-wms-tile-layer
                 :visible="false"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap-Mitwirkende</a> by terrestris'
-                base-url="https://ows.terrestris.de/osm/service?"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                base-url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                 layer-type="base"
-                layers="OSM-WMS"
-                name="OpenStreetMaps"
+                name="OpenStreetMap"
             />
             <!--      Beginn der overlay Layers   -->
             <l-wms-tile-layer
