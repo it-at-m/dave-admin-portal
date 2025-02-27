@@ -94,8 +94,8 @@
                             md="4"
                         >
                             <lhm-text-field
-                                :text="fahrzeugklassen"
-                                caption="Fahrzeugklassen"
+                                :text="fahrzeugklasse"
+                                caption="Fahrzeugklasse"
                             />
                         </v-col>
                     </v-row>
@@ -247,13 +247,13 @@ const stadtbezirk: ComputedRef<string> = computed(() => {
     return `${editMessstelle.value.stadtbezirkNummer} - ${editMessstelle.value.stadtbezirk}`;
 });
 
-const fahrzeugklassen: ComputedRef<string> = computed(() => {
-    const fahrzeugklassen = editMessstelle.value.fahrzeugKlassen;
-    let result = isNil(fahrzeugklassen)
+const fahrzeugklasse: ComputedRef<string> = computed(() => {
+    const fahrzeugklasse = editMessstelle.value.fahrzeugklasse;
+    let result = isNil(fahrzeugklasse)
         ? undefined
-        : FahrzeugklasseToBeschreibung.get(fahrzeugklassen);
+        : FahrzeugklasseToBeschreibung.get(fahrzeugklasse);
     if (isNil(result)) {
-        result = "Keine Fahrzeugklassen vorhanden";
+        result = "Keine Fahrzeugklasse vorhanden";
     }
     return result;
 });

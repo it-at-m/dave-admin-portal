@@ -5,5 +5,5 @@ export default interface MessfaehigkeitEditDTO {
     gueltigAb: string;
     gueltigBis: string;
     intervall: ZaehldatenIntervall;
-    fahrzeugklassen: Fahrzeugklasse;
+    fahrzeugklasse: Fahrzeugklasse;
 }
