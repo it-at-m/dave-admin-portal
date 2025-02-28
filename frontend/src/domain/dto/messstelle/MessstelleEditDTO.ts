@@ -2,6 +2,7 @@ import BaseEntity from "@/domain/BaseEntity";
 import MessquerschnittEditDTO from "@/domain/dto/messstelle/MessquerschnittEditDTO";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import MessfaehigkeitEditDTO from "@/domain/dto/messstelle/MessfaehigkeitEditDTO";
+import Fahrzeugklasse from "@/domain/enums/Fahrzeugklasse";
 
 export default interface MessstelleEditDTO extends BaseEntity {
     mstId: string;
@@ -15,7 +16,7 @@ export default interface MessstelleEditDTO extends BaseEntity {
     realisierungsdatum: string;
     abbaudatum: string;
     datumLetztePlausibleMessung: string;
-    fahrzeugKlassen: string;
+    fahrzeugklasse: Fahrzeugklasse | string;
     detektierteVerkehrsarten: string;
     hersteller: string;
 
