@@ -287,6 +287,7 @@ export default class AllgemeineInfoForm extends Vue {
 
     mounted() {
         this.validZaehlung = false;
+        console.log("mounted");
         this.updateWorkingCopy();
     }
 
@@ -304,8 +305,9 @@ export default class AllgemeineInfoForm extends Vue {
         return possibleStatus.includes(this.zaehlungOfStore.status);
     }
 
-    @Watch("zaehlungStore")
+    @Watch("zaehlungOfStore")
     updateWorkingCopy(): void {
+        console.log("updateWorkingCopy");
         this.zaehlung = cloneDeep(this.zaehlungOfStore);
         this.resetDatum();
     }
