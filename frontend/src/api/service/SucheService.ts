@@ -18,7 +18,7 @@ export default class SucheService {
         query: string
     ): Promise<Array<AnzeigeKarteDTO>> {
         return FetchService.getData(
-            `${this.ENDPOINT}/search?nofilter=true&query=${query}`,
+            `${this.ENDPOINT}/search?query=${query}`,
             "Beim Suchen von Zähl-/Messstellen ist ein Fehler aufgetreten."
         );
     }
