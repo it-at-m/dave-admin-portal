@@ -304,7 +304,7 @@ export default class AllgemeineInfoForm extends Vue {
         return possibleStatus.includes(this.zaehlungOfStore.status);
     }
 
-    @Watch("zaehlungStore")
+    @Watch("zaehlungOfStore")
     updateWorkingCopy(): void {
         this.zaehlung = cloneDeep(this.zaehlungOfStore);
         this.resetDatum();
