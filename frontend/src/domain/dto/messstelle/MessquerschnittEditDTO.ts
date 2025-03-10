@@ -9,7 +9,7 @@ export default interface MessquerschnittEditDTO extends BaseEntity {
     latitude: number;
     longitude: number;
     anzahlFahrspuren: number;
-    fahrzeugKlassen: string;
+    fahrzeugklasse: string;
     detektierteVerkehrsarten: string;
     hersteller: string;
     anzahlDetektoren: number;

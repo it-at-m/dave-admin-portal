@@ -46,10 +46,10 @@ function activeMessfaehigkeit(item: MessfaehigkeitEditDTO) {
 const header = computed(() => {
     return [
         {
-            text: "Fahrzeugklassen",
+            text: "Fahrzeugklasse",
             align: "start",
             sortable: false,
-            value: "fahrzeugklassen",
+            value: "fahrzeugklasse",
             divider: true,
         },
         {

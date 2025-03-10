@@ -94,8 +94,8 @@
                             md="4"
                         >
                             <lhm-text-field
-                                :text="editMessstelle.fahrzeugKlassen"
-                                caption="FZ-Klassen"
+                                :text="fahrzeugklasse"
+                                caption="Fahrzeugklasse"
                             />
                         </v-col>
                     </v-row>
@@ -215,6 +215,8 @@ import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import { messstelleStatusText } from "@/domain/enums/MessstelleStatus";
 import { useValidationUtils } from "@/util/validationUtils";
+import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
+import { isNil } from "lodash";
 
 const validationUtils = useValidationUtils();
 interface Props {
@@ -243,6 +245,17 @@ const isFormValid = computed({
 
 const stadtbezirk: ComputedRef<string> = computed(() => {
     return `${editMessstelle.value.stadtbezirkNummer} - ${editMessstelle.value.stadtbezirk}`;
+});
+
+const fahrzeugklasse: ComputedRef<string> = computed(() => {
+    const fahrzeugklasse = editMessstelle.value.fahrzeugklasse;
+    let result = isNil(fahrzeugklasse)
+        ? undefined
+        : FahrzeugklasseToBeschreibung.get(fahrzeugklasse);
+    if (isNil(result)) {
+        result = "Keine Fahrzeugklasse vorhanden";
+    }
+    return result;
 });
 
 const aufbaudatum: ComputedRef<string> = computed(() => {
