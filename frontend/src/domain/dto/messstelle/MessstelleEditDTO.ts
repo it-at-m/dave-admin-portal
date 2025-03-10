@@ -24,6 +24,7 @@ export default interface MessstelleEditDTO extends BaseEntity {
     standort: string;
     geprueft: boolean;
     sichtbarDatenportal: boolean;
+    lageplanVorhanden: boolean;
 
     messquerschnitte: Array<MessquerschnittEditDTO>;
     messfaehigkeiten: Array<MessfaehigkeitEditDTO>;
