@@ -16,10 +16,11 @@
                     >
                         <v-btn
                             icon
+                            small
                             variant="plain"
                             :disabled="!messstelle.lageplanVorhanden"
                             @click="loadLageplan"
-                            ><v-icon>mdi-map-outline</v-icon></v-btn
+                            ><v-icon color="secondary">mdi-map</v-icon></v-btn
                         >
                     </span>
                 </template>
