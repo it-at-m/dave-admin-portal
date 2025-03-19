@@ -192,310 +192,278 @@
     </v-container>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-
-// Komponenten
-import ZaehlstelleInfo from "@/components/zaehlstelle/ZaehlstelleInfo.vue";
-import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
-import UpdateZaehlstelleDialog from "@/components/zaehlstelle/UpdateZaehlstelleDialog.vue";
-import ZaehlungCard from "@/components/zaehlung/ZaehlungCard.vue";
-import ZaehlungDialog from "@/components/zaehlung/ZaehlungDialog.vue";
-
-import ChatDialog from "@/components/chat/ChatDialog.vue";
-
-// Typen
-/* eslint-disable no-unused-vars */
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import ZaehlungCardObject from "@/domain/ZaehlungCardObject";
-import PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
-import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
-/* eslint-enable no-unused-vars */
-// API Services
-import ZaehlstellenService from "@/api/service/ZaehlstellenService";
-import PkwEinheitenService from "@/api/service/PkwEinheitenService";
-import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService";
-import BaseUrlProvider from "@/api/util/BaseUrlProvider";
-
-// Util
-import ZaehlungCardObjectComparator from "@/util/ZaehlungCardObjectComparator";
-import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import { cloneDeep } from "lodash";
-import { zaehlartText } from "@/domain/enums/Zaehlart";
-import { wetterText } from "@/domain/enums/Wetter";
+<script setup lang="ts">
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { usePkweinheitStore } from "@/store/PkweinheitStore";
-import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
+import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
+import { computed, onMounted, ref } from "vue";
+import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import ZaehlungCardObject from "@/domain/ZaehlungCardObject";
+import { useRoute } from "vue-router/composables";
+import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService";
+import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
+import { cloneDeep } from "lodash";
+import PkwEinheitenService from "@/api/service/PkwEinheitenService";
+import PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
+import ZaehlstellenService from "@/api/service/ZaehlstellenService";
+import ZaehlungCardObjectComparator from "@/util/ZaehlungCardObjectComparator";
+import BaseUrlProvider from "@/api/util/BaseUrlProvider";
+import { wetterText } from "@/domain/enums/Wetter";
+import { zaehlartText } from "@/domain/enums/Zaehlart";
+import { useVuetify } from "@/util/useVuetify";
 
-@Component({
-    components: {
-        ZaehlungDialog,
-        ZaehlungCard,
-        ZaehlstelleInfo,
-        ZaehlstelleMap,
-        UpdateZaehlstelleDialog,
-        ChatDialog,
-    },
-})
-export default class ZaehlstelleView extends Vue {
-    private snackbarStore = useSnackbarStore();
-    private pkweinheitStore = usePkweinheitStore();
-    private hochrechnungsfaktorStore = useHochrechnungsfaktorStore();
-    private zaehlungStore = useZaehlungStore();
-    // Die Basisinformationen zur Zählstelle
-    zaehlstelle: ZaehlstelleDTO =
-        DefaultObjectCreator.createDefaultZaehlstelleDTO();
-    private zaehlungen: Array<ZaehlungDTO> = [] as Array<ZaehlungDTO>;
+const snackbarStore = useSnackbarStore();
+const pkweinheitStore = usePkweinheitStore();
+const hochrechnungsfaktorStore = useHochrechnungsfaktorStore();
+const zaehlungStore = useZaehlungStore();
+const route = useRoute();
+const vuetify = useVuetify();
 
-    showUpdateZaehlstelleDialog = false;
-    showZaehlungDialog = false;
-    showChatDialog = false;
+const zaehlstelle = ref(DefaultObjectCreator.createDefaultZaehlstelleDTO());
+const zaehlungen = ref([] as Array<ZaehlungDTO>);
+const showUpdateZaehlstelleDialog = ref(false);
+const showZaehlungDialog = ref(false);
+const showChatDialog = ref(false);
+const zaehlungCards = ref([] as Array<ZaehlungCardObject>);
+const fab = ref(false);
+const query = ref("");
+const reloadZaehlstellenMap = ref(false);
 
-    private zaehlungCards: Array<ZaehlungCardObject> = [];
+/**
+ * Die Daten zur Zählstelle und der ausgewählten Zählung wird über die
+ * API geladen.
+ */
+onMounted(() => {
+    loadZaehlstelle();
+    loadHochrechnungsfaktoren();
+    loadPkwEinheiten();
+});
 
-    fab = false;
-    query = "";
+function loadHochrechnungsfaktoren() {
+    HochrechnungsfaktorService.getAllHochrechnungsfaktoren()
+        .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
+            hochrechnungsfaktorStore.setHochrechnungsfaktoren(
+                cloneDeep(faktoren)
+            );
+        })
+        .catch((error) => snackbarStore.showApiError(error));
+}
 
-    reloadZaehlstellenMap = false;
+function loadPkwEinheiten() {
+    PkwEinheitenService.getPkweinheiten()
+        .then((latest: PkwEinheitDTO) => {
+            pkweinheitStore.setPkwEinheit(cloneDeep(latest));
+        })
+        .catch((error) => snackbarStore.showApiError(error));
+}
 
-    /**
-     * Die Daten zur Zählstelle und der ausgewählten Zählung wird über die
-     * API geladen.
-     */
-    mounted() {
-        this.loadZaehlstelle();
-        this.loadHochrechnungsfaktoren();
-        this.loadPkwEinheiten();
-        const zaehlungId = this.$route.params.zaehlungId;
-        if (zaehlungId) {
-            // Da die Daten erst geladen werden müssen, muss man kurz warten bevor die Zählung aufgemacht werden kann
-            setTimeout(() => this.openZaehlungWithId(zaehlungId), 400);
-        }
+const fabColor = computed(() => {
+    return fab.value ? "grey darken-1" : "secondary";
+});
+
+const kreuzungsname = computed(() => {
+    let zaehlungCardObjects: Array<ZaehlungCardObject> =
+        getZaehlungenForCards.value;
+    let kreuzungsname = "";
+    if (zaehlungCardObjects.length > 0) {
+        kreuzungsname = zaehlungCardObjects[0].zaehlung.kreuzungsname;
     }
+    return kreuzungsname;
+});
 
-    private loadHochrechnungsfaktoren() {
-        HochrechnungsfaktorService.getAllHochrechnungsfaktoren()
-            .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
-                this.hochrechnungsfaktorStore.setHochrechnungsfaktoren(
-                    cloneDeep(faktoren)
-                );
-            })
-            .catch((error) => this.snackbarStore.showApiError(error));
+/**
+ * Erzeugt aus dem übergebenen Punkt ein Array aus lat und lon.
+ */
+const latlng = computed(() => {
+    if (zaehlstelle.value.punkt != null) {
+        return [zaehlstelle.value.punkt.lat, zaehlstelle.value.punkt.lon];
+    } else {
+        return [];
     }
+});
 
-    private loadPkwEinheiten() {
-        PkwEinheitenService.getPkweinheiten()
-            .then((latest: PkwEinheitDTO) => {
-                this.pkweinheitStore.setPkwEinheit(cloneDeep(latest));
-            })
-            .catch((error) => this.snackbarStore.showApiError(error));
-    }
+const getZaehlungenForCards = computed(() => {
+    return zaehlungCards.value;
+});
 
-    get fabColor(): string {
-        return this.fab ? "grey darken-1" : "secondary";
-    }
+// =============
+// Höhenberechnungen
+// =============
 
-    get kreuzungsname(): string {
-        let zaehlungCardObjects: Array<ZaehlungCardObject> =
-            this.getZaehlungenForCards;
-        let kreuzungsname = "";
-        if (zaehlungCardObjects.length > 0) {
-            kreuzungsname = zaehlungCardObjects[0].zaehlung.kreuzungsname;
-        }
-        return kreuzungsname;
-    }
+/**
+ * Berechnet die Höhe des Headers (fix 160px) in "vh" (Höhe Viewport in Hundert)
+ */
+const headerHeight = computed(() => {
+    return 160 / (vuetify.breakpoint.height / 100);
+});
 
-    /**
-     * Erzeugt aus dem übergebenen Punkt ein Array aus lat und lon.
-     */
-    get latlng(): string[] {
-        if (this.zaehlstelle.punkt != null) {
-            return [this.zaehlstelle.punkt.lat, this.zaehlstelle.punkt.lon];
-        } else {
-            return [];
-        }
-    }
+// ===================
+// Ab hier werden dann die VH Werte als String zurück gegeben
+// ===================
 
-    get getZaehlungenForCards(): Array<ZaehlungCardObject> {
-        return this.zaehlungCards;
-    }
+/**
+ * Wandelt die Header Höhe in VH um.
+ */
+const headerHeightVh = computed(() => {
+    return headerHeight.value + "vh";
+});
 
-    // =============
-    // Höhenberechnungen
-    // =============
+function editZaehlstelle() {
+    showUpdateZaehlstelleDialog.value = true;
+}
 
-    /**
-     * Berechnet die Höhe des Headers (fix 160px) in "vh" (Höhe Viewport in Hundert)
-     */
-    get headerHeight(): number {
-        return 160 / (this.$vuetify.breakpoint.height / 100);
-    }
+function createDefaultZaehlungDTO(): ZaehlungDTO {
+    let zaehlung: ZaehlungDTO = DefaultObjectCreator.createDefaultZaehlungDTO();
+    zaehlung.punkt = cloneDeep(zaehlstelle.value.punkt);
+    zaehlung.zaehlIntervall = 15;
+    let time = new Date().toLocaleTimeString(navigator.language, {
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+    zaehlung.datum = new Date(
+        new Date().toISOString().substr(0, 10) + "T" + time
+    ).toISOString();
+    return zaehlung;
+}
 
-    // ===================
-    // Ab hier werden dann die VH Werte als String zurück gegeben
-    // ===================
+function loadZaehlstelle(): void {
+    // ID der Zählstelle aus der URL holen (oder Warnung ausgeben, falls keine vorhanden ist)
+    const zaehlstelleId = route.params.zaehlstelleId;
 
-    /**
-     * Wandelt die Header Höhe in VH um.
-     */
-    get headerHeightVh(): string {
-        return this.headerHeight + "vh";
-    }
-
-    editZaehlstelle() {
-        this.showUpdateZaehlstelleDialog = true;
-    }
-
-    private createDefaultZaehlungDTO(): ZaehlungDTO {
-        let zaehlung: ZaehlungDTO =
-            DefaultObjectCreator.createDefaultZaehlungDTO();
-        zaehlung.punkt = cloneDeep(this.zaehlstelle.punkt);
-        zaehlung.zaehlIntervall = 15;
-        let time = new Date().toLocaleTimeString(navigator.language, {
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-        zaehlung.datum = new Date(
-            new Date().toISOString().substr(0, 10) + "T" + time
-        ).toISOString();
-        return zaehlung;
-    }
-
-    loadZaehlstelle(): void {
-        // ID der Zählstelle aus der URL holen (oder Warnung ausgeben, falls keine vorhanden ist)
-        const zaehlstelleId = this.$route.params.zaehlstelleId;
-
-        // Die Informationen zur Zählstelle werden geladen
-        this.zaehlungCards = [];
-        ZaehlstellenService.getZaehlstelleById(zaehlstelleId)
-            .then((zaehlstelle) => {
-                this.zaehlstelle = zaehlstelle;
-                this.zaehlungen = zaehlstelle.zaehlungen;
-                zaehlstelle.zaehlungen.forEach((zaehlung: ZaehlungDTO) => {
-                    this.zaehlungCards.push({ flex: 3, zaehlung: zaehlung });
-                });
-                this.zaehlungCards.sort(
-                    ZaehlungCardObjectComparator.sortByDatumDesc
-                );
-            })
-            .catch((error) => this.snackbarStore.showApiError(error));
-    }
-
-    get hasNoZaehlung(): boolean {
-        return this.zaehlungen.length === 0;
-    }
-
-    get zaehlstelleId() {
-        const zaehlstelleId: string = this.$route.params.zaehlstelleId;
-        if (!zaehlstelleId) {
-            return "";
-        }
-        return zaehlstelleId;
-    }
-
-    reloadDataAndCloseDialog() {
-        this.loadZaehlstelle();
-        this.reloadZaehlstellenMap = !this.reloadZaehlstellenMap;
-        this.showUpdateZaehlstelleDialog = false;
-        this.showZaehlungDialog = false;
-    }
-
-    cancelUpdateZaehlstelleDialog() {
-        this.showUpdateZaehlstelleDialog = false;
-        this.loadZaehlstelle();
-    }
-
-    cancelZaehlungDialog() {
-        this.showZaehlungDialog = false;
-    }
-
-    openZaehlungDialog() {
-        this.showZaehlungDialog = true;
-    }
-
-    createZaehlung() {
-        this.zaehlungStore.setZaehlung(
-            cloneDeep(this.createDefaultZaehlungDTO())
-        );
-        this.showZaehlungDialog = true;
-    }
-
-    openZaehlungDatenportal(zaehlungId: string) {
-        let url = `${BaseUrlProvider.getBaseUrlDatenportal()}#/zaehlstelle/${
-            this.zaehlstelle.id
-        }/${zaehlungId}`;
-        window.open(url);
-    }
-
-    openChatDialog() {
-        this.showChatDialog = true;
-    }
-
-    closeChatDialog() {
-        this.showChatDialog = false;
-    }
-
-    private openZaehlungWithId(zaehlungId: string): void {
-        this.zaehlungCards.forEach((cardObject: ZaehlungCardObject) => {
-            if (cardObject.zaehlung.id === zaehlungId) {
-                this.zaehlungStore.setZaehlung(cloneDeep(cardObject.zaehlung));
-                this.openZaehlungDialog();
+    // Die Informationen zur Zählstelle werden geladen
+    zaehlungCards.value = [];
+    ZaehlstellenService.getZaehlstelleById(zaehlstelleId)
+        .then((response) => {
+            zaehlstelle.value = response;
+            zaehlungen.value = response.zaehlungen;
+            response.zaehlungen.forEach((zaehlung: ZaehlungDTO) => {
+                zaehlungCards.value.push({ flex: 3, zaehlung: zaehlung });
+            });
+            zaehlungCards.value.sort(
+                ZaehlungCardObjectComparator.sortByDatumDesc
+            );
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            const zaehlungId = route.params.zaehlungId;
+            if (zaehlungId) {
+                openZaehlungWithId(zaehlungId);
             }
         });
-    }
-
-    /**
-     * Filtert die ZählungCardObjects nach den Suchwörter.
-     */
-    get filteredZaehlungCardObjects(): ZaehlungCardObject[] {
-        let filteredZs: Array<ZaehlungCardObject> = this.getZaehlungenForCards;
-        if (this.query.length > 0) {
-            let words: string[] = this.query.split(" ");
-            words.forEach((w) => {
-                const searchString: string = w.toLocaleLowerCase();
-                filteredZs = filteredZs.filter(
-                    (z) =>
-                        new Date(z.zaehlung.datum)
-                            .toLocaleDateString("de-De", {
-                                year: "numeric",
-                                month: "numeric",
-                                day: "numeric",
-                            })
-                            .includes(searchString) ||
-                        z.zaehlung.projektNummer
-                            .toLocaleLowerCase()
-                            .includes(searchString) ||
-                        z.zaehlung.kreuzungsname
-                            .toLocaleLowerCase()
-                            .includes(searchString) ||
-                        z.zaehlung.projektName
-                            .toLocaleLowerCase()
-                            .includes(searchString) ||
-                        z.zaehlung.monat
-                            .toLocaleLowerCase()
-                            .includes(searchString) ||
-                        z.zaehlung.jahreszeit
-                            .toLocaleLowerCase()
-                            .includes(searchString) ||
-                        wetterText
-                            .get(z.zaehlung.wetter)
-                            ?.toLocaleLowerCase()
-                            .includes(searchString) ||
-                        z.zaehlung.zaehlart
-                            .toLocaleLowerCase()
-                            .includes(searchString) ||
-                        // Suche nach einem Zählartbuchstaben ist manchaml schwierig,
-                        // deshalb kann hier nach dem ganzen Text gesucht werden
-                        zaehlartText
-                            .get(z.zaehlung.zaehlart)
-                            ?.toLocaleLowerCase()
-                            .includes(searchString)
-                );
-            });
-        }
-        return filteredZs;
-    }
 }
+
+const hasNoZaehlung = computed(() => {
+    return zaehlungen.value.length === 0;
+});
+
+const zaehlstelleId = computed(() => {
+    const zaehlstelleId: string = route.params.zaehlstelleId;
+    if (!zaehlstelleId) {
+        return "";
+    }
+    return zaehlstelleId;
+});
+
+function reloadDataAndCloseDialog() {
+    loadZaehlstelle();
+    reloadZaehlstellenMap.value = !reloadZaehlstellenMap.value;
+    showUpdateZaehlstelleDialog.value = false;
+    showZaehlungDialog.value = false;
+}
+
+function cancelUpdateZaehlstelleDialog() {
+    showUpdateZaehlstelleDialog.value = false;
+    loadZaehlstelle();
+}
+
+function cancelZaehlungDialog() {
+    showZaehlungDialog.value = false;
+}
+
+function openZaehlungDialog() {
+    showZaehlungDialog.value = true;
+}
+
+function createZaehlung() {
+    zaehlungStore.setZaehlung(cloneDeep(createDefaultZaehlungDTO()));
+    showZaehlungDialog.value = true;
+}
+
+function openZaehlungDatenportal(zaehlungId: string) {
+    let url = `${BaseUrlProvider.getBaseUrlDatenportal()}#/zaehlstelle/${
+        zaehlstelle.value.id
+    }/${zaehlungId}`;
+    window.open(url);
+}
+
+function openChatDialog() {
+    showChatDialog.value = true;
+}
+
+function closeChatDialog() {
+    showChatDialog.value = false;
+}
+
+function openZaehlungWithId(zaehlungId: string): void {
+    zaehlungCards.value.forEach((cardObject: ZaehlungCardObject) => {
+        if (cardObject.zaehlung.id === zaehlungId) {
+            zaehlungStore.setZaehlung(cloneDeep(cardObject.zaehlung));
+            openZaehlungDialog();
+        }
+    });
+}
+
+/**
+ * Filtert die ZählungCardObjects nach den Suchwörter.
+ */
+const filteredZaehlungCardObjects = computed(() => {
+    let filteredZs: Array<ZaehlungCardObject> = getZaehlungenForCards.value;
+    if (query.value.length > 0) {
+        let words: string[] = query.value.split(" ");
+        words.forEach((w) => {
+            const searchString: string = w.toLocaleLowerCase();
+            filteredZs = filteredZs.filter(
+                (z) =>
+                    new Date(z.zaehlung.datum)
+                        .toLocaleDateString("de-De", {
+                            year: "numeric",
+                            month: "numeric",
+                            day: "numeric",
+                        })
+                        .includes(searchString) ||
+                    z.zaehlung.projektNummer
+                        .toLocaleLowerCase()
+                        .includes(searchString) ||
+                    z.zaehlung.kreuzungsname
+                        .toLocaleLowerCase()
+                        .includes(searchString) ||
+                    z.zaehlung.projektName
+                        .toLocaleLowerCase()
+                        .includes(searchString) ||
+                    z.zaehlung.monat
+                        .toLocaleLowerCase()
+                        .includes(searchString) ||
+                    z.zaehlung.jahreszeit
+                        .toLocaleLowerCase()
+                        .includes(searchString) ||
+                    wetterText
+                        .get(z.zaehlung.wetter)
+                        ?.toLocaleLowerCase()
+                        .includes(searchString) ||
+                    z.zaehlung.zaehlart
+                        .toLocaleLowerCase()
+                        .includes(searchString) ||
+                    // Suche nach einem Zählartbuchstaben ist manchaml schwierig,
+                    // deshalb kann hier nach dem ganzen Text gesucht werden
+                    zaehlartText
+                        .get(z.zaehlung.zaehlart)
+                        ?.toLocaleLowerCase()
+                        .includes(searchString)
+            );
+        });
+    }
+    return filteredZs;
+});
 </script>

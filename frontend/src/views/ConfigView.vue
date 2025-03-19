@@ -61,56 +61,36 @@
     </v-container>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { useVuetify } from "@/util/useVuetify";
 
-// Komponenten
-// Typen
-/* eslint-disable no-unused-vars */
-import ConfigHochrechnungsfaktoren from "@/components/config/subconfig/ConfigHochrechnungsfaktoren.vue";
-import ConfigEmailAddress from "@/components/config/subconfig/ConfigEmailAddress.vue";
-import ConfigInfoMessage from "@/components/config/subconfig/ConfigInfoMessage.vue";
-import ConfigDienstleister from "@/components/config/subconfig/ConfigDienstleister.vue";
-/* eslint-enable no-unused-vars */
-// API Services
+const activeTab = ref(0);
+const vuetify = useVuetify();
 
-// Util
+/**
+ * Berechnet die Höhe der Fläche unter den Tabs (72px hoch) in "vh"
+ */
+const contentHeight = computed(() => {
+    const h =
+        100 -
+        headerHeight.value -
+        appBarHeight.value -
+        72 / (vuetify.breakpoint.height / 100);
+    return h + "vh";
+});
 
-@Component({
-    components: {
-        ConfigDienstleister,
-        ConfigInfoMessage,
-        ConfigEmailAddress,
-        ConfigHochrechnungsfaktoren,
-    },
-})
-export default class ConfigView extends Vue {
-    activeTab = 0;
+/**
+ * Berechnet die Höhe des Headers (fix 160px) in "vh" (Höhe Viewport in Hundert)
+ */
+const headerHeight = computed(() => {
+    return 65 / (vuetify.breakpoint.height / 100);
+});
 
-    /**
-     * Berechnet die Höhe der Fläche unter den Tabs (72px hoch) in "vh"
-     */
-    get contentHeight(): string {
-        const h =
-            100 -
-            this.headerHeight -
-            this.appBarHeight -
-            72 / (this.$vuetify.breakpoint.height / 100);
-        return h + "vh";
-    }
-
-    /**
-     * Berechnet die Höhe des Headers (fix 160px) in "vh" (Höhe Viewport in Hundert)
-     */
-    get headerHeight(): number {
-        return 65 / (this.$vuetify.breakpoint.height / 100);
-    }
-
-    /**
-     * Berechnet die Höhe der AppBar (65px) in "vh" (Höhe Viewport in Hundert)
-     */
-    get appBarHeight(): number {
-        return 65 / (this.$vuetify.breakpoint.height / 100);
-    }
-}
+/**
+ * Berechnet die Höhe der AppBar (65px) in "vh" (Höhe Viewport in Hundert)
+ */
+const appBarHeight = computed(() => {
+    return 65 / (vuetify.breakpoint.height / 100);
+});
 </script>
