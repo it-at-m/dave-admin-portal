@@ -56,6 +56,7 @@ export default class DefaultObjectCreator {
     public static createDefaultMessstelleEditDTO(): MessstelleEditDTO {
         const messstelle: MessstelleEditDTO = {} as MessstelleEditDTO;
         messstelle.sichtbarDatenportal = false;
+        messstelle.lageplanVorhanden = false;
         messstelle.status = MessstelleStatus.IN_PLANUNG;
         messstelle.customSuchwoerter = [];
         messstelle.messquerschnitte = [];

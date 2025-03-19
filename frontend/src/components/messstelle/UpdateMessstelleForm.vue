@@ -29,10 +29,6 @@
                 Standort
                 <v-icon>mdi-map-marker-outline</v-icon>
             </v-tab>
-            <v-tab>
-                Lagepläne
-                <v-icon>mdi-map-outline</v-icon>
-            </v-tab>
         </v-tabs>
         <div v-if="isMessstelleReadonly">
             <v-row
@@ -94,9 +90,6 @@
                     :draggable="!isMessstelleReadonly"
                 />
             </v-tab-item>
-            <v-tab-item ref="lageplaene">
-                <lageplan-form :height="contentHeightVh" />
-            </v-tab-item>
         </v-tabs-items>
 
         <v-card-actions v-if="!isMessstelleReadonly">
@@ -124,7 +117,6 @@ import MessquerschnittForm from "@/components/messstelle/MessquerschnittForm.vue
 import { computed, ComputedRef, ref, Ref, watch } from "vue";
 import MessstelleService from "@/api/service/MessstelleService";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
-import LageplanForm from "@/components/messstelle/LageplanForm.vue";
 import { useVuetify } from "@/util/useVuetify";
 import StandortTabItem from "@/components/messstelle/StandortTabItem.vue";
 import MessfaehigkeitForm from "@/components/messstelle/MessfaehigkeitForm.vue";
