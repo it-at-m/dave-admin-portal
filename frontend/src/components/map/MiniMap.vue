@@ -14,7 +14,14 @@
 
 <script setup lang="ts">
 import L, { Icon, LatLng } from "leaflet";
-import { computed, ComputedRef, onMounted, ref, watch } from "vue";
+import {
+    computed,
+    ComputedRef,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    watch,
+} from "vue";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 
@@ -57,6 +64,10 @@ watch(resetMarkerSwitch, () => {
 
 onMounted(() => {
     initMap();
+});
+
+onBeforeUnmount(() => {
+    minimap.remove();
 });
 
 function initMap(): void {
