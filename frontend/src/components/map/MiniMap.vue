@@ -5,7 +5,8 @@
         :min-height="minheight"
     >
         <div
-            id="map"
+            id="minimap"
+            ref="minimapRef"
             :style="mapStyle"
         />
     </v-sheet>
@@ -13,7 +14,7 @@
 
 <script setup lang="ts">
 import L, { Icon, LatLng } from "leaflet";
-import { computed, ComputedRef, onMounted, Ref, ref, watch } from "vue";
+import { computed, ComputedRef, onMounted, ref, watch } from "vue";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 
@@ -40,7 +41,10 @@ const emit = defineEmits<(e: "updateZaehlstellenCoords", v: LatLng) => void>();
 
 const mapAttribution =
     '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
-const map: Ref<L.Map | undefined> = ref(undefined);
+
+const minimapRef = ref<HTMLDivElement | null>(null);
+
+let minimap: L.Map;
 const marker = ref(createMarker());
 
 const resetMarkerSwitch: ComputedRef<boolean> = computed(() => {
@@ -52,64 +56,49 @@ watch(resetMarkerSwitch, () => {
 });
 
 onMounted(() => {
-    createMap();
     initMap();
 });
 
 function initMap(): void {
-    if (map.value) {
-        map.value.setView(props.coords, 18);
+    minimap = L.map(minimapRef.value as HTMLElement, {
+        minZoom: 10,
+        maxZoom: 18,
+        zoom: 18,
+        preferCanvas: false,
+        attributionControl: false,
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+            position: "topleft",
+        },
+        center: props.coords,
+    });
 
-        createLayersAndAddToMap();
-
-        marker.value.addTo(map.value);
-
-        map.value.whenReady(() =>
-            setTimeout(() => {
-                if (map.value) {
-                    map.value.invalidateSize();
-                    map.value.addControl(
-                        L.control.attribution({
-                            position: "bottomleft",
-                            prefix: "Leaflet",
-                        })
-                    );
-                }
-            }, 10)
-        );
-    }
+    minimap.whenReady(() => {
+        setTimeout(() => {
+            minimap.invalidateSize();
+            minimap.addControl(
+                L.control.attribution({
+                    position: "bottomleft",
+                    prefix: "Leaflet",
+                })
+            );
+            createLayersAndAddToMap();
+            marker.value.addTo(minimap);
+        }, 10);
+    });
 }
 
 function resetMarker(): void {
-    if (map.value) {
-        marker.value.removeFrom(map.value);
-        marker.value = createMarker();
-        marker.value.addTo(map.value);
-    }
-}
-
-function createMap(): void {
-    if (!map.value) {
-        map.value = new L.Map("map", {
-            minZoom: 10,
-            maxZoom: 18,
-            preferCanvas: false,
-            attributionControl: false,
-            fullscreenControl: true,
-            fullscreenControlOptions: {
-                position: "topleft",
-            },
-        });
-    }
+    marker.value.removeFrom(minimap);
+    marker.value = createMarker();
+    marker.value.addTo(minimap);
 }
 
 function createLayersAndAddToMap(): void {
-    if (map.value) {
-        const baseLayers = createBaseLayers();
-        const overlayLayers = createOverlayLayers();
-        baseLayers.Stadtkarte.addTo(map.value);
-        L.control.layers(baseLayers, overlayLayers).addTo(map.value);
-    }
+    const baseLayers = createBaseLayers();
+    const overlayLayers = createOverlayLayers();
+    baseLayers.Stadtkarte.addTo(minimap);
+    L.control.layers(baseLayers, overlayLayers).addTo(minimap);
 }
 
 function createBaseLayers(): L.Control.LayersObject {
