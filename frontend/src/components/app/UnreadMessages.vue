@@ -29,11 +29,11 @@
                     >
                     <v-list-item-subtitle
                         v-for="(
-                            zaehlung, index
+                            zaehlung, subIndex
                         ) in getZaehlungenWithUnreadMessagesFromZaehlstelle(
                             zaehlstelle
                         )"
-                        :key="index"
+                        :key="subIndex"
                     >
                         {{ $d(Date.parse(zaehlung.datum), "short", "de-DE") }}
                         {{ zaehlung.projektName }}
@@ -44,76 +44,70 @@
     </v-menu>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
-import ZaehlstellenService from "@/api/service/ZaehlstellenService";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+<script setup lang="ts">
 import { useChatStore } from "@/store/ChatStore";
+import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRouter } from "vue-router/composables";
+import ZaehlstellenService from "@/api/service/ZaehlstellenService";
+import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 
-@Component
-export default class UnreadMessages extends Vue {
-    zaehlstellenWithUnreadMessages: ZaehlstelleDTO[] = [];
+const PARTICIPANT_ID_MOBILITAETSREFERAT = 2;
 
-    private static readonly PARTICIPANT_ID_MOBILITAETSREFERAT: number = 2;
+const chatStore = useChatStore();
 
-    private chatStore = useChatStore();
+const router = useRouter();
 
-    mounted() {
-        this.loadZaehlstellenWithUnreadMessages();
-    }
+const zaehlstellenWithUnreadMessages = ref<Array<ZaehlstelleDTO>>([]);
 
-    select(zaehlstelle: ZaehlstelleDTO): void {
-        this.$router.push(`/zaehlstelle/${zaehlstelle.id}`);
-    }
+onMounted(() => {
+    loadZaehlstellenWithUnreadMessages();
+});
 
-    /**
-     * Zählstellen mit ungelesenen Nachrichten fuer das Mobilitaetsreferat laden
-     * @private
-     */
-    private loadZaehlstellenWithUnreadMessages(): void {
-        ZaehlstellenService.getZaehlstellenByUnreadMessages(
-            UnreadMessages.PARTICIPANT_ID_MOBILITAETSREFERAT
-        ).then((result) => {
-            this.zaehlstellenWithUnreadMessages = result;
-        });
-    }
-
-    get notificationsEventSwitch(): boolean {
-        return this.chatStore.getNotificationsEventSwitch;
-    }
-
-    @Watch("notificationsEventSwitch")
-    private realoadNotifications(): void {
-        this.loadZaehlstellenWithUnreadMessages();
-    }
-
-    /**
-     * Gibt alle Zählungen einer Zählstelle zurück, bei der ungelesene Nachrichten vorliegt
-     * @param zaehlstelleDto Zählstelle die durchsucht werden soll
-     * @private
-     */
-    getZaehlungenWithUnreadMessagesFromZaehlstelle(
-        zaehlstelleDto: ZaehlstelleDTO
-    ): ZaehlungDTO[] {
-        let zaehlungen: ZaehlungDTO[] = [];
-        zaehlstelleDto.zaehlungen.forEach((zaehlung) => {
-            if (zaehlung.unreadMessagesMobilitaetsreferat) {
-                zaehlungen.push(zaehlung);
-            }
-        });
-        return zaehlungen;
-    }
-
-    /**
-     * Gibt ein Boolean zurück, ob es Zählstellen mit ungelesenen Nachrichten gibt
-     */
-    get zaehlstellenWithUnreadMessagesPresent(): boolean {
-        return this.zaehlstellenWithUnreadMessages.length > 0;
-    }
+function select(zaehlstelle: ZaehlstelleDTO): void {
+    router.push(`/zaehlstelle/${zaehlstelle.id}`);
 }
+
+/**
+ * Zählstellen mit ungelesenen Nachrichten fuer das Mobilitaetsreferat laden
+ * @private
+ */
+function loadZaehlstellenWithUnreadMessages(): void {
+    ZaehlstellenService.getZaehlstellenByUnreadMessages(
+        PARTICIPANT_ID_MOBILITAETSREFERAT
+    ).then((result) => {
+        zaehlstellenWithUnreadMessages.value = result;
+    });
+}
+
+watch(
+    () => chatStore.getNotificationsEventSwitch,
+    () => {
+        loadZaehlstellenWithUnreadMessages();
+    }
+);
+
+/**
+ * Gibt alle Zählungen einer Zählstelle zurück, bei der ungelesene Nachrichten vorliegt
+ * @param zaehlstelleDto Zählstelle die durchsucht werden soll
+ * @private
+ */
+function getZaehlungenWithUnreadMessagesFromZaehlstelle(
+    zaehlstelleDto: ZaehlstelleDTO
+): Array<ZaehlungDTO> {
+    const zaehlungen: Array<ZaehlungDTO> = [];
+    zaehlstelleDto.zaehlungen.forEach((zaehlung) => {
+        if (zaehlung.unreadMessagesMobilitaetsreferat) {
+            zaehlungen.push(zaehlung);
+        }
+    });
+    return zaehlungen;
+}
+
+/**
+ * Gibt ein Boolean zurück, ob es Zählstellen mit ungelesenen Nachrichten gibt
+ */
+const zaehlstellenWithUnreadMessagesPresent = computed(() => {
+    return zaehlstellenWithUnreadMessages.value.length > 0;
+});
 </script>
-
-<style scoped>
-
-</style>
