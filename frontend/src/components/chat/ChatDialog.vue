@@ -111,7 +111,7 @@ const mobilitaetsreferat: Participant = {
 // Hier ist myself das Mobilitätsreferat
 const participants: Array<Participant> = [dienstleister];
 
-const colors: unknown = {
+const colors: any = {
     header: {
         bg: "#C62828",
         text: "#fff",
@@ -132,17 +132,17 @@ const colors: unknown = {
     submitIcon: "#f57c00",
     submitImageIcon: "#f57c00",
 };
-const borderStyle: unknown = {
+const borderStyle: any = {
     topLeft: "10px",
     topRight: "10px",
     bottomLeft: "10px",
     bottomRight: "10px",
 };
-const scrollBottom: unknown = {
+const scrollBottom: any = {
     messageSent: true,
     messageReceived: false,
 };
-const profilePictureConfig: unknown = {
+const profilePictureConfig: any = {
     others: true,
     myself: true,
     styles: {
@@ -151,13 +151,13 @@ const profilePictureConfig: unknown = {
         borderRadius: "50%",
     },
 };
-const timestampConfig: unknown = {
+const timestampConfig: any = {
     format: "HH:mm",
     relative: false,
 };
 // there are other options, you can check them here
 // https://soapbox.github.io/linkifyjs/docs/options.html
-const linkOptions: unknown = {
+const linkOptions: any = {
     myself: {
         className: "myLinkClass",
         events: {
