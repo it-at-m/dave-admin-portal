@@ -1,5 +1,9 @@
 <template>
-    <v-menu offset-y>
+    <v-menu
+        offset-y
+        max-height="600px"
+        class="overflow-y-auto"
+    >
         <template #activator="{ on, attrs }">
             <v-btn
                 icon
@@ -95,13 +99,9 @@ watch(
 function getZaehlungenWithUnreadMessagesFromZaehlstelle(
     zaehlstelleDto: ZaehlstelleDTO
 ): Array<ZaehlungDTO> {
-    const zaehlungen: Array<ZaehlungDTO> = [];
-    zaehlstelleDto.zaehlungen.forEach((zaehlung) => {
-        if (zaehlung.unreadMessagesMobilitaetsreferat) {
-            zaehlungen.push(zaehlung);
-        }
+    return zaehlstelleDto.zaehlungen.filter((zaehlung) => {
+        return zaehlung.unreadMessagesMobilitaetsreferat;
     });
-    return zaehlungen;
 }
 
 /**
