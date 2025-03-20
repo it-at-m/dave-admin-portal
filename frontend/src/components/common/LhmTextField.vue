@@ -10,19 +10,21 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { isEmpty } from "lodash";
 
-@Component
-export default class LhmTextField extends Vue {
-    @Prop({ default: "" }) readonly caption!: string;
-    @Prop({ default: "" }) readonly text!: string;
-    @Prop({ default: false }) readonly fahrbeziehung?: boolean;
-
-    get showCaption(): boolean {
-        return this.caption !== "";
-    }
+interface Props {
+    fahrbeziehung?: boolean;
+    text?: string;
+    caption: string;
 }
+
+const props = withDefaults(defineProps<Props>(), {
+    fahrbeziehung: false,
+});
+
+const showCaption = computed(() => !isEmpty(props.caption));
 </script>
 
 <style scoped>

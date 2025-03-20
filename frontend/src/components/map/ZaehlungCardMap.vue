@@ -76,7 +76,6 @@ onBeforeUnmount(() => {
 });
 
 function initMap(): void {
-    console.log(props.latLngZaehlstelle);
     cardmap = L.map(cardmapRef.value as HTMLElement, {
         minZoom: 10,
         maxZoom: 18,

@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-        v-model="showDialog"
+        v-model="showDialogModel"
         max-width="50%"
         height="600px"
         persistent
@@ -8,17 +8,17 @@
     >
         <Chat
             :participants="participants"
-            :myself="myself"
+            :myself="mobilitaetsreferat"
             :messages="messages"
             :chat-title="chatTitle"
             :placeholder="placeholder"
             :colors="colors"
             :border-style="borderStyle"
-            :hide-close-button="hideCloseButton"
-            :close-button-icon-size="closeButtonIconSize"
-            :submit-icon-size="submitIconSize"
+            :hide-close-button="HIDE_CLOSE_BUTTON"
+            :close-button-icon-size="CLOSE_BUTTON_ICON_SIZE"
+            :submit-icon-size="SUBMIT_ICON_SIZE"
             :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
-            :async-mode="asyncMode"
+            :async-mode="ASYNC_MODE"
             :scroll-bottom="scrollBottom"
             :display-header="true"
             :send-images="false"
@@ -43,7 +43,7 @@
                             class="header-exit-button"
                             href="#"
                             :style="{
-                                fontSize: closeButtonIconSize,
+                                fontSize: CLOSE_BUTTON_ICON_SIZE,
                                 color: colors.header.text,
                             }"
                             @click.prevent="onClose"
@@ -56,223 +56,232 @@
     </v-dialog>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Chat } from "vue-quick-chat";
-import { Component, Prop, Watch } from "vue-property-decorator";
-import "vue-quick-chat/dist/vue-quick-chat.css";
-/* eslint-disable no-unused-vars */
-import Participant from "@/domain/chat/Participant";
-import ChatMessageService from "@/api/service/ChatMessageService";
-import Message from "@/domain/chat/Message";
-import ChatMessageDTO from "@/domain/dto/ChatMessageDTO";
-import accountTieUrl from "@/assets/account-tie.png";
-import kindlUrl from "@/assets/kindl.jpg";
+<script setup lang="ts">
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useChatStore } from "@/store/ChatStore";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
-/* eslint-enable no-unused-vars */
+import Message from "@/domain/chat/Message";
+import { computed, ref, watch } from "vue";
+import accountTieUrl from "@/assets/account-tie.png";
+import kindlUrl from "@/assets/kindl.jpg";
+import Participant from "@/domain/chat/Participant";
+import ChatMessageDTO from "@/domain/dto/ChatMessageDTO";
+import ChatMessageService from "@/api/service/ChatMessageService";
+import i18n from "@/i18n";
+import { Chat } from "vue-quick-chat";
+import "vue-quick-chat/dist/vue-quick-chat.css";
 
-@Component({
-    components: { Chat },
-})
-export default class ChatDialog extends Vue {
-    @Prop() showDialog!: boolean;
-    messages: Message[] = [];
-    private zaehlungId = "";
+interface Props {
+    showDialog: boolean;
+}
 
-    private snackbarStore = useSnackbarStore();
-    private chatStore = useChatStore();
-    private zaehlungStore = useZaehlungStore();
+const emits = defineEmits<{
+    (e: "closeDialog"): void;
+}>();
 
-    public static DIENSTLEISTER_ID = 1;
-    public static MOBILITAETSREFERAT_ID = 2;
+const props = defineProps<Props>();
 
-    private dienstleister: Participant = {
-        name: "Dienstleister",
-        id: ChatDialog.DIENSTLEISTER_ID,
-        profilePicture: accountTieUrl,
-    };
-    private mobilitaetsreferat: Participant = {
-        name: "Mobilitätsreferat",
-        id: ChatDialog.MOBILITAETSREFERAT_ID,
-        profilePicture: kindlUrl,
-    };
+const messages = ref<Array<Message>>([]);
+const zaehlungId = ref("");
+const toLoad = ref<Array<Message>>([]);
 
-    // Hier ist myself das Mobilitätsreferat
-    myself: Participant = this.mobilitaetsreferat;
-    participants: Participant[] = [this.dienstleister];
+const snackbarStore = useSnackbarStore();
+const chatStore = useChatStore();
+const zaehlungStore = useZaehlungStore();
 
-    placeholder = "Nachricht...";
-    colors: any = {
-        header: {
-            bg: "#C62828",
-            text: "#fff",
-        },
-        message: {
-            myself: {
-                bg: "#fff",
-                text: "#000000",
-            },
-            others: {
-                bg: "#fff",
-                text: "#000000",
-            },
-            messagesDisplay: {
-                bg: "#f7f3f3",
-            },
-        },
-        submitIcon: "#f57c00",
-        submitImageIcon: "#f57c00",
-    };
-    borderStyle: any = {
-        topLeft: "10px",
-        topRight: "10px",
-        bottomLeft: "10px",
-        bottomRight: "10px",
-    };
-    hideCloseButton = false;
-    submitIconSize = 25;
-    closeButtonIconSize = "20px";
-    asyncMode = false;
-    toLoad: Message[] = [];
+const placeholder = "Nachricht...";
+const HIDE_CLOSE_BUTTON = false;
+const SUBMIT_ICON_SIZE = 25;
+const CLOSE_BUTTON_ICON_SIZE = "20px";
+const ASYNC_MODE = false;
+const DIENSTLEISTER_ID = 1;
+const MOBILITAETSREFERAT_ID = 2;
 
-    scrollBottom: any = {
-        messageSent: true,
-        messageReceived: false,
-    };
-    displayHeader = true;
-    profilePictureConfig: any = {
-        others: true,
-        myself: true,
-        styles: {
-            width: "30px",
-            height: "30px",
-            borderRadius: "50%",
-        },
-    };
-    timestampConfig: any = {
-        format: "HH:mm",
-        relative: false,
-    };
-    // there are other options, you can check them here
-    // https://soapbox.github.io/linkifyjs/docs/options.html
-    linkOptions: any = {
+const dienstleister: Participant = {
+    name: "Dienstleister",
+    id: DIENSTLEISTER_ID,
+    profilePicture: accountTieUrl,
+};
+const mobilitaetsreferat: Participant = {
+    name: "Mobilitätsreferat",
+    id: MOBILITAETSREFERAT_ID,
+    profilePicture: kindlUrl,
+};
+
+// Hier ist myself das Mobilitätsreferat
+const participants: Array<Participant> = [dienstleister];
+
+const colors: any = {
+    header: {
+        bg: "#C62828",
+        text: "#fff",
+    },
+    message: {
         myself: {
-            className: "myLinkClass",
-            events: {
-                click: () => {
-                    //alert('Link clicked!');
-                },
-                mouseover: () => {
-                    //alert('Link hovered!');
-                },
-            },
-            format: function (value: string, type: string) {
-                if (type === "url" && value.length > 50) {
-                    value = value.slice(0, 50) + "…";
-                }
-                return value;
-            },
+            bg: "#fff",
+            text: "#000000",
         },
         others: {
-            className: "othersLinkClass",
-            events: {
-                click: () => {
-                    //alert('Link clicked!');
-                },
-                mouseover: () => {
-                    //alert('Link hovered!');
-                },
+            bg: "#fff",
+            text: "#000000",
+        },
+        messagesDisplay: {
+            bg: "#f7f3f3",
+        },
+    },
+    submitIcon: "#f57c00",
+    submitImageIcon: "#f57c00",
+};
+const borderStyle: any = {
+    topLeft: "10px",
+    topRight: "10px",
+    bottomLeft: "10px",
+    bottomRight: "10px",
+};
+const scrollBottom: any = {
+    messageSent: true,
+    messageReceived: false,
+};
+const profilePictureConfig: any = {
+    others: true,
+    myself: true,
+    styles: {
+        width: "30px",
+        height: "30px",
+        borderRadius: "50%",
+    },
+};
+const timestampConfig: any = {
+    format: "HH:mm",
+    relative: false,
+};
+// there are other options, you can check them here
+// https://soapbox.github.io/linkifyjs/docs/options.html
+const linkOptions: any = {
+    myself: {
+        className: "myLinkClass",
+        events: {
+            click: () => {
+                //alert('Link clicked!');
             },
-            format: function (value: string, type: string) {
-                if (type === "url" && value.length > 50) {
-                    value = value.slice(0, 50) + "…";
-                }
-                return value;
+            mouseover: () => {
+                //alert('Link hovered!');
             },
         },
-    };
+        format: function (value: string, type: string) {
+            if (type === "url" && value.length > 50) {
+                value = value.slice(0, 50) + "…";
+            }
+            return value;
+        },
+    },
+    others: {
+        className: "othersLinkClass",
+        events: {
+            click: () => {
+                //alert('Link clicked!');
+            },
+            mouseover: () => {
+                //alert('Link hovered!');
+            },
+        },
+        format: function (value: string, type: string) {
+            if (type === "url" && value.length > 50) {
+                value = value.slice(0, 50) + "…";
+            }
+            return value;
+        },
+    },
+};
 
-    // Wird (noch) nicht verwendet
-    loadMoreMessages(resolve: any) {
-        setTimeout(() => {
-            resolve(this.toLoad); //We end the loading state and add the messages
-            //Make sure the loaded messages are also added to our local messages copy or they will be lost
-            this.messages.unshift(...this.toLoad);
-            this.toLoad = [];
-        }, 1000);
+watch(
+    () => props.showDialog,
+    () => {
+        loadMessages();
     }
+);
 
-    onMessageSubmit(message: Message) {
-        this.messages.push(message);
-        let messageDTO: ChatMessageDTO = {} as ChatMessageDTO;
-        //Timestamp wird erst im Backend gesetzt (Zeitverzug ist unbedeutend)
-        messageDTO.content = message.content;
-        messageDTO.zaehlungId = this.zaehlungId;
-        messageDTO.participantId = message.participantId;
-        messageDTO.type = message.type;
-        messageDTO.uploaded = true;
-        messageDTO.viewed = false;
+const showDialogModel = computed(() => {
+    return props.showDialog;
+});
 
-        let response: Promise<ChatMessageDTO> =
-            ChatMessageService.save(messageDTO);
-        response
-            .then((message) => {
-                message.uploaded = true;
-            })
-            .catch((error) => this.snackbarStore.showApiError(error));
+const chatTitle = computed(() => {
+    const zaehlung = zaehlungStore.getZaehlung;
+    let chatTitle = "Chat";
+    if (zaehlung.datum) {
+        chatTitle =
+            zaehlung.projektName +
+            " - " +
+            `${i18n.d(new Date(zaehlung.datum), "short", "de-DE")}`;
     }
+    return chatTitle;
+});
 
-    onClose() {
-        this.$emit("closeDialog");
-    }
+// Wird (noch) nicht verwendet
+function loadMoreMessages(resolve: any) {
+    setTimeout(() => {
+        resolve(toLoad.value); //We end the loading state and add the messages
+        //Make sure the loaded messages are also added to our local messages copy or they will be lost
+        messages.value.unshift(...toLoad.value);
+        toLoad.value = [];
+    }, 1000);
+}
 
-    get chatTitle() {
-        let zaehlung = this.zaehlungStore.getZaehlung;
-        let chatTitle = "Chat";
-        if (zaehlung.datum) {
-            chatTitle =
-                zaehlung.projektName +
-                " - " +
-                `${this.$d(new Date(zaehlung.datum), "short", "de-DE")}`;
-        }
-        return chatTitle;
-    }
+function onMessageSubmit(message: Message) {
+    messages.value.push(message);
+    let messageDTO: ChatMessageDTO = {} as ChatMessageDTO;
+    //Timestamp wird erst im Backend gesetzt (Zeitverzug ist unbedeutend)
+    messageDTO.content = message.content;
+    messageDTO.zaehlungId = zaehlungId.value;
+    messageDTO.participantId = message.participantId;
+    messageDTO.type = message.type;
+    messageDTO.uploaded = true;
+    messageDTO.viewed = false;
 
-    @Watch("showDialog")
-    private loadMessages() {
-        if (this.showDialog) {
-            this.zaehlungId = this.zaehlungStore.getZaehlung.id;
-            this.messages = [];
-            ChatMessageService.getAllByZaehlungId(this.zaehlungId)
-                .then((messageDTOs) => {
-                    messageDTOs.forEach((messageDTO) => {
-                        this.messages.push({
-                            content: messageDTO.content,
-                            myself: messageDTO.participantId === this.myself.id,
-                            participantId: messageDTO.participantId,
-                            timestamp: messageDTO.messageTimeDTO,
-                            type: messageDTO.type,
-                            uploaded: messageDTO.uploaded,
-                            viewed: messageDTO.viewed,
-                        });
+    let response: Promise<ChatMessageDTO> = ChatMessageService.save(messageDTO);
+    response
+        .then((message) => {
+            message.uploaded = true;
+        })
+        .catch((error) => snackbarStore.showApiError(error));
+}
+
+function onClose() {
+    emits("closeDialog");
+}
+
+function loadMessages() {
+    if (props.showDialog) {
+        zaehlungId.value = zaehlungStore.getZaehlung.id;
+        messages.value = [];
+        ChatMessageService.getAllByZaehlungId(zaehlungId.value)
+            .then((messageDTOs) => {
+                messageDTOs.forEach((messageDTO) => {
+                    messages.value.push({
+                        content: messageDTO.content,
+                        myself:
+                            messageDTO.participantId === mobilitaetsreferat.id,
+                        participantId: messageDTO.participantId,
+                        timestamp: messageDTO.messageTimeDTO,
+                        type: messageDTO.type,
+                        uploaded: messageDTO.uploaded,
+                        viewed: messageDTO.viewed,
                     });
-                })
-                .catch((error) => this.snackbarStore.showApiError(error));
+                });
+            })
+            .catch((error) => snackbarStore.showApiError(error));
 
-            ChatMessageService.updateUnreadMessages(
-                this.zaehlungId,
-                this.mobilitaetsreferat.id
-            )
-                .then(() => {
-                    this.chatStore.resetNotificationsEventSwitch();
-                })
-                .catch((error) => this.snackbarStore.showApiError(error));
-        } else {
-            this.messages = [];
-            this.zaehlungId = "";
-        }
+        ChatMessageService.updateUnreadMessages(
+            zaehlungId.value,
+            mobilitaetsreferat.id
+        )
+            .then(() => {
+                chatStore.resetNotificationsEventSwitch();
+            })
+            .catch((error) => snackbarStore.showApiError(error));
+    } else {
+        messages.value = [];
+        zaehlungId.value = "";
     }
 }
 </script>
