@@ -40,7 +40,7 @@ export default class CreateZaehlstelleDialog extends Vue {
      * Steuerflag für den Dialog
      */
     @Prop() value!: boolean;
-    @Prop({ default: DefaultObjectCreator.createCenterOfMunichLatLng() })
+    @Prop()
     coords!: LatLng;
 
     dialogtitle = "Neue Zählstelle anlegen";
