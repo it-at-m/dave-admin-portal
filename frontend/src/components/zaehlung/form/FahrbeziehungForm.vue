@@ -33,6 +33,7 @@
                 v-else
                 :text="getHochrechnungsfaktorAsText(item.hochrechnungsfaktor)"
                 :fahrbeziehung="true"
+                caption=""
             />
         </template>
     </v-data-table>
