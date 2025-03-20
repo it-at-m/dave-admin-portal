@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Main from "./views/Main.vue";
+import HomeView from "./views/HomeView.vue";
 import ZaehlstelleView from "@/views/ZaehlstelleView.vue";
 import ErhebungsstellenOverview from "@/views/ErhebungsstellenOverviewView.vue";
 import ConfigView from "@/views/ConfigView.vue";
@@ -35,7 +35,7 @@ export default new Router({
         {
             path: "/",
             name: "home",
-            component: Main,
+            component: HomeView,
         },
         {
             path: "/erhebungsstellenOverview",
