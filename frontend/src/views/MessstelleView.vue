@@ -28,7 +28,7 @@
                     :latlng="latlng"
                     :height="headerHeightVh"
                     :minheight="headerHeightVh"
-                    show-marker="true"
+                    :show-marker="true"
                     :reload="reloadMessstelle"
                     width="100%"
                 />
