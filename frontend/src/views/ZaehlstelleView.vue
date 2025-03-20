@@ -31,7 +31,7 @@
                     :zoom="17"
                     :height="headerHeightVh"
                     :minheight="headerHeightVh"
-                    show-marker="true"
+                    :show-marker="true"
                     :reload="reloadZaehlstellenMap"
                     width="100%"
                 />
