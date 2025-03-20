@@ -16,7 +16,7 @@ import { isEmpty } from "lodash";
 
 interface Props {
     fahrbeziehung?: boolean;
-    text: string;
+    text?: string;
     caption: string;
 }
 
