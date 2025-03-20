@@ -200,7 +200,7 @@ import SucheWordSuggestDTO from "@/domain/dto/suche/SucheWordSuggestDTO";
 import SucheZaehlungSuggestDTO from "@/domain/dto/suche/SucheZaehlungSuggestDTO";
 import SucheZaehlstelleSuggestDTO from "@/domain/dto/suche/SucheZaehlstelleSuggestDTO";
 import SucheMessstelleSuggestDTO from "@/domain/dto/suche/SucheMessstelleSuggestDTO";
-import _ from "lodash";
+import { cloneDeep, isNil } from "lodash";
 import { useSearchStore } from "@/store/SearchStore";
 
 const URL_HANDBUCH_LINK =
@@ -344,11 +344,12 @@ function suggest(query: string) {
                 );
             })
             .catch((error) => snackbarStore.showApiError(error));
-    } else {
-        if (lastSuggestQuery.value !== "" && lastSuggestQuery.value != null) {
-            lastSuggestQuery.value = query;
-            suggestions.value = [];
-        }
+    } else if (
+        lastSuggestQuery.value !== "" &&
+        lastSuggestQuery.value != null
+    ) {
+        lastSuggestQuery.value = query;
+        suggestions.value = [];
     }
 }
 
@@ -360,7 +361,7 @@ function clear() {
 }
 
 function searchOrShowSelectedSuggestion() {
-    if (selectedSuggestion.value == null) {
+    if (isNil(selectedSuggestion.value)) {
         search();
     } else if (selectedSuggestion.value.type === SUGGESTION_TYPE_VORSCHLAG) {
         searchForSuggestion(selectedSuggestion.value.text);
@@ -376,7 +377,7 @@ function searchOrShowSelectedSuggestion() {
 }
 
 function search() {
-    if (searchQuery.value == null) {
+    if (isNil(searchQuery.value)) {
         searchQuery.value = "";
     }
 
@@ -390,7 +391,7 @@ function search() {
 
     SucheService.searchErhebungsstelle(searchQuery.value)
         .then((result) => {
-            searchStore.setSearchResult(_.cloneDeep(result));
+            searchStore.setSearchResult(cloneDeep(result));
         })
         .catch((error) => snackbarStore.showApiError(error));
 }
