@@ -16,7 +16,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
 @Profile("no-security")
-//@EnableAutoConfiguration(exclude = {ReactiveOAuth2ClientAutoConfiguration.class, ReactiveOAuth2ResourceServerAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = { ReactiveOAuth2ClientAutoConfiguration.class, ReactiveOAuth2ResourceServerAutoConfiguration.class })
 public class NoSecurityConfiguration {
 
     @Bean
