@@ -9,7 +9,7 @@
             :height="tableHeight"
             dense
             :headers="header"
-            :items="getHochrechnungsfaktoren"
+            :items="hochrechnungsfaktoren"
             :items-per-page="-1"
             hide-default-footer
             fixed-header
@@ -80,7 +80,8 @@
                                                 "
                                                 label="KFZ"
                                                 type="number"
-                                                :rules="[mustBeNumber]"
+                                                :min="0"
+                                                :rules="[mustBePositivNumber]"
                                                 validate-on-blur
                                             ></v-text-field>
                                         </v-col>
@@ -94,7 +95,8 @@
                                                 "
                                                 label="SV"
                                                 type="number"
-                                                :rules="[mustBeNumber]"
+                                                :min="0"
+                                                :rules="[mustBePositivNumber]"
                                                 validate-on-blur
                                             ></v-text-field>
                                         </v-col>
@@ -108,7 +110,8 @@
                                                 "
                                                 label="GV"
                                                 type="number"
-                                                :rules="[mustBeNumber]"
+                                                :min="0"
+                                                :rules="[mustBePositivNumber]"
                                                 validate-on-blur
                                             ></v-text-field>
                                         </v-col>
@@ -169,10 +172,16 @@
                         persistent
                     >
                         <v-card>
-                            <v-card-title
-                                >Soll der Hochrechnungsfaktor gelöscht
-                                werden?</v-card-title
-                            >
+                            <v-card-title>
+                                <span>Soll der Hochrechnungsfaktor</span>
+                                <span
+                                    class="font-italic mx-1"
+                                    style="color: crimson"
+                                >
+                                    {{ editHochrechnungsfaktor.matrix }}
+                                </span>
+                                <span>gelöscht werden?</span>
+                            </v-card-title>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn
@@ -222,360 +231,346 @@
     </v-sheet>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
-import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService";
-import _ from "lodash";
+<script setup lang="ts">
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
+import { computed, onMounted, ref, watch } from "vue";
+import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
+import { cloneDeep, isEmpty, isNumber } from "lodash";
+import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService";
 
-@Component
-export default class ConfigHochrechnungsfaktoren extends Vue {
-    @Prop() readonly height!: string;
+interface Props {
+    height: string;
+}
+const props = defineProps<Props>();
+const snackbarStore = useSnackbarStore();
+const hochrechnungsfaktorStore = useHochrechnungsfaktorStore();
 
-    private snackbarStore = useSnackbarStore();
-    private hochrechnungsfaktorStore = useHochrechnungsfaktorStore();
+const filterMatrix = ref("");
+/**
+ * Zur Prüfung ob Matrix bereits vergeben.
+ */
+const hofaMatrizen = ref<Set<string>>(new Set<string>());
+/**
+ * Zur Prüfung ob defaultFaktor maximal nur einmal vergeben ist.
+ */
+const defaultFaktorPerMatrix = ref<Map<string, boolean>>(
+    new Map<string, boolean>()
+);
+const hochrechnungsfaktoren = ref<Array<HochrechnungsfaktorDTO>>([]);
+const editHochrechnungsfaktor = ref(
+    DefaultObjectCreator.createDefaultHochrechnungsfaktor()
+);
+const editIndex = ref(-1);
+const showEditDialog = ref(false);
+const showDeleteDialog = ref(false);
 
-    filterMatrix = "";
+const header = [
+    {
+        text: "Matrix",
+        align: "center",
+        sortable: true,
+        filterable: true,
+        value: "matrix",
+        width: "24%",
+        divider: true,
+    },
+    {
+        text: "KFZ",
+        align: "center",
+        sortable: false,
+        filterable: false,
+        value: "kfz",
+        width: "10%",
+        divider: true,
+    },
+    {
+        text: "SV",
+        align: "center",
+        sortable: false,
+        filterable: false,
+        value: "sv",
+        width: "10%",
+        divider: true,
+    },
+    {
+        text: "GV",
+        align: "center",
+        sortable: false,
+        filterable: false,
+        value: "gv",
+        width: "10%",
+        divider: true,
+    },
+    {
+        text: "Aktiv",
+        align: "center",
+        sortable: true,
+        filterable: false,
+        value: "active",
+        width: "8%",
+        divider: true,
+    },
+    {
+        text: "Default",
+        align: "center",
+        sortable: true,
+        filterable: false,
+        value: "defaultFaktor",
+        width: "8%",
+        divider: true,
+    },
+    {
+        text: "Aktionen",
+        align: "center",
+        sortable: false,
+        filterable: false,
+        value: "aktionen",
+        width: "10%",
+    },
+];
 
-    // Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
-    // 64px Suche in Tabelle
-    // 20px Padding Bottom
-    // 52px Button
-    get tableHeight(): string {
-        return parseInt(this.height.replace("px", "")) - 136 + "px";
-    }
-
-    /**
-     * Zur Prüfung ob Matrix bereits vergeben.
-     */
-    private hofaMatrizen: Set<string> = new Set<string>();
-
-    /**
-     * Zur Prüfung ob defaultFaktor maximal nur einmal vergeben ist.
-     */
-    private defaultFaktorPerMatrix: Map<string, boolean> = new Map<
-        string,
-        boolean
-    >();
-
-    private hochrechnungsfaktoren: Array<HochrechnungsfaktorDTO> = [];
-
-    editHochrechnungsfaktor: HochrechnungsfaktorDTO =
+onMounted(() => {
+    getAllHochrechnungsfaktoren();
+    editHochrechnungsfaktor.value =
         DefaultObjectCreator.createDefaultHochrechnungsfaktor();
+});
 
-    private editIndex = -1;
-
-    showEditDialog = false;
-
-    showDeleteDialog = false;
-
-    mounted() {
-        this.getAllHochrechnungsfaktoren();
-        this.editHochrechnungsfaktor =
-            DefaultObjectCreator.createDefaultHochrechnungsfaktor();
-    }
-
-    @Watch("showEditDialog", { immediate: true })
-    private onChangeShowEditDialog() {
-        if (!this.showEditDialog) {
-            this.initDataStructureForInputValidation();
-            this.editHochrechnungsfaktor =
+watch(
+    showEditDialog,
+    () => {
+        if (!showEditDialog.value) {
+            initDataStructureForInputValidation();
+            editHochrechnungsfaktor.value =
                 DefaultObjectCreator.createDefaultHochrechnungsfaktor();
         }
-    }
+    },
+    { immediate: true }
+);
 
-    get getHochrechnungsfaktoren(): Array<HochrechnungsfaktorDTO> {
-        return this.hochrechnungsfaktoren;
-    }
+// Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
+// 64px Suche in Tabelle
+// 20px Padding Bottom
+// 52px Button
+const tableHeight = computed(() => {
+    return parseInt(props.height.replace("px", "")) - 136 + "px";
+});
 
-    get header(): Array<any> {
-        return [
-            {
-                text: "Matrix",
-                align: "center",
-                sortable: true,
-                filterable: true,
-                value: "matrix",
-                width: "24%",
-                divider: true,
-            },
-            {
-                text: "KFZ",
-                align: "center",
-                sortable: false,
-                filterable: false,
-                value: "kfz",
-                width: "10%",
-                divider: true,
-            },
-            {
-                text: "SV",
-                align: "center",
-                sortable: false,
-                filterable: false,
-                value: "sv",
-                width: "10%",
-                divider: true,
-            },
-            {
-                text: "GV",
-                align: "center",
-                sortable: false,
-                filterable: false,
-                value: "gv",
-                width: "10%",
-                divider: true,
-            },
-            {
-                text: "Aktiv",
-                align: "center",
-                sortable: true,
-                filterable: false,
-                value: "active",
-                width: "8%",
-                divider: true,
-            },
-            {
-                text: "Default",
-                align: "center",
-                sortable: true,
-                filterable: false,
-                value: "defaultFaktor",
-                width: "8%",
-                divider: true,
-            },
-            {
-                text: "Aktionen",
-                align: "center",
-                sortable: false,
-                filterable: false,
-                value: "aktionen",
-                width: "10%",
-            },
-        ];
-    }
+const disableSpeicherButton = computed(() => {
+    const matrix: string = editHochrechnungsfaktor.value.matrix;
+    return (
+        isEmpty(matrix) ||
+        hofaMatrizen.value.has(matrix) ||
+        mustBePositivNumber(editHochrechnungsfaktor.value.kfz) !== true ||
+        mustBePositivNumber(editHochrechnungsfaktor.value.sv) !== true ||
+        mustBePositivNumber(editHochrechnungsfaktor.value.gv) !== true ||
+        !checkForValidDefaultFactor(editHochrechnungsfaktor.value.defaultFaktor)
+    );
+});
 
-    // Löschen
-    /**
-     * Öffnet den Löschdialog.
-     * Ermittelt den Index des zu löschenden Items.
-     *
-     * @param item das Item was gelöscht werden soll.
-     */
-    deleteItem(item: HochrechnungsfaktorDTO) {
-        this.editIndex = this.hochrechnungsfaktoren.indexOf(item);
-        this.editHochrechnungsfaktor = Object.assign({}, item);
-        this.showDeleteDialog = true;
-    }
+// Löschen
+/**
+ * Öffnet den Löschdialog.
+ * Ermittelt den Index des zu löschenden Items.
+ *
+ * @param item das Item was gelöscht werden soll.
+ */
+function deleteItem(item: HochrechnungsfaktorDTO) {
+    editIndex.value = hochrechnungsfaktoren.value.indexOf(item);
+    editHochrechnungsfaktor.value = cloneDeep(item);
+    showDeleteDialog.value = true;
+}
 
-    /**
-     * Löscht das gewählte Item bei Klick auf den Button Löschen im Löschdialog
-     * mit einen DELETE-Request an das Backend.
-     *
-     * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
-     */
-    deleteItemConfirm() {
-        if (this.editIndex > -1 && this.editHochrechnungsfaktor) {
-            HochrechnungsfaktorService.deleteHochrechnungsfaktor(
-                this.editHochrechnungsfaktor
-            )
-                .then(() => {
-                    this.snackbarStore.showSuccess(
-                        "Gelöscht",
-                        "Der Hochrechnungsfaktor wurde erfolgreich gelöscht."
-                    );
-                })
-                .catch((error) => this.snackbarStore.showApiError(error))
-                .finally(() => {
-                    this.getAllHochrechnungsfaktoren();
-                });
-        }
-        this.closeDelete();
-    }
-
-    /**
-     * Schließt den Löschdialog und setzt den Index des gelöschten Items zurück.
-     */
-    closeDelete() {
-        this.showDeleteDialog = false;
-        this.editIndex = -1;
-        this.editHochrechnungsfaktor =
-            DefaultObjectCreator.createDefaultHochrechnungsfaktor();
-    }
-
-    // Editieren/Speichern
-    /**
-     * Öffnet den Dialog zum Ändern eines items.
-     * @param item zum Ändern.
-     */
-    editItem(item: HochrechnungsfaktorDTO) {
-        this.editIndex = this.hochrechnungsfaktoren.indexOf(item);
-        this.editHochrechnungsfaktor = Object.assign({}, item);
-        this.showEditDialog = true;
-        this.hofaMatrizen.delete(item.matrix);
-        this.defaultFaktorPerMatrix.delete(item.matrix);
-    }
-
-    // Speichern
-    /**
-     * Speichert das geänderte oder neu angelegte Item.
-     *
-     * Beim Erstellen eines neuen Items wird ein POST-Request an das Backend durchgeführt.
-     * Beim Ändern eines bestehenden Items wird ein PUT-Request an das Backend durchgeführt.
-     *
-     * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
-     */
-    saveEditItemDialog() {
-        if (this.editIndex > -1 && this.editHochrechnungsfaktor) {
-            // Bestehender HOFA
-            HochrechnungsfaktorService.putHochrechnungsfaktor(
-                this.editHochrechnungsfaktor
-            )
-                .then(() => {
-                    this.snackbarStore.showSuccess(
-                        "Aktualisiert",
-                        "Der Hochrechnungsfaktor wurde erfolgreich aktualisiert."
-                    );
-                })
-                .catch((error) => this.snackbarStore.showApiError(error))
-                .finally(() => {
-                    this.getAllHochrechnungsfaktoren();
-                });
-        } else if (this.editHochrechnungsfaktor) {
-            // Neuer HOFA
-            HochrechnungsfaktorService.postHochrechnungsfaktor(
-                this.editHochrechnungsfaktor
-            )
-                .then(() => {
-                    this.snackbarStore.showSuccess(
-                        "Gespeichert",
-                        "Der Hochrechnungsfaktor wurde erfolgreich gespeichert."
-                    );
-                })
-                .catch((error) => this.snackbarStore.showApiError(error))
-                .finally(() => {
-                    this.getAllHochrechnungsfaktoren();
-                });
-        }
-        this.closeEditItemDialog();
-    }
-
-    /**
-     * Schließt den Editdialog und setzt den Index des geänderten Items zurück.
-     */
-    closeEditItemDialog() {
-        this.showEditDialog = false;
-        this.editIndex = -1;
-        this.editHochrechnungsfaktor =
-            DefaultObjectCreator.createDefaultHochrechnungsfaktor();
-    }
-
-    /**
-     * Holt mit einen GET-Request alle Hochrechnungsfaktoren vom Backend.
-     */
-    private getAllHochrechnungsfaktoren() {
-        HochrechnungsfaktorService.getAllHochrechnungsfaktoren()
-            .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
-                this.hochrechnungsfaktorStore.setHochrechnungsfaktoren(
-                    _.cloneDeep(faktoren)
+/**
+ * Löscht das gewählte Item bei Klick auf den Button Löschen im Löschdialog
+ * mit einen DELETE-Request an das Backend.
+ *
+ * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
+ */
+function deleteItemConfirm() {
+    if (editIndex.value > -1 && editHochrechnungsfaktor.value) {
+        HochrechnungsfaktorService.deleteHochrechnungsfaktor(
+            editHochrechnungsfaktor.value
+        )
+            .then(() => {
+                snackbarStore.showSuccess(
+                    "Gelöscht",
+                    "Der Hochrechnungsfaktor wurde erfolgreich gelöscht."
                 );
-                this.hochrechnungsfaktoren =
-                    this.hochrechnungsfaktorStore.getHochrechnungsfaktoren;
-                this.initDataStructureForInputValidation();
             })
-            .catch((error) => this.snackbarStore.showApiError(error));
+            .catch((error) => snackbarStore.showApiError(error))
+            .finally(() => {
+                getAllHochrechnungsfaktoren();
+            });
     }
+    closeDelete();
+}
 
-    get disableSpeicherButton(): boolean {
-        const matrix: string = this.editHochrechnungsfaktor.matrix;
-        return (
-            _.isEmpty(matrix) ||
-            this.hofaMatrizen.has(matrix) ||
-            !_.isNumber(this.editHochrechnungsfaktor.kfz) ||
-            !_.isNumber(this.editHochrechnungsfaktor.sv) ||
-            !_.isNumber(this.editHochrechnungsfaktor.gv) ||
-            !this.checkForValidDefaultFactor(
-                this.editHochrechnungsfaktor.defaultFaktor
-            )
-        );
+/**
+ * Schließt den Löschdialog und setzt den Index des gelöschten Items zurück.
+ */
+function closeDelete() {
+    showDeleteDialog.value = false;
+    editIndex.value = -1;
+    editHochrechnungsfaktor.value =
+        DefaultObjectCreator.createDefaultHochrechnungsfaktor();
+}
+
+// Editieren/Speichern
+/**
+ * Öffnet den Dialog zum Ändern eines items.
+ * @param item zum Ändern.
+ */
+function editItem(item: HochrechnungsfaktorDTO) {
+    editIndex.value = hochrechnungsfaktoren.value.indexOf(item);
+    editHochrechnungsfaktor.value = cloneDeep(item);
+    showEditDialog.value = true;
+    hofaMatrizen.value.delete(item.matrix);
+    defaultFaktorPerMatrix.value.delete(item.matrix);
+}
+
+// Speichern
+/**
+ * Speichert das geänderte oder neu angelegte Item.
+ *
+ * Beim Erstellen eines neuen Items wird ein POST-Request an das Backend durchgeführt.
+ * Beim Ändern eines bestehenden Items wird ein PUT-Request an das Backend durchgeführt.
+ *
+ * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
+ */
+function saveEditItemDialog() {
+    if (editIndex.value > -1 && editHochrechnungsfaktor.value) {
+        // Bestehender HOFA
+        HochrechnungsfaktorService.putHochrechnungsfaktor(
+            editHochrechnungsfaktor.value
+        )
+            .then(() => {
+                snackbarStore.showSuccess(
+                    "Aktualisiert",
+                    "Der Hochrechnungsfaktor wurde erfolgreich aktualisiert."
+                );
+            })
+            .catch((error) => snackbarStore.showApiError(error))
+            .finally(() => {
+                getAllHochrechnungsfaktoren();
+            });
+    } else if (editHochrechnungsfaktor.value) {
+        // Neuer HOFA
+        HochrechnungsfaktorService.postHochrechnungsfaktor(
+            editHochrechnungsfaktor.value
+        )
+            .then(() => {
+                snackbarStore.showSuccess(
+                    "Gespeichert",
+                    "Der Hochrechnungsfaktor wurde erfolgreich gespeichert."
+                );
+            })
+            .catch((error) => snackbarStore.showApiError(error))
+            .finally(() => {
+                getAllHochrechnungsfaktoren();
+            });
     }
+    closeEditItemDialog();
+}
 
-    /**
-     * Prüft, ob der Matrixname bereits vergeben ist.
-     */
-    matrixVerwendbar(matrix: any): boolean | string {
-        const matrixBereitsVorhanden = this.hofaMatrizen.has(matrix);
-        if (!matrixBereitsVorhanden) {
-            return true;
+/**
+ * Schließt den Editdialog und setzt den Index des geänderten Items zurück.
+ */
+function closeEditItemDialog() {
+    showEditDialog.value = false;
+    editIndex.value = -1;
+    editHochrechnungsfaktor.value =
+        DefaultObjectCreator.createDefaultHochrechnungsfaktor();
+}
+
+/**
+ * Holt mit einen GET-Request alle Hochrechnungsfaktoren vom Backend.
+ */
+function getAllHochrechnungsfaktoren() {
+    HochrechnungsfaktorService.getAllHochrechnungsfaktoren()
+        .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
+            hochrechnungsfaktorStore.setHochrechnungsfaktoren(
+                cloneDeep(faktoren)
+            );
+            hochrechnungsfaktoren.value =
+                hochrechnungsfaktorStore.getHochrechnungsfaktoren;
+            initDataStructureForInputValidation();
+        })
+        .catch((error) => snackbarStore.showApiError(error));
+}
+
+/**
+ * Prüft, ob der Matrixname bereits vergeben ist.
+ */
+function matrixVerwendbar(matrix: string): boolean | string {
+    const matrixBereitsVorhanden = hofaMatrizen.value.has(matrix);
+    if (!matrixBereitsVorhanden) {
+        return true;
+    }
+    return "Diese Matrixbezeichnung existiert bereits.";
+}
+
+/**
+ * Prüft, ob ein Wert gesetzt ist.
+ */
+function pflichtfeld(value: string | number): boolean | string {
+    if (!isEmpty(value)) {
+        return true;
+    }
+    return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
+}
+
+/**
+ * Prüft, ob der übergebene Wert eine Zahl ist.
+ */
+function mustBePositivNumber(value: string | number): boolean | string {
+    if (!isNumber(value) || value < 0) {
+        return "Bitte eine Zahl >= 0 eingeben";
+    }
+    return true;
+}
+
+/**
+ * Prüft, ob bei Markierung als DefaultFaktor bereits ein
+ * anderer Hochrechnungsfaktor als Default markiert ist.
+ *
+ * Es darf nur ein Hochrechnungsfaktor den Wert "true" annehmen.
+ */
+function isDefaultFactorValid(value: boolean): boolean | string {
+    let result: string | boolean;
+    if (checkForValidDefaultFactor(value)) {
+        result = true;
+    } else {
+        result = "Es ist bereits ein Hochrechnungsfaktor als Default gesetzt.";
+    }
+    return result;
+}
+
+/**
+ * Prüft, ob bei Markierung als DefaultFaktor bereits ein
+ * anderer Hochrechnungsfaktor als Default markiert ist.
+ */
+function checkForValidDefaultFactor(value: boolean): boolean {
+    let numberOfDefaults = 0;
+    defaultFaktorPerMatrix.value.forEach((defaultFaktor) => {
+        if (defaultFaktor) {
+            numberOfDefaults++;
         }
-        return "Diese Matrixbezeichnung existiert bereits.";
-    }
+    });
+    return (value && numberOfDefaults < 1) || !value;
+}
 
-    /**
-     * Prüft, ob ein Wert gesetzt ist.
-     */
-    pflichtfeld(value: any): boolean | string {
-        if (!_.isEmpty(value)) {
-            return true;
-        }
-        return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
-    }
-
-    /**
-     * Prüft, ob der übergebene Wert eine Zahl ist.
-     */
-    mustBeNumber(value: any): boolean | string {
-        if (_.isNumber(value)) {
-            return true;
-        }
-        return "Bitte eine Zahl angeben.";
-    }
-
-    /**
-     * Prüft, ob bei Markierung als DefaultFaktor bereits ein
-     * anderer Hochrechnungsfaktor als Default markiert ist.
-     *
-     * Es darf nur ein Hochrechnungsfaktor den Wert "true" annehmen.
-     */
-    isDefaultFactorValid(value: boolean): boolean | string {
-        let result: any;
-        if (this.checkForValidDefaultFactor(value)) {
-            result = true;
-        } else {
-            result =
-                "Es ist bereits ein Hochrechnungsfaktor als Default gesetzt.";
-        }
-        return result;
-    }
-
-    /**
-     * Prüft, ob bei Markierung als DefaultFaktor bereits ein
-     * anderer Hochrechnungsfaktor als Default markiert ist.
-     */
-    private checkForValidDefaultFactor(value: boolean): boolean {
-        let numberOfDefaults = 0;
-        this.defaultFaktorPerMatrix.forEach((defaultFaktor) => {
-            if (defaultFaktor) {
-                numberOfDefaults++;
-            }
-        });
-        return (value && numberOfDefaults < 1) || !value;
-    }
-
-    /**
-     * Initialisiert die Datenstrukturen zur Duplikatsprüfung für die Attribute
-     * Matrix und DefaultFaktor.
-     */
-    private initDataStructureForInputValidation(): void {
-        this.hofaMatrizen.clear();
-        this.defaultFaktorPerMatrix.clear();
-        this.hochrechnungsfaktoren.forEach((hofa) => {
-            this.hofaMatrizen.add(hofa.matrix);
-            this.defaultFaktorPerMatrix.set(hofa.matrix, hofa.defaultFaktor);
-        });
-    }
+/**
+ * Initialisiert die Datenstrukturen zur Duplikatsprüfung für die Attribute
+ * Matrix und DefaultFaktor.
+ */
+function initDataStructureForInputValidation(): void {
+    hofaMatrizen.value.clear();
+    defaultFaktorPerMatrix.value.clear();
+    hochrechnungsfaktoren.value.forEach((hofa) => {
+        hofaMatrizen.value.add(hofa.matrix);
+        defaultFaktorPerMatrix.value.set(hofa.matrix, hofa.defaultFaktor);
+    });
 }
 </script>
