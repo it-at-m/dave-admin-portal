@@ -3,13 +3,12 @@
         width="100%"
         :min-height="height"
         :max-height="height"
+        class="overflow-y-auto"
     >
         <v-card elevation="0">
             <v-card-text>
                 <v-form>
                     <v-data-table
-                        class="overflow-y-auto"
-                        :height="tableHeight"
                         dense
                         :headers="header"
                         :items="messfahigkeiten"
@@ -26,7 +25,7 @@
 
 <script setup lang="ts">
 import MessfaehigkeitEditDTO from "@/domain/dto/messstelle/MessfaehigkeitEditDTO";
-import { computed, ComputedRef } from "vue";
+import { computed } from "vue";
 import _ from "lodash";
 
 interface Props {
@@ -34,10 +33,7 @@ interface Props {
     messfahigkeiten: Array<MessfaehigkeitEditDTO>;
 }
 
-const props = defineProps<Props>();
-const tableHeight: ComputedRef<string> = computed(() => {
-    return parseInt(props.height.replace("px", "")) - 136 + "px";
-});
+defineProps<Props>();
 
 function activeMessfaehigkeit(item: MessfaehigkeitEditDTO) {
     return _.isEmpty(item.gueltigBis) ? "indigo lighten-5" : "";
