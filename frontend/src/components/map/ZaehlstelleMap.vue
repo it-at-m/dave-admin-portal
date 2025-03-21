@@ -79,7 +79,7 @@
         </div>
 
         <create-zaehlstelle-dialog
-            v-model="showCreateZaehlstelleDialog"
+            :show-dialog="showCreateZaehlstelleDialog"
             :coords="newCoords"
             @saved="reloadDataAndCloseDialog"
             @cancel="cancelCreateZaehlstelleDialog"

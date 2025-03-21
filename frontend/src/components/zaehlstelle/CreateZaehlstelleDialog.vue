@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-        v-model="value"
+        v-model="showDialogModel"
         persistent
         max-width="900px"
     >
@@ -10,11 +10,11 @@
         >
             <v-card-title>
                 <v-icon left>mdi-map-marker-plus-outline</v-icon>
-                {{ dialogtitle }}
+                {{ DIALOG_TITLE }}
             </v-card-title>
 
             <v-card-text>
-                <zaehlstelle-form
+                <create-zaehlstelle-form
                     :coords="coords"
                     @cancel="cancelCreate"
                     @saved="saved"
@@ -24,33 +24,32 @@
     </v-dialog>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import ZaehlstelleForm from "@/components/zaehlstelle/CreateZaehlstelleForm.vue";
-/* eslint-disable no-unused-vars */
+<script setup lang="ts">
+import { computed } from "vue";
 import { LatLng } from "leaflet";
-import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-/* eslint-enable no-unused-vars */
-@Component({
-    components: { ZaehlstelleForm },
-})
-export default class CreateZaehlstelleDialog extends Vue {
-    /**
-     * Steuerflag für den Dialog
-     */
-    @Prop() value!: boolean;
-    @Prop()
-    coords!: LatLng;
 
-    dialogtitle = "Neue Zählstelle anlegen";
+interface Props {
+    showDialog: boolean;
+    coords: LatLng;
+}
+const props = defineProps<Props>();
 
-    cancelCreate(): void {
-        this.$emit("cancel");
-    }
+const showDialogModel = computed(() => {
+    return props.showDialog;
+});
 
-    saved(backendIdDTO: BackendIdDTO): void {
-        this.$emit("saved", backendIdDTO);
-    }
+const emits = defineEmits<{
+    (e: "cancel"): void;
+    (e: "saved", payload: BackendIdDTO): void;
+}>();
+const DIALOG_TITLE = "Neue Zählstelle anlegen";
+
+function cancelCreate(): void {
+    emits("cancel");
+}
+
+function saved(backendIdDTO: BackendIdDTO): void {
+    emits("saved", backendIdDTO);
 }
 </script>
