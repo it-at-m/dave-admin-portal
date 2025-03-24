@@ -44,44 +44,37 @@
     </v-expansion-panel>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-
-// Typen
-/* eslint-disable no-unused-vars */
+<script setup lang="ts">
 import IconOptions from "@/components/icons/IconOptions";
 import OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
+import i18n from "@/i18n";
 import { zaehlartText } from "@/domain/enums/Zaehlart";
-/* eslint-enable no-unused-vars */
+import { useRouter } from "vue-router/composables";
 
-@Component
-export default class OpenZaehlungPanel extends Vue {
-    @Prop() header!: string;
+interface Props {
+    header: string;
+    statusDesign: IconOptions;
+    zaehlungen: Array<OpenZaehlungDTO>;
+}
 
-    @Prop() statusDesign!: IconOptions;
+defineProps<Props>();
 
-    @Prop() zaehlungen!: Array<OpenZaehlungDTO>;
+const router = useRouter();
+function getItemTitle(zaehlung: OpenZaehlungDTO) {
+    return `Zählung vom ${i18n.d(
+        new Date(zaehlung.datum),
+        "short",
+        "de-DE"
+    )} an Zählstelle ${zaehlung.zaehlstellenNummer} in ${zaehlung.stadtbezirk}`;
+}
 
-    getItemTitle(zaehlung: OpenZaehlungDTO) {
-        return `Zählung vom ${this.$d(
-            new Date(zaehlung.datum),
-            "short",
-            "de-DE"
-        )} an Zählstelle ${zaehlung.zaehlstellenNummer} in ${
-            zaehlung.stadtbezirk
-        }`;
-    }
+function getItemSubtitle(zaehlung: OpenZaehlungDTO) {
+    return `Projektnummer: ${zaehlung.projektNummer}, Projektname: ${
+        zaehlung.projektName
+    }, Zählart: ${zaehlartText.get(zaehlung.zaehlart)}`;
+}
 
-    getItemSubtitle(zaehlung: OpenZaehlungDTO) {
-        return `Projektnummer: ${zaehlung.projektNummer}, Projektname: ${
-            zaehlung.projektName
-        }, Zählart: ${zaehlartText.get(zaehlung.zaehlart)}`;
-    }
-
-    openZaehlung(zaehlung: OpenZaehlungDTO): void {
-        this.$router.push(
-            `/zaehlstelle/${zaehlung.zaehlstellenId}/${zaehlung.id}`
-        );
-    }
+function openZaehlung(zaehlung: OpenZaehlungDTO): void {
+    router.push(`/zaehlstelle/${zaehlung.zaehlstellenId}/${zaehlung.id}`);
 }
 </script>
