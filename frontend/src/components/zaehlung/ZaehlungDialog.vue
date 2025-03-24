@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-        v-model="showDialog"
+        v-model="showDialogModel"
         persistent
         max-width="50%"
         height="600px"
@@ -34,56 +34,52 @@
     </v-dialog>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import ZaehlstelleForm from "@/components/zaehlstelle/CreateZaehlstelleForm.vue";
-/* eslint-disable no-unused-vars */
-import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import ZaehlungForm from "@/components/zaehlung/form/ZaehlungForm.vue";
+<script setup lang="ts">
 import { useZaehlungStore } from "@/store/ZaehlungStore";
 import { isEmpty } from "lodash";
-/* eslint-enable no-unused-vars */
-@Component({
-    components: {
-        ZaehlungForm,
-        ZaehlstelleForm,
-    },
-})
-export default class ZaehlungDialog extends Vue {
-    /**
-     * Steuerflag für den Dialog
-     */
-    @Prop() showDialog!: boolean;
-    @Prop() zaehlstelle!: ZaehlstelleDTO;
+import { computed, watch } from "vue";
+import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 
-    private zaehlungStore = useZaehlungStore();
+interface Props {
+    showDialog: boolean;
+    zaehlstelle: ZaehlstelleDTO;
+}
+const props = defineProps<Props>();
+const showDialogModel = computed(() => {
+    return props.showDialog;
+});
+const emits = defineEmits<{
+    (e: "cancel"): void;
+    (e: "saved", payload: BackendIdDTO): void;
+}>();
 
-    get editZaehlung(): boolean {
-        return !isEmpty(this.zaehlungStore.getZaehlung.id);
+const zaehlungStore = useZaehlungStore();
+
+const editZaehlung = computed(() => {
+    return !isEmpty(zaehlungStore.getZaehlung.id);
+});
+
+const dialogtitle = computed(() => {
+    if (editZaehlung.value) {
+        return "Zählung bearbeiten";
+    } else {
+        return "Neue Zählung anlegen";
     }
+});
 
-    get dialogtitle(): string {
-        if (this.editZaehlung) {
-            return "Zählung bearbeiten";
-        } else {
-            return "Neue Zählung anlegen";
-        }
+watch(
+    () => props.showDialog,
+    () => {
+        zaehlungStore.setResetformevent(!props.showDialog);
     }
+);
 
-    @Watch("showDialog")
-    openOrCloseDialog() {
-        // value === true, if open
-        // value === false, if close
-        this.zaehlungStore.setResetformevent(!this.showDialog);
-    }
+function cancelCreate(): void {
+    emits("cancel");
+}
 
-    cancelCreate(): void {
-        this.$emit("cancel");
-    }
-
-    saved(backendIdDTO: BackendIdDTO): void {
-        this.$emit("saved", backendIdDTO);
-    }
+function saved(backendIdDTO: BackendIdDTO): void {
+    emits("saved", backendIdDTO);
 }
 </script>

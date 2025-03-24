@@ -47,7 +47,6 @@
                 width="100%"
             >
                 <v-icon
-                    slot="icon"
                     color="error"
                     size="36"
                 >
@@ -236,7 +235,7 @@ const reloadZaehlstellenMap = ref(false);
  * API geladen.
  */
 onMounted(() => {
-    loadZaehlstelle();
+    loadZaehlstelle(true);
     loadHochrechnungsfaktoren();
     loadPkwEinheiten();
 });
@@ -328,7 +327,7 @@ function createDefaultZaehlungDTO(): ZaehlungDTO {
     return zaehlung;
 }
 
-function loadZaehlstelle(): void {
+function loadZaehlstelle(openDialog = false): void {
     // ID der Zählstelle aus der URL holen (oder Warnung ausgeben, falls keine vorhanden ist)
     const zaehlstelleId = route.params.zaehlstelleId;
 
@@ -348,7 +347,7 @@ function loadZaehlstelle(): void {
         .catch((error) => snackbarStore.showApiError(error))
         .finally(() => {
             const zaehlungId = route.params.zaehlungId;
-            if (zaehlungId) {
+            if (zaehlungId && openDialog) {
                 openZaehlungWithId(zaehlungId);
             }
         });

@@ -1,13 +1,13 @@
 <template>
     <v-dialog
-        v-model="showDialog"
+        v-model="showDialogModel"
         persistent
         width="420px"
     >
         <v-card flat>
             <v-card-title>
                 <v-icon left>mdi-calendar-remove</v-icon>
-                {{ dialogtitle }}
+                {{ DIALOG_TITLE }}
             </v-card-title>
 
             <v-card-text style="font-weight: normal; font-size: larger">
@@ -45,26 +45,31 @@
     </v-dialog>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-/* eslint-enable no-unused-vars */
-@Component
-export default class DeleteZaehlungDialog extends Vue {
-    /**
-     * Steuerflag für den Dialog
-     */
-    @Prop() showDialog!: boolean;
-    @Prop() dialogtext!: string;
+<script setup lang="ts">
+import { computed } from "vue";
 
-    dialogtitle = "Zählung löschen";
+interface Props {
+    showDialog: boolean;
+    dialogtext: string;
+}
+const props = defineProps<Props>();
 
-    cancel(): void {
-        this.$emit("cancel");
-    }
+const showDialogModel = computed(() => {
+    return props.showDialog;
+});
 
-    deleteIt(): void {
-        this.$emit("deleteIt");
-    }
+const emits = defineEmits<{
+    (e: "cancel"): void;
+    (e: "deleteIt"): void;
+}>();
+
+const DIALOG_TITLE = "Zählung löschen";
+
+function cancel(): void {
+    emits("cancel");
+}
+
+function deleteIt(): void {
+    emits("deleteIt");
 }
 </script>

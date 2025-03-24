@@ -21,7 +21,7 @@ interface Props {
     height: string;
     minheight: string;
     nummer?: string;
-    kreuzungsname: string;
+    kreuzungsname?: string;
     stadtbezirkNummer: string;
     stadtbezirk?: string;
 }
