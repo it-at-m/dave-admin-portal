@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-        v-model="showDialog"
+        v-model="showDialogModel"
         persistent
         max-width="50%"
         height="600px"
@@ -18,7 +18,7 @@
                     :height="tableHeightDienstleister"
                     dense
                     :headers="dienstleisterHeaders"
-                    :items="getDienstleister"
+                    :items="dienstleister"
                     :items-per-page="-1"
                     hide-default-footer
                     fixed-header
@@ -71,136 +71,135 @@
     </v-dialog>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
-import DienstleisterService from "@/api/service/DienstleisterService";
-import { ApiError } from "@/api/error";
-import _ from "lodash";
+<script setup lang="ts">
+import { computed, ref, watch } from "vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-/* eslint-enable no-unused-vars */
-@Component
-export default class BeauftrageZaehlungDialog extends Vue {
-    /**
-     * Steuerflag für den Dialog
-     */
-    @Prop() showDialog!: boolean;
-    @Prop({ default: "" }) dienstleisterkennung?: string;
-    @Prop() isBeauftragen!: boolean;
+import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
+import { isEmpty } from "lodash";
+import DienstleisterService from "@/api/service/DienstleisterService";
 
-    private snackbarStore = useSnackbarStore();
+interface Props {
+    showDialog: boolean;
+    isBeauftragen: boolean;
+    dienstleisterkennung?: string;
+}
+const props = withDefaults(defineProps<Props>(), {
+    dienstleisterkennung: "",
+});
+const showDialogModel = computed(() => {
+    return props.showDialog;
+});
+const emits = defineEmits<{
+    (e: "cancel"): void;
+    (e: "beauftragen", payload: DienstleisterDTO): void;
+    (e: "korrigieren", payload: DienstleisterDTO): void;
+}>();
 
-    filterDienstleister = "";
-    dienstleisterIsLoading = false;
-    private dienstleister: Array<DienstleisterDTO> = [];
-    selectedDienstleister: Array<DienstleisterDTO> = [];
+const snackbarStore = useSnackbarStore();
 
-    @Watch("showDialog")
-    private initOnOpen() {
-        if (this.showDialog) {
-            this.filterDienstleister = "";
-            this.dienstleister = [];
-            this.selectedDienstleister = [];
-            this.dienstleisterIsLoading = false;
-            this.loadAllActiveDienstleister();
+const filterDienstleister = ref("");
+const dienstleisterIsLoading = ref(false);
+const dienstleister = ref<Array<DienstleisterDTO>>([]);
+const selectedDienstleister = ref<Array<DienstleisterDTO>>([]);
+
+watch(
+    () => props.showDialog,
+    () => {
+        if (props.showDialog) {
+            filterDienstleister.value = "";
+            dienstleister.value = [];
+            selectedDienstleister.value = [];
+            dienstleisterIsLoading.value = false;
+            loadAllActiveDienstleister();
         }
     }
+);
 
-    cancel(): void {
-        this.$emit("cancel");
+function cancel(): void {
+    emits("cancel");
+}
+
+function beauftragen(): void {
+    if (selectedDienstleister.value.length === 1) {
+        emits("beauftragen", selectedDienstleister.value[0]);
     }
+}
 
-    beauftragen(): void {
-        if (this.selectedDienstleister.length === 1) {
-            this.$emit("beauftragen", this.selectedDienstleister[0]);
-        }
+function korrigieren(): void {
+    if (selectedDienstleister.value.length === 1) {
+        emits("korrigieren", selectedDienstleister.value[0]);
     }
+}
 
-    korrigieren(): void {
-        if (this.selectedDienstleister.length === 1) {
-            this.$emit("korrigieren", this.selectedDienstleister[0]);
-        }
-    }
+const dialogtitle = computed(() => {
+    return props.isBeauftragen
+        ? "Dienstleister beauftragen"
+        : "Dienstleister korrigieren";
+});
 
-    get dialogtitle(): string {
-        return this.isBeauftragen
-            ? "Dienstleister beauftragen"
-            : "Dienstleister korrigieren";
-    }
+const dialogicon = computed(() => {
+    return props.isBeauftragen
+        ? "mdi-account-arrow-right"
+        : "mdi-account-convert-outline";
+});
 
-    get dialogicon(): string {
-        return this.isBeauftragen
-            ? "mdi-account-arrow-right"
-            : "mdi-account-convert-outline";
-    }
+function loadAllActiveDienstleister() {
+    dienstleister.value = [];
+    dienstleisterIsLoading.value = true;
+    DienstleisterService.getAllActive()
+        .then((dienstleisterDTOS: Array<DienstleisterDTO>) => {
+            dienstleister.value = dienstleisterDTOS;
+            if (!isEmpty(props.dienstleisterkennung)) {
+                selectedDienstleister.value = dienstleister.value.filter(
+                    (value) => value.kennung === props.dienstleisterkennung
+                );
+            }
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            dienstleisterIsLoading.value = false;
+        });
+}
 
-    private loadAllActiveDienstleister() {
-        this.dienstleister = [];
-        this.dienstleisterIsLoading = true;
-        DienstleisterService.getAllActive()
-            .then((dienstleisterDTOS: Array<DienstleisterDTO>) => {
-                this.dienstleister = dienstleisterDTOS;
-                if (!_.isEmpty(this.dienstleisterkennung)) {
-                    this.dienstleister.forEach((value: DienstleisterDTO) => {
-                        if (value.kennung === this.dienstleisterkennung) {
-                            this.selectedDienstleister.push(value);
-                        }
-                    });
-                }
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.dienstleisterIsLoading = false;
-            });
-    }
+const dienstleisterHeaders = [
+    {
+        text: "Name",
+        align: "start",
+        value: "name",
+        divider: true,
+    },
+    {
+        text: "Kennung",
+        value: "kennung",
+        divider: true,
+    },
+    {
+        text: "Email",
+        value: "emailAddressesAsString",
+    },
+];
 
-    get getDienstleister(): Array<DienstleisterDTO> {
-        return this.dienstleister;
-    }
-
-    get dienstleisterHeaders(): Array<any> {
-        return [
-            {
-                text: "Name",
-                align: "start",
-                value: "name",
-                divider: true,
-            },
-            {
-                text: "Kennung",
-                value: "kennung",
-                divider: true,
-            },
-            {
-                text: "Email",
-                value: "emailAddressesAsString",
-            },
-        ];
-    }
-
-    /*
+/*
   Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
   64px Suche in Tabelle
   20px Padding Bottom
   52px Button
    */
-    get tableHeightDienstleister(): string {
-        // return parseInt(this.height.replace('px', '')) - 136 + 'px';
-        // return '400px'
-        return 600 - 58 - 64 - 52 + "px";
-    }
+const tableHeightDienstleister = computed(() => {
+    // return parseInt(this.height.replace('px', '')) - 136 + 'px';
+    // return '400px'
+    return 600 - 58 - 64 - 52 + "px";
+});
 
-    get getNoResultText(): string {
-        return `Kein Dienstleister zum Filter '${this.filterDienstleister}' gefunden.`;
-    }
+const getNoResultText = computed(() => {
+    return `Kein Dienstleister zum Filter '${filterDienstleister.value}' gefunden.`;
+});
 
-    get showButtonBeauftragen(): boolean {
-        return this.selectedDienstleister.length > 0 && this.isBeauftragen;
-    }
+const showButtonBeauftragen = computed(() => {
+    return selectedDienstleister.value.length > 0 && props.isBeauftragen;
+});
 
-    get showButtonKorrigieren(): boolean {
-        return this.selectedDienstleister.length > 0 && !this.isBeauftragen;
-    }
-}
+const showButtonKorrigieren = computed(() => {
+    return selectedDienstleister.value.length > 0 && !props.isBeauftragen;
+});
 </script>
