@@ -84,7 +84,7 @@
                     >
                         <zaehlart-icon
                             :zaehlart="zaehlung.zaehlart"
-                            :color="iconColor"
+                            :color="ICON_COLOR"
                         ></zaehlart-icon>
                     </v-col>
                     <v-spacer />
@@ -94,7 +94,7 @@
                     >
                         <wetter-icon
                             :wetter="zaehlung.wetter"
-                            :color="iconColor"
+                            :color="ICON_COLOR"
                         ></wetter-icon>
                     </v-col>
                     <v-spacer />
@@ -104,7 +104,7 @@
                     >
                         <zaehldauer-icon
                             :zaehldauer="zaehlung.zaehldauer"
-                            :color="iconColor"
+                            :color="ICON_COLOR"
                         ></zaehldauer-icon>
                     </v-col>
                     <v-spacer />
@@ -114,7 +114,7 @@
                     >
                         <quelle-icon
                             :quelle="zaehlung.quelle"
-                            :color="iconColor"
+                            :color="ICON_COLOR"
                         ></quelle-icon>
                     </v-col>
                     <v-spacer />
@@ -178,7 +178,7 @@
                         @click="openChatDialog"
                     >
                         <v-badge
-                            v-if="zaehlung.unreadMessagesMobilitaetsreferat"
+                            v-if="unreadMessagesMobilitaetsreferat"
                             dot
                             color="red"
                         >
@@ -306,316 +306,294 @@
     </v-card>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
-import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
-import { latLng, LatLng } from "leaflet";
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 import GeoPoint from "@/domain/GeoPoint";
-import ZaehlartIcon from "@/components/icons/ZaehlartIcon.vue";
-import WetterIcon from "@/components/icons/WetterIcon.vue";
-import ZaehldauerIcon from "@/components/icons/ZaehldauerIcon.vue";
-import QuelleIcon from "@/components/icons/QuelleIcon.vue";
+import i18n from "@/i18n";
 import KnotenarmDTO from "@/domain/KnotenarmDTO";
-import KnotenarmComparator from "@/util/KnotenarmComparator";
-import Status, { statusIcon } from "@/domain/enums/Status";
-import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
-import IconOptions from "@/components/icons/IconOptions";
-import ZaehlungService from "@/api/service/ZaehlungService";
-import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 import { cloneDeep } from "lodash";
-import DeleteZaehlungDialog from "@/components/zaehlung/DeleteZaehlungDialog.vue";
+import KnotenarmComparator from "@/util/KnotenarmComparator";
+import IconOptions from "@/components/icons/IconOptions";
+import Status, { statusIcon } from "@/domain/enums/Status";
+import { LatLng } from "leaflet";
+import UpdateStatusDTO from "@/domain/dto/bearbeiten/UpdateStatusDTO";
+import ZaehlungService from "@/api/service/ZaehlungService";
+import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
+import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 import Wetter from "@/domain/enums/Wetter";
 import FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
-import UpdateStatusDTO from "@/domain/dto/bearbeiten/UpdateStatusDTO";
-import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
-import BeauftrageZaehlungDialog from "@/components/zaehlung/BeauftrageZaehlungDialog.vue";
-import { useSnackbarStore } from "@/store/SnackbarStore";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
-@Component({
-    components: {
-        BeauftrageZaehlungDialog,
-        DeleteZaehlungDialog,
-        ZaehlungGeometrie,
-        QuelleIcon,
-        ZaehldauerIcon,
-        WetterIcon,
-        ZaehlartIcon,
-        ZaehlungCardMap,
-        ZaehlstelleMap,
+
+const ICON_COLOR = "black";
+const deleteDialogText = ref("Wollen Sie die Zählung wirklich löschen?");
+
+interface Props {
+    geoPointZaehlstelle: GeoPoint;
+    zaehlung: ZaehlungDTO;
+    zaehlstelleId: string;
+}
+const props = defineProps<Props>();
+
+const emits = defineEmits<{
+    (e: "cancel"): void;
+    (e: "deleted"): void;
+    (e: "openZaehlungDialog"): void;
+    (e: "openZaehlungDatenportal", zaehlungId: string): void;
+    (e: "openChatDialog", zaehlungId: string): void;
+    (e: "saved", payload: BackendIdDTO): void;
+}>();
+
+const snackbarStore = useSnackbarStore();
+const zaehlungStore = useZaehlungStore();
+const fab = ref(false);
+const loading = ref(false);
+const deleteDialog = ref(false);
+const isBeauftragen = ref(true);
+
+const unreadMessagesMobilitaetsreferat = ref(
+    props.zaehlung.unreadMessagesMobilitaetsreferat
+);
+
+const showBeauftragenDialog = ref(false);
+
+const coordsZaehlstelle = computed(() => {
+    return createLatLngFromString(
+        props.geoPointZaehlstelle.lat,
+        props.geoPointZaehlstelle.lon
+    );
+});
+
+const coordsZaehlung = computed(() => {
+    let geoPoint: GeoPoint = props.zaehlung.punkt;
+    return createLatLngFromString(geoPoint.lat, geoPoint.lon);
+});
+
+const title = computed(() => {
+    return props.zaehlung.projektName;
+});
+
+const datum = computed(() => {
+    return `${i18n.d(new Date(props.zaehlung.datum), "short", "de-DE")}`;
+});
+
+const streets = computed(() => {
+    return cloneDeep(props.zaehlung.knotenarme).sort(
+        KnotenarmComparator.sortByNumber
+    );
+});
+
+const streetsHeader = [
+    {
+        text: "Nummer",
+        align: "center",
+        sortable: false,
+        value: "nummer",
+        divider: "true",
     },
-})
-export default class ZaehlungCard extends Vue {
-    fab = false;
-    loading = false;
-    iconColor = "black";
-    deleteDialog = false;
-    deleteDialogText = "Wollen Sie die Zählung wirklich löschen?";
-    isBeauftragen = true;
+    {
+        text: "Straßenname",
+        align: "center",
+        sortable: false,
+        value: "strassenname",
+    },
+];
 
-    showBeauftragenDialog = false;
-
-    private snackbarStore = useSnackbarStore();
-    private zaehlungStore = useZaehlungStore();
-
-    @Prop()
-    readonly zaehlung!: ZaehlungDTO;
-
-    @Prop()
-    private readonly zaehlstelleId!: string;
-
-    @Prop()
-    private readonly geoPointZaehlstelle!: GeoPoint;
-
-    get getZaehlung(): ZaehlungDTO {
-        return this.zaehlung;
+const statusDesign = computed(() => {
+    let design: IconOptions | undefined = statusIcon.get(props.zaehlung.status);
+    if (!design) {
+        design = {} as IconOptions;
+        design.color = "deep-orange lighten-4";
+        design.iconPath = "mdi-calendar-question";
+        design.tooltip = "Status unbekannt";
     }
+    return design;
+});
 
-    get coordsZaehlstelle(): LatLng {
-        return this.createLatLngFromString(
-            this.geoPointZaehlstelle.lat,
-            this.geoPointZaehlstelle.lon
-        );
-    }
+const showButtonKorrektur = computed(() => {
+    return props.zaehlung.status === Status.ACCOMPLISHED;
+});
 
-    get coordsZaehlung(): LatLng {
-        let geoPoint: GeoPoint = this.zaehlung.punkt;
-        return this.createLatLngFromString(geoPoint.lat, geoPoint.lon);
-    }
+const showButtonFreigeben = computed(() => {
+    return props.zaehlung.status === Status.ACCOMPLISHED;
+});
 
-    get title(): string {
-        return this.getZaehlung.projektName;
-    }
+const showButtonBeauftragen = computed(() => {
+    return (
+        props.zaehlung.status === Status.CREATED &&
+        props.zaehlung.knotenarme &&
+        props.zaehlung.knotenarme.length > 0
+    );
+});
 
-    get datum(): string {
-        return `${this.$d(new Date(this.getZaehlung.datum), "short", "de-DE")}`;
-    }
+const showButtonDatenportal = computed(() => {
+    return (
+        props.zaehlung.status === Status.ACCOMPLISHED ||
+        props.zaehlung.status === Status.ACTIVE
+    );
+});
 
-    get streets(): Array<KnotenarmDTO> {
-        let knotenarme: Array<KnotenarmDTO> = [];
-        Object.assign(knotenarme, this.getZaehlung.knotenarme);
-        return knotenarme.sort(KnotenarmComparator.sortByNumber);
-    }
+const showButtonDienstleisterKorrigieren = computed(() => {
+    return (
+        props.zaehlung.status === Status.INSTRUCTED ||
+        props.zaehlung.status === Status.COUNTING ||
+        props.zaehlung.status === Status.CORRECTION
+    );
+});
 
-    get streetsHeader(): Array<any> {
-        return [
-            {
-                text: "Nummer",
-                align: "center",
-                sortable: false,
-                value: "nummer",
-                divider: "true",
-            },
-            {
-                text: "Straßenname",
-                align: "center",
-                sortable: false,
-                value: "strassenname",
-            },
-        ];
-    }
+// Erzeugt aus den String Koordinaten ein Objekt von Typ LatLng
+function createLatLngFromString(lat: string, lng: string): LatLng {
+    return new LatLng(parseFloat(lat), parseFloat(lng));
+}
 
-    get statusDesign(): IconOptions {
-        let design: IconOptions | undefined = statusIcon.get(
-            this.zaehlung.status
-        );
-        if (!design) {
-            design = {} as IconOptions;
-            design.color = "deep-orange lighten-4";
-            design.iconPath = "mdi-calendar-question";
-            design.tooltip = "Status unbekannt";
-        }
-        return design;
-    }
-
-    get showButtonKorrektur(): boolean {
-        return this.zaehlung.status === Status.ACCOMPLISHED;
-    }
-
-    get showButtonFreigeben(): boolean {
-        return this.zaehlung.status === Status.ACCOMPLISHED;
-    }
-
-    get showButtonBeauftragen(): boolean {
-        return (
-            this.zaehlung.status === Status.CREATED &&
-            this.zaehlung.knotenarme &&
-            this.zaehlung.knotenarme.length > 0
-        );
-    }
-
-    get showButtonDatenportal(): boolean {
-        return (
-            this.zaehlung.status === Status.ACCOMPLISHED ||
-            this.zaehlung.status === Status.ACTIVE
-        );
-    }
-
-    get showButtonDienstleisterKorrigieren(): boolean {
-        return (
-            this.zaehlung.status === Status.INSTRUCTED ||
-            this.zaehlung.status === Status.COUNTING ||
-            this.zaehlung.status === Status.CORRECTION
-        );
-    }
-
-    // Erzeugt aus den String Koordinaten ein Objekt von Typ LatLng
-    private createLatLngFromString(lat: string, lng: string): LatLng {
-        return latLng(parseFloat(lat), parseFloat(lng));
-    }
-
-    zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
-        this.loading = true;
-        const update: UpdateStatusDTO = {} as UpdateStatusDTO;
-        update.zaehlungId = this.zaehlung.id;
-        update.status = Status.INSTRUCTED;
-        update.dienstleisterkennung = dienstleister.kennung;
-        ZaehlungService.updateStatus(update)
-            .then((backendIdDTO) => {
-                this.snackbarStore.showInfo(
-                    `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${this.getZaehlung.projektName} durchzuführen.`
-                );
-                this.$emit("saved", backendIdDTO);
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.loading = false;
-                this.isBeauftragen = true;
-            });
-    }
-
-    zaehlungLoeschen() {
-        this.deleteDialogText = `Wollen Sie die Zählung vom ${this.datum} wirklich löschen?`;
-        this.deleteDialog = true;
-    }
-
-    deleteZaehlung() {
-        this.deleteDialog = false;
-        this.loading = true;
-        ZaehlungService.deleteZaehlungById(this.zaehlung.id)
-            .then((isDeleted: boolean) => {
-                if (isDeleted) {
-                    this.snackbarStore.showInfo(
-                        `Die Zählung vom ${this.datum} wurde gelöscht.`
-                    );
-                    this.$emit("deleted");
-                } else {
-                    this.snackbarStore.showError(
-                        `Die Zählung vom ${this.datum} konnte nicht gelöscht werden.`
-                    );
-                }
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.loading = false;
-            });
-    }
-
-    zaehlungFreigeben() {
-        this.loading = true;
-        const update: UpdateStatusDTO = {} as UpdateStatusDTO;
-        update.zaehlungId = this.zaehlung.id;
-        update.status = Status.ACTIVE;
-        ZaehlungService.updateStatus(update)
-            .then((backendIdDTO) => {
-                this.snackbarStore.showInfo(
-                    `Die Zählung vom ${this.datum} wurde freigegeben.`
-                );
-                this.$emit("saved", backendIdDTO);
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.loading = false;
-            });
-    }
-
-    zaehlungKorrigieren() {
-        this.loading = true;
-        const update: UpdateStatusDTO = {} as UpdateStatusDTO;
-        update.zaehlungId = this.zaehlung.id;
-        update.status = Status.CORRECTION;
-        ZaehlungService.updateStatus(update)
-            .then((backendIdDTO) => {
-                this.snackbarStore.showInfo(
-                    `Die Zählung vom ${this.datum} wurde dem Zähldienstleister zur Korrektur übermittelt.`
-                );
-                this.$emit("saved", backendIdDTO);
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.loading = false;
-            });
-    }
-
-    openZaehlungDialog() {
-        this.zaehlungStore.setZaehlung(cloneDeep(this.zaehlung));
-        this.$emit("openZaehlungDialog");
-    }
-
-    openZaehlungInDatenportal() {
-        this.$emit("openZaehlungDatenportal", this.getZaehlung.id);
-    }
-
-    zaehlungKopieren() {
-        this.loading = true;
-        let zaehlungCopy: ZaehlungDTO = cloneDeep(this.zaehlung);
-        zaehlungCopy.id = "";
-        zaehlungCopy.kommentar = "";
-        zaehlungCopy.zaehlsituation = "";
-        zaehlungCopy.zaehlsituationErweitert = "";
-        zaehlungCopy.wetter = Wetter.NO_INFORMATION;
-        zaehlungCopy.status = Status.CREATED;
-        zaehlungCopy.dienstleisterkennung = "";
-        zaehlungCopy.datum = new Date().toISOString().substr(0, 10);
-        zaehlungCopy.knotenarme.forEach((arm: KnotenarmDTO) => {
-            arm.id = "";
+function zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
+    loading.value = true;
+    const update: UpdateStatusDTO = {} as UpdateStatusDTO;
+    update.zaehlungId = props.zaehlung.id;
+    update.status = Status.INSTRUCTED;
+    update.dienstleisterkennung = dienstleister.kennung;
+    ZaehlungService.updateStatus(update)
+        .then((backendIdDTO) => {
+            snackbarStore.showInfo(
+                `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${props.zaehlung.projektName} durchzuführen.`
+            );
+            emits("saved", backendIdDTO);
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            loading.value = false;
+            isBeauftragen.value = true;
         });
-        zaehlungCopy.fahrbeziehungen.forEach((fz: FahrbeziehungDTO) => {
-            fz.id = "";
-            fz.hochrechnungsfaktor.id = "";
+}
+
+function zaehlungLoeschen() {
+    deleteDialogText.value = `Wollen Sie die Zählung vom ${datum.value} wirklich löschen?`;
+    deleteDialog.value = true;
+}
+
+function deleteZaehlung() {
+    deleteDialog.value = false;
+    loading.value = true;
+    ZaehlungService.deleteZaehlungById(props.zaehlung.id)
+        .then((isDeleted: boolean) => {
+            if (isDeleted) {
+                snackbarStore.showInfo(
+                    `Die Zählung vom ${datum.value} wurde gelöscht.`
+                );
+                emits("deleted");
+            } else {
+                snackbarStore.showError(
+                    `Die Zählung vom ${datum.value} konnte nicht gelöscht werden.`
+                );
+            }
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            loading.value = false;
         });
-        ZaehlungService.saveZaehlung(zaehlungCopy, this.zaehlstelleId)
-            .then((backendIdDTO: BackendIdDTO) => {
-                this.snackbarStore.showInfo(
-                    `Die Zählung vom ${this.datum} wurde kopiert.`
-                );
-                this.$emit("saved", backendIdDTO);
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.loading = false;
-            });
-    }
+}
 
-    openChatDialog() {
-        this.zaehlungStore.setZaehlung(cloneDeep(this.zaehlung));
-        this.zaehlung.unreadMessagesMobilitaetsreferat = false;
-        this.$emit("openChatDialog", this.zaehlung.id);
-    }
+function zaehlungFreigeben() {
+    loading.value = true;
+    const update: UpdateStatusDTO = {} as UpdateStatusDTO;
+    update.zaehlungId = props.zaehlung.id;
+    update.status = Status.ACTIVE;
+    ZaehlungService.updateStatus(update)
+        .then((backendIdDTO) => {
+            snackbarStore.showInfo(
+                `Die Zählung vom ${datum.value} wurde freigegeben.`
+            );
+            emits("saved", backendIdDTO);
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            loading.value = false;
+        });
+}
 
-    dienstleisterKorrigieren(dienstleister: DienstleisterDTO) {
-        this.loading = true;
-        ZaehlungService.updateDienstleisterkennung(
-            this.getZaehlung.id,
-            dienstleister
-        )
-            .then((backendIdDTO) => {
-                this.snackbarStore.showInfo(
-                    `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${this.getZaehlung.projektName} durchzuführen. (Korrektur)`
-                );
-                this.$emit("saved", backendIdDTO);
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.loading = false;
-                this.isBeauftragen = true;
-            });
-    }
+function zaehlungKorrigieren() {
+    loading.value = true;
+    const update: UpdateStatusDTO = {} as UpdateStatusDTO;
+    update.zaehlungId = props.zaehlung.id;
+    update.status = Status.CORRECTION;
+    ZaehlungService.updateStatus(update)
+        .then((backendIdDTO) => {
+            snackbarStore.showInfo(
+                `Die Zählung vom ${datum.value} wurde dem Zähldienstleister zur Korrektur übermittelt.`
+            );
+            emits("saved", backendIdDTO);
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            loading.value = false;
+        });
+}
 
-    openDienstleisterDialog(isBeauftragen: boolean): void {
-        this.showBeauftragenDialog = true;
-        this.isBeauftragen = isBeauftragen;
-    }
+function openZaehlungDialog() {
+    zaehlungStore.setZaehlung(cloneDeep(props.zaehlung));
+    emits("openZaehlungDialog");
+}
+
+function openZaehlungInDatenportal() {
+    emits("openZaehlungDatenportal", props.zaehlung.id);
+}
+
+function zaehlungKopieren() {
+    loading.value = true;
+    const zaehlungCopy: ZaehlungDTO = cloneDeep(props.zaehlung);
+    zaehlungCopy.id = "";
+    zaehlungCopy.kommentar = "";
+    zaehlungCopy.zaehlsituation = "";
+    zaehlungCopy.zaehlsituationErweitert = "";
+    zaehlungCopy.wetter = Wetter.NO_INFORMATION;
+    zaehlungCopy.status = Status.CREATED;
+    zaehlungCopy.dienstleisterkennung = "";
+    zaehlungCopy.datum = new Date().toISOString().substring(0, 10);
+    zaehlungCopy.knotenarme.forEach((arm: KnotenarmDTO) => {
+        arm.id = "";
+    });
+    zaehlungCopy.fahrbeziehungen.forEach((fz: FahrbeziehungDTO) => {
+        fz.id = "";
+        fz.hochrechnungsfaktor.id = "";
+    });
+    ZaehlungService.saveZaehlung(zaehlungCopy, props.zaehlstelleId)
+        .then((backendIdDTO: BackendIdDTO) => {
+            snackbarStore.showInfo(
+                `Die Zählung vom ${datum.value} wurde kopiert.`
+            );
+            emits("saved", backendIdDTO);
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            loading.value = false;
+        });
+}
+
+function openChatDialog() {
+    zaehlungStore.setZaehlung(cloneDeep(props.zaehlung));
+    unreadMessagesMobilitaetsreferat.value = false;
+    emits("openChatDialog", props.zaehlung.id);
+}
+
+function dienstleisterKorrigieren(dienstleister: DienstleisterDTO) {
+    loading.value = true;
+    ZaehlungService.updateDienstleisterkennung(props.zaehlung.id, dienstleister)
+        .then((backendIdDTO) => {
+            snackbarStore.showInfo(
+                `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${props.zaehlung.projektName} durchzuführen. (Korrektur)`
+            );
+            emits("saved", backendIdDTO);
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            loading.value = false;
+            isBeauftragen.value = true;
+        });
+}
+
+function openDienstleisterDialog(isBeauftragenParam: boolean): void {
+    showBeauftragenDialog.value = true;
+    isBeauftragen.value = isBeauftragenParam;
 }
 </script>
