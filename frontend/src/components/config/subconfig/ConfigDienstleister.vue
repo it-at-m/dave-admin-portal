@@ -9,7 +9,7 @@
             :height="tableHeightDienstleister"
             dense
             :headers="dienstleisterHeaders"
-            :items="getDienstleister"
+            :items="dienstleister"
             :items-per-page="-1"
             hide-default-footer
             fixed-header
@@ -109,7 +109,7 @@
                                                 :height="tableHeightMail"
                                                 dense
                                                 :headers="headerMail"
-                                                :items="getEmailAddresses"
+                                                :items="emailaddresses"
                                                 :items-per-page="-1"
                                                 hide-default-footer
                                                 fixed-header
@@ -389,489 +389,468 @@
     </v-sheet>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-import { ApiError, Levels } from "@/api/error";
+<script setup lang="ts">
+import { useSnackbarStore } from "@/store/SnackbarStore";
 import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
-import DienstleisterService from "@/api/service/DienstleisterService";
-import _ from "lodash";
+import { computed, onMounted, ref, watch } from "vue";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
-import { useSnackbarStore } from "@/store/SnackbarStore";
-/* eslint-enable no-unused-vars */
+import DienstleisterService from "@/api/service/DienstleisterService";
+import { cloneDeep, isEmpty } from "lodash";
+import { useValidationUtils } from "@/util/validationUtils";
 
-@Component
-export default class ConfigDienstleister extends Vue {
-    @Prop() readonly height!: string;
+interface Props {
+    height: string;
+}
+const props = defineProps<Props>();
+const snackbarStore = useSnackbarStore();
+const validationUtils = useValidationUtils();
 
-    private snackbarStore = useSnackbarStore();
+// Dienstleister
+const dienstleister = ref<Array<DienstleisterDTO>>([]);
+const dienstleisterIsLoading = ref(false);
+const showDeleteDienstleisterDialog = ref(false);
+const showEditDiensleisterDialog = ref(false);
+const filterDienstleister = ref("");
+const dienstleisterToEdit = ref(
+    DefaultObjectCreator.createDefaulDienstleisterDTO()
+);
+const editDienstleisterIndex = ref(-1);
+/* Zur Prüfung ob der Dienstleistername bereits vergeben ist. */
+const dienstleisterNamen = ref<Set<string>>(new Set<string>());
+/* Zur Prüfung ob die Dienstleisterkennung bereits vergeben ist. */
+const dienstleisterKennungen = ref<Set<string>>(new Set<string>());
 
-    // Dienstleister
-    private dienstleister: Array<DienstleisterDTO> = [];
-    dienstleisterIsLoading = false;
-    showDeleteDienstleisterDialog = false;
-    showEditDiensleisterDialog = false;
-    filterDienstleister = "";
-    dienstleisterToEdit: DienstleisterDTO =
-        DefaultObjectCreator.createDefaulDienstleisterDTO();
-    private editDienstleisterIndex = -1;
-    /* Zur Prüfung ob der Dienstleistername bereits vergeben ist. */
-    private dienstleisterNamen: Set<string> = new Set<string>();
-    /* Zur Prüfung ob die Dienstleisterkennung bereits vergeben ist. */
-    private dienstleisterKennungen: Set<string> = new Set<string>();
+// E-Mail-Adresse
+const filterEmailaddress = ref("");
+const mailaddressesForDuplicateCheck = ref<Set<string>>(new Set<string>());
+const showDeleteMailDialog = ref(false);
+const showEditMailDialog = ref(false);
+const editMailIndex = ref(-1);
+const editEmailaddress = ref(
+    DefaultObjectCreator.createDefaultEmailaddressDTO()
+);
+const emailaddresses = ref<Array<EmailAddressDTO>>([]);
 
-    // E-Mail-Adresse
-    filterEmailaddress = "";
-    private mailaddressesForDuplicateCheck: Set<string> = new Set<string>();
-    showDeleteMailDialog = false;
-    showEditMailDialog = false;
-    private editMailIndex = -1;
-    editEmailaddress: EmailAddressDTO =
-        DefaultObjectCreator.createDefaultEmailaddressDTO();
-    private emailaddresses: Array<EmailAddressDTO> = [];
+// E-Mail
 
-    // E-Mail
+onMounted(() => {
+    loadAllDienstleister();
+});
 
-    mounted() {
-        this.loadAllDienstleister();
-    }
-
-    // Dienstleister
-
-    @Watch("showEditDiensleisterDialog", { immediate: true })
-    private onChangeShowEditDialog() {
-        if (!this.showEditDiensleisterDialog) {
-            this.initDataStructureForInputValidation();
-            this.dienstleisterToEdit =
+// Dienstleister
+watch(
+    showEditDiensleisterDialog,
+    () => {
+        if (!showEditDiensleisterDialog.value) {
+            initDataStructureForInputValidation();
+            dienstleisterToEdit.value =
                 DefaultObjectCreator.createDefaulDienstleisterDTO();
         }
-    }
+    },
+    { immediate: true }
+);
 
-    get dienstleisterHeaders(): Array<any> {
-        return [
-            {
-                text: "Name",
-                align: "start",
-                value: "name",
-                divider: true,
-            },
-            {
-                text: "Kennung",
-                value: "kennung",
-                divider: true,
-            },
-            {
-                text: "Email",
-                value: "emailAddressesAsString",
-                divider: true,
-            },
-            {
-                text: "Aktiv",
-                value: "active",
-                align: "center",
-                filterable: false,
-                divider: true,
-                width: "8%",
-            },
-            {
-                text: "Aktionen",
-                align: "center",
-                sortable: false,
-                filterable: false,
-                value: "aktionen",
-                width: "10%",
-            },
-        ];
-    }
+const dienstleisterHeaders = [
+    {
+        text: "Name",
+        align: "start",
+        value: "name",
+        divider: true,
+    },
+    {
+        text: "Kennung",
+        value: "kennung",
+        divider: true,
+    },
+    {
+        text: "Email",
+        value: "emailAddressesAsString",
+        divider: true,
+    },
+    {
+        text: "Aktiv",
+        value: "active",
+        align: "center",
+        filterable: false,
+        divider: true,
+        width: "8%",
+    },
+    {
+        text: "Aktionen",
+        align: "center",
+        sortable: false,
+        filterable: false,
+        value: "aktionen",
+        width: "10%",
+    },
+];
 
-    get getDienstleister(): Array<DienstleisterDTO> {
-        return this.dienstleister;
-    }
-
-    /*
+/*
   Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
   64px Suche in Tabelle
   20px Padding Bottom
   52px Button
    */
-    get tableHeightDienstleister(): string {
-        return parseInt(this.height.replace("px", "")) - 136 + "px";
-    }
+const tableHeightDienstleister = computed(() => {
+    return parseInt(props.height.replace("px", "")) - 136 + "px";
+});
 
-    get getDienstleisterTitle() {
-        return this.editDienstleisterIndex === -1
-            ? "Dienstleister anlegen"
-            : "Dienstleister bearbeiten";
-    }
+const getDienstleisterTitle = computed(() => {
+    return editDienstleisterIndex.value === -1
+        ? "Dienstleister anlegen"
+        : "Dienstleister bearbeiten";
+});
 
-    /* Lädt alle Dienstleister */
-    private loadAllDienstleister() {
-        this.dienstleisterIsLoading = true;
-        DienstleisterService.getAll()
-            .then((dienstleisterDTOS: Array<DienstleisterDTO>) => {
-                this.dienstleister = dienstleisterDTOS;
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.dienstleisterIsLoading = false;
-                this.initDataStructureForInputValidation();
-            });
-    }
+/* Lädt alle Dienstleister */
+function loadAllDienstleister() {
+    dienstleisterIsLoading.value = true;
+    DienstleisterService.getAll()
+        .then((dienstleisterDTOS: Array<DienstleisterDTO>) => {
+            dienstleister.value = dienstleisterDTOS;
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            dienstleisterIsLoading.value = false;
+            initDataStructureForInputValidation();
+        });
+}
 
-    /*
+/*
     öffnet den Edit-Dialog des Dienstleisters und
     lädt die entsprechenden Daten.
   */
-    editDienstleister(dienstleister: DienstleisterDTO) {
-        this.editDienstleisterIndex = this.dienstleister.indexOf(dienstleister);
-        this.dienstleisterToEdit = Object.assign({}, dienstleister);
-        this.showEditDiensleisterDialog = true;
-        this.dienstleisterNamen.delete(dienstleister.name);
-        this.dienstleisterKennungen.delete(dienstleister.kennung);
+function editDienstleister(dienstleisterParam: DienstleisterDTO) {
+    editDienstleisterIndex.value =
+        dienstleister.value.indexOf(dienstleisterParam);
+    dienstleisterToEdit.value = cloneDeep(dienstleisterParam);
+    showEditDiensleisterDialog.value = true;
+    dienstleisterNamen.value.delete(dienstleisterParam.name);
+    dienstleisterKennungen.value.delete(dienstleisterParam.kennung);
 
-        this.resetEmailFields();
-        dienstleister.emailAddresses.forEach((value) => {
-            let dto: EmailAddressDTO = {} as EmailAddressDTO;
-            dto.emailAddress = value;
-            this.emailaddresses.push(dto);
-            this.mailaddressesForDuplicateCheck.add(value);
-        });
+    resetEmailFields();
+    dienstleisterParam.emailAddresses.forEach((value) => {
+        const dto: EmailAddressDTO = {} as EmailAddressDTO;
+        dto.emailAddress = value;
+        emailaddresses.value.push(dto);
+        mailaddressesForDuplicateCheck.value.add(value);
+    });
+}
+
+/* Prüft, ob der Dienstleistername bereits vergeben ist. */
+function nameVerwendbar(name: string): boolean | string {
+    if (!dienstleisterNamen.value.has(name)) {
+        return true;
     }
+    return "Dieser Name existiert bereits.";
+}
 
-    /* Prüft, ob der Dienstleistername bereits vergeben ist. */
-    nameVerwendbar(name: string): boolean | string {
-        if (!this.dienstleisterNamen.has(name)) {
-            return true;
-        }
-        return "Dieser Name existiert bereits.";
+/* Prüft, ob die Dienstleisterkennung bereits vergeben ist. */
+function kennungVerwendbar(kennung: string): boolean | string {
+    if (!dienstleisterKennungen.value.has(kennung)) {
+        return true;
     }
+    return "Diese Kennung existiert bereits.";
+}
 
-    /* Prüft, ob die Dienstleisterkennung bereits vergeben ist. */
-    kennungVerwendbar(kennung: string): boolean | string {
-        if (!this.dienstleisterKennungen.has(kennung)) {
-            return true;
-        }
-        return "Diese Kennung existiert bereits.";
+/* Prüft, ob ein Wert gesetzt ist. */
+function pflichtfeld(value: string | number): boolean | string {
+    if (!isEmpty(value)) {
+        return true;
     }
+    return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
+}
 
-    /* Prüft, ob ein Wert gesetzt ist. */
-    pflichtfeld(value: any): boolean | string {
-        if (!_.isEmpty(value)) {
-            return true;
-        }
-        return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
-    }
+/* Schließt den Editdialog und setzt den Index des geänderten Items zurück. */
+function closeEditDienstleisterDialog() {
+    showEditDiensleisterDialog.value = false;
+    editDienstleisterIndex.value = -1;
+    dienstleisterToEdit.value =
+        DefaultObjectCreator.createDefaulDienstleisterDTO();
+    resetEmailFields();
+}
 
-    /* Schließt den Editdialog und setzt den Index des geänderten Items zurück. */
-    closeEditDienstleisterDialog() {
-        this.showEditDiensleisterDialog = false;
-        this.editDienstleisterIndex = -1;
-        this.dienstleisterToEdit =
-            DefaultObjectCreator.createDefaulDienstleisterDTO();
-        this.resetEmailFields();
-    }
+const disableSpeicherButtonDienstleister = computed(() => {
+    const kennung: string = dienstleisterToEdit.value.kennung;
+    const name: string = dienstleisterToEdit.value.name;
 
-    get disableSpeicherButtonDienstleister(): boolean {
-        const kennung: string = this.dienstleisterToEdit.kennung;
-        const name: string = this.dienstleisterToEdit.name;
+    return (
+        isEmpty(name) ||
+        isEmpty(kennung) ||
+        dienstleisterNamen.value.has(name) ||
+        dienstleisterKennungen.value.has(kennung) ||
+        dienstleisterToEdit.value.emailAddresses.length === 0
+    );
+});
 
-        return (
-            _.isEmpty(name) ||
-            _.isEmpty(kennung) ||
-            this.dienstleisterNamen.has(name) ||
-            this.dienstleisterKennungen.has(kennung) ||
-            this.dienstleisterToEdit.emailAddresses.length === 0
-        );
-    }
-
-    /**
-     * Speichert das geänderte oder neu angelegte Item.
-     *
-     * Beim Erstellen eines neuen Items wird ein POST-Request an das Backend durchgeführt.
-     * Beim Ändern eines bestehenden Items wird ein PUT-Request an das Backend durchgeführt.
-     *
-     * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
-     */
-    saveEditDienstleisterDialog() {
-        if (this.editDienstleisterIndex > -1 && this.dienstleisterToEdit) {
-            // Bestehender Dienstleister
-            DienstleisterService.update(this.dienstleisterToEdit)
-                .then(() => {
-                    this.snackbarStore.showSuccess(
-                        "Aktualisiert",
-                        "Der Dienstleister wurde erfolgreich aktualisiert."
-                    );
-                })
-                .catch((error) => this.snackbarStore.showApiError(error))
-                .finally(() => {
-                    this.loadAllDienstleister();
-                });
-        } else if (this.dienstleisterToEdit) {
-            // Neuer Dienstleister
-            DienstleisterService.save(this.dienstleisterToEdit)
-                .then(() => {
-                    this.snackbarStore.showSuccess(
-                        "Gespeichert",
-                        "Der Dienstleister wurde erfolgreich gespeichert."
-                    );
-                })
-                .catch((error) => this.snackbarStore.showApiError(error))
-                .finally(() => {
-                    this.loadAllDienstleister();
-                });
-        }
-        this.closeEditDienstleisterDialog();
-    }
-
-    /**
-     * Öffnet den Löschdialog.
-     * Ermittelt den Index des zu löschenden Items.
-     *
-     * @param dienstleister das Item was gelöscht werden soll.
-     */
-    deleteDienstleister(dienstleister: DienstleisterDTO) {
-        this.editDienstleisterIndex = this.dienstleister.indexOf(dienstleister);
-        this.dienstleisterToEdit = Object.assign({}, dienstleister);
-        this.showDeleteDienstleisterDialog = true;
-    }
-
-    /**
-     * Löscht das gewählte Item bei Klick auf den Button Löschen im Löschdialog
-     * mit einen DELETE-Request an das Backend.
-     *
-     * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
-     */
-    deleteDienstleisterConfirm() {
-        if (this.editDienstleisterIndex > -1 && this.dienstleisterToEdit) {
-            DienstleisterService.delete(this.dienstleisterToEdit)
-                .then(() => {
-                    this.snackbarStore.showSuccess(
-                        "Gelöscht",
-                        "Der Dienstleister wurde erfolgreich gelöscht."
-                    );
-                })
-                .catch((error) => this.snackbarStore.showApiError(error))
-                .finally(() => {
-                    this.loadAllDienstleister();
-                });
-        }
-        this.closeDeleteDienstleisterDialog();
-    }
-
-    /**
-     * Schließt den Löschdialog und setzt den Index des gelöschten Items zurück.
-     */
-    closeDeleteDienstleisterDialog() {
-        this.showDeleteDienstleisterDialog = false;
-        this.editDienstleisterIndex = -1;
-        this.dienstleisterToEdit =
-            DefaultObjectCreator.createDefaulDienstleisterDTO();
-        this.resetEmailFields();
-    }
-
-    /**
-     * Initialisiert die Datenstrukturen zur Duplikatsprüfung für die Attribute
-     * Name und Kennung des Dienstleisters.
-     */
-    private initDataStructureForInputValidation(): void {
-        this.dienstleisterKennungen.clear();
-        this.dienstleisterNamen.clear();
-        this.getDienstleister.forEach((dienstleister: DienstleisterDTO) => {
-            this.dienstleisterNamen.add(dienstleister.name);
-            this.dienstleisterKennungen.add(dienstleister.kennung);
-        });
-    }
-
-    // E-Mail-Adressen
-
-    get tableHeightMail() {
-        return "50%";
-    }
-
-    get getTitleMail() {
-        return this.editMailIndex === -1
-            ? "E-Mail-Adresse anlegen"
-            : "E-Mail-Adresse bearbeiten";
-    }
-
-    get headerMail(): Array<any> {
-        return [
-            {
-                text: "E-Mail-Adressen",
-                align: "start",
-                sortable: true,
-                value: "emailAddress",
-                divider: true,
-            },
-            {
-                text: "Aktionen",
-                align: "center",
-                sortable: false,
-                filterable: false,
-                value: "aktionen",
-                width: "10%",
-            },
-        ];
-    }
-
-    get getEmailAddresses(): Array<EmailAddressDTO> {
-        return this.emailaddresses;
-    }
-
-    get disableSpeicherButtonMail(): boolean {
-        const mail: string = this.editEmailaddress.emailAddress;
-
-        return (
-            _.isEmpty(mail) ||
-            this.mailaddressesForDuplicateCheck.has(mail) ||
-            mail.length === 0 ||
-            !this.isEmailValid(mail)
-        );
-    }
-
-    // Speichern
-    /**
-     * Speichert das geänderte oder neu angelegte Item.
-     *
-     * Beim Erstellen eines neuen Items wird ein POST-Request an das Backend durchgeführt.
-     * Beim Ändern eines bestehenden Items wird ein PUT-Request an das Backend durchgeführt.
-     *
-     * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
-     */
-    saveEditMailDialog() {
-        if (this.editMailIndex > -1 && this.editEmailaddress) {
-            // Bestehende Email
-            let deletedEmail = this.emailaddresses.splice(
-                this.editMailIndex,
-                1
-            )[0];
-            this.dienstleisterToEdit.emailAddresses.splice(
-                this.dienstleisterToEdit.emailAddresses.indexOf(
-                    deletedEmail.emailAddress
-                ),
-                1
-            );
-            this.mailaddressesForDuplicateCheck.delete(
-                deletedEmail.emailAddress
-            );
-            this.emailaddresses.push(this.editEmailaddress);
-            this.dienstleisterToEdit.emailAddresses.push(
-                this.editEmailaddress.emailAddress
-            );
-            this.mailaddressesForDuplicateCheck.add(
-                this.editEmailaddress.emailAddress
-            );
-        } else if (this.editEmailaddress) {
-            // Neue Email
-            this.emailaddresses.push(this.editEmailaddress);
-            this.dienstleisterToEdit.emailAddresses.push(
-                this.editEmailaddress.emailAddress
-            );
-            this.mailaddressesForDuplicateCheck.add(
-                this.editEmailaddress.emailAddress
-            );
-        }
-        this.closeEditMailDialog();
-    }
-
-    /**
-     * Schließt den Editdialog und setzt den Index des geänderten Items zurück.
-     */
-    closeEditMailDialog() {
-        this.showEditMailDialog = false;
-        this.editMailIndex = -1;
-        this.editEmailaddress =
-            DefaultObjectCreator.createDefaultEmailaddressDTO();
-    }
-
-    // Löschen
-    /**
-     * Öffnet den Löschdialog.
-     * Ermittelt den Index des zu löschenden Items.
-     *
-     * @param item das Item was gelöscht werden soll.
-     */
-    deleteMail(item: EmailAddressDTO) {
-        this.editMailIndex = this.emailaddresses.indexOf(item);
-        this.editEmailaddress = Object.assign({}, item);
-        this.showDeleteMailDialog = true;
-    }
-
-    /**
-     * Löscht das gewählte Item bei Klick auf den Button Löschen im Löschdialog
-     * mit einen DELETE-Request an das Backend.
-     *
-     * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
-     */
-    deleteMailConfirm() {
-        if (this.editMailIndex > -1 && this.editEmailaddress) {
-            let index: number = this.dienstleisterToEdit.emailAddresses.indexOf(
-                this.editEmailaddress.emailAddress
-            );
-            if (index > -1) {
-                this.dienstleisterToEdit.emailAddresses.splice(index, 1);
-                this.emailaddresses.splice(this.editMailIndex, 1);
-                this.mailaddressesForDuplicateCheck.delete(
-                    this.editEmailaddress.emailAddress
+/**
+ * Speichert das geänderte oder neu angelegte Item.
+ *
+ * Beim Erstellen eines neuen Items wird ein POST-Request an das Backend durchgeführt.
+ * Beim Ändern eines bestehenden Items wird ein PUT-Request an das Backend durchgeführt.
+ *
+ * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
+ */
+function saveEditDienstleisterDialog() {
+    if (editDienstleisterIndex.value > -1 && dienstleisterToEdit.value) {
+        // Bestehender Dienstleister
+        DienstleisterService.update(dienstleisterToEdit.value)
+            .then(() => {
+                snackbarStore.showSuccess(
+                    "Aktualisiert",
+                    "Der Dienstleister wurde erfolgreich aktualisiert."
                 );
-            }
-        }
-        this.closeMailDelete();
+            })
+            .catch((error) => snackbarStore.showApiError(error))
+            .finally(() => {
+                loadAllDienstleister();
+            });
+    } else if (dienstleisterToEdit.value) {
+        // Neuer Dienstleister
+        DienstleisterService.save(dienstleisterToEdit.value)
+            .then(() => {
+                snackbarStore.showSuccess(
+                    "Gespeichert",
+                    "Der Dienstleister wurde erfolgreich gespeichert."
+                );
+            })
+            .catch((error) => snackbarStore.showApiError(error))
+            .finally(() => {
+                loadAllDienstleister();
+            });
     }
+    closeEditDienstleisterDialog();
+}
 
-    /**
-     * Schließt den Löschdialog und setzt den Index des gelöschten Items zurück.
-     */
-    closeMailDelete() {
-        this.showDeleteMailDialog = false;
-        this.editMailIndex = -1;
-        this.editEmailaddress =
-            DefaultObjectCreator.createDefaultEmailaddressDTO();
+/**
+ * Öffnet den Löschdialog.
+ * Ermittelt den Index des zu löschenden Items.
+ *
+ * @param dienstleisterToDelete das Item was gelöscht werden soll.
+ */
+function deleteDienstleister(dienstleisterToDelete: DienstleisterDTO) {
+    editDienstleisterIndex.value = dienstleister.value.indexOf(
+        dienstleisterToDelete
+    );
+    dienstleisterToEdit.value = cloneDeep(dienstleisterToDelete);
+    showDeleteDienstleisterDialog.value = true;
+}
+
+/**
+ * Löscht das gewählte Item bei Klick auf den Button Löschen im Löschdialog
+ * mit einen DELETE-Request an das Backend.
+ *
+ * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
+ */
+function deleteDienstleisterConfirm() {
+    if (editDienstleisterIndex.value > -1 && dienstleisterToEdit.value) {
+        DienstleisterService.delete(dienstleisterToEdit.value)
+            .then(() => {
+                snackbarStore.showSuccess(
+                    "Gelöscht",
+                    "Der Dienstleister wurde erfolgreich gelöscht."
+                );
+            })
+            .catch((error) => snackbarStore.showApiError(error))
+            .finally(() => {
+                loadAllDienstleister();
+            });
     }
+    closeDeleteDienstleisterDialog();
+}
 
-    /**
-     * Öffnet den Dialog zum Ändern eines items.
-     * @param emailaddressDTO zum Ändern.
-     */
-    editMail(emailaddressDTO: EmailAddressDTO) {
-        this.editMailIndex = this.emailaddresses.indexOf(emailaddressDTO);
-        this.editEmailaddress = Object.assign({}, emailaddressDTO);
-        this.mailaddressesForDuplicateCheck.delete(
-            emailaddressDTO.emailAddress
+/**
+ * Schließt den Löschdialog und setzt den Index des gelöschten Items zurück.
+ */
+function closeDeleteDienstleisterDialog() {
+    showDeleteDienstleisterDialog.value = false;
+    editDienstleisterIndex.value = -1;
+    dienstleisterToEdit.value =
+        DefaultObjectCreator.createDefaulDienstleisterDTO();
+    resetEmailFields();
+}
+
+/**
+ * Initialisiert die Datenstrukturen zur Duplikatsprüfung für die Attribute
+ * Name und Kennung des Dienstleisters.
+ */
+function initDataStructureForInputValidation(): void {
+    dienstleisterKennungen.value.clear();
+    dienstleisterNamen.value.clear();
+    dienstleister.value.forEach((dienstleister2: DienstleisterDTO) => {
+        dienstleisterNamen.value.add(dienstleister2.name);
+        dienstleisterKennungen.value.add(dienstleister2.kennung);
+    });
+}
+
+// E-Mail-Adressen
+
+const tableHeightMail = "50%";
+
+const getTitleMail = computed(() => {
+    return editMailIndex.value === -1
+        ? "E-Mail-Adresse anlegen"
+        : "E-Mail-Adresse bearbeiten";
+});
+
+const headerMail = [
+    {
+        text: "E-Mail-Adressen",
+        align: "start",
+        sortable: true,
+        value: "emailAddress",
+        divider: true,
+    },
+    {
+        text: "Aktionen",
+        align: "center",
+        sortable: false,
+        filterable: false,
+        value: "aktionen",
+        width: "10%",
+    },
+];
+
+const disableSpeicherButtonMail = computed(() => {
+    const mail: string = editEmailaddress.value.emailAddress;
+    return (
+        isEmpty(mail) ||
+        mailaddressesForDuplicateCheck.value.has(mail) ||
+        mail.length === 0 ||
+        !validationUtils.isEmailValid(mail)
+    );
+});
+
+// Speichern
+/**
+ * Speichert das geänderte oder neu angelegte Item.
+ *
+ * Beim Erstellen eines neuen Items wird ein POST-Request an das Backend durchgeführt.
+ * Beim Ändern eines bestehenden Items wird ein PUT-Request an das Backend durchgeführt.
+ *
+ * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
+ */
+function saveEditMailDialog() {
+    if (editMailIndex.value > -1 && editEmailaddress.value) {
+        // Bestehende Email
+        const deletedEmail = emailaddresses.value.splice(
+            editMailIndex.value,
+            1
+        )[0];
+        dienstleisterToEdit.value.emailAddresses.splice(
+            dienstleisterToEdit.value.emailAddresses.indexOf(
+                deletedEmail.emailAddress
+            ),
+            1
         );
-        this.showEditMailDialog = true;
+        mailaddressesForDuplicateCheck.value.delete(deletedEmail.emailAddress);
+        emailaddresses.value.push(editEmailaddress.value);
+        dienstleisterToEdit.value.emailAddresses.push(
+            editEmailaddress.value.emailAddress
+        );
+        mailaddressesForDuplicateCheck.value.add(
+            editEmailaddress.value.emailAddress
+        );
+    } else if (editEmailaddress.value) {
+        // Neue Email
+        emailaddresses.value.push(editEmailaddress.value);
+        dienstleisterToEdit.value.emailAddresses.push(
+            editEmailaddress.value.emailAddress
+        );
+        mailaddressesForDuplicateCheck.value.add(
+            editEmailaddress.value.emailAddress
+        );
     }
+    closeEditMailDialog();
+}
 
-    private resetEmailFields() {
-        this.filterEmailaddress = "";
-        this.emailaddresses = [];
-        this.mailaddressesForDuplicateCheck = new Set<string>();
-    }
+/**
+ * Schließt den Editdialog und setzt den Index des geänderten Items zurück.
+ */
+function closeEditMailDialog() {
+    showEditMailDialog.value = false;
+    editMailIndex.value = -1;
+    editEmailaddress.value =
+        DefaultObjectCreator.createDefaultEmailaddressDTO();
+}
 
-    /* Prüft, ob die Email valide oder leer ist. */
-    isEmailValidOrEmpty(email: string): boolean | string {
-        if (_.isEmpty(email) || this.isEmailValid(email)) {
-            return true;
-        } else {
-            return "Die Email-Adresse ist nicht valide.";
+// Löschen
+/**
+ * Öffnet den Löschdialog.
+ * Ermittelt den Index des zu löschenden Items.
+ *
+ * @param item das Item was gelöscht werden soll.
+ */
+function deleteMail(item: EmailAddressDTO) {
+    editMailIndex.value = emailaddresses.value.indexOf(item);
+    editEmailaddress.value = cloneDeep(item);
+    showDeleteMailDialog.value = true;
+}
+
+/**
+ * Löscht das gewählte Item bei Klick auf den Button Löschen im Löschdialog
+ * mit einen DELETE-Request an das Backend.
+ *
+ * Nach Ausführung des Requests an das Backend werden die Daten neu vom Backend geladen.
+ */
+function deleteMailConfirm() {
+    if (editMailIndex.value > -1 && editEmailaddress.value) {
+        const index: number = dienstleisterToEdit.value.emailAddresses.indexOf(
+            editEmailaddress.value.emailAddress
+        );
+        if (index > -1) {
+            dienstleisterToEdit.value.emailAddresses.splice(index, 1);
+            emailaddresses.value.splice(editMailIndex.value, 1);
+            mailaddressesForDuplicateCheck.value.delete(
+                editEmailaddress.value.emailAddress
+            );
         }
     }
+    closeMailDelete();
+}
 
-    /* Prüft, ob die Email valide ist. */
-    isEmailValid(email: string): boolean {
-        const pattern =
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return pattern.test(email);
+/**
+ * Schließt den Löschdialog und setzt den Index des gelöschten Items zurück.
+ */
+function closeMailDelete() {
+    showDeleteMailDialog.value = false;
+    editMailIndex.value = -1;
+    editEmailaddress.value =
+        DefaultObjectCreator.createDefaultEmailaddressDTO();
+}
+
+/**
+ * Öffnet den Dialog zum Ändern eines items.
+ * @param emailaddressDTO zum Ändern.
+ */
+function editMail(emailaddressDTO: EmailAddressDTO) {
+    editMailIndex.value = emailaddresses.value.indexOf(emailaddressDTO);
+    editEmailaddress.value = cloneDeep(emailaddressDTO);
+    mailaddressesForDuplicateCheck.value.delete(emailaddressDTO.emailAddress);
+    showEditMailDialog.value = true;
+}
+
+function resetEmailFields() {
+    filterEmailaddress.value = "";
+    emailaddresses.value = [];
+    mailaddressesForDuplicateCheck.value = new Set<string>();
+}
+
+/* Prüft, ob die Email valide oder leer ist. */
+function isEmailValidOrEmpty(email: string): boolean | string {
+    if (isEmpty(email) || validationUtils.isEmailValid(email)) {
+        return true;
+    } else {
+        return "Die Email-Adresse ist nicht valide.";
     }
+}
 
-    /* Prúft, ob die Email bereits gespeichert ist */
-    isEmailADuplicate(email: string): boolean | string {
-        if (this.mailaddressesForDuplicateCheck.has(email)) {
-            return "Die Email-Adresse exisitert bereits.";
-        } else {
-            return false;
-        }
+/* Prúft, ob die Email bereits gespeichert ist */
+function isEmailADuplicate(email: string): boolean | string {
+    if (mailaddressesForDuplicateCheck.value.has(email)) {
+        return "Die Email-Adresse exisitert bereits.";
+    } else {
+        return false;
     }
 }
 </script>
