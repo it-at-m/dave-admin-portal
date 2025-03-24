@@ -143,119 +143,115 @@
     </v-sheet>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
+<script setup lang="ts">
+import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { computed, ref } from "vue";
 import { StadtbezirkToBeschreibung } from "@/domain/enums/Stadtbezirk";
 import { StadtbezirksviertelToBeschreibung } from "@/domain/enums/Stadtbezirksviertel";
+import { cloneDeep, isEmpty, isNil } from "lodash";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import _ from "lodash";
 import { LatLng } from "leaflet";
 import GeoPoint from "@/domain/GeoPoint";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import MiniMap from "@/components/map/MiniMap.vue";
-import { useSnackbarStore } from "@/store/SnackbarStore";
-/* eslint-enable no-unused-vars */
-@Component({
-    components: { MiniMap },
-})
-export default class UpdateZaehlstelleForm extends Vue {
-    @Prop({ default: {} }) zaehlstelle!: ZaehlstelleDTO;
 
-    private snackbarStore = useSnackbarStore();
+interface Props {
+    zaehlstelle: ZaehlstelleDTO;
+}
+const props = defineProps<Props>();
 
-    newSuchwort = "";
+const emits = defineEmits<{
+    (e: "cancel"): void;
+    (e: "saved"): void;
+}>();
 
-    get cloneOfZaehlstelle(): ZaehlstelleDTO {
-        return _.cloneDeep(this.zaehlstelle);
+const snackbarStore = useSnackbarStore();
+
+const newSuchwort = ref("");
+
+const cloneOfZaehlstelle = computed(() => {
+    return cloneDeep(props.zaehlstelle);
+});
+
+const coords = computed(() => {
+    const punkt: GeoPoint = cloneOfZaehlstelle.value.punkt;
+    if (punkt) return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+    else return DefaultObjectCreator.createCenterOfMunichLatLng();
+});
+
+const getStadtbezirksnummer = computed(() => {
+    const stadtbezirksnummer: string | undefined =
+        StadtbezirkToBeschreibung.get(
+            cloneOfZaehlstelle.value.stadtbezirkNummer
+        );
+    if (!isNil(stadtbezirksnummer)) {
+        return stadtbezirksnummer;
     }
+    return "Der Stadtbezirk konnte nicht ermittelt werden.";
+});
 
-    get getStadtbezirksnummer(): string {
-        const stadtbezirksnummer: string | undefined =
-            StadtbezirkToBeschreibung.get(
-                this.cloneOfZaehlstelle.stadtbezirkNummer
-            );
-        if (stadtbezirksnummer != undefined) {
-            return stadtbezirksnummer;
+const getStadtbezirksviertel = computed(() => {
+    const stadtbezirksviertelMap: Map<number, string> | undefined =
+        StadtbezirksviertelToBeschreibung.get(
+            cloneOfZaehlstelle.value.stadtbezirkNummer
+        );
+    if (!isNil(stadtbezirksviertelMap)) {
+        const stadtbezirksviertelnummer: string | undefined =
+            stadtbezirksviertelMap.get(getStadtbezirksviertelNummer.value);
+        if (!isNil(stadtbezirksviertelnummer)) {
+            return stadtbezirksviertelnummer;
         }
-        return "Der Stadtbezirk konnte nicht ermittelt werden.";
     }
+    return "Das Stadtbezirksviertel konnte nicht ermittelt werden.";
+});
 
-    get getStadtbezirksviertel(): string {
-        const stadtbezirksviertelMap: Map<number, string> | undefined =
-            StadtbezirksviertelToBeschreibung.get(
-                this.cloneOfZaehlstelle.stadtbezirkNummer
-            );
-        if (stadtbezirksviertelMap != undefined) {
-            const stadtbezirksviertelnummer: string | undefined =
-                stadtbezirksviertelMap.get(this.getStadtbezirksviertelNummer);
-            if (stadtbezirksviertelnummer != undefined) {
-                return stadtbezirksviertelnummer;
-            }
+const getStadtbezirksviertelNummer = computed(() => {
+    if (!isNil(cloneOfZaehlstelle.value.nummer)) {
+        if (cloneOfZaehlstelle.value.nummer.length === 5) {
+            return parseInt(cloneOfZaehlstelle.value.nummer.substring(1, 3));
+        } else if (cloneOfZaehlstelle.value.nummer.length === 6) {
+            return parseInt(cloneOfZaehlstelle.value.nummer.substring(2, 4));
         }
-        return "Das Stadtbezirksviertel konnte nicht ermittelt werden.";
     }
+    return -1;
+});
 
-    get getStadtbezirksviertelNummer(): number {
-        if (this.cloneOfZaehlstelle.nummer != null) {
-            if (this.cloneOfZaehlstelle.nummer.length == 5) {
-                return parseInt(this.cloneOfZaehlstelle.nummer.substr(1, 2));
-            } else if (this.cloneOfZaehlstelle.nummer.length == 6) {
-                return parseInt(this.cloneOfZaehlstelle.nummer.substr(2, 2));
-            }
-        }
-        return -1;
+// Fuegt das eingegebene Wort den Suchwoertern hinzu
+function addSuchwortToList() {
+    if (isNil(cloneOfZaehlstelle.value.customSuchwoerter)) {
+        cloneOfZaehlstelle.value.customSuchwoerter = [];
     }
-
-    // Fuegt das eingegebene Wort den Suchwoertern hinzu
-    addSuchwortToList() {
-        if (_.isNil(this.cloneOfZaehlstelle.customSuchwoerter)) {
-            this.cloneOfZaehlstelle.customSuchwoerter = [];
-        }
-
-        if (this.newSuchwort == null || this.newSuchwort.trim() === "") {
-            return;
-        }
-
-        if (
-            !this.cloneOfZaehlstelle.customSuchwoerter.includes(
-                this.newSuchwort
-            )
-        ) {
-            this.cloneOfZaehlstelle.customSuchwoerter.push(
-                ...this.newSuchwort.split(",")
-            );
-        }
-        this.newSuchwort = "";
+    if (isNil(newSuchwort.value) || isEmpty(newSuchwort.value.trim())) {
+        return;
     }
-
-    save(): void {
-        ZaehlstellenService.saveZaehlstelle(this.cloneOfZaehlstelle)
-            .then(() => {
-                this.$emit("saved");
-            })
-            .catch((error) => this.snackbarStore.showApiError(error));
+    if (
+        !cloneOfZaehlstelle.value.customSuchwoerter.includes(newSuchwort.value)
+    ) {
+        cloneOfZaehlstelle.value.customSuchwoerter.push(
+            ...newSuchwort.value.split(",")
+        );
     }
+    newSuchwort.value = "";
+}
 
-    cancel(): void {
-        this.$emit("cancel");
-    }
+function save(): void {
+    ZaehlstellenService.saveZaehlstelle(cloneOfZaehlstelle.value)
+        .then(() => {
+            emits("saved");
+        })
+        .catch((error) => snackbarStore.showApiError(error));
+}
 
-    get coords(): LatLng {
-        let punkt: GeoPoint = this.cloneOfZaehlstelle.punkt;
-        if (punkt)
-            return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
-        else return DefaultObjectCreator.createCenterOfMunichLatLng();
-    }
+function cancel(): void {
+    emits("cancel");
+}
 
-    updateZaehlstellenCoords(newCoords: LatLng): void {
-        if (!this.cloneOfZaehlstelle.punkt) {
-            this.cloneOfZaehlstelle.punkt = {} as GeoPoint;
-        }
-        this.cloneOfZaehlstelle.punkt.lat = newCoords.lat.toString();
-        this.cloneOfZaehlstelle.punkt.lon = newCoords.lng.toString();
+function updateZaehlstellenCoords(newCoords: LatLng): void {
+    if (!cloneOfZaehlstelle.value.punkt) {
+        cloneOfZaehlstelle.value.punkt = {} as GeoPoint;
     }
+    cloneOfZaehlstelle.value.punkt.lat = newCoords.lat.toString();
+    cloneOfZaehlstelle.value.punkt.lon = newCoords.lng.toString();
 }
 </script>
 

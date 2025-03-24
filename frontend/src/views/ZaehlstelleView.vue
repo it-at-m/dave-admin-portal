@@ -172,7 +172,7 @@
         </v-speed-dial>
 
         <update-zaehlstelle-dialog
-            v-model="showUpdateZaehlstelleDialog"
+            :show-dialog="showUpdateZaehlstelleDialog"
             :zaehlstelle="zaehlstelle"
             @saved="reloadDataAndCloseDialog"
             @cancel="cancelUpdateZaehlstelleDialog"
