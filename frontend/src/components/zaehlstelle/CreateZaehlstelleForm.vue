@@ -171,7 +171,7 @@ interface Props {
     coords: LatLng;
 }
 const props = withDefaults(defineProps<Props>(), {
-    coords: DefaultObjectCreator.createCenterOfMunichLatLng(),
+    coords: () => DefaultObjectCreator.createCenterOfMunichLatLng(),
 });
 
 const emits = defineEmits<{
