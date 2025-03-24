@@ -149,7 +149,7 @@ import { useSnackbarStore } from "@/store/SnackbarStore";
 import { computed, ref } from "vue";
 import { StadtbezirkToBeschreibung } from "@/domain/enums/Stadtbezirk";
 import { StadtbezirksviertelToBeschreibung } from "@/domain/enums/Stadtbezirksviertel";
-import { cloneDeep, isNil } from "lodash";
+import { cloneDeep, isEmpty, isNil } from "lodash";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import { LatLng } from "leaflet";
 import GeoPoint from "@/domain/GeoPoint";
@@ -195,10 +195,10 @@ const getStadtbezirksviertel = computed(() => {
         StadtbezirksviertelToBeschreibung.get(
             cloneOfZaehlstelle.value.stadtbezirkNummer
         );
-    if (stadtbezirksviertelMap != undefined) {
+    if (!isNil(stadtbezirksviertelMap)) {
         const stadtbezirksviertelnummer: string | undefined =
             stadtbezirksviertelMap.get(getStadtbezirksviertelNummer.value);
-        if (stadtbezirksviertelnummer != undefined) {
+        if (!isNil(stadtbezirksviertelnummer)) {
             return stadtbezirksviertelnummer;
         }
     }
@@ -206,10 +206,10 @@ const getStadtbezirksviertel = computed(() => {
 });
 
 const getStadtbezirksviertelNummer = computed(() => {
-    if (cloneOfZaehlstelle.value.nummer != null) {
-        if (cloneOfZaehlstelle.value.nummer.length == 5) {
+    if (!isNil(cloneOfZaehlstelle.value.nummer)) {
+        if (cloneOfZaehlstelle.value.nummer.length === 5) {
             return parseInt(cloneOfZaehlstelle.value.nummer.substring(1, 3));
-        } else if (cloneOfZaehlstelle.value.nummer.length == 6) {
+        } else if (cloneOfZaehlstelle.value.nummer.length === 6) {
             return parseInt(cloneOfZaehlstelle.value.nummer.substring(2, 4));
         }
     }
@@ -221,7 +221,7 @@ function addSuchwortToList() {
     if (isNil(cloneOfZaehlstelle.value.customSuchwoerter)) {
         cloneOfZaehlstelle.value.customSuchwoerter = [];
     }
-    if (newSuchwort.value == null || newSuchwort.value.trim() === "") {
+    if (isNil(newSuchwort.value) || isEmpty(newSuchwort.value.trim())) {
         return;
     }
     if (

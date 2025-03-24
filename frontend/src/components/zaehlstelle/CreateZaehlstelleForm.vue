@@ -152,6 +152,7 @@ import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 import NextZaehlstellennummerDTO from "@/domain/dto/laden/NextZaehlstellennummerDTO";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { stadtbezirksviertel } from "@/domain/enums/Stadtbezirksviertel";
+import { isEmpty, isNil } from "lodash";
 
 const snackbarStore = useSnackbarStore();
 const validZaehlstelle = ref(false);
@@ -230,7 +231,7 @@ watch(stadtbezirksviertelKeyVal, (stadtbezirksviertelNew: KeyVal) => {
 
 // Fuegt das eingegebene Wort den Suchwoertern hinzu
 function addSuchwortToList() {
-    if (newSuchwort.value == null || newSuchwort.value.trim() === "") {
+    if (isNil(newSuchwort.value) || isEmpty(newSuchwort.value.trim())) {
         return;
     }
     if (!suchwoerter.value.includes(newSuchwort.value)) {
