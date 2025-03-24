@@ -54,7 +54,7 @@
                             md="12"
                         >
                             <v-autocomplete
-                                v-model="stadtbezirksviertel"
+                                v-model="stadtbezirksviertelKeyVal"
                                 outlined
                                 :items="getStadtbezirksviertel"
                                 dense
@@ -140,144 +140,146 @@
     </v-sheet>
 </template>
 
-<script lang="ts">
-import { stadtbezirke } from "@/domain/enums/Stadtbezirk";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-import { LatLng } from "leaflet";
-import { stadtbezirksviertel } from "@/domain/enums/Stadtbezirksviertel";
+<script setup lang="ts">
+import { computed, onMounted, ref, watch } from "vue";
 import KeyVal from "@/domain/KeyVal";
-import ZaehlstellenService from "@/api/service/ZaehlstellenService";
-import NextZaehlstellennummerDTO from "@/domain/dto/laden/NextZaehlstellennummerDTO";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import { LatLng } from "leaflet";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import { stadtbezirke } from "@/domain/enums/Stadtbezirk";
+import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import GeoPoint from "@/domain/GeoPoint";
-import MiniMap from "@/components/map/MiniMap.vue";
+import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
+import NextZaehlstellennummerDTO from "@/domain/dto/laden/NextZaehlstellennummerDTO";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-/* eslint-enable no-unused-vars */
-@Component({
-    components: { MiniMap },
-})
-export default class ZaehlstelleForm extends Vue {
-    private snackbarStore = useSnackbarStore();
-    validZaehlstelle = false;
+import { stadtbezirksviertel } from "@/domain/enums/Stadtbezirksviertel";
 
-    zaehlstelle: ZaehlstelleDTO =
-        DefaultObjectCreator.createDefaultZaehlstelleDTO();
+const snackbarStore = useSnackbarStore();
+const validZaehlstelle = ref(false);
 
-    stadtbezirksviertelModel = "";
-    private laufendeNummer = "";
+const zaehlstelle = ref(DefaultObjectCreator.createDefaultZaehlstelleDTO());
 
-    newSuchwort = "";
+const stadtbezirksviertelModel = ref("");
+const laufendeNummer = ref("");
 
-    stadtbezirksviertel: KeyVal = {} as KeyVal;
+const newSuchwort = ref("");
 
-    @Prop({ default: DefaultObjectCreator.createCenterOfMunichLatLng() })
-    coords!: LatLng;
+const stadtbezirksviertelKeyVal = ref({} as KeyVal);
 
-    suchwoerter: Array<string> = [];
+const suchwoerter = ref<Array<string>>([]);
 
-    mounted() {
-        this.zaehlstelle = DefaultObjectCreator.createDefaultZaehlstelleDTO();
-        this.validZaehlstelle = false;
+interface Props {
+    coords: LatLng;
+}
+const props = withDefaults(defineProps<Props>(), {
+    coords: DefaultObjectCreator.createCenterOfMunichLatLng(),
+});
+
+const emits = defineEmits<{
+    (e: "cancel"): void;
+    (e: "saved", payload: BackendIdDTO): void;
+}>();
+
+onMounted(() => {
+    zaehlstelle.value = DefaultObjectCreator.createDefaultZaehlstelleDTO();
+    validZaehlstelle.value = false;
+});
+
+const getStadtbezirke = computed(() => {
+    return stadtbezirke;
+});
+
+const getStadtbezirksviertel = computed(() => {
+    return stadtbezirksviertel(
+        zaehlstelle.value.stadtbezirkNummer
+            ? zaehlstelle.value.stadtbezirkNummer.toString()
+            : ""
+    );
+});
+
+const zaehlstellenummer = computed(() => {
+    return laufendeNummer.value;
+});
+
+const pflichtfeldText = computed(() => {
+    return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
+});
+
+watch(
+    () => zaehlstelle.value.stadtbezirkNummer,
+    () => {
+        stadtbezirksviertelModel.value = "";
+        stadtbezirksviertelKeyVal.value = {} as KeyVal;
     }
+);
 
-    get getStadtbezirke(): Array<KeyVal> {
-        return stadtbezirke;
+watch(stadtbezirksviertelKeyVal, (stadtbezirksviertelNew: KeyVal) => {
+    if (stadtbezirksviertelNew && stadtbezirksviertelNew.value) {
+        stadtbezirksviertelModel.value = stadtbezirksviertelNew.value;
+        const idStartsWith = `${zaehlstelle.value.stadtbezirkNummer}${stadtbezirksviertelModel.value}`;
+        ZaehlstellenService.getNextZaehlstellennummer(
+            idStartsWith,
+            zaehlstelle.value.stadtbezirkNummer
+        )
+            .then((result: NextZaehlstellennummerDTO) => {
+                zaehlstelle.value.nummer = result.nummer;
+                laufendeNummer.value = result.nummer;
+            })
+            .catch((error) => snackbarStore.showApiError(error));
     }
+});
 
-    get getStadtbezirksviertel(): Array<KeyVal> {
-        return stadtbezirksviertel(
-            this.zaehlstelle.stadtbezirkNummer
-                ? this.zaehlstelle.stadtbezirkNummer.toString()
-                : ""
+// Fuegt das eingegebene Wort den Suchwoertern hinzu
+function addSuchwortToList() {
+    if (newSuchwort.value == null || newSuchwort.value.trim() === "") {
+        return;
+    }
+    if (!suchwoerter.value.includes(newSuchwort.value)) {
+        suchwoerter.value.push(...newSuchwort.value.split(","));
+    }
+    newSuchwort.value = "";
+}
+
+function save(): void {
+    if (validZaehlstelle.value) {
+        zaehlstelle.value.lat = props.coords.lat;
+        zaehlstelle.value.lng = props.coords.lng;
+        zaehlstelle.value.customSuchwoerter = suchwoerter.value;
+        zaehlstelle.value.sichtbarDatenportal = true;
+        ZaehlstellenService.saveZaehlstelle(zaehlstelle.value)
+            .then((backendIdDTO) => {
+                resetZaehlstelle();
+                emits("saved", backendIdDTO);
+            })
+            .catch((error) => snackbarStore.showApiError(error));
+    } else {
+        // Fehler Toast, dass kein Marker vorhanden
+        snackbarStore.showWarning(
+            "Es wurde nicht alle Pflichtfelder ausgefüllt."
         );
     }
+}
 
-    get zaehlstellenummer(): string {
-        return this.laufendeNummer;
-    }
+function cancel(): void {
+    resetZaehlstelle();
+    emits("cancel");
+}
 
-    get pflichtfeldText(): string {
-        return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
-    }
+function resetZaehlstelle() {
+    zaehlstelle.value = DefaultObjectCreator.createDefaultZaehlstelleDTO();
+    stadtbezirksviertelModel.value = "";
+    stadtbezirksviertelKeyVal.value = {} as KeyVal;
+    laufendeNummer.value = "";
+    suchwoerter.value = [];
+    newSuchwort.value = "";
+    validZaehlstelle.value = false;
+}
 
-    @Watch("zaehlstelle.stadtbezirkNummer")
-    updateStadtbezirk(): void {
-        this.stadtbezirksviertelModel = "";
-        this.stadtbezirksviertel = {} as KeyVal;
+function updateZaehlstellenCoords(newCoords: LatLng): void {
+    if (!zaehlstelle.value.punkt) {
+        zaehlstelle.value.punkt = {} as GeoPoint;
     }
-
-    @Watch("stadtbezirksviertel")
-    createZaehlstellennummer(stadtbezirksviertel: KeyVal): void {
-        if (stadtbezirksviertel && stadtbezirksviertel.value) {
-            this.stadtbezirksviertelModel = stadtbezirksviertel.value;
-            const idStartsWith = `${this.zaehlstelle.stadtbezirkNummer}${this.stadtbezirksviertelModel}`;
-            ZaehlstellenService.getNextZaehlstellennummer(
-                idStartsWith,
-                this.zaehlstelle.stadtbezirkNummer
-            )
-                .then((result: NextZaehlstellennummerDTO) => {
-                    this.zaehlstelle.nummer = result.nummer;
-                    this.laufendeNummer = result.nummer;
-                })
-                .catch((error) => this.snackbarStore.showApiError(error));
-        }
-    }
-
-    // Fuegt das eingegebene Wort den Suchwoertern hinzu
-    addSuchwortToList() {
-        if (this.newSuchwort == null || this.newSuchwort.trim() === "") {
-            return;
-        }
-        if (!this.suchwoerter.includes(this.newSuchwort)) {
-            this.suchwoerter.push(...this.newSuchwort.split(","));
-        }
-        this.newSuchwort = "";
-    }
-
-    save(): void {
-        if (this.validZaehlstelle) {
-            this.zaehlstelle.lat = this.coords.lat;
-            this.zaehlstelle.lng = this.coords.lng;
-            this.zaehlstelle.customSuchwoerter = this.suchwoerter;
-            this.zaehlstelle.sichtbarDatenportal = true;
-            ZaehlstellenService.saveZaehlstelle(this.zaehlstelle)
-                .then((backendIdDTO) => {
-                    this.resetZaehlstelle();
-                    this.$emit("saved", backendIdDTO);
-                })
-                .catch((error) => this.snackbarStore.showApiError(error));
-        } else {
-            // Fehler Toast, dass kein Marker vorhanden
-            this.snackbarStore.showWarning(
-                "Es wurde nicht alle Pflichtfelder ausgefüllt."
-            );
-        }
-    }
-
-    cancel(): void {
-        this.resetZaehlstelle();
-        this.$emit("cancel");
-    }
-
-    private resetZaehlstelle() {
-        this.zaehlstelle = DefaultObjectCreator.createDefaultZaehlstelleDTO();
-        this.stadtbezirksviertelModel = "";
-        this.stadtbezirksviertel = {} as KeyVal;
-        this.laufendeNummer = "";
-        this.suchwoerter = [];
-        this.newSuchwort = "";
-        this.validZaehlstelle = false;
-    }
-
-    updateZaehlstellenCoords(newCoords: LatLng): void {
-        if (!this.zaehlstelle.punkt) {
-            this.zaehlstelle.punkt = {} as GeoPoint;
-        }
-        this.zaehlstelle.punkt.lat = newCoords.lat.toString();
-        this.zaehlstelle.punkt.lon = newCoords.lng.toString();
-    }
+    zaehlstelle.value.punkt.lat = newCoords.lat.toString();
+    zaehlstelle.value.punkt.lon = newCoords.lng.toString();
 }
 </script>
 
