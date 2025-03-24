@@ -3,20 +3,19 @@
         width="100%"
         :height="height"
         :max-height="height"
+        class="overflow-y-auto"
     >
         <!-- Eingabefeld -->
-        <div v-if="!showHistoryList">
+        <div v-if="!showHistory">
             <v-card-subtitle> Anzuzeigende Info-Nachricht </v-card-subtitle>
 
             <v-sheet
                 width="100%"
                 :height="cardTextHeight"
                 :max-height="cardTextHeight"
-                class="overflow-y-auto"
             >
                 <v-card-text>
                     <v-menu
-                        ref="datepickerMenu"
                         v-model="datepickerMenuModel"
                         :close-on-content-click="false"
                         :close-on-click="false"
@@ -78,7 +77,7 @@
         </div>
 
         <!-- Historisierung -->
-        <div v-if="showHistoryList">
+        <div v-if="showHistory">
             <v-card-subtitle>
                 Historisierung der letzten
                 {{ inactiveInfoMessages.length }} deaktivierten
@@ -140,7 +139,7 @@
         <v-card-actions style="position: absolute; bottom: 0; right: 0">
             <v-spacer></v-spacer>
             <v-btn
-                v-if="!showHistoryList"
+                v-if="!showHistory"
                 color="secondary"
                 :disabled="disableSpeicherButton"
                 @click="save"
@@ -148,7 +147,7 @@
                 Speichern
             </v-btn>
             <v-btn
-                v-if="!showHistoryList"
+                v-if="!showHistory"
                 color="grey lighten-1"
                 @click="inactivateInfoMessage"
             >
@@ -164,201 +163,179 @@
     </v-sheet>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Ref, Vue } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-import { ApiError, Levels } from "@/api/error";
+<script setup lang="ts">
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { computed, onMounted, ref } from "vue";
 import InfoMessageDTO from "@/domain/dto/InfoMessageDTO";
 import InfoMessageService from "@/api/service/InfoMessageService";
-import _ from "lodash";
-import { useSnackbarStore } from "@/store/SnackbarStore";
-/* eslint-enable no-unused-vars */
+import { takeRight } from "lodash";
 
-@Component
-export default class ConfigInfoMessage extends Vue {
-    @Prop() readonly height!: string;
+interface Props {
+    height: string;
+}
+const props = defineProps<Props>();
 
-    private snackbarStore = useSnackbarStore();
+const emits = defineEmits<{
+    (e: "cancel"): void;
+}>();
 
-    private showHistory = false;
+const snackbarStore = useSnackbarStore();
 
-    dates: Array<string> = [];
+const showHistory = ref(false);
 
-    datepickerMenuModel = false;
+const dates = ref<Array<string>>([]);
 
-    activeInfoMessage: InfoMessageDTO = {} as InfoMessageDTO;
+const datepickerMenuModel = ref(false);
 
-    inactiveInfoMessages: Array<InfoMessageDTO> = [];
+const activeInfoMessage = ref({} as InfoMessageDTO);
 
-    @Ref("datepickerMenu") private datepickerMenu: any;
+const inactiveInfoMessages = ref<Array<InfoMessageDTO>>([]);
 
-    mounted() {
-        this.loadInfoMessages();
+onMounted(() => {
+    loadInfoMessages();
+});
+
+function loadInfoMessages() {
+    InfoMessageService.getAllInfoMessages()
+        .then((infoMessages: Array<InfoMessageDTO>) => {
+            setActiveInfoMessage(infoMessages[0]);
+            setInactiveInfoMessages(
+                takeRight(infoMessages, infoMessages.length - 1)
+            );
+        })
+        .catch((error) => snackbarStore.showApiError(error));
+}
+
+function setActiveInfoMessage(infoMessage: InfoMessageDTO): void {
+    resetDatum();
+    activeInfoMessage.value = infoMessage;
+    dates.value = infoMessageToDateArray(infoMessage);
+}
+
+function infoMessageToDateArray(infoMessage: InfoMessageDTO): Array<string> {
+    const dates: Array<string> = [];
+    if (infoMessage.gueltigVon) {
+        dates.push(infoMessage.gueltigVon.substring(0, 10));
     }
-
-    private loadInfoMessages() {
-        InfoMessageService.getAllInfoMessages()
-            .then((infoMessages: Array<InfoMessageDTO>) => {
-                this.setActiveInfoMessage(infoMessages[0]);
-                this.setInactiveInfoMessages(
-                    _.takeRight(infoMessages, infoMessages.length - 1)
-                );
-            })
-            .catch((error) => this.snackbarStore.showApiError(error));
+    if (infoMessage.gueltigBis) {
+        dates.push(infoMessage.gueltigBis.substring(0, 10));
     }
+    return dates;
+}
 
-    private setActiveInfoMessage(infoMessage: InfoMessageDTO): void {
-        this.resetDatum();
-        this.activeInfoMessage = infoMessage;
-        this.dates = this.infoMessageToDateArray(infoMessage);
+function setInactiveInfoMessages(infoMessages: Array<InfoMessageDTO>) {
+    inactiveInfoMessages.value = infoMessages;
+}
+
+function closeMenu(): void {
+    datepickerMenuModel.value = false;
+    resetDatum();
+}
+
+function resetDatum(): void {
+    dates.value = [];
+}
+
+function saveDate(): void {
+    datepickerMenuModel.value = false;
+    activeInfoMessage.value.gueltigVon = formatDateForBackend(dates.value[0]);
+    activeInfoMessage.value.gueltigBis = formatDateForBackend(dates.value[1]);
+}
+
+const computedDateFormatted = computed(() => {
+    return createComputedDateFormatted(dates.value);
+});
+
+function computedDateFormattedForList(infoMessage: InfoMessageDTO): string {
+    const dates: Array<string> = infoMessageToDateArray(infoMessage);
+    return createComputedDateFormatted(dates);
+}
+
+function createComputedDateFormatted(dates: Array<string>): string {
+    if (dates.length === 0) {
+        return "";
     }
-
-    public infoMessageToDateArray(infoMessage: InfoMessageDTO): Array<string> {
-        const dates: Array<string> = [];
-        if (infoMessage.gueltigVon) {
-            dates.push(infoMessage.gueltigVon.substr(0, 10));
-        }
-        if (infoMessage.gueltigBis) {
-            dates.push(infoMessage.gueltigBis.substr(0, 10));
-        }
-        return dates;
-    }
-
-    private setInactiveInfoMessages(
-        inactiveInfoMessages: Array<InfoMessageDTO>
-    ) {
-        this.inactiveInfoMessages = inactiveInfoMessages;
-    }
-
-    closeMenu(): void {
-        this.datepickerMenuModel = false;
-        this.resetDatum();
-    }
-
-    private resetDatum(): void {
-        this.dates = [];
-    }
-
-    saveDate(): void {
-        this.datepickerMenu.save(this.dates);
-        this.activeInfoMessage.gueltigVon = this.formatDateForBackend(
-            this.dates[0]
-        );
-        this.activeInfoMessage.gueltigBis = this.formatDateForBackend(
-            this.dates[1]
-        );
-    }
-
-    get computedDateFormatted(): string {
-        return this.createComputedDateFormatted(this.dates);
-    }
-
-    computedDateFormattedForList(infoMessage: InfoMessageDTO): string {
-        const dates: Array<string> = this.infoMessageToDateArray(infoMessage);
-        return this.createComputedDateFormatted(dates);
-    }
-
-    public createComputedDateFormatted(dates: Array<string>): string {
-        if (dates.length === 0) {
-            return "";
-        }
-        if (dates.length === 1) {
-            return `von: ${this.formatDate(dates[0])}`;
-        } else {
-            dates = this.sortDates(dates);
-            return `von: ${this.formatDate(dates[0])}, bis: ${this.formatDate(
-                dates[1]
-            )}`;
-        }
-    }
-
-    public formatDate(date: string): string {
-        const [year, month, day] = date.split("-");
-        return `${day}.${month}.${year}`;
-    }
-
-    // Wenn das zweite Datum vor dem ersten liegt, werden beide getauscht
-    // 'von' muss vor 'bis' liegen
-    private sortDates(dates: Array<string>): Array<string> {
-        let sortedDates: Array<string> = dates;
-        let date0: number = parseInt(sortedDates[0].replace(/-/g, ""));
-        let date1: number = parseInt(sortedDates[1].replace(/-/g, ""));
-        if (date0 > date1) {
-            sortedDates = sortedDates.reverse();
-        }
-        return sortedDates;
-    }
-
-    private formatDateForBackend(datum: string): string {
-        let time = new Date().toLocaleTimeString(navigator.language, {
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-        return new Date(datum + "T" + time).toISOString();
-    }
-
-    cancel(): void {
-        this.loadInfoMessages();
-        this.$emit("cancel");
-    }
-
-    save(): void {
-        InfoMessageService.save(this.activeInfoMessage)
-            .then((infoMessages: Array<InfoMessageDTO>) => {
-                this.setActiveInfoMessage(infoMessages[0]);
-                this.setInactiveInfoMessages(
-                    _.takeRight(infoMessages, infoMessages.length - 1)
-                );
-                this.snackbarStore.showSuccess(
-                    "Die Infonachricht wurde gespeichert."
-                );
-            })
-            .catch((error) => this.snackbarStore.showApiError(error));
-    }
-
-    inactivateInfoMessage(): void {
-        InfoMessageService.setAllInfoMessagesInactive()
-            .then(() => {
-                this.snackbarStore.showSuccess(
-                    `Die Infonachricht wurde inaktiviert.`
-                );
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.loadInfoMessages();
-            });
-    }
-
-    get disableSpeicherButton(): boolean {
-        return (
-            this.activeInfoMessage.content == null ||
-            this.activeInfoMessage.content.trim().length === 0 ||
-            this.dates.length !== 2 ||
-            this.datepickerMenuModel
-        );
-    }
-
-    changeInfoMessageView(): void {
-        this.showHistory = !this.showHistory;
-    }
-
-    get showHistoryList(): boolean {
-        return this.showHistory;
-    }
-
-    get buttonNameShowHistory(): string {
-        if (this.showHistory) {
-            return "Eingabe";
-        } else {
-            return "Historie";
-        }
-    }
-
-    // Von der Sheet-Height alles abziehen, was nicht die scrollable sein soll
-    // 54px Subtitle
-    // 52px Buttonbar
-    get cardTextHeight(): string {
-        return parseInt(this.height.replace("px", "")) - 106 + "px";
+    if (dates.length === 1) {
+        return `von: ${formatDate(dates[0])}`;
+    } else {
+        dates = sortDates(dates);
+        return `von: ${formatDate(dates[0])}, bis: ${formatDate(dates[1])}`;
     }
 }
+
+function formatDate(date: string): string {
+    const [year, month, day] = date.split("-");
+    return `${day}.${month}.${year}`;
+}
+
+// Wenn das zweite Datum vor dem ersten liegt, werden beide getauscht
+// 'von' muss vor 'bis' liegen
+function sortDates(dates: Array<string>): Array<string> {
+    let sortedDates: Array<string> = dates;
+    let date0: number = parseInt(sortedDates[0].replace(/-/g, ""));
+    let date1: number = parseInt(sortedDates[1].replace(/-/g, ""));
+    if (date0 > date1) {
+        sortedDates = sortedDates.reverse();
+    }
+    return sortedDates;
+}
+
+function formatDateForBackend(datum: string): string {
+    let time = new Date().toLocaleTimeString(navigator.language, {
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+    return new Date(datum + "T" + time).toISOString();
+}
+
+function cancel(): void {
+    loadInfoMessages();
+    emits("cancel");
+}
+
+function save(): void {
+    InfoMessageService.save(activeInfoMessage.value)
+        .then((infoMessages: Array<InfoMessageDTO>) => {
+            setActiveInfoMessage(infoMessages[0]);
+            setInactiveInfoMessages(
+                takeRight(infoMessages, infoMessages.length - 1)
+            );
+            snackbarStore.showSuccess("Die Infonachricht wurde gespeichert.");
+        })
+        .catch((error) => snackbarStore.showApiError(error));
+}
+
+function inactivateInfoMessage(): void {
+    InfoMessageService.setAllInfoMessagesInactive()
+        .then(() => {
+            snackbarStore.showSuccess(`Die Infonachricht wurde inaktiviert.`);
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            loadInfoMessages();
+        });
+}
+
+const disableSpeicherButton = computed(() => {
+    return (
+        activeInfoMessage.value.content == null ||
+        activeInfoMessage.value.content.trim().length === 0 ||
+        dates.value.length !== 2 ||
+        datepickerMenuModel.value
+    );
+});
+
+function changeInfoMessageView(): void {
+    showHistory.value = !showHistory.value;
+}
+const buttonNameShowHistory = computed(() => {
+    return showHistory.value ? "Eingabe" : "Historie";
+});
+
+// Von der Sheet-Height alles abziehen, was nicht die scrollable sein soll
+// 54px Subtitle
+// 52px Buttonbar
+const cardTextHeight = computed(() => {
+    return parseInt(props.height.replace("px", "")) - 106 + "px";
+});
 </script>
