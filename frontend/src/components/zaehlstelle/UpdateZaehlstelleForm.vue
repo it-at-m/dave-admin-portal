@@ -184,7 +184,7 @@ const getStadtbezirksnummer = computed(() => {
         StadtbezirkToBeschreibung.get(
             cloneOfZaehlstelle.value.stadtbezirkNummer
         );
-    if (stadtbezirksnummer != undefined) {
+    if (!isNil(stadtbezirksnummer)) {
         return stadtbezirksnummer;
     }
     return "Der Stadtbezirk konnte nicht ermittelt werden.";
