@@ -182,12 +182,10 @@ const dienstleisterHeaders = [
 /*
   Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
   64px Suche in Tabelle
-  20px Padding Bottom
+  58px Header
   52px Button
    */
 const tableHeightDienstleister = computed(() => {
-    // return parseInt(this.height.replace('px', '')) - 136 + 'px';
-    // return '400px'
     return 600 - 58 - 64 - 52 + "px";
 });
 
