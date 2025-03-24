@@ -216,8 +216,6 @@
 import { computed } from "vue";
 import KnotenarmDTO from "@/domain/KnotenarmDTO";
 
-/* eslint-enable no-unused-vars */
-
 interface Props {
     height?: string;
     width?: string;
