@@ -397,12 +397,14 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
 import DienstleisterService from "@/api/service/DienstleisterService";
 import { cloneDeep, isEmpty } from "lodash";
+import { useValidationUtils } from "@/util/validationUtils";
 
 interface Props {
     height: string;
 }
 const props = defineProps<Props>();
 const snackbarStore = useSnackbarStore();
+const validationUtils = useValidationUtils();
 
 // Dienstleister
 const dienstleister = ref<Array<DienstleisterDTO>>([]);
@@ -715,7 +717,7 @@ const disableSpeicherButtonMail = computed(() => {
         isEmpty(mail) ||
         mailaddressesForDuplicateCheck.value.has(mail) ||
         mail.length === 0 ||
-        !isEmailValid(mail)
+        !validationUtils.isEmailValid(mail)
     );
 });
 
@@ -836,18 +838,11 @@ function resetEmailFields() {
 
 /* Prüft, ob die Email valide oder leer ist. */
 function isEmailValidOrEmpty(email: string): boolean | string {
-    if (isEmpty(email) || isEmailValid(email)) {
+    if (isEmpty(email) || validationUtils.isEmailValid(email)) {
         return true;
     } else {
         return "Die Email-Adresse ist nicht valide.";
     }
-}
-
-/* Prüft, ob die Email valide ist. */
-function isEmailValid(email: string): boolean {
-    const pattern =
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return pattern.test(email);
 }
 
 /* Prúft, ob die Email bereits gespeichert ist */
