@@ -169,6 +169,7 @@ import { computed, onMounted, ref } from "vue";
 import InfoMessageDTO from "@/domain/dto/InfoMessageDTO";
 import InfoMessageService from "@/api/service/InfoMessageService";
 import { takeRight } from "lodash";
+import { useDateUtils } from "@/util/DateUtils";
 
 interface Props {
     height: string;
@@ -180,6 +181,7 @@ const emits = defineEmits<{
 }>();
 
 const snackbarStore = useSnackbarStore();
+const dateUtils = useDateUtils();
 
 const showHistory = ref(false);
 
@@ -238,8 +240,12 @@ function resetDatum(): void {
 
 function saveDate(): void {
     datepickerMenuModel.value = false;
-    activeInfoMessage.value.gueltigVon = formatDateForBackend(dates.value[0]);
-    activeInfoMessage.value.gueltigBis = formatDateForBackend(dates.value[1]);
+    activeInfoMessage.value.gueltigVon = dateUtils.formatDateForBackend(
+        dates.value[0]
+    );
+    activeInfoMessage.value.gueltigBis = dateUtils.formatDateForBackend(
+        dates.value[1]
+    );
 }
 
 const computedDateFormatted = computed(() => {
@@ -256,16 +262,13 @@ function createComputedDateFormatted(dates: Array<string>): string {
         return "";
     }
     if (dates.length === 1) {
-        return `von: ${formatDate(dates[0])}`;
+        return `von: ${dateUtils.formatDate(dates[0])}`;
     } else {
         dates = sortDates(dates);
-        return `von: ${formatDate(dates[0])}, bis: ${formatDate(dates[1])}`;
+        return `von: ${dateUtils.formatDate(
+            dates[0]
+        )}, bis: ${dateUtils.formatDate(dates[1])}`;
     }
-}
-
-function formatDate(date: string): string {
-    const [year, month, day] = date.split("-");
-    return `${day}.${month}.${year}`;
 }
 
 // Wenn das zweite Datum vor dem ersten liegt, werden beide getauscht
@@ -278,14 +281,6 @@ function sortDates(dates: Array<string>): Array<string> {
         sortedDates = sortedDates.reverse();
     }
     return sortedDates;
-}
-
-function formatDateForBackend(datum: string): string {
-    let time = new Date().toLocaleTimeString(navigator.language, {
-        hour: "2-digit",
-        minute: "2-digit",
-    });
-    return new Date(datum + "T" + time).toISOString();
 }
 
 function cancel(): void {

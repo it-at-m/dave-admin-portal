@@ -215,8 +215,10 @@ import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import { messstelleStatusText } from "@/domain/enums/MessstelleStatus";
 import { useValidationUtils } from "@/util/validationUtils";
+import { useDateUtils } from "@/util/DateUtils";
 
 const validationUtils = useValidationUtils();
+const dateUtils = useDateUtils();
 interface Props {
     height: string;
     disabled: boolean;
@@ -246,20 +248,12 @@ const stadtbezirk: ComputedRef<string> = computed(() => {
 });
 
 const aufbaudatum: ComputedRef<string> = computed(() => {
-    return formatDate(editMessstelle.value.realisierungsdatum);
+    return dateUtils.formatDate(editMessstelle.value.realisierungsdatum);
 });
 
 const abbaudatum: ComputedRef<string> = computed(() => {
-    return formatDate(editMessstelle.value.abbaudatum);
+    return dateUtils.formatDate(editMessstelle.value.abbaudatum);
 });
-
-function formatDate(date: string): string {
-    if (!date) {
-        return "";
-    }
-    const [year, month, day] = date.split("-");
-    return `${day}.${month}.${year}`;
-}
 
 const newSuchwort: Ref<string> = ref("");
 
