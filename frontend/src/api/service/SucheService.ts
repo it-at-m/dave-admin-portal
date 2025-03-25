@@ -1,5 +1,6 @@
 import type AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
-import type SucheComplexSuggestsDTO from "@/domain/dto/suche/SucheComplexSuggestsDTO";
+import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
+import type SucheComplexSuggestsDTO from "@/types/suche/SucheComplexSuggestsDTO";
 
 import FetchService from "@/api/service/FetchService";
 
@@ -15,8 +16,12 @@ export default class SucheService {
     );
   }
 
-  static searchErhebungsstelle(query: string): Promise<Array<AnzeigeKarteDTO>> {
-    return FetchService.getData(
+  static searchErhebungsstelle(
+    query: string,
+    searchAndFilterOptions: SearchAndFilterOptionsDTO
+  ): Promise<Array<AnzeigeKarteDTO>> {
+    return FetchService.postData(
+      searchAndFilterOptions,
       `${this.ENDPOINT}/search?query=${query}`,
       "Beim Suchen von Zähl-/Messstellen ist ein Fehler aufgetreten."
     );

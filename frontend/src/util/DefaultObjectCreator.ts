@@ -1,16 +1,18 @@
+import type DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
+import type EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
+import type HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
+import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
+
 import { LatLng } from "leaflet";
 
-import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
-import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
-import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
-import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import Quelle from "@/domain/enums/Quelle";
 import Status from "@/domain/enums/Status";
 import Wetter from "@/domain/enums/Wetter";
-import Suggest from "@/domain/Suggest";
+import Suggest from "@/types/suche/Suggest";
 
 export default class DefaultObjectCreator {
   private static readonly MUNICH_CENTER_LATITUDE: number = 48.137227;
@@ -23,6 +25,7 @@ export default class DefaultObjectCreator {
       zaehlstelleId: "",
       zaehlungId: "",
       mstId: "",
+      props: {},
     };
   }
 
@@ -89,5 +92,12 @@ export default class DefaultObjectCreator {
     const emailaddressDTO: EmailAddressDTO = {} as EmailAddressDTO;
     emailaddressDTO.emailAddress = "";
     return emailaddressDTO;
+  }
+
+  public static createDefaultSearchAndFilterOptionsDTO(): SearchAndFilterOptionsDTO {
+    return {
+      searchInMessstellen: true,
+      searchInZaehlstellen: true,
+    } as SearchAndFilterOptionsDTO;
   }
 }

@@ -183,10 +183,10 @@
       @cancel="cancelZaehlungDialog"
     ></zaehlung-dialog>
 
-<!--    <chat-dialog-->
-<!--      :show-dialog="showChatDialog"-->
-<!--      @closeDialog="closeChatDialog"-->
-<!--    ></chat-dialog>-->
+    <!--    <chat-dialog-->
+    <!--      :show-dialog="showChatDialog"-->
+    <!--      @closeDialog="closeChatDialog"-->
+    <!--    ></chat-dialog>-->
   </v-container>
 </template>
 
