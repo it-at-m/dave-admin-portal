@@ -42,7 +42,7 @@
                 />
             </v-tab-item>
             <v-tab-item ref="knotenUndLage">
-                <knoten-richtung-form
+                <knoten-lage-form
                     :height="SHEETHEIGHT"
                     :zaehlstelle="zaehlstelle"
                 />
@@ -66,7 +66,7 @@
             <v-spacer />
             <v-btn
                 color="secondary"
-                :disabled="!isZaehlungValid"
+                :disabled="!isAllgemeinFormValid"
                 @click="save()"
             >
                 Speichern
@@ -81,99 +81,77 @@
     </v-sheet>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
+<script setup lang="ts">
 import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import { computed, ref } from "vue";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import { cloneDeep } from "lodash";
 import KnotenarmDTO from "@/domain/KnotenarmDTO";
-import { ApiError } from "@/api/error";
-/* eslint-enable no-unused-vars */
-// Components
-import AllgemeineInfoForm from "@/components/zaehlung/form/AllgemeineInfoForm.vue";
-import KontaktForm from "@/components/zaehlung/form/KontaktForm.vue";
-import KnotenRichtungForm from "@/components/zaehlung/form/KnotenLageForm.vue";
-import FahrzeugeForm from "@/components/zaehlung/form/FahrzeugeForm.vue";
-import FahrbeziehungForm from "@/components/zaehlung/form/FahrbeziehungForm.vue";
-
-// Api
 import ZaehlungService from "@/api/service/ZaehlungService";
 
-// Util
-import _ from "lodash";
-import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/FahrbeziehungKreisverkehrForm.vue";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
-import { useSnackbarStore } from "@/store/SnackbarStore";
-
-@Component({
-    components: {
-        FahrbeziehungKreisverkehrForm,
-        FahrbeziehungForm,
-        FahrzeugeForm,
-        KnotenRichtungForm,
-        KontaktForm,
-        AllgemeineInfoForm,
-    },
-})
-export default class ZaehlungForm extends Vue {
-    @Prop() zaehlstelle!: ZaehlstelleDTO;
-
-    readonly SHEETHEIGHT: string = "580px";
-
-    activeTab = 0;
-    private isAllgemeinFormValid = false;
-
-    private zaehlungStore = useZaehlungStore();
-    private snackbarStore = useSnackbarStore();
-
-    /**
-     * Erzeugt eine vorübergehende ID, um die Knotenarme identifizieren zu können.
-     * Diese ID wird vor dem Speichern gelöscht
-     */
-    public static generateId(): string {
-        return "xyyxyyx-yxxyxxy".replace(/[xy]/g, function (c) {
-            let r: number = (Math.random() * 16) | 0,
-                v = c == "x" ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-        });
-    }
-
-    save(): void {
-        let copy: ZaehlungDTO = _.cloneDeep(this.zaehlungStore.getZaehlung);
-        let selfIdLength: number = ZaehlungForm.generateId().length;
-        copy.knotenarme.forEach((arm: KnotenarmDTO) => {
-            // Alle Id's entfernen, die ich selber gesetzt habe
-            if (arm.id && arm.id.length === selfIdLength) {
-                arm.id = "";
-            }
-        });
-        ZaehlungService.saveZaehlung(copy, this.zaehlstelle.id)
-            .then(() => {
-                this.$emit("saved");
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.activeTab = 0;
-                this.zaehlungStore.setResetformevent(true);
-            });
-    }
-
-    cancel(): void {
-        this.activeTab = 0;
-        this.zaehlungStore.setResetformevent(true);
-        this.$emit("cancel");
-    }
-
-    setAllgemeineFormValid(isPartValid: boolean) {
-        this.isAllgemeinFormValid = isPartValid;
-    }
-
-    get isZaehlungValid(): boolean {
-        return this.isAllgemeinFormValid;
-    }
-
-    get isKreisverkehr(): boolean {
-        return this.zaehlungStore.getZaehlung.kreisverkehr;
-    }
+interface Props {
+    zaehlstelle: ZaehlstelleDTO;
 }
+const props = defineProps<Props>();
+
+const SHEETHEIGHT = "580px";
+
+const zaehlungStore = useZaehlungStore();
+const snackbarStore = useSnackbarStore();
+
+const emits = defineEmits<{
+    (e: "cancel"): void;
+    (e: "saved"): void;
+}>();
+
+const activeTab = ref(0);
+const isAllgemeinFormValid = ref(false);
+
+/**
+ * Erzeugt eine vorübergehende ID, um die Knotenarme identifizieren zu können.
+ * Diese ID wird vor dem Speichern gelöscht
+ */
+function generateId(): string {
+    return "xyyxyyx-yxxyxxy".replace(/[xy]/g, function (c) {
+        let r: number = (Math.random() * 16) | 0,
+            v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+}
+
+function save(): void {
+    let copy: ZaehlungDTO = cloneDeep(zaehlungStore.getZaehlung);
+    let selfIdLength: number = generateId().length;
+    copy.knotenarme.forEach((arm: KnotenarmDTO) => {
+        // Alle Id's entfernen, die ich selber gesetzt habe
+        if (arm.id && arm.id.length === selfIdLength) {
+            arm.id = "";
+        }
+    });
+    ZaehlungService.saveZaehlung(copy, props.zaehlstelle.id)
+        .then(() => {
+            emits("saved");
+        })
+        .catch((error) => snackbarStore.showApiError(error))
+        .finally(() => {
+            activeTab.value = 0;
+            zaehlungStore.setResetformevent(true);
+        });
+}
+
+function cancel(): void {
+    activeTab.value = 0;
+    zaehlungStore.setResetformevent(true);
+    emits("cancel");
+}
+
+function setAllgemeineFormValid(isPartValid: boolean) {
+    isAllgemeinFormValid.value = isPartValid;
+}
+
+const isKreisverkehr = computed(() => {
+    return zaehlungStore.getZaehlung.kreisverkehr;
+});
 </script>

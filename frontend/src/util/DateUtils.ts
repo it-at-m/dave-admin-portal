@@ -20,9 +20,22 @@ export function useDateUtils() {
         return new Date(dateToCheck).valueOf() > new Date(dateAfter).valueOf();
     }
 
+    function formatDateForBackend(date: string): string {
+        if (!date) {
+            return "";
+        }
+
+        const time = new Date().toLocaleTimeString(navigator.language, {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+        return new Date(date + "T" + time).toISOString();
+    }
+
     return {
         sortDatesDescAsStrings,
         formatDate,
         isDateAfter,
+        formatDateForBackend,
     };
 }
