@@ -1,5 +1,5 @@
 export default interface MapOptions {
-    longitude: string;
-    latitude: string;
-    zoom: number;
+  longitude: string;
+  latitude: string;
+  zoom: number;
 }

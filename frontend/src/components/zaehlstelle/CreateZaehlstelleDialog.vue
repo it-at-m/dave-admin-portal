@@ -1,55 +1,56 @@
 <template>
-    <v-dialog
-        v-model="showDialogModel"
-        persistent
-        max-width="900px"
+  <v-dialog
+    v-model="showDialogModel"
+    persistent
+    max-width="900px"
+  >
+    <v-card
+      width="900px"
+      flat
     >
-        <v-card
-            width="900px"
-            flat
-        >
-            <v-card-title>
-                <v-icon left>mdi-map-marker-plus-outline</v-icon>
-                {{ DIALOG_TITLE }}
-            </v-card-title>
+      <v-card-title>
+        <v-icon left>mdi-map-marker-plus-outline</v-icon>
+        {{ DIALOG_TITLE }}
+      </v-card-title>
 
-            <v-card-text>
-                <create-zaehlstelle-form
-                    :coords="coords"
-                    @cancel="cancelCreate"
-                    @saved="saved"
-                />
-            </v-card-text>
-        </v-card>
-    </v-dialog>
+      <v-card-text>
+        <create-zaehlstelle-form
+          :coords="coords"
+          @cancel="cancelCreate"
+          @saved="saved"
+        />
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { LatLng } from "leaflet";
+import { computed } from "vue";
+
 import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 
 interface Props {
-    showDialog: boolean;
-    coords: LatLng;
+  showDialog: boolean;
+  coords: LatLng;
 }
 const props = defineProps<Props>();
 
 const showDialogModel = computed(() => {
-    return props.showDialog;
+  return props.showDialog;
 });
 
 const emits = defineEmits<{
-    (e: "cancel"): void;
-    (e: "saved", payload: BackendIdDTO): void;
+  (e: "cancel"): void;
+  (e: "saved", payload: BackendIdDTO): void;
 }>();
 const DIALOG_TITLE = "Neue Zählstelle anlegen";
 
 function cancelCreate(): void {
-    emits("cancel");
+  emits("cancel");
 }
 
 function saved(backendIdDTO: BackendIdDTO): void {
-    emits("saved", backendIdDTO);
+  emits("saved", backendIdDTO);
 }
 </script>

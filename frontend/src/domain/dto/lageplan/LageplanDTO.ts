@@ -1,3 +1,3 @@
 export default interface LageplanDTO {
-    url: string;
+  url: string;
 }

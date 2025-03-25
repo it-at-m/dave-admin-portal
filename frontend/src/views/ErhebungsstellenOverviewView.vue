@@ -1,11 +1,11 @@
 <template>
-    <v-container
-        fluid
-        class="pa-0"
-    >
-        <zaehlstelle-overview />
-        <messstelle-overview />
-    </v-container>
+  <v-container
+    fluid
+    class="pa-0"
+  >
+    <zaehlstelle-overview />
+    <messstelle-overview />
+  </v-container>
 </template>
 
 <script setup lang="ts">

@@ -1,27 +1,27 @@
 <template>
-    <div>
-        <span
-            v-if="showCaption"
-            class="text-caption"
-            >{{ caption }}</span
-        ><br />
-        <span class="text text-info">{{ text }}</span
-        ><br /><br v-if="fahrbeziehung" />
-    </div>
+  <div>
+    <span
+      v-if="showCaption"
+      class="text-caption"
+      >{{ caption }}</span
+    ><br />
+    <span class="text text-info">{{ text }}</span
+    ><br /><br v-if="fahrbeziehung" />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { isEmpty } from "lodash";
+import { computed } from "vue";
 
 interface Props {
-    fahrbeziehung?: boolean;
-    text?: string;
-    caption: string;
+  fahrbeziehung?: boolean;
+  text?: string;
+  caption: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    fahrbeziehung: false,
+  fahrbeziehung: false,
 });
 
 const showCaption = computed(() => !isEmpty(props.caption));
@@ -29,7 +29,7 @@ const showCaption = computed(() => !isEmpty(props.caption));
 
 <style scoped>
 .text-info {
-    font-size: 18px;
-    color: black;
+  font-size: 18px;
+  color: black;
 }
 </style>

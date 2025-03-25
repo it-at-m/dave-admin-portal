@@ -1,53 +1,54 @@
 <template>
-    <v-sheet
-        :height="height"
-        :width="width"
-        :min-height="minheight"
-    >
-        <div
-            id="minimap"
-            ref="minimapRef"
-            :style="mapStyle"
-        />
-    </v-sheet>
+  <v-sheet
+    :height="height"
+    :width="width"
+    :min-height="minheight"
+  >
+    <div
+      id="minimap"
+      ref="minimapRef"
+      :style="mapStyle"
+    />
+  </v-sheet>
 </template>
 
 <script setup lang="ts">
 import L, { Icon, LatLng } from "leaflet";
 import {
-    computed,
-    ComputedRef,
-    onBeforeUnmount,
-    onMounted,
-    ref,
-    watch,
+  computed,
+  ComputedRef,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
 } from "vue";
-import markerIconRed from "@/assets/marker-icon-red.png";
+
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
+import markerIconRed from "@/assets/marker-icon-red.png";
 
 interface Props {
-    coords: LatLng;
-    height?: string;
-    width?: string;
-    minheight?: string;
-    isMessstelle?: boolean;
-    resetMarker?: boolean;
-    draggable?: boolean;
+  coords: LatLng;
+  height?: string;
+  width?: string;
+  minheight?: string;
+  isMessstelle?: boolean;
+  resetMarker?: boolean;
+  draggable?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    height: "100%",
-    width: "100%",
-    minheight: "160px",
-    isMessstelle: false,
-    resetMarker: false,
-    draggable: true,
+  height: "100%",
+  width: "100%",
+  minheight: "160px",
+  isMessstelle: false,
+  resetMarker: false,
+  draggable: true,
 });
 
 const emit = defineEmits<(e: "updateZaehlstellenCoords", v: LatLng) => void>();
 
 const mapAttribution =
-    '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
+  '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
 
 const minimapRef = ref<HTMLDivElement | null>(null);
 
@@ -55,148 +56,148 @@ let minimap: L.Map;
 const marker = ref(createMarker());
 
 const resetMarkerSwitch: ComputedRef<boolean> = computed(() => {
-    return props.resetMarker;
+  return props.resetMarker;
 });
 
 watch(resetMarkerSwitch, () => {
-    resetMarker();
+  resetMarker();
 });
 
 onMounted(() => {
-    initMap();
+  initMap();
 });
 
 onBeforeUnmount(() => {
-    minimap.remove();
+  minimap.remove();
 });
 
 function initMap(): void {
-    minimap = L.map(minimapRef.value as HTMLElement, {
-        minZoom: 10,
-        maxZoom: 18,
-        zoom: 18,
-        preferCanvas: false,
-        attributionControl: false,
-        fullscreenControl: true,
-        fullscreenControlOptions: {
-            position: "topleft",
-        },
-        center: props.coords,
-    });
+  minimap = L.map(minimapRef.value as HTMLElement, {
+    minZoom: 10,
+    maxZoom: 18,
+    zoom: 18,
+    preferCanvas: false,
+    attributionControl: false,
+    fullscreenControl: true,
+    fullscreenControlOptions: {
+      position: "topleft",
+    },
+    center: props.coords,
+  });
 
-    minimap.whenReady(() => {
-        setTimeout(() => {
-            minimap.invalidateSize();
-            minimap.addControl(
-                L.control.attribution({
-                    position: "bottomleft",
-                    prefix: "Leaflet",
-                })
-            );
-            createLayersAndAddToMap();
-            marker.value.addTo(minimap);
-        }, 10);
-    });
+  minimap.whenReady(() => {
+    setTimeout(() => {
+      minimap.invalidateSize();
+      minimap.addControl(
+        L.control.attribution({
+          position: "bottomleft",
+          prefix: "Leaflet",
+        })
+      );
+      createLayersAndAddToMap();
+      marker.value.addTo(minimap);
+    }, 10);
+  });
 }
 
 function resetMarker(): void {
-    marker.value.removeFrom(minimap);
-    marker.value = createMarker();
-    marker.value.addTo(minimap);
+  marker.value.removeFrom(minimap);
+  marker.value = createMarker();
+  marker.value.addTo(minimap);
 }
 
 function createLayersAndAddToMap(): void {
-    const baseLayers = createBaseLayers();
-    const overlayLayers = createOverlayLayers();
-    baseLayers.Stadtkarte.addTo(minimap);
-    L.control.layers(baseLayers, overlayLayers).addTo(minimap);
+  const baseLayers = createBaseLayers();
+  const overlayLayers = createOverlayLayers();
+  baseLayers.Stadtkarte.addTo(minimap);
+  L.control.layers(baseLayers, overlayLayers).addTo(minimap);
 }
 
 function createBaseLayers(): L.Control.LayersObject {
-    const stadtkarteGesamt = L.tileLayer.wms(
-        "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-        {
-            layers: "gsm:g_stadtkarte_gesamt",
-            className: "Stadtkarte",
-            attribution: mapAttribution,
-        }
-    );
+  const stadtkarteGesamt = L.tileLayer.wms(
+    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+    {
+      layers: "gsm:g_stadtkarte_gesamt",
+      className: "Stadtkarte",
+      attribution: mapAttribution,
+    }
+  );
 
-    const luftbild = L.tileLayer.wms(
-        "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-        {
-            layers: "gsm:g_luftbild",
-            className: "Luftbild",
-            attribution: mapAttribution,
-        }
-    );
+  const luftbild = L.tileLayer.wms(
+    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+    {
+      layers: "gsm:g_luftbild",
+      className: "Luftbild",
+      attribution: mapAttribution,
+    }
+  );
 
-    const osm = L.tileLayer.wms(
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-            attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        }
-    );
+  const osm = L.tileLayer.wms(
+    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }
+  );
 
-    return {
-        Stadtkarte: stadtkarteGesamt,
-        Luftbild: luftbild,
-        OpenStreetMaps: osm,
-    };
+  return {
+    Stadtkarte: stadtkarteGesamt,
+    Luftbild: luftbild,
+    OpenStreetMaps: osm,
+  };
 }
 
 function createOverlayLayers(): L.Control.LayersObject {
-    const stadtbezirke = L.tileLayer.wms(
-        "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-        {
-            layers: "gsm:stadtbezirk",
-            className: "Stadtbezirke",
-            transparent: true,
-            format: "image/png",
-            attribution: mapAttribution,
-        }
-    );
-    const stadtviertel = L.tileLayer.wms(
-        "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-        {
-            layers: "gsm:vablock_viertel_dave",
-            className: "Stadtviertel",
-            transparent: true,
-            format: "image/png",
-            attribution: mapAttribution,
-        }
-    );
+  const stadtbezirke = L.tileLayer.wms(
+    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+    {
+      layers: "gsm:stadtbezirk",
+      className: "Stadtbezirke",
+      transparent: true,
+      format: "image/png",
+      attribution: mapAttribution,
+    }
+  );
+  const stadtviertel = L.tileLayer.wms(
+    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+    {
+      layers: "gsm:vablock_viertel_dave",
+      className: "Stadtviertel",
+      transparent: true,
+      format: "image/png",
+      attribution: mapAttribution,
+    }
+  );
 
-    return {
-        Stadtbezirke: stadtbezirke,
-        Stadtviertel: stadtviertel,
-    };
+  return {
+    Stadtbezirke: stadtbezirke,
+    Stadtviertel: stadtviertel,
+  };
 }
 
 function createMarker(): L.Marker {
-    let defaultIcon = new Icon.Default();
-    if (props.isMessstelle) {
-        defaultIcon.options.iconUrl = markerIconDiamondRed;
-    } else {
-        defaultIcon.options.iconUrl = markerIconRed;
-    }
+  let defaultIcon = new Icon.Default();
+  if (props.isMessstelle) {
+    defaultIcon.options.iconUrl = markerIconDiamondRed;
+  } else {
+    defaultIcon.options.iconUrl = markerIconRed;
+  }
 
-    const marker = L.marker(props.coords, {
-        icon: defaultIcon,
-        opacity: 1.0,
-        draggable: props.draggable,
-    });
+  const marker = L.marker(props.coords, {
+    icon: defaultIcon,
+    opacity: 1.0,
+    draggable: props.draggable,
+  });
 
-    marker.on("dragend", () => {
-        emit("updateZaehlstellenCoords", marker.getLatLng());
-    });
+  marker.on("dragend", () => {
+    emit("updateZaehlstellenCoords", marker.getLatLng());
+  });
 
-    return marker;
+  return marker;
 }
 
 const mapStyle: ComputedRef<string> = computed(() => {
-    return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}; z-index: 1`;
+  return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}; z-index: 1`;
 });
 </script>
 
@@ -204,10 +205,10 @@ const mapStyle: ComputedRef<string> = computed(() => {
 /* Zoom-Buttons verwenden per Default die Farbe 'primary'. Da diese im Button kaum zu erkennen ist,
 wurden die Farbe auf schwarz gesetzt */
 .leaflet-control-zoom a.leaflet-control-zoom-in {
-    color: black;
+  color: black;
 }
 
 .leaflet-control-zoom a.leaflet-control-zoom-out {
-    color: black;
+  color: black;
 }
 </style>
