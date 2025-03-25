@@ -1,31 +1,13 @@
-import moment from "moment";
-import { createPinia, PiniaVuePlugin } from "pinia";
-import Vue, { VNode } from "vue";
+import { createApp } from "vue";
 
-import validationRules from "@/mixins/validationRules";
 import App from "./App.vue";
-import i18n from "./i18n";
-import Vuetify from "./plugins/Vuetify";
-import router from "./router";
 
-import "./directives/infinitescroll";
-import "./plugins/Leafletmaps";
-import "./registerServiceWorker";
-import "roboto-fontface/css/roboto/roboto-fontface.css";
+import "./plugins/leafletmaps";
 
-Vue.config.productionTip = false;
+import { registerPlugins } from "@/plugins";
 
-Vue.use(validationRules);
+const app = createApp(App);
 
-Vue.use(PiniaVuePlugin);
-const pinia = createPinia();
+registerPlugins(app);
 
-moment.locale(window.navigator.language);
-
-new Vue({
-  router,
-  pinia,
-  vuetify: Vuetify,
-  i18n,
-  render: (h): VNode => h(App),
-}).$mount("#app");
+app.mount("#app");
