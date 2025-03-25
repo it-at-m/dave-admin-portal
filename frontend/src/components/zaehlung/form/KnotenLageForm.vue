@@ -285,15 +285,21 @@ function updateStore(): void {
 }
 
 const coordsZaehlstelle = computed(() => {
-    let punkt: GeoPoint = props.zaehlstelle.punkt;
-    if (punkt) return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
-    else return DefaultObjectCreator.createCenterOfMunichLatLng();
+    const punkt: GeoPoint = props.zaehlstelle.punkt;
+    if (punkt) {
+        return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+    } else {
+        return DefaultObjectCreator.createCenterOfMunichLatLng();
+    }
 });
 
 const coordsZaehlung = computed(() => {
     const punkt: GeoPoint = zaehlung.value.punkt;
-    if (punkt) return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
-    else return coordsZaehlstelle.value;
+    if (punkt) {
+        return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+    } else {
+        return coordsZaehlstelle.value;
+    }
 });
 
 function updateZaehlungCoords(newCoords: LatLng): void {
