@@ -196,118 +196,112 @@
     </v-sheet>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+<script setup lang="ts">
 import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
-import KnotenarmDTO from "@/domain/KnotenarmDTO";
-import { LatLng } from "leaflet";
-import GeoPoint from "@/domain/GeoPoint";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
-import { cloneDeep } from "lodash";
+import { computed, onMounted, ref, watch } from "vue";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
-@Component({
-    components: {
-        ZaehlungCardMap,
-        ZaehlungGeometrie,
+import { cloneDeep, isEmpty, isNil } from "lodash";
+import KnotenarmDTO from "@/domain/KnotenarmDTO";
+import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import GeoPoint from "@/domain/GeoPoint";
+import { LatLng } from "leaflet";
+
+interface Props {
+    height: string;
+    zaehlstelle: ZaehlstelleDTO;
+}
+const props = defineProps<Props>();
+
+const zaehlung = ref(DefaultObjectCreator.createDefaultZaehlungDTO());
+
+const strassen = ref<Array<string>>([]);
+
+const zaehlungStore = useZaehlungStore();
+
+onMounted(() => {
+    updateWorkingCopy();
+});
+
+const knotenarmeStore = computed(() => {
+    return zaehlungStore.getKnotenarme;
+});
+
+watch(
+    () => zaehlungStore.getResetformevent,
+    () => {
+        resetForm();
+    }
+);
+
+function resetForm() {
+    // Alle Straßennamen löschen
+    strassen.value = ["", "", "", "", "", "", "", ""];
+
+    // Straßennamen neu setzen, wenn vorhanden
+    const zaehlung: ZaehlungDTO = zaehlungStore.getZaehlung;
+    zaehlung.knotenarme.forEach((arm: KnotenarmDTO) => {
+        strassen.value[arm.nummer - 1] = arm.strassenname;
+    });
+}
+
+watch(
+    () => zaehlungStore.getZaehlung,
+    () => {
+        updateWorkingCopy();
     },
-})
-export default class KnotenLageForm extends Vue {
-    @Prop()
-    private zaehlstelle!: ZaehlstelleDTO;
+    { immediate: true, deep: true }
+);
 
-    @Prop()
-    readonly height!: string;
+function updateWorkingCopy(): void {
+    resetForm();
+    zaehlung.value = cloneDeep(zaehlungStore.getZaehlung);
+}
 
-    zaehlung: ZaehlungDTO = DefaultObjectCreator.createDefaultZaehlungDTO();
-
-    strassen: Array<string> = [];
-
-    private zaehlungStore = useZaehlungStore();
-
-    mounted() {
-        this.updateWorkingCopy();
-    }
-
-    get zaehlungOfStore(): ZaehlungDTO {
-        return this.zaehlungStore.getZaehlung;
-    }
-
-    get knotenarmeStore(): Array<KnotenarmDTO> {
-        return this.zaehlungStore.getKnotenarme;
-    }
-
-    get resetFormEvent(): boolean {
-        return this.zaehlungStore.getResetformevent;
-    }
-
-    @Watch("resetFormEvent")
-    private resetForm() {
-        // Alle Straßennamen löschen
-        this.strassen = ["", "", "", "", "", "", "", ""];
-
-        // Straßennamen neu setzen, wenn vorhanden
-        let zaehlung: ZaehlungDTO = this.zaehlungOfStore;
-        zaehlung.knotenarme.forEach((arm: KnotenarmDTO) => {
-            this.strassen[arm.nummer - 1] = arm.strassenname;
-        });
-    }
-
-    @Watch("zaehlungOfStore", { deep: true, immediate: true })
-    updateWorkingCopy(): void {
-        this.resetForm();
-        this.zaehlung = cloneDeep(this.zaehlungOfStore);
-    }
-
-    addOrUpdateStrassenname(nummer: number, name: string) {
-        // Kein Text mehr => löschen
-        if (name === null || name === undefined || name.trim() === "") {
-            // Knotenarm entfernen
-            this.zaehlungStore.deleteKnotenarm(nummer);
-            // Fahrbeziehung entfernen
-            this.zaehlungStore.deleteFahrbeziehungByKnotenarmnummer(nummer);
-        } else {
-            // hinzufügen oder aktualisieren
-            let knotenarm: KnotenarmDTO = {} as KnotenarmDTO;
-            knotenarm.nummer = nummer;
-            knotenarm.strassenname = name.trim();
-            this.zaehlungStore.addOrUpdateKnotenarm(cloneDeep(knotenarm));
-        }
-    }
-
-    deleteKnotenarm(nummer: number) {
-        this.zaehlungStore.deleteKnotenarm(nummer);
+function addOrUpdateStrassenname(nummer: number, name: string) {
+    // Kein Text mehr => löschen
+    if (isNil(name) || isEmpty(name.trim())) {
+        // Knotenarm entfernen
+        zaehlungStore.deleteKnotenarm(nummer);
         // Fahrbeziehung entfernen
-        this.zaehlungStore.deleteFahrbeziehungByKnotenarmnummer(nummer);
+        zaehlungStore.deleteFahrbeziehungByKnotenarmnummer(nummer);
+    } else {
+        // hinzufügen oder aktualisieren
+        const knotenarm: KnotenarmDTO = {} as KnotenarmDTO;
+        knotenarm.nummer = nummer;
+        knotenarm.strassenname = name.trim();
+        zaehlungStore.addOrUpdateKnotenarm(cloneDeep(knotenarm));
     }
+}
 
-    updateStore(): void {
-        this.zaehlungStore.setZaehlung(cloneDeep(this.zaehlung));
-    }
+function deleteKnotenarm(nummer: number) {
+    zaehlungStore.deleteKnotenarm(nummer);
+    // Fahrbeziehung entfernen
+    zaehlungStore.deleteFahrbeziehungByKnotenarmnummer(nummer);
+}
 
-    get coordsZaehlstelle(): LatLng {
-        let punkt: GeoPoint = this.zaehlstelle.punkt;
-        if (punkt)
-            return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
-        else return DefaultObjectCreator.createCenterOfMunichLatLng();
-    }
+function updateStore(): void {
+    zaehlungStore.setZaehlung(cloneDeep(zaehlung.value));
+}
 
-    get coordsZaehlung(): LatLng {
-        let punkt: GeoPoint = this.zaehlung.punkt;
-        if (punkt)
-            return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
-        else return this.coordsZaehlstelle;
-    }
+const coordsZaehlstelle = computed(() => {
+    let punkt: GeoPoint = props.zaehlstelle.punkt;
+    if (punkt) return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+    else return DefaultObjectCreator.createCenterOfMunichLatLng();
+});
 
-    updateZaehlungCoords(newCoords: LatLng): void {
-        if (!this.zaehlung.punkt) {
-            this.zaehlung.punkt = {} as GeoPoint;
-        }
-        this.zaehlung.punkt.lat = newCoords.lat.toString();
-        this.zaehlung.punkt.lon = newCoords.lng.toString();
-        this.updateStore();
+const coordsZaehlung = computed(() => {
+    const punkt: GeoPoint = zaehlung.value.punkt;
+    if (punkt) return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+    else return coordsZaehlstelle.value;
+});
+
+function updateZaehlungCoords(newCoords: LatLng): void {
+    if (!zaehlung.value.punkt) {
+        zaehlung.value.punkt = {} as GeoPoint;
     }
+    zaehlung.value.punkt.lat = newCoords.lat.toString();
+    zaehlung.value.punkt.lon = newCoords.lng.toString();
+    updateStore();
 }
 </script>
