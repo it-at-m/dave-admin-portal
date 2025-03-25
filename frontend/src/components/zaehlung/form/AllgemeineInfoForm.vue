@@ -45,11 +45,11 @@
                         <v-autocomplete
                             v-model="zaehlung.zaehldauer"
                             outlined
-                            :items="getZaehldauer"
+                            :items="zaehldauerDropDown"
                             dense
                             label="Zähldauer"
                             :rules="[
-                                () => !!zaehlung.zaehldauer || pflichtfeldText,
+                                () => !!zaehlung.zaehldauer || PFLICHTFELD_TEXT,
                             ]"
                             required
                             @blur="updateStore"
@@ -62,11 +62,11 @@
                         <v-autocomplete
                             v-model="zaehlung.zaehlart"
                             outlined
-                            :items="getZaehlarten"
+                            :items="zaehlartenDropDown"
                             dense
                             label="Zählart"
                             :rules="[
-                                () => !!zaehlung.zaehlart || pflichtfeldText,
+                                () => !!zaehlung.zaehlart || PFLICHTFELD_TEXT,
                             ]"
                             required
                             @blur="updateStore"
@@ -77,8 +77,7 @@
                         md="4"
                     >
                         <v-menu
-                            ref="menu"
-                            v-model="menu"
+                            v-model="datepickerMenuModel"
                             :close-on-content-click="false"
                             :close-on-click="false"
                             transition="scale-transition"
@@ -131,7 +130,7 @@
                         <v-autocomplete
                             v-model="zaehlung.quelle"
                             outlined
-                            :items="getQuelle"
+                            :items="quelleDropDown"
                             dense
                             label="Quelle"
                             @blur="updateStore"
@@ -144,7 +143,7 @@
                         <v-autocomplete
                             v-model="zaehlung.zaehlIntervall"
                             outlined
-                            :items="getZaehlintervalle"
+                            :items="ZAEHLINTERVALLE_15"
                             dense
                             label="Zählintervall"
                             @blur="updateStore"
@@ -255,151 +254,123 @@
     </v-sheet>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import { computed, onMounted, ref, watch } from "vue";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import Status from "@/domain/enums/Status";
+import { cloneDeep, isEmpty, isNil } from "lodash";
 import { zaehlartenDropDown } from "@/domain/enums/Zaehlart";
-import KeyVal from "@/domain/KeyVal";
 import { zaehldauerDropDown } from "@/domain/enums/Zaehldauer";
 import { quelleDropDown } from "@/domain/enums/Quelle";
-import { cloneDeep } from "lodash";
-import Status from "@/domain/enums/Status";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
+import { useDateUtils } from "@/util/DateUtils";
 
-@Component
-export default class AllgemeineInfoForm extends Vue {
-    @Prop()
-    readonly height!: string;
+interface Props {
+    height: string;
+}
+defineProps<Props>();
 
-    newSuchwort = "";
+const emits = defineEmits<{
+    (e: "isValid", payload: boolean): void;
+}>();
 
-    // Without Time
-    date: string = new Date().toISOString().substr(0, 10);
-    menu = false;
-    validZaehlung = false;
+const zaehlungStore = useZaehlungStore();
+const dateUtils = useDateUtils();
 
-    zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
+const PFLICHTFELD_TEXT =
+    "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
+const ZAEHLINTERVALLE_15 = [{ text: "15 min", value: 15 }];
 
-    private zaehlungStore = useZaehlungStore();
+const newSuchwort = ref("");
+const datepickerMenuModel = ref(false);
+const validZaehlung = ref(false);
+// Without Time
+const date = ref(new Date().toISOString().substring(0, 10));
+const zaehlung = ref({} as ZaehlungDTO);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @Ref("menu") private vMenu: any;
+onMounted(() => {
+    validZaehlung.value = false;
+    updateWorkingCopy();
+});
 
-    mounted() {
-        this.validZaehlung = false;
-        this.updateWorkingCopy();
+watch(
+    () => validZaehlung.value,
+    () => {
+        emits("isValid", validZaehlung.value);
+    }
+);
+
+watch(
+    () => zaehlungStore.getZaehlung,
+    () => {
+        updateWorkingCopy();
+    }
+);
+
+const zaehlungOfStore = computed(() => {
+    return zaehlungStore.getZaehlung;
+});
+
+const showZaehlsituation = computed(() => {
+    const possibleStatus: Array<Status> = [
+        Status.ACTIVE,
+        Status.ACCOMPLISHED,
+        Status.CORRECTION,
+        Status.COUNTING,
+    ];
+    return possibleStatus.includes(zaehlungOfStore.value.status);
+});
+
+const computedDateFormatted = computed(() => {
+    return dateUtils.formatDate(date.value);
+});
+
+function updateWorkingCopy(): void {
+    zaehlung.value = cloneDeep(zaehlungOfStore.value);
+    resetDatum();
+}
+
+function updateStore(): void {
+    zaehlungStore.setZaehlung(cloneDeep(zaehlung.value));
+}
+
+// Fuegt das eingegebene Wort den Suchwoertern hinzu
+function addSuchwortToList(): void {
+    if (
+        zaehlung.value.customSuchwoerter === undefined ||
+        zaehlung.value.customSuchwoerter === null
+    ) {
+        zaehlung.value.customSuchwoerter = [];
     }
 
-    get zaehlungOfStore(): ZaehlungDTO {
-        return this.zaehlungStore.getZaehlung;
+    if (isNil(newSuchwort.value) || isEmpty(newSuchwort.value.trim())) {
+        return;
     }
 
-    get showZaehlsituation(): boolean {
-        let possibleStatus: Array<Status> = [
-            Status.ACTIVE,
-            Status.ACCOMPLISHED,
-            Status.CORRECTION,
-            Status.COUNTING,
-        ];
-        return possibleStatus.includes(this.zaehlungOfStore.status);
+    if (!zaehlung.value.customSuchwoerter.includes(newSuchwort.value)) {
+        zaehlung.value.customSuchwoerter.push(...newSuchwort.value.split(","));
     }
+    newSuchwort.value = "";
+}
 
-    @Watch("zaehlungStore")
-    updateWorkingCopy(): void {
-        this.zaehlung = cloneDeep(this.zaehlungOfStore);
-        this.resetDatum();
-    }
+function addSuchwortToListAndUpdateStore(): void {
+    addSuchwortToList();
+    updateStore();
+}
 
-    @Watch("validZaehlung")
-    sendIsValid(): void {
-        this.$emit("isValid", this.validZaehlung);
-    }
+function saveDate(): void {
+    datepickerMenuModel.value = false;
+    zaehlung.value.datum = dateUtils.formatDateForBackend(date.value);
+    updateStore();
+}
 
-    updateStore(): void {
-        this.zaehlungStore.setZaehlung(cloneDeep(this.zaehlung));
-    }
+function closeMenu(): void {
+    datepickerMenuModel.value = false;
+    resetDatum();
+}
 
-    get computedDateFormatted(): string | null {
-        return this.formatDate(this.date);
-    }
-
-    private formatDateForBackend(): string {
-        let time = new Date().toLocaleTimeString(navigator.language, {
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-        return new Date(this.date + "T" + time).toISOString();
-    }
-
-    private formatDate(date: string): string | null {
-        if (!date) {
-            return null;
-        }
-        const [year, month, day] = date.split("-");
-        return `${day}.${month}.${year}`;
-    }
-
-    get pflichtfeldText(): string {
-        return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
-    }
-
-    get getZaehlarten(): Array<KeyVal> {
-        return zaehlartenDropDown;
-    }
-
-    get getZaehldauer(): Array<KeyVal> {
-        return zaehldauerDropDown;
-    }
-
-    get getQuelle(): Array<KeyVal> {
-        return quelleDropDown;
-    }
-
-    /* eslint-disable @typescript-eslint/ban-types */
-    get getZaehlintervalle(): Array<Object> {
-        return [{ text: "15 min", value: 15 }];
-    }
-    /* eslint-enable @typescript-eslint/ban-types */
-
-    // Fuegt das eingegebene Wort den Suchwoertern hinzu
-    addSuchwortToList(): void {
-        if (
-            this.zaehlung.customSuchwoerter === undefined ||
-            this.zaehlung.customSuchwoerter === null
-        ) {
-            this.zaehlung.customSuchwoerter = [];
-        }
-
-        if (this.newSuchwort == null || this.newSuchwort.trim() === "") {
-            return;
-        }
-
-        if (!this.zaehlung.customSuchwoerter.includes(this.newSuchwort)) {
-            this.zaehlung.customSuchwoerter.push(
-                ...this.newSuchwort.split(",")
-            );
-        }
-        this.newSuchwort = "";
-    }
-
-    addSuchwortToListAndUpdateStore(): void {
-        this.addSuchwortToList();
-        this.updateStore();
-    }
-
-    saveDate(): void {
-        this.vMenu.save(this.date);
-        this.zaehlung.datum = this.formatDateForBackend();
-        this.updateStore();
-    }
-
-    closeMenu(): void {
-        this.menu = false;
-        this.resetDatum();
-    }
-
-    private resetDatum(): void {
-        this.date = this.zaehlung.datum.substr(0, 10);
-    }
+function resetDatum(): void {
+    date.value = zaehlung.value.datum.substring(0, 10);
 }
 </script>
