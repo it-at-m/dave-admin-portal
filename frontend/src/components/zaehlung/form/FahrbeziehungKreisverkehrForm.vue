@@ -2,7 +2,7 @@
     <v-data-table
         key="indexKey"
         v-model="selectedFahrbeziehungen"
-        :headers="headersFahrbeziehungen"
+        :headers="HEADERS"
         :items="allPossibleFahrbeziehungen"
         item-key="indexKey"
         show-select
@@ -61,7 +61,7 @@ const zaehlungStore = useZaehlungStore();
 const fahrbeziehungen = ref<Array<FahrbeziehungDTO>>([]);
 const allPossibleFahrbeziehungen = ref<Array<FahrbeziehungDTO>>([]);
 const selectedFahrbeziehungen = ref<Array<FahrbeziehungDTO>>([]);
-const headersFahrbeziehungen = [
+const HEADERS = [
     {
         text: "Knotenarm",
         align: "start",
@@ -177,7 +177,7 @@ function getType(fz: FahrbeziehungDTO): string {
 function calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
     const standardFaktor: HochrechnungsfaktorDTO =
         hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
-    let allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
+    const allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
     zaehlungStore.getKnotenarme.forEach((arm: KnotenarmDTO) => {
         const newFzHeraus: FahrbeziehungDTO = {} as FahrbeziehungDTO;
         newFzHeraus.knotenarm = arm.nummer;
