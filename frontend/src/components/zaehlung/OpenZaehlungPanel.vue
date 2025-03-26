@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router/composables";
+import { useRouter } from "vue-router";
 
 import IconOptions from "@/components/icons/IconOptions";
 import OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";

@@ -52,7 +52,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
-import { useRoute } from "vue-router/composables";
+import { useRoute } from "vue-router";
 
 import MessstelleService from "@/api/service/MessstelleService";
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";

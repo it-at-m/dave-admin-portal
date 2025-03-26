@@ -11,6 +11,7 @@
       v-if="hasMessstellen"
       hover
       focusable
+      elevation="0"
     >
       <messstelle-overview-panel
         :header="geplanteMessstellenHeader"
@@ -116,11 +117,11 @@ function resetDataArrays(): void {
   nichtSichtbareMessstellen.value = [];
 }
 </script>
-<style scoped lang="sass">
-// Entfernt die Elevation beim ExpansionPanel. Die Build-In-Funktion (flat) kann leider nicht genutzt werden,
-// da dann auch die Trennstriche zwischen den Panels entfernt werden.
-@import 'vuetify/src/components/VExpansionPanel/_variables.scss'
-.v-expansion-panel
-  &::before
-    +elevation(0)
-</style>
+<!--<style scoped lang="sass">-->
+<!--// Entfernt die Elevation beim ExpansionPanel. Die Build-In-Funktion (flat) kann leider nicht genutzt werden,-->
+<!--// da dann auch die Trennstriche zwischen den Panels entfernt werden.-->
+<!--@import 'vuetify/lib/components/VExpansionPanel/_variables.scss'-->
+<!--.v-expansion-panel-->
+<!--  &::before-->
+<!--    +elevation(0)-->
+<!--</style>-->

@@ -193,7 +193,7 @@
 <script setup lang="ts">
 import { cloneDeep } from "lodash";
 import { computed, onMounted, ref } from "vue";
-import { useRoute } from "vue-router/composables";
+import { useRoute } from "vue-router";
 
 import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService";
 import PkwEinheitenService from "@/api/service/PkwEinheitenService";

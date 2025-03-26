@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import { useRouter } from "vue-router/composables";
+import { useRouter } from "vue-router";
 
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
