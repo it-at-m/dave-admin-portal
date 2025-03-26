@@ -9,25 +9,25 @@
     </v-card-title>
     <v-expansion-panels
       v-if="hasMessstellen"
-      hover
+      variant="accordion"
       focusable
       elevation="0"
     >
       <messstelle-overview-panel
         :header="geplanteMessstellenHeader"
-        color="orange lighten-4"
+        color="orange-lighten-4"
         icon="mdi-clipboard-clock-outline"
         :messstellen="geplanteMessstellen"
       />
       <messstelle-overview-panel
         :header="neuUmgesetzteMessstellenHeader"
-        color="blue lighten-4"
+        color="blue-lighten-4"
         icon="mdi-clipboard-plus-outline"
         :messstellen="neuUmgesetztMessstellen"
       />
       <messstelle-overview-panel
         :header="nichtSichtbareMessstellenHeader"
-        color="purple lighten-4"
+        color="purple-lighten-4"
         icon="mdi-eye-off-outline"
         :messstellen="nichtSichtbareMessstellen"
       />
@@ -41,35 +41,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
+import type MessstelleOverviewDTO from "@/domain/dto/messstelle/MessstelleOverviewDTO";
+
+import { computed, onMounted, ref } from "vue";
 
 import MessstelleService from "@/api/service/MessstelleService";
 import MessstelleOverviewPanel from "@/components/messstelle/MessstelleOverviewPanel.vue";
-import MessstelleOverviewDTO from "@/domain/dto/messstelle/MessstelleOverviewDTO";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 
 const snackbarStore = useSnackbarStore();
 
-const hasMessstellen: Ref<boolean> = ref(false);
+const hasMessstellen = ref(false);
 
-const geplanteMessstellen: Ref<Array<MessstelleOverviewDTO>> = ref(
-  [] as Array<MessstelleOverviewDTO>
-);
-const neuUmgesetztMessstellen: Ref<Array<MessstelleOverviewDTO>> = ref(
-  [] as Array<MessstelleOverviewDTO>
-);
-const nichtSichtbareMessstellen: Ref<Array<MessstelleOverviewDTO>> = ref(
-  [] as Array<MessstelleOverviewDTO>
-);
+const geplanteMessstellen = ref<Array<MessstelleOverviewDTO>>([]);
+const neuUmgesetztMessstellen = ref<Array<MessstelleOverviewDTO>>([]);
+const nichtSichtbareMessstellen = ref<Array<MessstelleOverviewDTO>>([]);
 
-const geplanteMessstellenHeader: ComputedRef<string> = computed(() => {
+const geplanteMessstellenHeader = computed(() => {
   return `Geplante Messstellen: ${geplanteMessstellen.value.length}`;
 });
-const neuUmgesetzteMessstellenHeader: ComputedRef<string> = computed(() => {
+const neuUmgesetzteMessstellenHeader = computed(() => {
   return `Neue Messstellen: ${neuUmgesetztMessstellen.value.length}`;
 });
-const nichtSichtbareMessstellenHeader: ComputedRef<string> = computed(() => {
+const nichtSichtbareMessstellenHeader = computed(() => {
   return `Nicht sichtbare Messstellen: ${nichtSichtbareMessstellen.value.length}`;
 });
 
@@ -117,11 +112,3 @@ function resetDataArrays(): void {
   nichtSichtbareMessstellen.value = [];
 }
 </script>
-<!--<style scoped lang="sass">-->
-<!--// Entfernt die Elevation beim ExpansionPanel. Die Build-In-Funktion (flat) kann leider nicht genutzt werden,-->
-<!--// da dann auch die Trennstriche zwischen den Panels entfernt werden.-->
-<!--@import 'vuetify/lib/components/VExpansionPanel/_variables.scss'-->
-<!--.v-expansion-panel-->
-<!--  &::before-->
-<!--    +elevation(0)-->
-<!--</style>-->

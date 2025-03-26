@@ -9,7 +9,7 @@
     </v-card-title>
     <v-expansion-panels
       v-if="hasOpenZaehlungen"
-      hover
+      variant="accordion"
       focusable
       elevation="0"
     >
@@ -48,65 +48,55 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, onMounted, ref, Ref } from "vue";
+import { computed, onMounted, ref} from "vue";
 
 import ZaehlungService from "@/api/service/ZaehlungService";
 import IconOptions from "@/components/icons/IconOptions";
 import OpenZaehlungPanel from "@/components/zaehlung/OpenZaehlungPanel.vue";
-import OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
+import type OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
 import Status, { statusIcon } from "@/domain/enums/Status";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import ZaehlungComparator from "@/util/ZaehlungComparator";
 
 const snackbarStore = useSnackbarStore();
 
-const hasOpenZaehlungen: Ref<boolean> = ref(false);
+const hasOpenZaehlungen = ref(false);
 
-const createdZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
-  [] as Array<OpenZaehlungDTO>
-);
-const instructedZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
-  [] as Array<OpenZaehlungDTO>
-);
-const countingZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
-  [] as Array<OpenZaehlungDTO>
-);
-const accomplishedZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
-  [] as Array<OpenZaehlungDTO>
-);
-const correctionZaehlungen: Ref<Array<OpenZaehlungDTO>> = ref(
-  [] as Array<OpenZaehlungDTO>
-);
+const createdZaehlungen = ref<Array<OpenZaehlungDTO>>([]);
+const instructedZaehlungen = ref<Array<OpenZaehlungDTO>>([]);
+const countingZaehlungen = ref<Array<OpenZaehlungDTO>>([]);
+const accomplishedZaehlungen = ref<Array<OpenZaehlungDTO>>([]);
+const correctionZaehlungen = ref<Array<OpenZaehlungDTO>>([]);
 
-const createdStatusDesign: ComputedRef<IconOptions> = computed(() => {
+const createdStatusDesign = computed(() => {
   return getStatusDesign(Status.CREATED);
 });
-const instructedStatusDesign: ComputedRef<IconOptions> = computed(() => {
+const instructedStatusDesign = computed(() => {
   return getStatusDesign(Status.INSTRUCTED);
 });
-const countingStatusDesign: ComputedRef<IconOptions> = computed(() => {
+const countingStatusDesign = computed(() => {
   return getStatusDesign(Status.COUNTING);
 });
-const accomplishedStatusDesign: ComputedRef<IconOptions> = computed(() => {
+const accomplishedStatusDesign = computed(() => {
   return getStatusDesign(Status.ACCOMPLISHED);
 });
-const correctionStatusDesign: ComputedRef<IconOptions> = computed(() => {
+const correctionStatusDesign = computed(() => {
   return getStatusDesign(Status.CORRECTION);
 });
 
-const getCreatedHeader: ComputedRef<string> = computed(() => {
+const getCreatedHeader = computed(() => {
   return `Angelegte Zählungen: ${createdZaehlungen.value.length}`;
 });
-const getInstructedHeader: ComputedRef<string> = computed(() => {
+const getInstructedHeader = computed(() => {
   return `Beauftragte Zählungen: ${instructedZaehlungen.value.length}`;
 });
-const getCountingHeader: ComputedRef<string> = computed(() => {
+const getCountingHeader = computed(() => {
   return `Laufende Zählungen: ${countingZaehlungen.value.length}`;
 });
-const getAccomplishedHeader: ComputedRef<string> = computed(() => {
+const getAccomplishedHeader = computed(() => {
   return `Durchgeführte Zählungen: ${accomplishedZaehlungen.value.length}`;
 });
-const getCorrectionHeader: ComputedRef<string> = computed(() => {
+const getCorrectionHeader = computed(() => {
   return `Fehlerhafte Zählungen: ${correctionZaehlungen.value.length}`;
 });
 
@@ -170,18 +160,10 @@ function getStatusDesign(status: Status): IconOptions {
   let design: IconOptions | undefined = statusIcon.get(status);
   if (!design) {
     design = {} as IconOptions;
-    design.color = "deep-orange lighten-4";
+    design.color = "deep-orange-lighten-4";
     design.iconPath = "mdi-calendar-question";
     design.tooltip = "Status unbekannt";
   }
   return design;
 }
 </script>
-<!--<style scoped lang="sass">-->
-<!--// Entfernt die Elevation beim ExpansionPanel. Die Build-In-Funktion (flat) kann leider nicht genutzt werden,-->
-<!--// da dann auch die Trennstriche zwischen den Panels entfernt werden.-->
-<!--@import 'vuetify/lib/components/VExpansionPanel/_variables.scss'-->
-<!--.v-expansion-panel-->
-<!--  &::before-->
-<!--    +elevation(0)-->
-<!--</style>-->

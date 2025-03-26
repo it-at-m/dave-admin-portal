@@ -1,17 +1,16 @@
 <template>
   <v-expansion-panel>
-    <v-expansion-panel-header>
+    <v-expansion-panel-title>
       <v-row no-gutters>
         <div style="align-self: center">
           <v-avatar
             :color="color"
-            size="50"
+            size="x-large"
           >
             <v-icon
-              large
-              dense
-              >{{ icon }}</v-icon
-            >
+              size="xx-large"
+              :icon="icon"
+            />
           </v-avatar>
         </div>
         <div
@@ -22,29 +21,27 @@
         </div>
         <v-spacer />
       </v-row>
-    </v-expansion-panel-header>
-    <v-expansion-panel-content class="mt-1">
+    </v-expansion-panel-title>
+    <v-expansion-panel-text class="mt-1">
       <v-list>
         <v-list-item
           v-for="(messstelle, index) in messstellen"
           :key="index"
           @click="openMessstelle(messstelle)"
         >
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ getItemTitle(messstelle) }}
-            </v-list-item-title>
-          </v-list-item-content>
+          <v-list-item-title>
+            {{ getItemTitle(messstelle) }}
+          </v-list-item-title>
         </v-list-item>
       </v-list>
-    </v-expansion-panel-content>
+    </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import type MessstelleOverviewDTO from "@/domain/dto/messstelle/MessstelleOverviewDTO";
 
-import MessstelleOverviewDTO from "@/domain/dto/messstelle/MessstelleOverviewDTO";
+import { useRouter } from "vue-router";
 
 interface Props {
   header: string;

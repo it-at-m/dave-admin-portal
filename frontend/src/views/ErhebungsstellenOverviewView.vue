@@ -1,11 +1,8 @@
 <template>
-  <v-container
-    fluid
-    class="pa-0"
-  >
+  <v-sheet class="dave-default">
     <zaehlstelle-overview />
     <messstelle-overview />
-  </v-container>
+  </v-sheet>
 </template>
 
 <script setup lang="ts">

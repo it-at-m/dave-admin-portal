@@ -1,4 +1,5 @@
-import BaseEntity from "@/domain/BaseEntity";
+import type BaseEntity from "@/domain/BaseEntity";
+
 import Status from "@/domain/enums/Status";
 import Zaehlart from "@/domain/enums/Zaehlart";
 

@@ -1,4 +1,5 @@
-import BaseEntity from "@/domain/BaseEntity";
+import type BaseEntity from "@/domain/BaseEntity";
+
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
 
 export default interface MessstelleOverviewDTO extends BaseEntity {

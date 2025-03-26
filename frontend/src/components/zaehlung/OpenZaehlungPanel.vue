@@ -1,17 +1,16 @@
 <template>
   <v-expansion-panel>
-    <v-expansion-panel-header>
+    <v-expansion-panel-title>
       <v-row no-gutters>
         <div style="align-self: center">
           <v-avatar
             :color="statusDesign.color"
-            size="50"
+            size="x-large"
           >
             <v-icon
-              large
-              dense
-              >{{ statusDesign.iconPath }}</v-icon
-            >
+              size="xx-large"
+              :icon="statusDesign.iconPath"
+            />
           </v-avatar>
         </div>
         <div
@@ -22,33 +21,32 @@
         </div>
         <v-spacer />
       </v-row>
-    </v-expansion-panel-header>
-    <v-expansion-panel-content class="mt-1">
+    </v-expansion-panel-title>
+    <v-expansion-panel-text class="mt-1">
       <v-list>
         <v-list-item
           v-for="(zaehlung, index) in zaehlungen"
           :key="index"
           @click="openZaehlung(zaehlung)"
         >
-          <!--eslint-disable vue/no-v-text-v-html-on-component-->
-          <v-list-item-content>
-            <v-list-item-title v-text="getItemTitle(zaehlung)" />
-            <v-list-item-subtitle v-text="getItemSubtitle(zaehlung)" />
-          </v-list-item-content>
-          <!--eslint-enable vue/no-v-text-v-html-on-component-->
+          <v-list-item-title> {{ getItemTitle(zaehlung) }} </v-list-item-title>
+          <v-list-item-subtitle>
+            {{ getItemSubtitle(zaehlung) }}
+          </v-list-item-subtitle>
         </v-list-item>
       </v-list>
-    </v-expansion-panel-content>
+    </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
 
 <script setup lang="ts">
+import type OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
+
 import { useRouter } from "vue-router";
 
 import IconOptions from "@/components/icons/IconOptions";
-import OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
 import { zaehlartText } from "@/domain/enums/Zaehlart";
-import i18n from "@/i18n";
+import { useDateUtils } from "@/util/DateUtils";
 
 interface Props {
   header: string;
@@ -59,12 +57,10 @@ interface Props {
 defineProps<Props>();
 
 const router = useRouter();
+const dateUtils = useDateUtils();
+
 function getItemTitle(zaehlung: OpenZaehlungDTO) {
-  return `Zählung vom ${i18n.d(
-    new Date(zaehlung.datum),
-    "short",
-    "de-DE"
-  )} an Zählstelle ${zaehlung.zaehlstellenNummer} in ${zaehlung.stadtbezirk}`;
+  return `Zählung vom ${dateUtils.getShortVersionOfDate(zaehlung.datum)} an Zählstelle ${zaehlung.zaehlstellenNummer} in ${zaehlung.stadtbezirk}`;
 }
 
 function getItemSubtitle(zaehlung: OpenZaehlungDTO) {
