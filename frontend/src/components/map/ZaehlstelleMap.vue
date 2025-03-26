@@ -18,13 +18,14 @@
     <v-speed-dial
       v-if="showSpeedDial"
       v-model="speedDialOpen"
+      persistent
       location="top"
     >
       <template #activator="{ props: activatorProps }">
         <v-btn
           v-bind="activatorProps"
           key="speedDial"
-          v-tooltip:start="'Neue Zählstelle anlegen'"
+          v-tooltip:start="speedDialTooltip"
           color="secondary"
           :icon="speedDialIcon"
           size="large"
@@ -38,87 +39,24 @@
         />
       </template>
       <v-btn
-        v-if="hasNewMarker"
         key="createZaehlstelle"
         v-tooltip:start="'Bestätigen'"
         icon="mdi-check"
         size="small"
         color="green"
+        :disabled="!hasNewMarker"
         @click="createZaehlstelle"
       />
       <v-btn
-        v-if="hasNewMarker"
         key="deleteNewMarker"
         v-tooltip:start="'Entfernen'"
         icon="mdi-delete"
         size="small"
         color="red"
+        :disabled="!hasNewMarker"
         @click="deleteNewMarker"
       />
     </v-speed-dial>
-
-    <!--    <div v-if="showSpeedDial">-->
-    <!--      <v-speed-dial-->
-    <!--        v-if="!hasNewMarker"-->
-    <!--        v-model="fab"-->
-    <!--        absolute-->
-    <!--        bottom-->
-    <!--        right-->
-    <!--      >-->
-    <!--        <template #activator>-->
-    <!--          <v-btn-->
-    <!--            v-model="fab"-->
-    <!--            dark-->
-    <!--            fab-->
-    <!--            color="secondary"-->
-    <!--            @click="addZaehlstellenMarker"-->
-    <!--          >-->
-    <!--            <v-icon v-if="addMarker"> mdi-close </v-icon>-->
-    <!--            <v-icon v-else> mdi-map-marker-plus-outline </v-icon>-->
-    <!--          </v-btn>-->
-    <!--        </template>-->
-    <!--      </v-speed-dial>-->
-
-    <!--      <v-speed-dial-->
-    <!--        v-if="hasNewMarker"-->
-    <!--        v-model="fab2"-->
-    <!--        absolute-->
-    <!--        bottom-->
-    <!--        right-->
-    <!--        open-on-hover-->
-    <!--      >-->
-    <!--        <template #activator>-->
-    <!--          <v-btn-->
-    <!--            v-model="fab2"-->
-    <!--            dark-->
-    <!--            fab-->
-    <!--            color="secondary"-->
-    <!--          >-->
-    <!--            <v-icon> mdi-check </v-icon>-->
-    <!--            /-->
-    <!--            <v-icon> mdi-delete </v-icon>-->
-    <!--          </v-btn>-->
-    <!--        </template>-->
-    <!--        <v-btn-->
-    <!--          fab-->
-    <!--          dark-->
-    <!--          small-->
-    <!--          color="green"-->
-    <!--          @click="createZaehlstelle"-->
-    <!--        >-->
-    <!--          <v-icon>mdi-check</v-icon>-->
-    <!--        </v-btn>-->
-    <!--        <v-btn-->
-    <!--          fab-->
-    <!--          dark-->
-    <!--          small-->
-    <!--          color="red"-->
-    <!--          @click="deleteNewMarker"-->
-    <!--        >-->
-    <!--          <v-icon>mdi-delete</v-icon>-->
-    <!--        </v-btn>-->
-    <!--      </v-speed-dial>-->
-    <!--    </div>-->
 
     <create-zaehlstelle-dialog
       :show-dialog="showCreateZaehlstelleDialog"
@@ -250,11 +188,17 @@ const hasNewMarker = computed(() => {
   return newMarker.value !== null;
 });
 const speedDialIcon = computed(() => {
-  let icon = "mdi-plus-thick";
+  let icon = "mdi-map-marker-plus-outline";
   if (addMarker.value) {
-    icon = "mdi-map-marker-plus-outline";
+    icon = "mdi-map-marker-off-outline";
   }
-
+  return icon;
+});
+const speedDialTooltip = computed(() => {
+  let icon = "Neue Zählstelle anlegen";
+  if (addMarker.value) {
+    icon = "Anlegen abbrechen";
+  }
   return icon;
 });
 const customCursor = computed(() => {
@@ -332,7 +276,7 @@ function deleteNewMarker() {
 function resetBooleans() {
   fab.value = false;
   fab2.value = false;
-  speedDialOpen.value = false;
+  // speedDialOpen.value = false;
   addMarker.value = false;
   useCustomCursor.value = false;
 }
@@ -750,22 +694,5 @@ wurden die Farbe auf schwarz gesetzt */
 
 .leaflet-control-zoom a.leaflet-control-zoom-out {
   color: black;
-}
-
-.zaehlart-circle-red {
-  height: 30px;
-  width: 30px;
-  line-height: 30px;
-  border-radius: 50%;
-  background: #f44336;
-  text-align: center;
-}
-.zaehlart-circle-secondary {
-  height: 30px;
-  width: 30px;
-  line-height: 30px;
-  border-radius: 50%;
-  background: #f57c00;
-  text-align: center;
 }
 </style>
