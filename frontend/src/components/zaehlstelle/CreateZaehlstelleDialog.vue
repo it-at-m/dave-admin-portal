@@ -25,10 +25,12 @@
 </template>
 
 <script setup lang="ts">
+import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
+
 import { LatLng } from "leaflet";
 import { computed } from "vue";
 
-import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
+import CreateZaehlstelleForm from "@/components/zaehlstelle/CreateZaehlstelleForm.vue";
 
 interface Props {
   showDialog: boolean;
