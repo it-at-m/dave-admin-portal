@@ -17,11 +17,11 @@
               cols="12"
               md="6"
             >
-              <div>
-                <span class="text-caption">Zählstellennummer</span><br />
-                <span class="text text-info">{{ zaehlstellenummer }}</span
-                ><br /><br />
-              </div>
+              <lhm-text-field
+                caption="Zählstellennummer"
+                :text="zaehlstellenummer"
+                add-extra-br
+              />
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -31,9 +31,9 @@
             >
               <v-autocomplete
                 v-model="zaehlstelle.stadtbezirkNummer"
-                outlined
                 :items="getStadtbezirke"
-                dense
+                variant="outlined"
+                density="compact"
                 label="Stadtbezirk"
                 :rules="[
                   () => !!zaehlstelle.stadtbezirkNummer || pflichtfeldText,
@@ -48,15 +48,14 @@
               md="12"
             >
               <v-autocomplete
-                v-model="stadtbezirksviertelKeyVal"
-                outlined
+                v-model="stadtbezirksviertelModel"
+                variant="outlined"
                 :items="getStadtbezirksviertel"
-                dense
+                density="compact"
                 label="Stadtbezirksviertel"
                 :rules="[() => !!stadtbezirksviertelModel || pflichtfeldText]"
                 required
                 :disabled="!zaehlstelle.stadtbezirkNummer"
-                return-object
               ></v-autocomplete>
             </v-col>
           </v-row>
@@ -68,8 +67,8 @@
               <v-textarea
                 v-model="zaehlstelle.kommentar"
                 label="Kommentar"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
                 rows="2"
                 row-height="15"
                 counter="255"
@@ -87,10 +86,10 @@
                 v-model:search-input="newSuchwort"
                 multiple
                 label="Suchwörter"
-                outlined
-                dense
-                small-chips
-                deletable-chips
+                variant="outlined"
+                density="compact"
+                chips
+                closable-chips
                 class="tag-input"
                 append-icon="mdi-plus"
                 @click:append="addSuchwortToList"
@@ -100,19 +99,23 @@
               </v-combobox>
             </v-col>
           </v-row>
-          <v-card-actions>
+          <v-row no-gutters>
             <v-spacer />
             <v-btn
+              class="mr-2 text-none"
               color="secondary"
+              text="Speichern"
+              variant="elevated"
               @click="save()"
-              >Speichern
-            </v-btn>
+            />
             <v-btn
-              color="grey lighten-1"
+              class="text-none"
+              color="grey-lighten-1"
+              text="Abbrechen"
+              variant="elevated"
               @click="cancel()"
-              >Abbrechen
-            </v-btn>
-          </v-card-actions>
+            />
+          </v-row>
         </v-form>
       </v-col>
       <v-col
@@ -134,13 +137,13 @@
 import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
 import type NextZaehlstellennummerDTO from "@/domain/dto/laden/NextZaehlstellennummerDTO";
 import type GeoPoint from "@/domain/GeoPoint";
-import type KeyVal from "@/domain/KeyVal";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
+import LhmTextField from "@/components/common/LhmTextField.vue";
 import MiniMap from "@/components/map/MiniMap.vue";
 import { stadtbezirke } from "@/domain/enums/Stadtbezirk";
 import { stadtbezirksviertel } from "@/domain/enums/Stadtbezirksviertel";
@@ -152,12 +155,10 @@ const validZaehlstelle = ref(false);
 
 const zaehlstelle = ref(DefaultObjectCreator.createDefaultZaehlstelleDTO());
 
-const stadtbezirksviertelModel = ref("");
+const stadtbezirksviertelModel = ref<string | undefined>(undefined);
 const laufendeNummer = ref("");
 
 const newSuchwort = ref("");
-
-const stadtbezirksviertelKeyVal = ref({} as KeyVal);
 
 const suchwoerter = ref<Array<string>>([]);
 
@@ -201,25 +202,21 @@ const pflichtfeldText = computed(() => {
 watch(
   () => zaehlstelle.value.stadtbezirkNummer,
   () => {
-    stadtbezirksviertelModel.value = "";
-    stadtbezirksviertelKeyVal.value = {} as KeyVal;
+    stadtbezirksviertelModel.value = undefined;
   }
 );
 
-watch(stadtbezirksviertelKeyVal, (stadtbezirksviertelNew: KeyVal) => {
-  if (stadtbezirksviertelNew && stadtbezirksviertelNew.value) {
-    stadtbezirksviertelModel.value = stadtbezirksviertelNew.value;
-    const idStartsWith = `${zaehlstelle.value.stadtbezirkNummer}${stadtbezirksviertelModel.value}`;
-    ZaehlstellenService.getNextZaehlstellennummer(
-      idStartsWith,
-      zaehlstelle.value.stadtbezirkNummer
-    )
-      .then((result: NextZaehlstellennummerDTO) => {
-        zaehlstelle.value.nummer = result.nummer;
-        laufendeNummer.value = result.nummer;
-      })
-      .catch((error) => snackbarStore.showApiError(error));
-  }
+watch(stadtbezirksviertelModel, () => {
+  const idStartsWith = `${zaehlstelle.value.stadtbezirkNummer}${stadtbezirksviertelModel.value}`;
+  ZaehlstellenService.getNextZaehlstellennummer(
+    idStartsWith,
+    zaehlstelle.value.stadtbezirkNummer
+  )
+    .then((result: NextZaehlstellennummerDTO) => {
+      zaehlstelle.value.nummer = result.nummer;
+      laufendeNummer.value = result.nummer;
+    })
+    .catch((error) => snackbarStore.showApiError(error));
 });
 
 // Fuegt das eingegebene Wort den Suchwoertern hinzu
@@ -258,8 +255,7 @@ function cancel(): void {
 
 function resetZaehlstelle() {
   zaehlstelle.value = DefaultObjectCreator.createDefaultZaehlstelleDTO();
-  stadtbezirksviertelModel.value = "";
-  stadtbezirksviertelKeyVal.value = {} as KeyVal;
+  stadtbezirksviertelModel.value = undefined;
   laufendeNummer.value = "";
   suchwoerter.value = [];
   newSuchwort.value = "";
@@ -274,10 +270,3 @@ function updateZaehlstellenCoords(newCoords: LatLng): void {
   zaehlstelle.value.punkt.lon = newCoords.lng.toString();
 }
 </script>
-
-<style scoped>
-.text-info {
-  font-size: 18px;
-  color: black;
-}
-</style>

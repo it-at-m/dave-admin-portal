@@ -5,8 +5,8 @@
       class="text-caption"
       >{{ caption }}</span
     ><br />
-    <span class="text text-info">{{ text }}</span
-    ><br /><br v-if="fahrbeziehung" />
+    <span class="lhm-text-field">{{ text }}</span>
+    <br /><br v-if="addExtraBr" />
   </div>
 </template>
 
@@ -15,20 +15,21 @@ import { isEmpty } from "lodash";
 import { computed } from "vue";
 
 interface Props {
-  fahrbeziehung?: boolean;
+  addExtraBr?: boolean;
   text?: string;
   caption: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  fahrbeziehung: false,
+  addExtraBr: false,
+  text: "",
 });
 
 const showCaption = computed(() => !isEmpty(props.caption));
 </script>
 
 <style scoped>
-.text-info {
+.lhm-text-field {
   font-size: 18px;
   color: black;
 }

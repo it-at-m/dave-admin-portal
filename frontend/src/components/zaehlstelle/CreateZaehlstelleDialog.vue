@@ -9,7 +9,11 @@
       flat
     >
       <v-card-title>
-        <v-icon left>mdi-map-marker-plus-outline</v-icon>
+        <v-icon
+          start
+          size="small"
+          icon="mdi-map-marker-plus-outline"
+        />
         {{ DIALOG_TITLE }}
       </v-card-title>
 
