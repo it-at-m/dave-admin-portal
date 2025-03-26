@@ -84,6 +84,7 @@
             >
               <v-combobox
                 v-model="suchwoerter"
+                v-model:search-input="newSuchwort"
                 multiple
                 label="Suchwörter"
                 outlined
@@ -91,7 +92,6 @@
                 small-chips
                 deletable-chips
                 class="tag-input"
-                :search-input.sync="newSuchwort"
                 append-icon="mdi-plus"
                 @click:append="addSuchwortToList"
                 @blur="addSuchwortToList"
@@ -123,7 +123,7 @@
           :coords="coords"
           height="100%"
           width="100%"
-          @updateZaehlstellenCoords="updateZaehlstellenCoords"
+          @update-zaehlstellen-coords="updateZaehlstellenCoords"
         />
       </v-col>
     </v-row>
@@ -131,17 +131,19 @@
 </template>
 
 <script setup lang="ts">
+import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
+import type NextZaehlstellennummerDTO from "@/domain/dto/laden/NextZaehlstellennummerDTO";
+import type GeoPoint from "@/domain/GeoPoint";
+import type KeyVal from "@/domain/KeyVal";
+
 import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
-import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import NextZaehlstellennummerDTO from "@/domain/dto/laden/NextZaehlstellennummerDTO";
+import MiniMap from "@/components/map/MiniMap.vue";
 import { stadtbezirke } from "@/domain/enums/Stadtbezirk";
 import { stadtbezirksviertel } from "@/domain/enums/Stadtbezirksviertel";
-import GeoPoint from "@/domain/GeoPoint";
-import KeyVal from "@/domain/KeyVal";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
