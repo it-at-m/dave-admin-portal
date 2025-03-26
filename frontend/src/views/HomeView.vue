@@ -1,14 +1,11 @@
 <template>
-  <v-sheet
-    height="100%"
-    width="100%"
-  >
+  <v-main class="dave-default">
     <zaehlstelle-map
       height="100%"
       width="100%"
       :zoom="12"
     />
-  </v-sheet>
+  </v-main>
 </template>
 
 <script setup lang="ts">
