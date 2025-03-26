@@ -15,68 +15,110 @@
       }"
     />
 
-    <div v-if="showSpeedDial">
-      <v-speed-dial
-        v-if="!hasNewMarker"
-        v-model="fab"
-        absolute
-        bottom
-        right
-      >
-        <template #activator>
-          <v-btn
-            v-model="fab"
-            dark
-            fab
-            color="secondary"
-            @click="addZaehlstellenMarker"
-          >
-            <v-icon v-if="addMarker"> mdi-close </v-icon>
-            <v-icon v-else> mdi-map-marker-plus-outline </v-icon>
-          </v-btn>
-        </template>
-      </v-speed-dial>
-
-      <v-speed-dial
+    <v-speed-dial
+      v-if="showSpeedDial"
+      v-model="speedDialOpen"
+      location="top"
+    >
+      <template #activator="{ props: activatorProps }">
+        <v-btn
+          v-bind="activatorProps"
+          key="speedDial"
+          v-tooltip:start="'Neue Zählstelle anlegen'"
+          color="secondary"
+          :icon="speedDialIcon"
+          size="large"
+          elevation="6"
+          location="bottom end"
+          position="absolute"
+          class="mr-4 mb-4"
+          style="z-index: 400"
+          :data-x="activatorProps"
+          @click="addZaehlstellenMarker"
+        />
+      </template>
+      <v-btn
         v-if="hasNewMarker"
-        v-model="fab2"
-        absolute
-        bottom
-        right
-        open-on-hover
-      >
-        <template #activator>
-          <v-btn
-            v-model="fab2"
-            dark
-            fab
-            color="secondary"
-          >
-            <v-icon> mdi-check </v-icon>
-            /
-            <v-icon> mdi-delete </v-icon>
-          </v-btn>
-        </template>
-        <v-btn
-          fab
-          dark
-          small
-          color="green"
-          @click="createZaehlstelle"
-        >
-          <v-icon>mdi-check</v-icon>
-        </v-btn>
-        <v-btn
-          fab
-          dark
-          small
-          color="red"
-          @click="deleteNewMarker"
-        >
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-      </v-speed-dial>
-    </div>
+        key="createZaehlstelle"
+        v-tooltip:start="'Bestätigen'"
+        icon="mdi-check"
+        size="small"
+        color="green"
+        @click="createZaehlstelle"
+      />
+      <v-btn
+        v-if="hasNewMarker"
+        key="deleteNewMarker"
+        v-tooltip:start="'Entfernen'"
+        icon="mdi-delete"
+        size="small"
+        color="red"
+        @click="deleteNewMarker"
+      />
+    </v-speed-dial>
+
+    <!--    <div v-if="showSpeedDial">-->
+    <!--      <v-speed-dial-->
+    <!--        v-if="!hasNewMarker"-->
+    <!--        v-model="fab"-->
+    <!--        absolute-->
+    <!--        bottom-->
+    <!--        right-->
+    <!--      >-->
+    <!--        <template #activator>-->
+    <!--          <v-btn-->
+    <!--            v-model="fab"-->
+    <!--            dark-->
+    <!--            fab-->
+    <!--            color="secondary"-->
+    <!--            @click="addZaehlstellenMarker"-->
+    <!--          >-->
+    <!--            <v-icon v-if="addMarker"> mdi-close </v-icon>-->
+    <!--            <v-icon v-else> mdi-map-marker-plus-outline </v-icon>-->
+    <!--          </v-btn>-->
+    <!--        </template>-->
+    <!--      </v-speed-dial>-->
+
+    <!--      <v-speed-dial-->
+    <!--        v-if="hasNewMarker"-->
+    <!--        v-model="fab2"-->
+    <!--        absolute-->
+    <!--        bottom-->
+    <!--        right-->
+    <!--        open-on-hover-->
+    <!--      >-->
+    <!--        <template #activator>-->
+    <!--          <v-btn-->
+    <!--            v-model="fab2"-->
+    <!--            dark-->
+    <!--            fab-->
+    <!--            color="secondary"-->
+    <!--          >-->
+    <!--            <v-icon> mdi-check </v-icon>-->
+    <!--            /-->
+    <!--            <v-icon> mdi-delete </v-icon>-->
+    <!--          </v-btn>-->
+    <!--        </template>-->
+    <!--        <v-btn-->
+    <!--          fab-->
+    <!--          dark-->
+    <!--          small-->
+    <!--          color="green"-->
+    <!--          @click="createZaehlstelle"-->
+    <!--        >-->
+    <!--          <v-icon>mdi-check</v-icon>-->
+    <!--        </v-btn>-->
+    <!--        <v-btn-->
+    <!--          fab-->
+    <!--          dark-->
+    <!--          small-->
+    <!--          color="red"-->
+    <!--          @click="deleteNewMarker"-->
+    <!--        >-->
+    <!--          <v-icon>mdi-delete</v-icon>-->
+    <!--        </v-btn>-->
+    <!--      </v-speed-dial>-->
+    <!--    </div>-->
 
     <create-zaehlstelle-dialog
       :show-dialog="showCreateZaehlstelleDialog"
@@ -88,22 +130,25 @@
 </template>
 
 <script setup lang="ts">
-import L, { Icon, LatLng, latLng, LeafletMouseEvent, Marker } from "leaflet";
+import type AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
+import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
+import type MessstelleKarteDTO from "@/domain/dto/messstelle/MessstelleKarteDTO";
+import type TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
+import type TooltipZaehlstelleDTO from "@/domain/dto/TooltipZaehlstelleDTO";
+import type ZaehlstelleKarteDTO from "@/domain/dto/ZaehlstelleKarteDTO";
+import type { LeafletMouseEvent } from "leaflet";
+
+import L, { Icon, LatLng, latLng, Marker } from "leaflet";
 import { cloneDeep } from "lodash";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { useRouter } from "vue-router/composables";
+import { useRouter } from "vue-router";
 
 import SucheService from "@/api/service/SucheService";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 import markerIconDiamondShadow from "@/assets/cards-diamond-shadow.png";
 import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconRed from "@/assets/marker-icon-red.png";
-import AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
-import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import MessstelleKarteDTO from "@/domain/dto/messstelle/MessstelleKarteDTO";
-import TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
-import TooltipZaehlstelleDTO from "@/domain/dto/TooltipZaehlstelleDTO";
-import ZaehlstelleKarteDTO from "@/domain/dto/ZaehlstelleKarteDTO";
+import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleDialog.vue";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
@@ -146,7 +191,7 @@ const mapRef = ref<HTMLDivElement | null>(null);
 
 let map: L.Map;
 let mapMarkerClusterGroup = L.markerClusterGroup();
-let zaehlartenLayer = L.layerGroup();
+const zaehlartenLayer = L.layerGroup();
 
 onMounted(() => {
   initMap();
@@ -194,6 +239,7 @@ const showSpeedDial = computed(() => {
 });
 
 const newMarker = ref<Marker | null>(null);
+const speedDialOpen = ref(false);
 const fab = ref(false);
 const fab2 = ref(false);
 const addMarker = ref(false);
@@ -202,6 +248,14 @@ const showCreateZaehlstelleDialog = ref(false);
 // Schalter zum Wechseln der Buttons
 const hasNewMarker = computed(() => {
   return newMarker.value !== null;
+});
+const speedDialIcon = computed(() => {
+  let icon = "mdi-plus-thick";
+  if (addMarker.value) {
+    icon = "mdi-map-marker-plus-outline";
+  }
+
+  return icon;
 });
 const customCursor = computed(() => {
   if (useCustomCursor.value) {
@@ -242,7 +296,7 @@ function createMarkerForNewZaehlstelle(coords: LatLng) {
 
 // Erzeugt einen neuen roten Marker auf der Karte
 function createNewMarker(coords: LatLng): Marker {
-  let defaultIcon = new Icon.Default();
+  const defaultIcon = new Icon.Default();
   defaultIcon.options.iconUrl = markerIconRed;
   return new Marker(coords, {
     icon: defaultIcon,
@@ -278,6 +332,7 @@ function deleteNewMarker() {
 function resetBooleans() {
   fab.value = false;
   fab2.value = false;
+  speedDialOpen.value = false;
   addMarker.value = false;
   useCustomCursor.value = false;
 }
@@ -476,7 +531,10 @@ function setMarkerToMap() {
 }
 
 function searchErhebungsstelle() {
-  SucheService.searchErhebungsstelle(searchStore.getLastSearchQuery)
+  SucheService.searchErhebungsstelle(
+    searchStore.getLastSearchQuery,
+    searchStore.getSearchAndFilterOptions
+  )
     .then((result) => {
       searchStore.setSearchResult(cloneDeep(result));
     })
