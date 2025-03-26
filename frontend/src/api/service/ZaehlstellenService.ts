@@ -33,11 +33,9 @@ export default class ZaehlstellenService {
     );
   }
 
-  static getZaehlstellenByUnreadMessages(
-    participantId: number
-  ): Promise<ZaehlstelleDTO[]> {
+  static getZaehlstellenByUnreadMessages(): Promise<ZaehlstelleDTO[]> {
     return FetchService.getData(
-      `${this.ENDPOINT}/byUnreadMessages?participant=${participantId}`,
+      `${this.ENDPOINT}/unread-messages`,
       "Beim Holen der ungelesenen Nachrichten ist ein Fehler aufgetreten."
     );
   }
