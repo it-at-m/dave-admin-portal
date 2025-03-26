@@ -56,7 +56,6 @@ onMounted(() => {
  * Zählstellen mit ungelesenen Nachrichten fuer das Mobilitaetsreferat laden
  * @private
  */
-// TODO umstellen, damit keine ID mehr benötigt wird
 function loadZaehlstellenWithUnreadMessages(): void {
   ZaehlstellenService.getZaehlstellenByUnreadMessages()
     .then((result) => {
