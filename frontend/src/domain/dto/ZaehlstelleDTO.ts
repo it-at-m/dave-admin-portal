@@ -1,4 +1,4 @@
-import BaseEntity from "@/domain/BaseEntity";
+import type BaseEntity from "@/domain/BaseEntity";
 import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 import GeoPoint from "@/domain/GeoPoint";
 

@@ -1,4 +1,4 @@
-import BaseEntity from "@/domain/BaseEntity";
+import type BaseEntity from "@/domain/BaseEntity";
 import FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
 import PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
 import Quelle from "@/domain/enums/Quelle";

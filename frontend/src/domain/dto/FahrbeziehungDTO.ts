@@ -1,4 +1,4 @@
-import BaseEntity from "@/domain/BaseEntity";
+import type BaseEntity from "@/domain/BaseEntity";
 import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 
 export default interface FahrbeziehungDTO extends BaseEntity {

@@ -1,4 +1,4 @@
-import BaseEntity from "@/domain/BaseEntity";
+import type BaseEntity from "@/domain/BaseEntity";
 import Himmelsrichtungen from "@/domain/enums/Himmelsrichtungen";
 
 export default interface MessquerschnittEditDTO extends BaseEntity {
