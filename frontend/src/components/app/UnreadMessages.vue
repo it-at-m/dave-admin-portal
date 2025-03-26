@@ -12,6 +12,9 @@
     class="overflow-y-auto"
   >
     <v-list density="compact">
+      <v-list-subheader>
+        Ungelesene Nachrichten in folgenden Zählungen:
+      </v-list-subheader>
       <v-list-item
         v-for="(item, index) in items"
         :key="index"
