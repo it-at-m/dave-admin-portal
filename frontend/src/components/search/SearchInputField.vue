@@ -37,6 +37,7 @@
     <template #append>
       <v-icon
         v-tooltip:bottom="'Such- und Filtereinstellungen'"
+        style="opacity: 1"
         :color="isDefaultFilter ? '' : 'secondary'"
         @click="openSearchAndFilterDialog"
       >
