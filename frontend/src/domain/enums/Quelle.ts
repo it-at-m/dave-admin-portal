@@ -1,4 +1,4 @@
-import KeyVal from "@/domain/KeyVal";
+import type KeyVal from "@/domain/KeyVal";
 
 export enum Quelle {
   // manuelle Erhebung

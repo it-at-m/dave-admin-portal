@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 import { Levels } from "@/api/error";
 import { useSnackbarStore } from "@/store/SnackbarStore";
@@ -35,8 +35,8 @@ const defaultTimeout = 6000;
 
 const show = ref(false);
 const timeout = ref(defaultTimeout);
-const snackbarTextPart1: Ref<string | undefined> = ref("");
-const snackbarTextPart2: Ref<string | undefined> = ref("");
+const snackbarTextPart1 = ref<string | undefined>("");
+const snackbarTextPart2 = ref<string | undefined>("");
 const color = ref(Levels.INFO);
 
 const snackbarStore = useSnackbarStore();

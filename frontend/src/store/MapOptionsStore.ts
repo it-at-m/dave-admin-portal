@@ -1,7 +1,7 @@
+import type MapOptions from "@/domain/MapOptions";
+
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-
-import MapOptions from "@/domain/MapOptions";
 
 export const useMapOptionsStore = defineStore("mapOptionsStore", () => {
   const mapOptions = ref<MapOptions | undefined>(undefined);

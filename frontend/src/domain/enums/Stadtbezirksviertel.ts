@@ -1,4 +1,4 @@
-import KeyVal from "@/domain/KeyVal";
+import type KeyVal from "@/domain/KeyVal";
 
 export const Stadtbezirksviertel1ToBeschreibung = new Map<number, string>([
   [11, "01.1.1"],
