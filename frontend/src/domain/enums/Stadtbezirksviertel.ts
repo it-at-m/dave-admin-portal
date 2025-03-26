@@ -675,7 +675,7 @@ export const stadtbezirksviertel = (bezirksnummer: string) => {
   }
 
   toConvert.forEach((val, key) => {
-    result.push({ value: key.toString(), text: val });
+    result.push({ value: key.toString(), title: val });
   });
   return result;
 };

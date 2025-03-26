@@ -48,17 +48,17 @@ export const zaehlartText = new Map<string, string>([
 ]);
 
 export const zaehlartenDropDown = new Array<KeyVal>(
-  { value: Zaehlart.N, text: zaehlartText.get(Zaehlart.N)! },
-  { value: Zaehlart.H, text: zaehlartText.get(Zaehlart.H)! },
-  { value: Zaehlart.Q, text: zaehlartText.get(Zaehlart.Q)! },
-  { value: Zaehlart.Q_, text: zaehlartText.get(Zaehlart.Q_)! },
-  { value: Zaehlart.QB, text: zaehlartText.get(Zaehlart.QB)! },
-  { value: Zaehlart.QH, text: zaehlartText.get(Zaehlart.QH)! },
-  { value: Zaehlart.QI, text: zaehlartText.get(Zaehlart.QI)! },
-  { value: Zaehlart.QS, text: zaehlartText.get(Zaehlart.QS)! },
-  { value: Zaehlart.QT, text: zaehlartText.get(Zaehlart.QT)! },
-  { value: Zaehlart.QR, text: zaehlartText.get(Zaehlart.QR)! },
-  { value: Zaehlart.R, text: zaehlartText.get(Zaehlart.R)! },
-  { value: Zaehlart.T, text: zaehlartText.get(Zaehlart.T)! },
-  { value: Zaehlart.TK, text: zaehlartText.get(Zaehlart.TK)! }
+  { value: Zaehlart.N, title: zaehlartText.get(Zaehlart.N)! },
+  { value: Zaehlart.H, title: zaehlartText.get(Zaehlart.H)! },
+  { value: Zaehlart.Q, title: zaehlartText.get(Zaehlart.Q)! },
+  { value: Zaehlart.Q_, title: zaehlartText.get(Zaehlart.Q_)! },
+  { value: Zaehlart.QB, title: zaehlartText.get(Zaehlart.QB)! },
+  { value: Zaehlart.QH, title: zaehlartText.get(Zaehlart.QH)! },
+  { value: Zaehlart.QI, title: zaehlartText.get(Zaehlart.QI)! },
+  { value: Zaehlart.QS, title: zaehlartText.get(Zaehlart.QS)! },
+  { value: Zaehlart.QT, title: zaehlartText.get(Zaehlart.QT)! },
+  { value: Zaehlart.QR, title: zaehlartText.get(Zaehlart.QR)! },
+  { value: Zaehlart.R, title: zaehlartText.get(Zaehlart.R)! },
+  { value: Zaehlart.T, title: zaehlartText.get(Zaehlart.T)! },
+  { value: Zaehlart.TK, title: zaehlartText.get(Zaehlart.TK)! }
 );

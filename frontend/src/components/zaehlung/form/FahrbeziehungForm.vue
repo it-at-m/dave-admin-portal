@@ -32,7 +32,7 @@
       <lhm-text-field
         v-else
         :text="getHochrechnungsfaktorAsText(item.hochrechnungsfaktor)"
-        :fahrbeziehung="true"
+        :addExtraBr="true"
         caption=""
       />
     </template>

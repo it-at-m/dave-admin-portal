@@ -32,7 +32,7 @@
       <lhm-text-field
         v-else
         :text="getHochrechnungsfaktorAsText(item.hochrechnungsfaktor)"
-        :fahrbeziehung="true"
+        :add-extra-br="true"
         caption=""
       />
     </template>
@@ -50,6 +50,7 @@ import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
 import FahrbeziehungComparator from "@/util/FahrbeziehungComparator";
 import ObjectToTextTranslator from "@/util/ObjectToTextTranslator";
+import LhmTextField from "@/components/common/LhmTextField.vue";
 
 interface Props {
   height: string;

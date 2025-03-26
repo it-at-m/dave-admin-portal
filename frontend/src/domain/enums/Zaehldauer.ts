@@ -32,16 +32,16 @@ export default Zaehldauer;
 export const zaehldauerDropDown = new Array<KeyVal>(
   {
     value: Zaehldauer.DAUER_2_X_4_STUNDEN,
-    text: "Kurzzeiterhebung (6 bis 10 Uhr; 15 bis 19 Uhr)",
+    title: "Kurzzeiterhebung (6 bis 10 Uhr; 15 bis 19 Uhr)",
   },
   {
     value: Zaehldauer.DAUER_13_STUNDEN,
-    text: "13 Stunden Zählung (6 bis 19 Uhr)",
+    title: "13 Stunden Zählung (6 bis 19 Uhr)",
   },
   {
     value: Zaehldauer.DAUER_16_STUNDEN,
-    text: "16 Stunden Zählung (6 bis 22 Uhr)",
+    title: "16 Stunden Zählung (6 bis 22 Uhr)",
   },
-  { value: Zaehldauer.DAUER_24_STUNDEN, text: "Ganztageszählung" },
-  { value: Zaehldauer.SONSTIGE, text: "Sonderzähldauer" }
+  { value: Zaehldauer.DAUER_24_STUNDEN, title: "Ganztageszählung" },
+  { value: Zaehldauer.SONSTIGE, title: "Sonderzähldauer" }
 );

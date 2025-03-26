@@ -14,8 +14,8 @@ export enum Quelle {
 export default Quelle;
 
 export const quelleDropDown = new Array<KeyVal>(
-  { value: Quelle.MANUALLY, text: "Händisch" },
-  { value: Quelle.DETECTOR, text: "Detektor" },
-  { value: Quelle.RADAR, text: "Radar" },
-  { value: Quelle.VIDEO, text: "Video" }
+  { value: Quelle.MANUALLY, title: "Händisch" },
+  { value: Quelle.DETECTOR, title: "Detektor" },
+  { value: Quelle.RADAR, title: "Radar" },
+  { value: Quelle.VIDEO, title: "Video" }
 );
