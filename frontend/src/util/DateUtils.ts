@@ -1,4 +1,11 @@
+import { isEmpty } from "lodash";
+
+import i18n from "@/plugins/i18n";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+
 export function useDateUtils() {
+  const snackbarStore = useSnackbarStore();
+
   function formatDate(date: string): string {
     if (!date) {
       return "";
@@ -29,10 +36,59 @@ export function useDateUtils() {
     return new Date(date + "T" + time).toISOString();
   }
 
+  function getTimeOfDate(date: Date | string): string {
+    if (!date) {
+      return "";
+    }
+    if (typeof date === "string") {
+      date = getDatumOfString(date);
+    }
+    return `${i18n.global.d(date, "time", "de-DE")}`;
+  }
+
+  function getShortVersionOfDate(date: Date | string): string {
+    if (!date) {
+      return "";
+    }
+    if (typeof date === "string") {
+      date = getDatumOfString(date);
+    }
+    return `${i18n.global.d(date, "short", "de-DE")}`;
+  }
+
+  function getLongVersionOfDate(date: Date | string): string {
+    if (!date) {
+      return "";
+    }
+    if (typeof date === "string") {
+      date = getDatumOfString(date);
+    }
+    return `${i18n.global.d(date, "long", "de-DE")}`;
+  }
+
+  /**
+   * es muss für i18n ein Datumsobjekt erzeugt werden.
+   */
+  function getDatumOfString(datum: string): Date {
+    const d = datum;
+    if (Date.parse(d)) {
+      return new Date(d);
+    }
+    if (!isEmpty(datum)) {
+      snackbarStore.showError(
+        `Der angegebene Wert ${datum} kann nicht in ein Datum umgewandelt werden.`
+      );
+    }
+    return new Date();
+  }
+
   return {
     sortDatesDescAsStrings,
     formatDate,
     isDateAfter,
     formatDateForBackend,
+    getTimeOfDate,
+    getShortVersionOfDate,
+    getLongVersionOfDate,
   };
 }
