@@ -14,14 +14,7 @@
 
 <script setup lang="ts">
 import L, { Icon, LatLng } from "leaflet";
-import {
-  computed,
-  ComputedRef,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watch,
-} from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 import markerIconRed from "@/assets/marker-icon-red.png";
@@ -55,13 +48,14 @@ const minimapRef = ref<HTMLDivElement | null>(null);
 let minimap: L.Map;
 const marker = ref(createMarker());
 
-const resetMarkerSwitch: ComputedRef<boolean> = computed(() => {
-  return props.resetMarker;
-});
-
-watch(resetMarkerSwitch, () => {
-  resetMarker();
-});
+watch(
+  () => props.resetMarker,
+  () => {
+    marker.value.removeFrom(minimap);
+    marker.value = createMarker();
+    marker.value.addTo(minimap);
+  }
+);
 
 onMounted(() => {
   initMap();
@@ -98,12 +92,6 @@ function initMap(): void {
       marker.value.addTo(minimap);
     }, 10);
   });
-}
-
-function resetMarker(): void {
-  marker.value.removeFrom(minimap);
-  marker.value = createMarker();
-  marker.value.addTo(minimap);
 }
 
 function createLayersAndAddToMap(): void {
@@ -176,7 +164,7 @@ function createOverlayLayers(): L.Control.LayersObject {
 }
 
 function createMarker(): L.Marker {
-  let defaultIcon = new Icon.Default();
+  const defaultIcon = new Icon.Default();
   if (props.isMessstelle) {
     defaultIcon.options.iconUrl = markerIconDiamondRed;
   } else {
@@ -196,7 +184,7 @@ function createMarker(): L.Marker {
   return marker;
 }
 
-const mapStyle: ComputedRef<string> = computed(() => {
+const mapStyle = computed(() => {
   return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}; z-index: 1`;
 });
 </script>
