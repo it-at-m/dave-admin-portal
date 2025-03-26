@@ -93,7 +93,9 @@ import { useRoute } from "vue-router";
 import SsoUserInfoService from "@/api/service/SsoUserInfoService";
 import VersionInfoService from "@/api/service/VersionInfoService";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
+import UnreadMessages from "@/components/app/UnreadMessages.vue";
 import TheSnackbar from "@/components/common/TheSnackbar.vue";
+import SearchInputField from "@/components/search/SearchInputField.vue";
 import SsoUserInfoResponse from "@/domain/SsoUserInfoResponse";
 import VersionInfoResponse from "@/domain/VersionInfoResponse";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
@@ -161,3 +163,18 @@ function resetMapAndSearch() {
   searchStore.resetAndTriggerSearch();
 }
 </script>
+<style>
+/* Alle Hinweise werden nun rot eingefärbt */
+.v-messages {
+  color: #e57373 !important;
+}
+
+.dave-default {
+  --app-bar-height: 50px;
+  width: 100%;
+  height: 100%;
+  /* Um auf der Y-Achse direkt unter der App Bar zu liegen */
+  padding-top: var(--app-bar-height);
+  position: fixed;
+}
+</style>
