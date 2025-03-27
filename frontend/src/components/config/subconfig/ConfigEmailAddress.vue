@@ -45,18 +45,16 @@
       <!-- Buttons in Tabellenspalte "Aktionen" -->
       <template #[`item.aktionen`]="{ item }">
         <v-icon
-          small
+          size="small"
+          icon="mdi-pencil"
           @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
+        />
         <v-icon
           class="ml-3"
-          small
+          size="small"
+          icon="mdi-delete"
           @click="deleteItem(item)"
-        >
-          mdi-delete
-        </v-icon>
+        />
       </template>
     </v-data-table>
   </v-sheet>
@@ -68,9 +66,10 @@
   >
     <v-card>
       <v-card-title>
-        <v-icon start>
-          {{ dialogicon }}
-        </v-icon>
+        <v-icon
+          start
+          :icon="dialogicon"
+        />
         {{ dialogtitle }}
       </v-card-title>
 
@@ -126,7 +125,7 @@
         />
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="red-lighten-1"
           text="Löschen"
@@ -139,7 +138,7 @@
           variant="elevated"
           @click="closeDelete"
         />
-        <v-spacer></v-spacer>
+        <v-spacer />
       </v-card-actions>
     </v-card>
   </v-dialog>

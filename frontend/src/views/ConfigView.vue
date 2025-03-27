@@ -47,7 +47,7 @@
         <config-email-address :height="contentHeight" />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_DIENSTLEISTER">
-        <!--          <config-dienstleister :height="contentHeight" />-->
+        <config-dienstleister :height="contentHeight" />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_INFO">
         <!--          <config-info-message :height="contentHeight" />-->
@@ -59,6 +59,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 
+import ConfigDienstleister from "@/components/config/subconfig/ConfigDienstleister.vue";
 import ConfigEmailAddress from "@/components/config/subconfig/ConfigEmailAddress.vue";
 import ConfigHochrechnungsfaktoren from "@/components/config/subconfig/ConfigHochrechnungsfaktoren.vue";
 import { useDaveUtils } from "@/util/DaveUtils";

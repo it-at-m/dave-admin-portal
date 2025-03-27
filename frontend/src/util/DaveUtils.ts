@@ -21,7 +21,13 @@ export function useDaveUtils() {
    * Berechnet die Höhe des CardTitles (47px) in "vh" (Höhe Viewport in Hundert)
    */
   const cardtitleHeight = computed(() => {
-    return pxToVh(47);
+    return pxToVh(49);
+  });
+  /**
+   * Berechnet die Höhe der CardActions (52px) in "vh" (Höhe Viewport in Hundert)
+   */
+  const cardactionHeight = computed(() => {
+    return pxToVh(52);
   });
 
   function pxToVh(pixel: number): number {
@@ -33,5 +39,6 @@ export function useDaveUtils() {
     appBarHeight,
     tabHeight,
     cardtitleHeight,
+    cardactionHeight,
   };
 }

@@ -44,27 +44,31 @@
 
       <!-- Für Anzeige der Booleans "active" und "defaultFaktor" als Check (Haken) -->
       <template #[`item.active`]="{ item }">
-        <v-icon v-if="item.active"> mdi-check-bold </v-icon>
+        <v-icon
+          v-if="item.active"
+          icon="mdi-check-bold"
+        />
       </template>
       <template #[`item.defaultFaktor`]="{ item }">
-        <v-icon v-if="item.defaultFaktor"> mdi-check-bold </v-icon>
+        <v-icon
+          v-if="item.defaultFaktor"
+          icon="mdi-check-bold"
+        />
       </template>
 
       <!-- Buttons in Tabellenspalte "Aktionen" -->
       <template #[`item.aktionen`]="{ item }">
         <v-icon
-          small
+          size="small"
+          icon="mdi-pencil"
           @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
+        />
         <v-icon
           class="ml-3"
-          small
+          size="small"
+          icon="mdi-delete"
           @click="deleteItem(item)"
-        >
-          mdi-delete
-        </v-icon>
+        />
       </template>
     </v-data-table>
   </v-sheet>
@@ -76,9 +80,10 @@
   >
     <v-card>
       <v-card-title>
-        <v-icon start>
-          {{ dialogicon }}
-        </v-icon>
+        <v-icon
+          start
+          :icon="dialogicon"
+        />
         {{ dialogtitle }}
       </v-card-title>
 
@@ -163,7 +168,7 @@
 
       <!-- Buttons zum speichern und Abbrechen des Editierdialogs -->
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="secondary"
           text="Speichern"
@@ -177,6 +182,7 @@
           text="Abbrechen"
           @click="closeEditItemDialog"
         />
+        <v-spacer />
       </v-card-actions>
     </v-card>
   </v-dialog>
