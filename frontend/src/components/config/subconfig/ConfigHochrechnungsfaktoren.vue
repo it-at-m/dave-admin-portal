@@ -5,7 +5,6 @@
     :max-height="height"
   >
     <v-data-table
-      class="overflow-y-auto"
       :height="tableHeight"
       density="compact"
       :headers="header"
@@ -237,6 +236,7 @@ interface Props {
 const props = defineProps<Props>();
 const snackbarStore = useSnackbarStore();
 const hochrechnungsfaktorStore = useHochrechnungsfaktorStore();
+const daveUtils = useDaveUtils();
 
 const filterMatrix = ref("");
 /**
@@ -339,8 +339,6 @@ watch(
   },
   { immediate: true }
 );
-
-const daveUtils = useDaveUtils();
 
 // Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
 // 64px Suche in Tabelle

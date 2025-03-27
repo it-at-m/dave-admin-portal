@@ -5,9 +5,8 @@
     :max-height="height"
   >
     <v-data-table
-      class="overflow-y-auto"
       :height="tableHeight"
-      dense
+      density="compact"
       :headers="header"
       :items="emailaddresses"
       :items-per-page="-1"
@@ -16,113 +15,30 @@
       :search="filterEmailaddress"
     >
       <template #top>
-        <v-toolbar flat>
-          <v-text-field
-            v-model="filterEmailaddress"
-            append-icon="mdi-filter"
-            label="E-Mail-Adresse nach der gefiltert werden soll"
-            single-line
-            hide-details
+        <v-toolbar
+          flat
+          color="white"
+        >
+          <v-toolbar-title>
+            <!-- Eingabefeld zum Filtern der Matrix -->
+            <v-text-field
+              v-model="filterEmailaddress"
+              append-inner-icon="mdi-filter"
+              label="E-Mail-Adresse nach der gefiltert werden soll"
+              single-line
+              hide-details
+              variant="underlined"
+              width="50%"
+              density="compact"
+            />
+          </v-toolbar-title>
+          <v-btn
+            prepend-icon="mdi-email-plus-outline"
+            text="E-Mail-Adresse anlegen"
+            variant="elevated"
+            color="secondary"
+            @click="showEditDialog = true"
           />
-
-          <v-spacer />
-
-          <!-- Der Editierdialog -->
-          <v-dialog
-            v-model="showEditDialog"
-            max-width="700px"
-            persistent
-          >
-            <template #activator="{ on, attrs }">
-              <v-icon
-                v-bind="attrs"
-                v-on="on"
-              >
-                mdi-plus-box
-              </v-icon>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="text-h5"> {{ getTitle }}</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      md="8"
-                    >
-                      <!-- Der eindeutige Bezeichner -->
-                      <v-text-field
-                        v-model="editEmailaddress.emailAddress"
-                        label="E-Mail"
-                        :rules="[
-                          pflichtfeld,
-                          isEmailValidOrEmpty,
-                          isEmailADuplicate,
-                        ]"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-
-              <!-- Buttons zum speichern und Abbrechen des Editierdialogs -->
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="secondary"
-                  :disabled="disableSpeicherButton"
-                  @click="saveEditItemDialog"
-                >
-                  Speichern
-                </v-btn>
-                <v-btn
-                  color="grey lighten-1"
-                  @click="closeEditItemDialog"
-                >
-                  Abbrechen
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
-          <!-- Der Löschdialog -->
-          <v-dialog
-            v-model="showDeleteDialog"
-            max-width="700px"
-            persistent
-          >
-            <v-card>
-              <v-card-title
-                >Soll folgende E-Mail-Adresse gelöscht werden?</v-card-title
-              >
-              <v-card-text>
-                <v-text-field
-                  v-model="editEmailaddress.emailAddress"
-                  label="E-Mail-Adresse"
-                  readonly
-                />
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="red lighten-1"
-                  @click="deleteItemConfirm"
-                >
-                  Löschen
-                </v-btn>
-                <v-btn
-                  color="grey lighten-1"
-                  @click="closeDelete"
-                >
-                  Abbrechen
-                </v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
         </v-toolbar>
       </template>
 
@@ -144,15 +60,100 @@
       </template>
     </v-data-table>
   </v-sheet>
+  <!-- Der Editierdialog -->
+  <v-dialog
+    v-model="showEditDialog"
+    max-width="700px"
+    persistent
+  >
+    <v-card>
+      <v-card-title>
+        <v-icon start>
+          {{ dialogicon }}
+        </v-icon>
+        {{ dialogtitle }}
+      </v-card-title>
+
+      <v-card-text>
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            md="8"
+          >
+            <!-- Der eindeutige Bezeichner -->
+            <v-text-field
+              v-model="editEmailaddress.emailAddress"
+              label="E-Mail"
+              :rules="[pflichtfeld, isEmailValidOrEmpty, isEmailADuplicate]"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card-text>
+
+      <!-- Buttons zum speichern und Abbrechen des Editierdialogs -->
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="secondary"
+          text="Speichern"
+          variant="elevated"
+          :disabled="disableSpeicherButton"
+          @click="saveEditItemDialog"
+        />
+        <v-btn
+          color="grey-lighten-1"
+          variant="elevated"
+          text="Abbrechen"
+          @click="closeEditItemDialog"
+        />
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- Der Löschdialog -->
+  <v-dialog
+    v-model="showDeleteDialog"
+    max-width="700px"
+    persistent
+  >
+    <v-card>
+      <v-card-title>Soll folgende E-Mail-Adresse gelöscht werden?</v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="editEmailaddress.emailAddress"
+          label="E-Mail-Adresse"
+          readonly
+        />
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="red-lighten-1"
+          text="Löschen"
+          variant="elevated"
+          @click="deleteItemConfirm"
+        />
+        <v-btn
+          color="grey-lighten-1"
+          text="Abbrechen"
+          variant="elevated"
+          @click="closeDelete"
+        />
+        <v-spacer></v-spacer>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
+import type EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
+
 import { cloneDeep, isEmpty, isNull } from "lodash";
 import { computed, onMounted, ref } from "vue";
 
 import EmailAddressService from "@/api/service/EmailAddressService";
-import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useDaveUtils } from "@/util/DaveUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { useValidationUtils } from "@/util/validationUtils";
 
@@ -162,6 +163,7 @@ interface Props {
 const props = defineProps<Props>();
 const snackbarStore = useSnackbarStore();
 const validationUtils = useValidationUtils();
+const daveUtils = useDaveUtils();
 
 const showEditDialog = ref(false);
 const showDeleteDialog = ref(false);
@@ -303,22 +305,20 @@ function closeEditItemDialog() {
 
 // Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
 // 64px Suche in Tabelle
-// 20px Padding Bottom
-// 52px Button
 const tableHeight = computed(() => {
-  return parseInt(props.height.replace("px", "")) - 136 + "px";
+  return parseInt(props.height.replace("vh", "")) - daveUtils.pxToVh(64) + "vh";
 });
 
-const header = [
+const header: Array<any> = [
   {
-    text: "E-Mail-Adressen",
+    title: "E-Mail-Adressen",
     align: "start",
     sortable: true,
     value: "emailAddress",
-    divider: true,
+    lastFixed: true,
   },
   {
-    text: "Aktionen",
+    title: "Aktionen",
     align: "center",
     sortable: false,
     filterable: false,
@@ -338,10 +338,13 @@ const disableSpeicherButton = computed(() => {
   );
 });
 
-const getTitle = computed(() => {
-  return editIndex.value === -1
-    ? "E-Mail-Adresse anlegen"
-    : "E-Mail-Adresse bearbeiten";
+const dialogtitle = computed(() => {
+  return `E-Mail-Adresse ${editIndex.value > -1 ? "bearbeiten" : "anlegen"}`;
+});
+const dialogicon = computed(() => {
+  return editIndex.value > -1
+    ? "mdi-email-edit-outline"
+    : "mdi-email-plus-outline";
 });
 
 /* Rules */
