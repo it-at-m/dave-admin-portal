@@ -83,5 +83,8 @@ export default createVuetify({
     VSelect: {
       itemColor: "primary",
     },
+    VBtn: {
+      class: "text-none",
+    },
   },
 });
