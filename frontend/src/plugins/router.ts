@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
+import ConfigView from "@/views/ConfigView.vue";
 import ErhebungsstellenOverviewView from "@/views/ErhebungsstellenOverviewView.vue";
 import HomeView from "@/views/HomeView.vue";
 
@@ -25,11 +26,11 @@ const routes = [
   //   component: MessstelleView,
   //   props: true,
   // },
-  // {
-  //   path: "/config",
-  //   name: "config",
-  //   component: ConfigView,
-  // },
+  {
+    path: "/config",
+    name: "config",
+    component: ConfigView,
+  },
   { path: "/:catchAll(.*)*", redirect: "/" }, // CatchAll route
 ];
 

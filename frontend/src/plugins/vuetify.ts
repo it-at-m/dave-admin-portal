@@ -85,6 +85,15 @@ export default createVuetify({
     },
     VBtn: {
       class: "text-none",
+      variant: "elevated",
+      density: "compact",
+    },
+    VTextField: {
+      density: "compact",
+      variant: "outlined",
+    },
+    VCheckbox: {
+      density: "compact",
     },
   },
 });

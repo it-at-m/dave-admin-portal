@@ -102,14 +102,13 @@
           <v-row no-gutters>
             <v-spacer />
             <v-btn
-              class="mr-2 text-none"
+              class="mr-2"
               color="secondary"
               text="Speichern"
               variant="elevated"
               @click="save()"
             />
             <v-btn
-              class="text-none"
               color="grey-lighten-1"
               text="Abbrechen"
               variant="elevated"

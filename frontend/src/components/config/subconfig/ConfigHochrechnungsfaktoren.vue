@@ -7,7 +7,7 @@
     <v-data-table
       class="overflow-y-auto"
       :height="tableHeight"
-      dense
+      density="compact"
       :headers="header"
       :items="hochrechnungsfaktoren"
       :items-per-page="-1"
@@ -16,173 +16,30 @@
       :search="filterMatrix"
     >
       <template #top>
-        <v-toolbar flat>
-          <!-- Eingabefeld zum Filtern der Matrix -->
-          <v-text-field
-            v-model="filterMatrix"
-            append-icon="mdi-filter"
-            label="Matrix nach der gefiltert werden soll"
-            single-line
-            hide-details
-          ></v-text-field>
-
-          <v-spacer />
-
-          <!-- Der Editierdialog -->
-          <v-dialog
-            v-model="showEditDialog"
-            max-width="700px"
-            persistent
-          >
-            <template #activator="{ on, attrs }">
-              <v-icon
-                v-bind="attrs"
-                v-on="on"
-              >
-                mdi-plus-box
-              </v-icon>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="text-h5">Hochrechnungsfaktor anlegen</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      md="8"
-                    >
-                      <!-- Der eindeutige Bezeichner -->
-                      <v-text-field
-                        v-model="editHochrechnungsfaktor.matrix"
-                        label="Matrix"
-                        :rules="[matrixVerwendbar, pflichtfeld]"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model.number="editHochrechnungsfaktor.kfz"
-                        label="KFZ"
-                        type="number"
-                        :min="0"
-                        :rules="[mustBePositivNumber]"
-                        validate-on-blur
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model.number="editHochrechnungsfaktor.sv"
-                        label="SV"
-                        type="number"
-                        :min="0"
-                        :rules="[mustBePositivNumber]"
-                        validate-on-blur
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model.number="editHochrechnungsfaktor.gv"
-                        label="GV"
-                        type="number"
-                        :min="0"
-                        :rules="[mustBePositivNumber]"
-                        validate-on-blur
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      md="4"
-                    >
-                      <v-checkbox
-                        v-model="editHochrechnungsfaktor.active"
-                        label="Aktiv"
-                      ></v-checkbox>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="4"
-                    >
-                      <!-- Es darf nur ein DTO den Wert true annehmen -->
-                      <v-checkbox
-                        v-model="editHochrechnungsfaktor.defaultFaktor"
-                        label="Default"
-                        :rules="[isDefaultFactorValid]"
-                      ></v-checkbox>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-
-              <!-- Buttons zum speichern und Abbrechen des Editierdialogs -->
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="secondary"
-                  :disabled="disableSpeicherButton"
-                  @click="saveEditItemDialog"
-                >
-                  Speichern
-                </v-btn>
-                <v-btn
-                  color="grey lighten-1"
-                  @click="closeEditItemDialog"
-                >
-                  Abbrechen
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
-          <!-- Der Löschdialog -->
-          <v-dialog
-            v-model="showDeleteDialog"
-            max-width="700px"
-            persistent
-          >
-            <v-card>
-              <v-card-title>
-                <span>Soll der Hochrechnungsfaktor</span>
-                <span
-                  class="font-italic mx-1"
-                  style="color: crimson"
-                >
-                  {{ editHochrechnungsfaktor.matrix }}
-                </span>
-                <span>gelöscht werden?</span>
-              </v-card-title>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="red lighten-1"
-                  @click="deleteItemConfirm"
-                >
-                  Löschen
-                </v-btn>
-                <v-btn
-                  color="grey lighten-1"
-                  @click="closeDelete"
-                >
-                  Abbrechen
-                </v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+        <v-toolbar
+          flat
+          color="white"
+        >
+          <v-toolbar-title>
+            <!-- Eingabefeld zum Filtern der Matrix -->
+            <v-text-field
+              v-model="filterMatrix"
+              append-inner-icon="mdi-filter"
+              label="Matrix nach der gefiltert werden soll"
+              single-line
+              hide-details
+              variant="underlined"
+              width="50%"
+              density="compact"
+            />
+          </v-toolbar-title>
+          <v-btn
+            prepend-icon="mdi-data-matrix-plus"
+            text="Hochrechnungsfaktor anlegen"
+            variant="elevated"
+            color="secondary"
+            @click="showEditDialog = true"
+          />
         </v-toolbar>
       </template>
 
@@ -212,16 +69,166 @@
       </template>
     </v-data-table>
   </v-sheet>
+  <!-- Der Editierdialog -->
+  <v-dialog
+    v-model="showEditDialog"
+    max-width="700px"
+    persistent
+  >
+    <v-card>
+      <v-card-title>
+        <v-icon start>
+          {{ dialogicon }}
+        </v-icon>
+        {{ dialogtitle }}
+      </v-card-title>
+
+      <v-card-text>
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            md="8"
+          >
+            <!-- Der eindeutige Bezeichner -->
+            <v-text-field
+              v-model="editHochrechnungsfaktor.matrix"
+              label="Matrix"
+              :rules="[matrixVerwendbar, pflichtfeld]"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-text-field
+              v-model.number="editHochrechnungsfaktor.kfz"
+              label="KFZ"
+              type="number"
+              :min="0"
+              :rules="[mustBePositivNumber]"
+              validate-on-blur
+            ></v-text-field>
+          </v-col>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-text-field
+              v-model.number="editHochrechnungsfaktor.sv"
+              label="SV"
+              type="number"
+              :min="0"
+              :rules="[mustBePositivNumber]"
+              validate-on-blur
+            ></v-text-field>
+          </v-col>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-text-field
+              v-model.number="editHochrechnungsfaktor.gv"
+              label="GV"
+              type="number"
+              :min="0"
+              :rules="[mustBePositivNumber]"
+              validate-on-blur
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-checkbox
+              v-model="editHochrechnungsfaktor.active"
+              label="Aktiv"
+            ></v-checkbox>
+          </v-col>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <!-- Es darf nur ein DTO den Wert true annehmen -->
+            <v-checkbox
+              v-model="editHochrechnungsfaktor.defaultFaktor"
+              label="Default"
+              :rules="[isDefaultFactorValid]"
+            ></v-checkbox>
+          </v-col>
+        </v-row>
+      </v-card-text>
+
+      <!-- Buttons zum speichern und Abbrechen des Editierdialogs -->
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="secondary"
+          text="Speichern"
+          variant="elevated"
+          :disabled="disableSpeicherButton"
+          @click="saveEditItemDialog"
+        />
+        <v-btn
+          color="grey-lighten-1"
+          variant="elevated"
+          text="Abbrechen"
+          @click="closeEditItemDialog"
+        />
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- Der Löschdialog -->
+  <v-dialog
+    v-model="showDeleteDialog"
+    max-width="700px"
+    persistent
+  >
+    <v-card>
+      <v-card-title>
+        <span>Soll der Hochrechnungsfaktor</span>
+        <span
+          class="font-italic mx-1"
+          style="color: crimson"
+        >
+          {{ editHochrechnungsfaktor.matrix }}
+        </span>
+        <span>gelöscht werden?</span>
+      </v-card-title>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="red-lighten-1"
+          text="Löschen"
+          variant="elevated"
+          @click="deleteItemConfirm"
+        />
+        <v-btn
+          color="grey-lighten-1"
+          text="Abbrechen"
+          variant="elevated"
+          @click="closeDelete"
+        />
+        <v-spacer></v-spacer>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
+import type HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
+
 import { cloneDeep, isEmpty, isNumber } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService";
-import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useDaveUtils } from "@/util/DaveUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 interface Props {
@@ -250,63 +257,63 @@ const editIndex = ref(-1);
 const showEditDialog = ref(false);
 const showDeleteDialog = ref(false);
 
-const header = [
+const header: Array<any> = [
   {
-    text: "Matrix",
+    title: "Matrix",
     align: "center",
     sortable: true,
     filterable: true,
     value: "matrix",
     width: "24%",
-    divider: true,
+    lastFixed: true,
   },
   {
-    text: "KFZ",
+    title: "KFZ",
     align: "center",
     sortable: false,
     filterable: false,
     value: "kfz",
     width: "10%",
-    divider: true,
+    lastFixed: true,
   },
   {
-    text: "SV",
+    title: "SV",
     align: "center",
     sortable: false,
     filterable: false,
     value: "sv",
     width: "10%",
-    divider: true,
+    lastFixed: true,
   },
   {
-    text: "GV",
+    title: "GV",
     align: "center",
     sortable: false,
     filterable: false,
     value: "gv",
     width: "10%",
-    divider: true,
+    lastFixed: true,
   },
   {
-    text: "Aktiv",
+    title: "Aktiv",
     align: "center",
     sortable: true,
     filterable: false,
     value: "active",
     width: "8%",
-    divider: true,
+    lastFixed: true,
   },
   {
-    text: "Default",
+    title: "Default",
     align: "center",
     sortable: true,
     filterable: false,
     value: "defaultFaktor",
     width: "8%",
-    divider: true,
+    lastFixed: true,
   },
   {
-    text: "Aktionen",
+    title: "Aktionen",
     align: "center",
     sortable: false,
     filterable: false,
@@ -333,12 +340,18 @@ watch(
   { immediate: true }
 );
 
+const daveUtils = useDaveUtils();
+
 // Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
 // 64px Suche in Tabelle
-// 20px Padding Bottom
-// 52px Button
 const tableHeight = computed(() => {
-  return parseInt(props.height.replace("px", "")) - 136 + "px";
+  return parseInt(props.height.replace("vh", "")) - daveUtils.pxToVh(64) + "vh";
+});
+const dialogtitle = computed(() => {
+  return `Hochrechnungsfaktor ${editIndex.value > -1 ? "bearbeiten" : "anlegen"}`;
+});
+const dialogicon = computed(() => {
+  return editIndex.value > -1 ? "mdi-data-matrix-edit" : "mdi-data-matrix-plus";
 });
 
 const disableSpeicherButton = computed(() => {
