@@ -34,137 +34,137 @@
         />
       </v-col>
     </v-row>
-<!--    <v-row-->
-<!--      dense-->
-<!--      justify="center"-->
-<!--    >-->
-<!--      <v-banner-->
-<!--        v-if="hasNoZaehlung"-->
-<!--        single-line-->
-<!--        width="100%"-->
-<!--      >-->
-<!--        <v-icon-->
-<!--          color="error"-->
-<!--          size="36"-->
-<!--        >-->
-<!--          mdi-alert-decagram-outline-->
-<!--        </v-icon>-->
-<!--        Zählstelle besitzt aktuell keine Zählungen.-->
-<!--      </v-banner>-->
-<!--      <v-col-->
-<!--        v-else-->
-<!--        cols="12"-->
-<!--        md="6"-->
-<!--      >-->
-<!--        <v-spacer />-->
-<!--        <v-tooltip-->
-<!--          right-->
-<!--          class="pl-5"-->
-<!--        >-->
-<!--          <template #activator="{ on, attrs }">-->
-<!--            <v-text-field-->
-<!--              v-model="query"-->
-<!--              color="grey darken-1"-->
-<!--              label="Zählung suchen"-->
-<!--              dense-->
-<!--              outlined-->
-<!--              prepend-inner-icon="mdi-magnify"-->
-<!--              hide-details-->
-<!--              class="px-4 my-2"-->
-<!--            >-->
-<!--              <template #append>-->
-<!--                <v-icon-->
-<!--                  v-bind="attrs"-->
-<!--                  v-on="on"-->
-<!--                  >mdi-information-outline-->
-<!--                </v-icon>-->
-<!--              </template>-->
-<!--            </v-text-field>-->
-<!--          </template>-->
-<!--          <span>-->
-<!--            <b>Beispiele, wonach gefiltert werden kann:</b><br />-->
-<!--            * Datum (24.12.2009)<br />-->
-<!--            * Monat (Januar, Februar, ...)<br />-->
-<!--            * Jahreszeit (Frühling, Sommer, ...)<br />-->
-<!--            * Projektname / -nummer (U1022, VZ Stadtgrenzen 2019, ...)<br />-->
-<!--            * Zählart (Q, QS, ...)<br />-->
-<!--            * Wetter (sonnig, neblig, ...)<br />-->
-<!--          </span>-->
-<!--        </v-tooltip>-->
-<!--        <v-spacer />-->
-<!--      </v-col>-->
-<!--    </v-row>-->
-<!--    <v-row dense>-->
-<!--      <v-col-->
-<!--        v-for="card in filteredZaehlungCardObjects"-->
-<!--        :key="card.zaehlung.id"-->
-<!--        :cols="card.flex"-->
-<!--      >-->
-<!--        <zaehlung-card-->
-<!--          :zaehlung="card.zaehlung"-->
-<!--          :zaehlstelle-id="zaehlstelle.id"-->
-<!--          :geo-point-zaehlstelle="zaehlstelle.punkt"-->
-<!--          @open-zaehlung-dialog="openZaehlungDialog"-->
-<!--          @open-zaehlung-datenportal="openZaehlungDatenportal"-->
-<!--          @open-chat-dialog="openChatDialog"-->
-<!--          @saved="reloadDataAndCloseDialog"-->
-<!--          @deleted="loadZaehlstelle"-->
-<!--        />-->
-<!--      </v-col>-->
-<!--    </v-row>-->
+    <!--    <v-row-->
+    <!--      dense-->
+    <!--      justify="center"-->
+    <!--    >-->
+    <!--      <v-banner-->
+    <!--        v-if="hasNoZaehlung"-->
+    <!--        single-line-->
+    <!--        width="100%"-->
+    <!--      >-->
+    <!--        <v-icon-->
+    <!--          color="error"-->
+    <!--          size="36"-->
+    <!--        >-->
+    <!--          mdi-alert-decagram-outline-->
+    <!--        </v-icon>-->
+    <!--        Zählstelle besitzt aktuell keine Zählungen.-->
+    <!--      </v-banner>-->
+    <!--      <v-col-->
+    <!--        v-else-->
+    <!--        cols="12"-->
+    <!--        md="6"-->
+    <!--      >-->
+    <!--        <v-spacer />-->
+    <!--        <v-tooltip-->
+    <!--          right-->
+    <!--          class="pl-5"-->
+    <!--        >-->
+    <!--          <template #activator="{ on, attrs }">-->
+    <!--            <v-text-field-->
+    <!--              v-model="query"-->
+    <!--              color="grey darken-1"-->
+    <!--              label="Zählung suchen"-->
+    <!--              dense-->
+    <!--              outlined-->
+    <!--              prepend-inner-icon="mdi-magnify"-->
+    <!--              hide-details-->
+    <!--              class="px-4 my-2"-->
+    <!--            >-->
+    <!--              <template #append>-->
+    <!--                <v-icon-->
+    <!--                  v-bind="attrs"-->
+    <!--                  v-on="on"-->
+    <!--                  >mdi-information-outline-->
+    <!--                </v-icon>-->
+    <!--              </template>-->
+    <!--            </v-text-field>-->
+    <!--          </template>-->
+    <!--          <span>-->
+    <!--            <b>Beispiele, wonach gefiltert werden kann:</b><br />-->
+    <!--            * Datum (24.12.2009)<br />-->
+    <!--            * Monat (Januar, Februar, ...)<br />-->
+    <!--            * Jahreszeit (Frühling, Sommer, ...)<br />-->
+    <!--            * Projektname / -nummer (U1022, VZ Stadtgrenzen 2019, ...)<br />-->
+    <!--            * Zählart (Q, QS, ...)<br />-->
+    <!--            * Wetter (sonnig, neblig, ...)<br />-->
+    <!--          </span>-->
+    <!--        </v-tooltip>-->
+    <!--        <v-spacer />-->
+    <!--      </v-col>-->
+    <!--    </v-row>-->
+    <v-row dense>
+      <v-col
+        v-for="card in filteredZaehlungCardObjects"
+        :key="card.zaehlung.id"
+        :cols="card.flex"
+      >
+        <zaehlung-card
+          :zaehlung="card.zaehlung"
+          :zaehlstelle-id="zaehlstelle.id"
+          :geo-point-zaehlstelle="zaehlstelle.punkt"
+          @open-zaehlung-dialog="openZaehlungDialog"
+          @open-zaehlung-datenportal="openZaehlungDatenportal"
+          @open-chat-dialog="openChatDialog"
+          @saved="reloadDataAndCloseDialog"
+          @deleted="loadZaehlstelle"
+        />
+      </v-col>
+    </v-row>
 
-<!--    <v-speed-dial-->
-<!--      v-model="fab"-->
-<!--      absolute-->
-<!--      bottom-->
-<!--      fixed-->
-<!--      right-->
-<!--      open-on-hover-->
-<!--    >-->
-<!--      <template #activator>-->
-<!--        <v-btn-->
-<!--          v-model="fab"-->
-<!--          dark-->
-<!--          fab-->
-<!--          :color="fabColor"-->
-<!--        >-->
-<!--          <v-icon v-if="fab"> mdi-close-thick </v-icon>-->
-<!--          <v-icon v-else> mdi-plus-thick </v-icon>-->
-<!--        </v-btn>-->
-<!--      </template>-->
-<!--      <v-tooltip left>-->
-<!--        <template #activator="{ on, attrs }">-->
-<!--          <v-btn-->
-<!--            dark-->
-<!--            fab-->
-<!--            small-->
-<!--            color="secondary"-->
-<!--            v-bind="attrs"-->
-<!--            @click.stop="createZaehlung"-->
-<!--            v-on="on"-->
-<!--          >-->
-<!--            <v-icon> mdi-calendar-plus </v-icon>-->
-<!--          </v-btn>-->
-<!--        </template>-->
-<!--        <span>Neue Zählung anlegen</span>-->
-<!--      </v-tooltip>-->
-<!--      <v-tooltip left>-->
-<!--        <template #activator="{ on, attrs }">-->
-<!--          <v-btn-->
-<!--            fab-->
-<!--            dark-->
-<!--            small-->
-<!--            color="secondary"-->
-<!--            v-bind="attrs"-->
-<!--            @click="editZaehlstelle"-->
-<!--            v-on="on"-->
-<!--          >-->
-<!--            <v-icon>mdi-pencil</v-icon>-->
-<!--          </v-btn>-->
-<!--        </template>-->
-<!--        <span>Zählstelle bearbeiten</span>-->
-<!--      </v-tooltip>-->
-<!--    </v-speed-dial>-->
+    <!--    <v-speed-dial-->
+    <!--      v-model="fab"-->
+    <!--      absolute-->
+    <!--      bottom-->
+    <!--      fixed-->
+    <!--      right-->
+    <!--      open-on-hover-->
+    <!--    >-->
+    <!--      <template #activator>-->
+    <!--        <v-btn-->
+    <!--          v-model="fab"-->
+    <!--          dark-->
+    <!--          fab-->
+    <!--          :color="fabColor"-->
+    <!--        >-->
+    <!--          <v-icon v-if="fab"> mdi-close-thick </v-icon>-->
+    <!--          <v-icon v-else> mdi-plus-thick </v-icon>-->
+    <!--        </v-btn>-->
+    <!--      </template>-->
+    <!--      <v-tooltip left>-->
+    <!--        <template #activator="{ on, attrs }">-->
+    <!--          <v-btn-->
+    <!--            dark-->
+    <!--            fab-->
+    <!--            small-->
+    <!--            color="secondary"-->
+    <!--            v-bind="attrs"-->
+    <!--            @click.stop="createZaehlung"-->
+    <!--            v-on="on"-->
+    <!--          >-->
+    <!--            <v-icon> mdi-calendar-plus </v-icon>-->
+    <!--          </v-btn>-->
+    <!--        </template>-->
+    <!--        <span>Neue Zählung anlegen</span>-->
+    <!--      </v-tooltip>-->
+    <!--      <v-tooltip left>-->
+    <!--        <template #activator="{ on, attrs }">-->
+    <!--          <v-btn-->
+    <!--            fab-->
+    <!--            dark-->
+    <!--            small-->
+    <!--            color="secondary"-->
+    <!--            v-bind="attrs"-->
+    <!--            @click="editZaehlstelle"-->
+    <!--            v-on="on"-->
+    <!--          >-->
+    <!--            <v-icon>mdi-pencil</v-icon>-->
+    <!--          </v-btn>-->
+    <!--        </template>-->
+    <!--        <span>Zählstelle bearbeiten</span>-->
+    <!--      </v-tooltip>-->
+    <!--    </v-speed-dial>-->
 
     <update-zaehlstelle-dialog
       v-model="zaehlstelle"
@@ -173,14 +173,14 @@
       @cancel="cancelUpdateZaehlstelleDialog"
     ></update-zaehlstelle-dialog>
 
-<!--    <zaehlung-dialog-->
-<!--      :show-dialog="showZaehlungDialog"-->
-<!--      :zaehlstelle="zaehlstelle"-->
-<!--      @saved="reloadDataAndCloseDialog"-->
-<!--      @cancel="cancelZaehlungDialog"-->
-<!--    ></zaehlung-dialog>-->
+    <!--    <zaehlung-dialog-->
+    <!--      :show-dialog="showZaehlungDialog"-->
+    <!--      :zaehlstelle="zaehlstelle"-->
+    <!--      @saved="reloadDataAndCloseDialog"-->
+    <!--      @cancel="cancelZaehlungDialog"-->
+    <!--    ></zaehlung-dialog>-->
 
-<!--  TODO muss neu gemacht werden  -->
+    <!--  TODO muss neu gemacht werden  -->
     <!--    <chat-dialog-->
     <!--      :show-dialog="showChatDialog"-->
     <!--      @closeDialog="closeChatDialog"-->
@@ -194,26 +194,27 @@ import type PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
 import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 import type ZaehlungCardObject from "@/domain/ZaehlungCardObject";
 
-import {cloneDeep} from "lodash";
-import {computed, onMounted, ref} from "vue";
-import {useRoute} from "vue-router";
-import {useDisplay} from "vuetify";
+import { cloneDeep } from "lodash";
+import { computed, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useDisplay } from "vuetify";
 
 import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService";
 import PkwEinheitenService from "@/api/service/PkwEinheitenService";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
+import UpdateZaehlstelleDialog from "@/components/zaehlstelle/UpdateZaehlstelleDialog.vue";
 import ZaehlstelleInfo from "@/components/zaehlstelle/ZaehlstelleInfo.vue";
-import {wetterText} from "@/domain/enums/Wetter";
-import {zaehlartText} from "@/domain/enums/Zaehlart";
-import {useHochrechnungsfaktorStore} from "@/store/HochrechnungsfaktorStore";
-import {usePkweinheitStore} from "@/store/PkweinheitStore";
-import {useSnackbarStore} from "@/store/SnackbarStore";
-import {useZaehlungStore} from "@/store/ZaehlungStore";
+import ZaehlungCard from "@/components/zaehlung/ZaehlungCard.vue";
+import { wetterText } from "@/domain/enums/Wetter";
+import { zaehlartText } from "@/domain/enums/Zaehlart";
+import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
+import { usePkweinheitStore } from "@/store/PkweinheitStore";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useZaehlungStore } from "@/store/ZaehlungStore";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import ZaehlungCardObjectComparator from "@/util/ZaehlungCardObjectComparator";
-import UpdateZaehlstelleDialog from "@/components/zaehlstelle/UpdateZaehlstelleDialog.vue";
 
 const snackbarStore = useSnackbarStore();
 const pkweinheitStore = usePkweinheitStore();

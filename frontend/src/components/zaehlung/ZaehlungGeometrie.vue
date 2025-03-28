@@ -213,9 +213,9 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import type KnotenarmDTO from "@/domain/KnotenarmDTO";
 
-import KnotenarmDTO from "@/domain/KnotenarmDTO";
+import { computed } from "vue";
 
 interface Props {
   height?: string;
@@ -230,6 +230,7 @@ const props = withDefaults(defineProps<Props>(), {
   width: "72",
   activeColor: "#FFFFFF",
   passiveColor: "#757575",
+  knotenarme: undefined,
 });
 
 /**

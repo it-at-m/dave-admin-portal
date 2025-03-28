@@ -1,6 +1,6 @@
 <template>
   <tooltip-with-icon
-    :small="small"
+    :size="size"
     :color="color"
     :icon="icon.iconPath"
     :tooltip="icon.tooltip"
@@ -10,17 +10,18 @@
 import { computed } from "vue";
 
 import IconTooltip from "@/components/icons/IconTooltip";
+import TooltipWithIcon from "@/components/icons/TooltipWithIcon.vue";
 import Zaehlart from "@/domain/enums/Zaehlart";
 
 interface Props {
-  small?: boolean;
+  size?: string;
   color?: string;
   zaehlart: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   color: "black",
-  small: false,
+  size: "default",
 });
 
 /**

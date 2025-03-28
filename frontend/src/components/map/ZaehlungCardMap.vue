@@ -13,22 +13,10 @@
 </template>
 
 <script setup lang="ts">
-import L, {
-  CircleMarker,
-  CircleMarkerOptions,
-  Icon,
-  LatLng,
-  Marker,
-  MarkerOptions,
-} from "leaflet";
-import {
-  computed,
-  ComputedRef,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watch,
-} from "vue";
+import type { CircleMarkerOptions, MarkerOptions } from "leaflet";
+
+import L, { CircleMarker, Icon, LatLng, Marker } from "leaflet";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import markerIconRed from "@/assets/marker-icon-red.png";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
@@ -192,7 +180,7 @@ function updateZaehlungCoords(zaehlungCoords: LatLng) {
   }
 }
 
-const mapStyle: ComputedRef<string> = computed(() => {
+const mapStyle = computed(() => {
   return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}; z-index: 1`;
 });
 </script>

@@ -1,4 +1,4 @@
-import KnotenarmDTO from "@/domain/KnotenarmDTO";
+import type KnotenarmDTO from "@/domain/KnotenarmDTO";
 
 export default class KnotenarmComparator {
   /**

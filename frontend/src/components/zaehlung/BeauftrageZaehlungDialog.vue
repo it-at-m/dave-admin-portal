@@ -1,22 +1,26 @@
 <template>
   <v-dialog
-    v-model="showDialogModel"
+    v-model="showDialog"
     persistent
     max-width="50%"
     height="600px"
   >
     <v-card flat>
       <v-card-title>
-        <v-icon left> {{ dialogicon }} </v-icon>
+        <v-icon
+          end
+          :icon="dialogicon"
+        />
         {{ dialogtitle }}
       </v-card-title>
 
       <v-card-text>
+        <!--        TODO anpassen an Config Tabellen-->
         <v-data-table
           v-model="selectedDienstleister"
           class="overflow-y-auto"
           :height="tableHeightDienstleister"
-          dense
+          density="compact"
           :headers="dienstleisterHeaders"
           :items="dienstleister"
           :items-per-page="-1"
@@ -49,46 +53,46 @@
         <v-btn
           v-if="showButtonBeauftragen"
           color="secondary"
+          variant="elevated"
+          text="Beauftragen"
           @click="beauftragen()"
-        >
-          Beauftragen
-        </v-btn>
+        />
         <v-btn
           v-if="showButtonKorrigieren"
           color="secondary"
+          variant="elevated"
+          text="Korrigieren"
           @click="korrigieren()"
-        >
-          Korrigieren
-        </v-btn>
+        />
         <v-btn
-          color="grey lighten-1"
+          color="grey-lighten-1"
+          variant="elevated"
+          text="Abbrechen"
           @click="cancel()"
-        >
-          Abbrechen
-        </v-btn>
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
+import type DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
+
 import { isEmpty } from "lodash";
 import { computed, ref, watch } from "vue";
 
 import DienstleisterService from "@/api/service/DienstleisterService";
-import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 
 interface Props {
-  showDialog: boolean;
   isBeauftragen: boolean;
   dienstleisterkennung?: string;
 }
 const props = withDefaults(defineProps<Props>(), {
   dienstleisterkennung: "",
 });
-const showDialogModel = computed(() => {
-  return props.showDialog;
+const showDialog = defineModel<boolean>({
+  required: true,
 });
 const emits = defineEmits<{
   (e: "cancel"): void;
@@ -104,9 +108,9 @@ const dienstleister = ref<Array<DienstleisterDTO>>([]);
 const selectedDienstleister = ref<Array<DienstleisterDTO>>([]);
 
 watch(
-  () => props.showDialog,
+  () => showDialog.value,
   () => {
-    if (props.showDialog) {
+    if (showDialog.value) {
       filterDienstleister.value = "";
       dienstleister.value = [];
       selectedDienstleister.value = [];
@@ -162,20 +166,20 @@ function loadAllActiveDienstleister() {
     });
 }
 
-const dienstleisterHeaders = [
+const dienstleisterHeaders: Array<any> = [
   {
-    text: "Name",
+    title: "Name",
     align: "start",
     value: "name",
-    divider: true,
+    lastFixed: true,
   },
   {
-    text: "Kennung",
+    title: "Kennung",
     value: "kennung",
-    divider: true,
+    lastFixed: true,
   },
   {
-    text: "Email",
+    title: "Email",
     value: "emailAddressesAsString",
   },
 ];
@@ -186,6 +190,7 @@ const dienstleisterHeaders = [
   58px Header
   52px Button
    */
+// TODO berechnung prüfen
 const tableHeightDienstleister = computed(() => {
   return 600 - 58 - 64 - 52 + "px";
 });
