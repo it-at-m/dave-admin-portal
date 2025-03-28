@@ -16,6 +16,9 @@
       v-else
       v-model="activeInfoMessage"
       :height="height"
+      @save="save"
+      @cancel="loadInfoMessages"
+      @deactivate="deactivateInfoMessage"
     />
 
     <v-card-actions style="position: absolute; top: 0; right: 0">
@@ -60,18 +63,39 @@ onMounted(() => {
 function loadInfoMessages() {
   InfoMessageService.getAllInfoMessages()
     .then((infoMessages: Array<InfoMessageDTO>) => {
-      setActiveInfoMessage(infoMessages.filter((value) => value.gueltig));
-      inactiveInfoMessages.value = infoMessages.filter(
-        (value) => !value.gueltig
-      );
+      setActiveInfoMessage(infoMessages);
+      setInactiveInfoMessages(infoMessages);
     })
     .catch((error) => snackbarStore.showApiError(error));
 }
 
+function save(): void {
+  InfoMessageService.save(activeInfoMessage.value)
+    .then((infoMessages: Array<InfoMessageDTO>) => {
+      setActiveInfoMessage(infoMessages);
+      setInactiveInfoMessages(infoMessages);
+      snackbarStore.showSuccess("Die Infonachricht wurde gespeichert.");
+    })
+    .catch((error) => snackbarStore.showApiError(error));
+}
+
+function deactivateInfoMessage(): void {
+  InfoMessageService.setAllInfoMessagesInactive()
+    .then(() => {
+      snackbarStore.showSuccess(`Die Infonachricht wurde deaktiviert.`);
+    })
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      loadInfoMessages();
+    });
+}
+
+function setInactiveInfoMessages(infoMessages: Array<InfoMessageDTO>): void {
+  inactiveInfoMessages.value = infoMessages.filter((value) => !value.aktiv);
+}
+
 function setActiveInfoMessage(infoMessages: Array<InfoMessageDTO>) {
-  const firstActiveMessage = first(
-    infoMessages.filter((value) => value.gueltig)
-  );
+  const firstActiveMessage = first(infoMessages.filter((value) => value.aktiv));
   if (firstActiveMessage) {
     activeInfoMessage.value = firstActiveMessage;
   }

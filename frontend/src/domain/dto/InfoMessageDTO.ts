@@ -5,4 +5,5 @@ export default interface InfoMessageDTO extends BaseEntity {
   gueltigVon: string;
   gueltigBis: string;
   gueltig: boolean;
+  aktiv: boolean;
 }
