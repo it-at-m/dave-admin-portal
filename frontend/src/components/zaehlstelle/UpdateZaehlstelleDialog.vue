@@ -9,13 +9,16 @@
       flat
     >
       <v-card-title>
-        <v-icon left>mdi-map-marker-plus-outline</v-icon>
+        <v-icon
+          start
+          icon="mdi-map-marker-plus-outline"
+        />
         {{ DIALOG_TITLE }}
       </v-card-title>
 
       <v-card-text>
         <update-zaehlstelle-form
-          :zaehlstelle="zaehlstelle"
+          v-model="zaehlstelle"
           @cancel="cancelCreate"
           @saved="saved"
         />
@@ -25,15 +28,20 @@
 </template>
 
 <script setup lang="ts">
+import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+
 import { computed } from "vue";
 
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import UpdateZaehlstelleForm from "@/components/zaehlstelle/UpdateZaehlstelleForm.vue";
 
 interface Props {
   showDialog: boolean;
-  zaehlstelle: ZaehlstelleDTO;
 }
 const props = defineProps<Props>();
+
+const zaehlstelle = defineModel<ZaehlstelleDTO>({
+  required: true,
+});
 
 const showDialogModel = computed(() => {
   return props.showDialog;

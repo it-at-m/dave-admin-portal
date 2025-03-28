@@ -1,13 +1,14 @@
 import type BaseEntity from "@/domain/BaseEntity";
-import FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
-import PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
+import type FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
+import type PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
+import type GeoPoint from "@/domain/GeoPoint";
+import type KnotenarmDTO from "@/domain/KnotenarmDTO";
+
 import Quelle from "@/domain/enums/Quelle";
 import Status from "@/domain/enums/Status";
 import Wetter from "@/domain/enums/Wetter";
 import Zaehlart from "@/domain/enums/Zaehlart";
 import Zaehldauer from "@/domain/enums/Zaehldauer";
-import GeoPoint from "@/domain/GeoPoint";
-import KnotenarmDTO from "@/domain/KnotenarmDTO";
 
 export default interface ZaehlungDTO extends BaseEntity {
   datum: string;

@@ -1,16 +1,17 @@
-import { defineStore } from "pinia";
-import { computed, Ref, ref } from "vue";
+import type FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
+import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type KnotenarmDTO from "@/domain/KnotenarmDTO";
 
-import FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import { defineStore } from "pinia";
+import { computed, ref } from "vue";
+
 import Fahrzeug from "@/domain/enums/Fahrzeug";
 import Status from "@/domain/enums/Status";
-import KnotenarmDTO from "@/domain/KnotenarmDTO";
 
 export const useZaehlungStore = defineStore("zaehlungStore", () => {
   // ref()s become state properties
   const resetFormevent = ref<boolean>(false);
-  const zaehlung: Ref<ZaehlungDTO> = ref<ZaehlungDTO>({} as ZaehlungDTO);
+  const zaehlung = ref<ZaehlungDTO>({} as ZaehlungDTO);
   // computed()s become getters
   const getResetformevent = computed(() => resetFormevent.value);
   const getZaehlung = computed(() => zaehlung.value);

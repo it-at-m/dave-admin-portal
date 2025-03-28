@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import ConfigView from "@/views/ConfigView.vue";
 import ErhebungsstellenOverviewView from "@/views/ErhebungsstellenOverviewView.vue";
 import HomeView from "@/views/HomeView.vue";
+import ZaehlstelleView from "@/views/ZaehlstelleView.vue";
 
 const routes = [
   {
@@ -15,11 +16,12 @@ const routes = [
     name: "erhebungsstellenOverview",
     component: ErhebungsstellenOverviewView,
   },
-  // {
-  //   path: "/zaehlstelle/:zaehlstelleId/:zaehlungId?",
-  //   name: "zaehlstelle",
-  //   component: ZaehlstelleView,
-  // },
+  {
+    path: "/zaehlstelle/:zaehlstelleId/:zaehlungId?",
+    name: "zaehlstelle",
+    component: ZaehlstelleView,
+    props: true,
+  },
   // {
   //   path: "/messstelle/:messstelleId",
   //   name: "messstelle",

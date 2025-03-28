@@ -40,8 +40,10 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<(e: "updateZaehlstellenCoords", v: LatLng) => void>();
 
-const mapAttribution =
-  '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
+const mapAttributionLhm =
+  '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html" style="color: #c62828">GeodatenService München</a>';
+const mapAttributionOpenStreetMap =
+  '&copy; <a href="https://www.openstreetmap.org/copyright" style="color: #c62828">OpenStreetMap</a>';
 
 const minimapRef = ref<HTMLDivElement | null>(null);
 
@@ -107,7 +109,7 @@ function createBaseLayers(): L.Control.LayersObject {
     {
       layers: "gsm:g_stadtkarte_gesamt",
       className: "Stadtkarte",
-      attribution: mapAttribution,
+      attribution: mapAttributionLhm,
     }
   );
 
@@ -116,15 +118,14 @@ function createBaseLayers(): L.Control.LayersObject {
     {
       layers: "gsm:g_luftbild",
       className: "Luftbild",
-      attribution: mapAttribution,
+      attribution: mapAttributionLhm,
     }
   );
 
   const osm = L.tileLayer.wms(
     "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: mapAttributionOpenStreetMap,
     }
   );
 
@@ -143,7 +144,7 @@ function createOverlayLayers(): L.Control.LayersObject {
       className: "Stadtbezirke",
       transparent: true,
       format: "image/png",
-      attribution: mapAttribution,
+      attribution: mapAttributionLhm,
     }
   );
   const stadtviertel = L.tileLayer.wms(
@@ -153,7 +154,7 @@ function createOverlayLayers(): L.Control.LayersObject {
       className: "Stadtviertel",
       transparent: true,
       format: "image/png",
-      attribution: mapAttribution,
+      attribution: mapAttributionLhm,
     }
   );
 

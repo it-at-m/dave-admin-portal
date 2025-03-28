@@ -1,4 +1,4 @@
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 
 export default interface ZaehlungCardObject {
   zaehlung: ZaehlungDTO;

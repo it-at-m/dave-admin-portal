@@ -1,5 +1,5 @@
 import type BaseEntity from "@/domain/BaseEntity";
-import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
+import type HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 
 export default interface FahrbeziehungDTO extends BaseEntity {
   // Kreuzung

@@ -96,8 +96,10 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 const MUNICH_CENTER_LATITUDE = "48.137227";
 const MUNICH_CENTER_LONGITUDE = "11.575517";
 
-const mapAttribution =
-  '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
+const mapAttributionLhm =
+  '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html" style="color: #c62828">GeodatenService München</a>';
+const mapAttributionOpenStreetMap =
+  '&copy; <a href="https://www.openstreetmap.org/copyright" style="color: #c62828">OpenStreetMap</a>';
 
 interface Props {
   minheight?: string;
@@ -118,7 +120,6 @@ const props = withDefaults(defineProps<Props>(), {
   zoom: 12,
 });
 
-// const zaehlstelleStore = useZaehlstelleStore();
 const searchStore = useSearchStore();
 const snackbarStore = useSnackbarStore();
 const router = useRouter();
@@ -353,7 +354,7 @@ function createBaseLayers(): L.Control.LayersObject {
     {
       layers: "gsm:g_stadtkarte_gesamt",
       className: "Stadtkarte",
-      attribution: mapAttribution,
+      attribution: mapAttributionLhm,
     }
   );
 
@@ -362,15 +363,14 @@ function createBaseLayers(): L.Control.LayersObject {
     {
       layers: "gsm:g_luftbild",
       className: "Luftbild",
-      attribution: mapAttribution,
+      attribution: mapAttributionLhm,
     }
   );
 
   const osm = L.tileLayer.wms(
     "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: mapAttributionOpenStreetMap,
     }
   );
 
@@ -389,7 +389,7 @@ function createOverlayLayers(): L.Control.LayersObject {
       className: "Stadtbezirke",
       transparent: true,
       format: "image/png",
-      attribution: mapAttribution,
+      attribution: mapAttributionLhm,
     }
   );
   const stadtviertel = L.tileLayer.wms(
@@ -399,7 +399,7 @@ function createOverlayLayers(): L.Control.LayersObject {
       className: "Stadtviertel",
       transparent: true,
       format: "image/png",
-      attribution: mapAttribution,
+      attribution: mapAttributionLhm,
     }
   );
   const lichtsignalanlagen = L.tileLayer.wms(
@@ -409,7 +409,7 @@ function createOverlayLayers(): L.Control.LayersObject {
       className: "Lichtsignalanlagen",
       transparent: true,
       format: "image/png",
-      attribution: mapAttribution,
+      attribution: mapAttributionLhm,
     }
   );
 
@@ -685,7 +685,7 @@ function markerOptionsMessstelle(messstelleKarte: MessstelleKarteDTO) {
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 /* Zoom-Buttons verwenden per Default die Farbe 'primary'. Da diese im Button kaum zu erkennen ist,
 wurden die Farbe auf schwarz gesetzt */
 .leaflet-control-zoom a.leaflet-control-zoom-in {

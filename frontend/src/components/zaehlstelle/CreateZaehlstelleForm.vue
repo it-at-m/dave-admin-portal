@@ -56,7 +56,7 @@
                 :rules="[() => !!stadtbezirksviertelModel || pflichtfeldText]"
                 required
                 :disabled="!zaehlstelle.stadtbezirkNummer"
-              ></v-autocomplete>
+              />
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -73,7 +73,7 @@
                 row-height="15"
                 counter="255"
                 maxlength="255"
-              ></v-textarea>
+              />
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -95,8 +95,7 @@
                 @click:append="addSuchwortToList"
                 @blur="addSuchwortToList"
                 @keyup.enter="addSuchwortToList"
-              >
-              </v-combobox>
+              />
             </v-col>
           </v-row>
           <v-row no-gutters>

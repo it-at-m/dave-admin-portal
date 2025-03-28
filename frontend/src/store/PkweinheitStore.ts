@@ -1,7 +1,7 @@
+import type PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
+
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-
-import PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
 
 export const usePkweinheitStore = defineStore("pkweinheitStore", () => {
   // ref()s become state properties
