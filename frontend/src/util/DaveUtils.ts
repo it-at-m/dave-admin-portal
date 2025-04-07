@@ -29,6 +29,12 @@ export function useDaveUtils() {
   const cardactionHeight = computed(() => {
     return pxToVh(52);
   });
+  /**
+   * Berechnet die Höhe des Filters einer Datentabelle (64px) in "vh" (Höhe Viewport in Hundert)
+   */
+  const datatableFilterHeight = computed(() => {
+    return pxToVh(64);
+  });
 
   function pxToVh(pixel: number): number {
     return (pixel / display.height.value) * 100;
@@ -40,5 +46,6 @@ export function useDaveUtils() {
     tabHeight,
     cardtitleHeight,
     cardactionHeight,
+    datatableFilterHeight,
   };
 }

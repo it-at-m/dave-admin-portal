@@ -347,9 +347,12 @@ watch(
 );
 
 // Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
-// 64px Suche in Tabelle
 const tableHeight = computed(() => {
-  return parseInt(props.height.replace("vh", "")) - daveUtils.pxToVh(64) + "vh";
+  return (
+    parseInt(props.height.replace("vh", "")) -
+    daveUtils.datatableFilterHeight.value +
+    "vh"
+  );
 });
 const dialogtitle = computed(() => {
   return `Hochrechnungsfaktor ${editIndex.value > -1 ? "bearbeiten" : "anlegen"}`;

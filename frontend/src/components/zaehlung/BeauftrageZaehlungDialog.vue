@@ -14,11 +14,9 @@
         {{ dialogtitle }}
       </v-card-title>
 
-      <v-card-text>
-        <!--        TODO anpassen an Config Tabellen-->
+      <v-card-text class="py-0">
         <v-data-table
           v-model="selectedDienstleister"
-          class="overflow-y-auto"
           :height="tableHeightDienstleister"
           density="compact"
           :headers="dienstleisterHeaders"
@@ -34,15 +32,23 @@
           single-select
         >
           <template #top>
-            <v-toolbar flat>
-              <!-- Eingabefeld zum Filtern der Dienstleister -->
-              <v-text-field
-                v-model="filterDienstleister"
-                append-icon="mdi-filter"
-                label="Dienstleister nach dem gefiltert werden soll"
-                single-line
-                hide-details
-              ></v-text-field>
+            <v-toolbar
+              flat
+              color="white"
+            >
+              <v-toolbar-title>
+                <!-- Eingabefeld zum Filtern der Dienstleister -->
+                <v-text-field
+                  v-model="filterDienstleister"
+                  append-inner-icon="mdi-filter"
+                  label="Dienstleister nach dem gefiltert werden soll"
+                  single-line
+                  hide-details
+                  variant="underlined"
+                  width="50%"
+                  density="compact"
+                />
+              </v-toolbar-title>
             </v-toolbar>
           </template>
         </v-data-table>
@@ -83,6 +89,7 @@ import { computed, ref, watch } from "vue";
 
 import DienstleisterService from "@/api/service/DienstleisterService";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useDaveUtils } from "@/util/DaveUtils";
 
 interface Props {
   isBeauftragen: boolean;
@@ -101,6 +108,7 @@ const emits = defineEmits<{
 }>();
 
 const snackbarStore = useSnackbarStore();
+const daveUtils = useDaveUtils();
 
 const filterDienstleister = ref("");
 const dienstleisterIsLoading = ref(false);
@@ -185,14 +193,16 @@ const dienstleisterHeaders: Array<any> = [
 ];
 
 /*
-  Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
-  64px Suche in Tabelle
-  58px Header
-  52px Button
-   */
-// TODO berechnung prüfen
+  Von der Table-Height alles abziehen, was nicht die Tabelle ist
+*/
 const tableHeightDienstleister = computed(() => {
-  return 600 - 58 - 64 - 52 + "px";
+  return (
+    daveUtils.pxToVh(600) -
+    daveUtils.cardtitleHeight.value -
+    daveUtils.datatableFilterHeight.value -
+    daveUtils.cardactionHeight.value +
+    "vh"
+  );
 });
 
 const getNoResultText = computed(() => {
