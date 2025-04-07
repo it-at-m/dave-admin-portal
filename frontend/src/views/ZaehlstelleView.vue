@@ -34,66 +34,68 @@
         />
       </v-col>
     </v-row>
-    <!--    <v-row-->
-    <!--      dense-->
-    <!--      justify="center"-->
-    <!--    >-->
-    <!--      <v-banner-->
-    <!--        v-if="hasNoZaehlung"-->
-    <!--        single-line-->
-    <!--        width="100%"-->
-    <!--      >-->
-    <!--        <v-icon-->
-    <!--          color="error"-->
-    <!--          size="36"-->
-    <!--        >-->
-    <!--          mdi-alert-decagram-outline-->
-    <!--        </v-icon>-->
-    <!--        Zählstelle besitzt aktuell keine Zählungen.-->
-    <!--      </v-banner>-->
-    <!--      <v-col-->
-    <!--        v-else-->
-    <!--        cols="12"-->
-    <!--        md="6"-->
-    <!--      >-->
-    <!--        <v-spacer />-->
-    <!--        <v-tooltip-->
-    <!--          right-->
-    <!--          class="pl-5"-->
-    <!--        >-->
-    <!--          <template #activator="{ on, attrs }">-->
-    <!--            <v-text-field-->
-    <!--              v-model="query"-->
-    <!--              color="grey darken-1"-->
-    <!--              label="Zählung suchen"-->
-    <!--              dense-->
-    <!--              outlined-->
-    <!--              prepend-inner-icon="mdi-magnify"-->
-    <!--              hide-details-->
-    <!--              class="px-4 my-2"-->
-    <!--            >-->
-    <!--              <template #append>-->
-    <!--                <v-icon-->
-    <!--                  v-bind="attrs"-->
-    <!--                  v-on="on"-->
-    <!--                  >mdi-information-outline-->
-    <!--                </v-icon>-->
-    <!--              </template>-->
-    <!--            </v-text-field>-->
-    <!--          </template>-->
-    <!--          <span>-->
-    <!--            <b>Beispiele, wonach gefiltert werden kann:</b><br />-->
-    <!--            * Datum (24.12.2009)<br />-->
-    <!--            * Monat (Januar, Februar, ...)<br />-->
-    <!--            * Jahreszeit (Frühling, Sommer, ...)<br />-->
-    <!--            * Projektname / -nummer (U1022, VZ Stadtgrenzen 2019, ...)<br />-->
-    <!--            * Zählart (Q, QS, ...)<br />-->
-    <!--            * Wetter (sonnig, neblig, ...)<br />-->
-    <!--          </span>-->
-    <!--        </v-tooltip>-->
-    <!--        <v-spacer />-->
-    <!--      </v-col>-->
-    <!--    </v-row>-->
+    <v-banner
+      v-if="hasNoZaehlung"
+      lines="one"
+      width="100%"
+      text="Zählstelle besitzt aktuell keine Zählungen."
+    >
+      <template #prepend>
+        <v-icon
+          icon="mdi-alert-decagram-outline"
+          size="36"
+          color="error"
+        />
+      </template>
+    </v-banner>
+    <v-row
+      v-else
+      dense
+    >
+      <v-spacer />
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <v-text-field
+          v-model="query"
+          color="grey darken-1"
+          label="Zählung suchen"
+          density="compact"
+          variant="outlined"
+          prepend-inner-icon="mdi-magnify"
+          hide-details
+          class="px-4 my-2"
+        >
+          <template #append-inner>
+            <v-tooltip
+              v-model="showtooltip"
+              location="end top"
+              :open-on-hover="true"
+            >
+              <template #activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  variant="text"
+                  icon="mdi-information-outline"
+                >
+                </v-btn>
+              </template>
+              <span>
+                <b>Beispiele, wonach gefiltert werden kann:</b><br />
+                * Datum (24.12.2009)<br />
+                * Monat (Januar, Februar, ...)<br />
+                * Jahreszeit (Frühling, Sommer, ...)<br />
+                * Projektname / -nummer (U1022, VZ Stadtgrenzen 2019, ...)<br />
+                * Zählart (Q, QS, ...)<br />
+                * Wetter (sonnig, neblig, ...)<br />
+              </span>
+            </v-tooltip>
+          </template>
+        </v-text-field>
+      </v-col>
+      <v-spacer />
+    </v-row>
     <v-row dense>
       <v-col
         v-for="card in filteredZaehlungCardObjects"
@@ -232,6 +234,7 @@ const zaehlungCards = ref([] as Array<ZaehlungCardObject>);
 const fab = ref(false);
 const query = ref("");
 const reloadZaehlstellenMap = ref(false);
+const showtooltip = ref(false);
 
 /**
  * Die Daten zur Zählstelle und der ausgewählten Zählung wird über die
@@ -357,7 +360,7 @@ const hasNoZaehlung = computed(() => {
 });
 
 const zaehlstelleId = computed(() => {
-  const zaehlstelleId: string = route.params.zaehlstelleId;
+  const zaehlstelleId: string = route.params.zaehlstelleId as string;
   if (!zaehlstelleId) {
     return "";
   }
