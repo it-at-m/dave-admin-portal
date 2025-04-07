@@ -158,7 +158,6 @@ function deleteMarkers() {
 }
 
 function resetMap() {
-  // setTimeout(() => {
   deleteMarkers();
   if (props.latLngZaehlstelle) {
     createMarkerForZaehlstelle(props.latLngZaehlstelle);
@@ -167,7 +166,6 @@ function resetMap() {
     createMarkerForZaehlung(props.latLngZaehlung);
   }
   cardmap.setView(props.latLngZaehlstelle, 16);
-  // }, 200);
 }
 
 const emits = defineEmits<{
