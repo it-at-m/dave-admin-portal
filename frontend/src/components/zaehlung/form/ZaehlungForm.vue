@@ -6,89 +6,92 @@
     <v-tabs
       v-model="activeTab"
       fixed-tabs
-      background-color="grey darken-1"
-      dark
-      icons-and-text
-      slider-color="grey lighten-1"
-      slider-size="8"
+      bg-color="grey-darken-1"
+      slider-color="grey-lighten-1"
+      stacked
+      density="compact"
+      color="white"
+      class="text-grey-lighten-1"
     >
       <!-- Kopfzeile -->
-      <v-tab>
+      <v-tab :value="TAB_INFO">
+        <v-icon icon="mdi-information-outline" />
         Allgemeine Info
-        <v-icon>mdi-information-outline</v-icon>
       </v-tab>
-      <v-tab>
+      <v-tab :value="TAB_KNOTEN">
+        <v-icon icon="mdi-routes" />
         Knoten & Lage
-        <v-icon>mdi-routes</v-icon>
       </v-tab>
-      <v-tab>
+      <v-tab :value="TAB_FAHRBEZIEHUNG">
+        <v-icon icon="mdi-routes" />
         Fahrbeziehungen
-        <v-icon>mdi-routes</v-icon>
       </v-tab>
-      <v-tab>
+      <v-tab :value="TAB_FAHRZEUGE">
+        <v-icon icon="mdi-car-multiple" />
         Fahrzeuge
-        <v-icon>mdi-car-multiple</v-icon>
       </v-tab>
     </v-tabs>
-    <v-tabs-items
+    <v-tabs-window
       v-model="activeTab"
       class="d-flex flex-column align-stretch"
     >
       <!-- Inhalte -->
-      <v-tab-item ref="allgemeineInfo">
+      <v-tabs-window-item :value="TAB_INFO">
         <allgemeine-info-form
           :height="SHEETHEIGHT"
-          @isValid="setAllgemeineFormValid"
+          @is-valid="setAllgemeineFormValid"
         />
-      </v-tab-item>
-      <v-tab-item ref="knotenUndLage">
-        <knoten-lage-form
-          :height="SHEETHEIGHT"
-          :zaehlstelle="zaehlstelle"
-        />
-      </v-tab-item>
-      <v-tab-item ref="fahrbeziehungen">
-        <fahrbeziehung-kreisverkehr-form
-          v-if="isKreisverkehr"
-          :height="SHEETHEIGHT"
-        />
-        <fahrbeziehung-form
-          v-else
-          :height="SHEETHEIGHT"
-        />
-      </v-tab-item>
-      <v-tab-item ref="fahrzeuge">
-        <fahrzeuge-form :height="SHEETHEIGHT" />
-      </v-tab-item>
-    </v-tabs-items>
+      </v-tabs-window-item>
+      <v-tabs-window-item :value="TAB_KNOTEN">
+        <!--        <knoten-lage-form-->
+        <!--          :height="SHEETHEIGHT"-->
+        <!--          :zaehlstelle="zaehlstelle"-->
+        <!--        />-->
+      </v-tabs-window-item>
+      <v-tabs-window-item :value="TAB_FAHRBEZIEHUNG">
+        <!--        <fahrbeziehung-kreisverkehr-form-->
+        <!--          v-if="isKreisverkehr"-->
+        <!--          :height="SHEETHEIGHT"-->
+        <!--        />-->
+        <!--        <fahrbeziehung-form-->
+        <!--          v-else-->
+        <!--          :height="SHEETHEIGHT"-->
+        <!--        />-->
+      </v-tabs-window-item>
+      <v-tabs-window-item :value="TAB_FAHRZEUGE">
+        <!--        <fahrzeuge-form :height="SHEETHEIGHT" />-->
+      </v-tabs-window-item>
+    </v-tabs-window>
 
     <v-card-actions>
       <v-spacer />
       <v-btn
         color="secondary"
+        text="Speichern"
+        variant="elevated"
         :disabled="!isAllgemeinFormValid"
         @click="save()"
-      >
-        Speichern
-      </v-btn>
+      />
       <v-btn
-        color="grey lighten-1"
+        color="grey-lighten-1"
+        variant="elevated"
+        text="Abbrechen"
         @click="cancel()"
-      >
-        Abbrechen
-      </v-btn>
+      />
     </v-card-actions>
   </v-sheet>
 </template>
 
 <script setup lang="ts">
+import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type KnotenarmDTO from "@/domain/KnotenarmDTO";
+
 import { cloneDeep } from "lodash";
 import { computed, ref } from "vue";
 
 import ZaehlungService from "@/api/service/ZaehlungService";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import KnotenarmDTO from "@/domain/KnotenarmDTO";
+import AllgemeineInfoForm from "@/components/zaehlung/form/AllgemeineInfoForm.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
 
@@ -110,21 +113,26 @@ const emits = defineEmits<{
 const activeTab = ref(0);
 const isAllgemeinFormValid = ref(false);
 
+const TAB_INFO = 0;
+const TAB_KNOTEN = 1;
+const TAB_FAHRBEZIEHUNG = 2;
+const TAB_FAHRZEUGE = 3;
+
 /**
  * Erzeugt eine vorübergehende ID, um die Knotenarme identifizieren zu können.
  * Diese ID wird vor dem Speichern gelöscht
  */
 function generateId(): string {
   return "xyyxyyx-yxxyxxy".replace(/[xy]/g, function (c) {
-    let r: number = (Math.random() * 16) | 0,
+    const r: number = (Math.random() * 16) | 0,
       v = c == "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
 
 function save(): void {
-  let copy: ZaehlungDTO = cloneDeep(zaehlungStore.getZaehlung);
-  let selfIdLength: number = generateId().length;
+  const copy: ZaehlungDTO = cloneDeep(zaehlungStore.getZaehlung);
+  const selfIdLength: number = generateId().length;
   copy.knotenarme.forEach((arm: KnotenarmDTO) => {
     // Alle Id's entfernen, die ich selber gesetzt habe
     if (arm.id && arm.id.length === selfIdLength) {

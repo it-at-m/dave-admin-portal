@@ -173,14 +173,14 @@
       :show-dialog="showUpdateZaehlstelleDialog"
       @saved="reloadDataAndCloseDialog"
       @cancel="cancelUpdateZaehlstelleDialog"
-    ></update-zaehlstelle-dialog>
+    />
 
-    <!--    <zaehlung-dialog-->
-    <!--      :show-dialog="showZaehlungDialog"-->
-    <!--      :zaehlstelle="zaehlstelle"-->
-    <!--      @saved="reloadDataAndCloseDialog"-->
-    <!--      @cancel="cancelZaehlungDialog"-->
-    <!--    ></zaehlung-dialog>-->
+    <zaehlung-dialog
+      :show-dialog="showZaehlungDialog"
+      :zaehlstelle="zaehlstelle"
+      @saved="reloadDataAndCloseDialog"
+      @cancel="cancelZaehlungDialog"
+    />
 
     <!--  TODO muss neu gemacht werden  -->
     <!--    <chat-dialog-->
@@ -209,6 +209,7 @@ import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
 import UpdateZaehlstelleDialog from "@/components/zaehlstelle/UpdateZaehlstelleDialog.vue";
 import ZaehlstelleInfo from "@/components/zaehlstelle/ZaehlstelleInfo.vue";
 import ZaehlungCard from "@/components/zaehlung/ZaehlungCard.vue";
+import ZaehlungDialog from "@/components/zaehlung/ZaehlungDialog.vue";
 import { wetterText } from "@/domain/enums/Wetter";
 import { zaehlartText } from "@/domain/enums/Zaehlart";
 import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";

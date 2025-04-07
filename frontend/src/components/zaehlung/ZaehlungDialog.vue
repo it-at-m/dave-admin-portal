@@ -3,7 +3,7 @@
     v-model="showDialogModel"
     persistent
     max-width="50%"
-    height="600px"
+    height="800px"
   >
     <v-card
       width="100%"
@@ -11,15 +11,9 @@
     >
       <v-card-title>
         <v-icon
-          v-if="editZaehlung"
-          left
-          >mdi-calendar-edit</v-icon
-        >
-        <v-icon
-          v-else
-          left
-          >mdi-calendar-plus</v-icon
-        >
+          end
+          :icon="dialogicon"
+        />
         {{ dialogtitle }}
       </v-card-title>
 
@@ -35,11 +29,12 @@
 </template>
 
 <script setup lang="ts">
+import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+
 import { isEmpty } from "lodash";
 import { computed, watch } from "vue";
 
-import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import ZaehlungForm from "@/components/zaehlung/form/ZaehlungForm.vue";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
 
 interface Props {
@@ -52,13 +47,21 @@ const showDialogModel = computed(() => {
 });
 const emits = defineEmits<{
   (e: "cancel"): void;
-  (e: "saved", payload: BackendIdDTO): void;
+  (e: "saved"): void;
 }>();
 
 const zaehlungStore = useZaehlungStore();
 
 const editZaehlung = computed(() => {
   return !isEmpty(zaehlungStore.getZaehlung.id);
+});
+
+const dialogicon = computed(() => {
+  if (editZaehlung.value) {
+    return "mdi-calendar-edit";
+  } else {
+    return "mdi-calendar-plus";
+  }
 });
 
 const dialogtitle = computed(() => {
@@ -80,7 +83,7 @@ function cancelCreate(): void {
   emits("cancel");
 }
 
-function saved(backendIdDTO: BackendIdDTO): void {
-  emits("saved", backendIdDTO);
+function saved(): void {
+  emits("saved");
 }
 </script>

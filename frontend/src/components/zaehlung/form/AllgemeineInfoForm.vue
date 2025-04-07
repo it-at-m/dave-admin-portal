@@ -18,8 +18,6 @@
             <v-text-field
               v-model="zaehlung.projektNummer"
               label="Projektnummer"
-              outlined
-              dense
               @blur="updateStore"
             />
           </v-col>
@@ -30,8 +28,6 @@
             <v-text-field
               v-model="zaehlung.projektName"
               label="Projektname"
-              outlined
-              dense
               @blur="updateStore"
             />
           </v-col>
@@ -44,14 +40,12 @@
           >
             <v-autocomplete
               v-model="zaehlung.zaehldauer"
-              outlined
               :items="zaehldauerDropDown"
-              dense
               label="Zähldauer"
               :rules="[() => !!zaehlung.zaehldauer || PFLICHTFELD_TEXT]"
               required
               @blur="updateStore"
-            ></v-autocomplete>
+            />
           </v-col>
           <v-col
             cols="12"
@@ -59,9 +53,7 @@
           >
             <v-autocomplete
               v-model="zaehlung.zaehlart"
-              outlined
               :items="zaehlartenDropDown"
-              dense
               label="Zählart"
               :rules="[() => !!zaehlung.zaehlart || PFLICHTFELD_TEXT]"
               required
@@ -72,50 +64,51 @@
             cols="12"
             md="4"
           >
-            <v-menu
-              v-model="datepickerMenuModel"
-              :close-on-content-click="false"
-              :close-on-click="false"
-              transition="scale-transition"
-              offset-y
-              max-width="290px"
-              min-width="auto"
-            >
-              <template #activator="{ on, attrs }">
-                <v-text-field
-                  v-model="computedDateFormatted"
-                  label="Datum"
-                  prepend-inner-icon="mdi-calendar"
-                  readonly
-                  outlined
-                  dense
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="date"
-                no-title
-                locale="de"
-                :first-day-of-week="1"
-              >
-                <v-spacer></v-spacer>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="saveDate"
-                >
-                  OK
-                </v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="closeMenu"
-                >
-                  Abbrechen
-                </v-btn>
-              </v-date-picker>
-            </v-menu>
+            <!--            TODO Menu updaten Datepicker-->
+            <!--            <v-menu-->
+            <!--              v-model="datepickerMenuModel"-->
+            <!--              :close-on-content-click="false"-->
+            <!--              :close-on-click="false"-->
+            <!--              transition="scale-transition"-->
+            <!--              offset-y-->
+            <!--              max-width="290px"-->
+            <!--              min-width="auto"-->
+            <!--            >-->
+            <!--              <template #activator="{ on, attrs }">-->
+            <!--                <v-text-field-->
+            <!--                  v-model="computedDateFormatted"-->
+            <!--                  label="Datum"-->
+            <!--                  prepend-inner-icon="mdi-calendar"-->
+            <!--                  readonly-->
+            <!--                  outlined-->
+            <!--                  dense-->
+            <!--                  v-bind="attrs"-->
+            <!--                  v-on="on"-->
+            <!--                ></v-text-field>-->
+            <!--              </template>-->
+            <!--              <v-date-picker-->
+            <!--                v-model="date"-->
+            <!--                no-title-->
+            <!--                locale="de"-->
+            <!--                :first-day-of-week="1"-->
+            <!--              >-->
+            <!--                <v-spacer></v-spacer>-->
+            <!--                <v-btn-->
+            <!--                  text-->
+            <!--                  color="primary"-->
+            <!--                  @click="saveDate"-->
+            <!--                >-->
+            <!--                  OK-->
+            <!--                </v-btn>-->
+            <!--                <v-btn-->
+            <!--                  text-->
+            <!--                  color="primary"-->
+            <!--                  @click="closeMenu"-->
+            <!--                >-->
+            <!--                  Abbrechen-->
+            <!--                </v-btn>-->
+            <!--              </v-date-picker>-->
+            <!--            </v-menu>-->
           </v-col>
         </v-row>
         <v-row dense>
@@ -125,9 +118,7 @@
           >
             <v-autocomplete
               v-model="zaehlung.quelle"
-              outlined
               :items="quelleDropDown"
-              dense
               label="Quelle"
               @blur="updateStore"
             ></v-autocomplete>
@@ -138,9 +129,7 @@
           >
             <v-autocomplete
               v-model="zaehlung.zaehlIntervall"
-              outlined
               :items="ZAEHLINTERVALLE_15"
-              dense
               label="Zählintervall"
               @blur="updateStore"
             ></v-autocomplete>
@@ -157,7 +146,6 @@
               label="Sonderzählung"
               color="grey darken-1"
               hide-details
-              dense
               @change="updateStore"
             />
           </v-col>
@@ -170,8 +158,8 @@
             <v-textarea
               v-model="zaehlung.kommentar"
               label="Kommentar"
-              outlined
-              dense
+              variant="outlined"
+              density="compact"
               rows="2"
               row-height="10"
               counter="255"
@@ -187,20 +175,19 @@
           >
             <v-combobox
               v-model="zaehlung.customSuchwoerter"
+              v-model:search-input="newSuchwort"
               multiple
               label="Suchwörter"
-              outlined
-              dense
-              small-chips
-              deletable-chips
+              variant="outlined"
+              density="compact"
+              chips
+              closable-chips
               class="tag-input"
-              :search-input.sync="newSuchwort"
               append-icon="mdi-plus"
               @click:append="addSuchwortToList"
               @keyup.enter="addSuchwortToList"
               @blur="addSuchwortToListAndUpdateStore"
-            >
-            </v-combobox>
+            />
           </v-col>
         </v-row>
         <v-row
@@ -214,8 +201,8 @@
             <v-textarea
               v-model="zaehlung.zaehlsituation"
               label="Zählsituation"
-              outlined
-              dense
+              variant="outlined"
+              density="compact"
               rows="2"
               row-height="10"
               counter="255"
@@ -235,8 +222,8 @@
             <v-textarea
               v-model="zaehlung.zaehlsituationErweitert"
               label="erweiterte Zählsituation"
-              outlined
-              dense
+              variant="outlined"
+              density="compact"
               rows="2"
               row-height="10"
               counter="255"
@@ -251,11 +238,11 @@
 </template>
 
 <script setup lang="ts">
+import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+
 import { cloneDeep, isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 import { quelleDropDown } from "@/domain/enums/Quelle";
 import Status from "@/domain/enums/Status";
 import { zaehlartenDropDown } from "@/domain/enums/Zaehlart";
