@@ -64,51 +64,49 @@
             cols="12"
             md="4"
           >
-            <!--            TODO Menu updaten Datepicker-->
-            <!--            <v-menu-->
-            <!--              v-model="datepickerMenuModel"-->
-            <!--              :close-on-content-click="false"-->
-            <!--              :close-on-click="false"-->
-            <!--              transition="scale-transition"-->
-            <!--              offset-y-->
-            <!--              max-width="290px"-->
-            <!--              min-width="auto"-->
-            <!--            >-->
-            <!--              <template #activator="{ on, attrs }">-->
-            <!--                <v-text-field-->
-            <!--                  v-model="computedDateFormatted"-->
-            <!--                  label="Datum"-->
-            <!--                  prepend-inner-icon="mdi-calendar"-->
-            <!--                  readonly-->
-            <!--                  outlined-->
-            <!--                  dense-->
-            <!--                  v-bind="attrs"-->
-            <!--                  v-on="on"-->
-            <!--                ></v-text-field>-->
-            <!--              </template>-->
-            <!--              <v-date-picker-->
-            <!--                v-model="date"-->
-            <!--                no-title-->
-            <!--                locale="de"-->
-            <!--                :first-day-of-week="1"-->
-            <!--              >-->
-            <!--                <v-spacer></v-spacer>-->
-            <!--                <v-btn-->
-            <!--                  text-->
-            <!--                  color="primary"-->
-            <!--                  @click="saveDate"-->
-            <!--                >-->
-            <!--                  OK-->
-            <!--                </v-btn>-->
-            <!--                <v-btn-->
-            <!--                  text-->
-            <!--                  color="primary"-->
-            <!--                  @click="closeMenu"-->
-            <!--                >-->
-            <!--                  Abbrechen-->
-            <!--                </v-btn>-->
-            <!--              </v-date-picker>-->
-            <!--            </v-menu>-->
+            <v-menu
+              v-model="datepickerMenuModel"
+              :close-on-content-click="false"
+            >
+              <template #activator="{ props }">
+                <v-text-field
+                  v-bind="props"
+                  :model-value="formattedDate"
+                  prepend-inner-icon="mdi-calendar"
+                  readonly
+                />
+              </template>
+              <v-card>
+                <v-card-text>
+                  <v-row style="justify-content: center">
+                    <v-date-picker
+                      v-model="datepickerModel"
+                      width="300"
+                      header=""
+                      title="Datum auswählen"
+                      border
+                      show-adjacent-months
+                      color="primary"
+                    />
+                  </v-row>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn
+                    text="OK"
+                    color="secondary"
+                    variant="elevated"
+                    @click="saveDate"
+                  />
+                  <v-btn
+                    text="Abbrechen"
+                    color="grey-lighten-1"
+                    variant="elevated"
+                    @click="closeMenu"
+                  />
+                </v-card-actions>
+              </v-card>
+            </v-menu>
           </v-col>
         </v-row>
         <v-row dense>
@@ -270,7 +268,7 @@ const newSuchwort = ref("");
 const datepickerMenuModel = ref(false);
 const validZaehlung = ref(false);
 // Without Time
-const date = ref(new Date().toISOString().substring(0, 10));
+const datepickerModel = ref<Date>(new Date());
 const zaehlung = ref({} as ZaehlungDTO);
 
 onMounted(() => {
@@ -306,8 +304,8 @@ const showZaehlsituation = computed(() => {
   return possibleStatus.includes(zaehlungOfStore.value.status);
 });
 
-const computedDateFormatted = computed(() => {
-  return dateUtils.formatDate(date.value);
+const formattedDate = computed(() => {
+  return datepickerModel.value.toLocaleDateString();
 });
 
 function updateWorkingCopy(): void {
@@ -321,10 +319,7 @@ function updateStore(): void {
 
 // Fuegt das eingegebene Wort den Suchwoertern hinzu
 function addSuchwortToList(): void {
-  if (
-    zaehlung.value.customSuchwoerter === undefined ||
-    zaehlung.value.customSuchwoerter === null
-  ) {
+  if (isNil(zaehlung.value.customSuchwoerter)) {
     zaehlung.value.customSuchwoerter = [];
   }
 
@@ -345,7 +340,7 @@ function addSuchwortToListAndUpdateStore(): void {
 
 function saveDate(): void {
   datepickerMenuModel.value = false;
-  zaehlung.value.datum = dateUtils.formatDateForBackend(date.value);
+  zaehlung.value.datum = dateUtils.formatDateForBackend(datepickerModel.value);
   updateStore();
 }
 
@@ -355,6 +350,6 @@ function closeMenu(): void {
 }
 
 function resetDatum(): void {
-  date.value = zaehlung.value.datum.substring(0, 10);
+  datepickerModel.value = dateUtils.getDatumOfString(zaehlung.value.datum);
 }
 </script>

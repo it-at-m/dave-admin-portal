@@ -24,16 +24,18 @@ export function useDateUtils() {
     return new Date(dateToCheck).valueOf() > new Date(dateAfter).valueOf();
   }
 
-  function formatDateForBackend(date: string): string {
+  function formatDateForBackend(date: Date | string): string {
     if (!date) {
       return "";
     }
-
-    const time = new Date().toLocaleTimeString(navigator.language, {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    return new Date(date + "T" + time).toISOString();
+    if (typeof date === "string") {
+      const time = new Date().toLocaleTimeString(navigator.language, {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      date = new Date(date + "T" + time);
+    }
+    return date.toISOString();
   }
 
   function getTimeOfDate(date: Date | string): string {
@@ -90,5 +92,6 @@ export function useDateUtils() {
     getTimeOfDate,
     getShortVersionOfDate,
     getLongVersionOfDate,
+    getDatumOfString,
   };
 }
