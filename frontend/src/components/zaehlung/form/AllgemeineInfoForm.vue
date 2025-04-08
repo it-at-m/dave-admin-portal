@@ -264,7 +264,7 @@ const dateUtils = useDateUtils();
 
 const PFLICHTFELD_TEXT =
   "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
-const ZAEHLINTERVALLE_15 = [{ text: "15 min", value: 15 }];
+const ZAEHLINTERVALLE_15 = [{ title: "15 min", value: 15 }];
 
 const newSuchwort = ref("");
 const datepickerMenuModel = ref(false);
