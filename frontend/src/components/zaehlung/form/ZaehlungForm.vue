@@ -43,10 +43,10 @@
         />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_KNOTEN">
-        <!--        <knoten-lage-form-->
-        <!--          :height="SHEETHEIGHT"-->
-        <!--          :zaehlstelle="zaehlstelle"-->
-        <!--        />-->
+        <knoten-lage-form
+          :height="SHEETHEIGHT"
+          :zaehlstelle="zaehlstelle"
+        />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_FAHRBEZIEHUNG">
         <!--        <fahrbeziehung-kreisverkehr-form-->
@@ -94,6 +94,7 @@ import ZaehlungService from "@/api/service/ZaehlungService";
 import AllgemeineInfoForm from "@/components/zaehlung/form/AllgemeineInfoForm.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
+import KnotenLageForm from "@/components/zaehlung/form/KnotenLageForm.vue";
 
 interface Props {
   zaehlstelle: ZaehlstelleDTO;

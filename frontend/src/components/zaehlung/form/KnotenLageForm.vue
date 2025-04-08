@@ -14,7 +14,7 @@
           :lat-lng-zaehlung="coordsZaehlung"
           :show-luftbild="false"
           :edit-zaehlung-marker="true"
-          @updateZaehlungCoords="updateZaehlungCoords"
+          @update-zaehlung-coords="updateZaehlungCoords"
         />
       </v-row>
       <v-row dense>
@@ -27,7 +27,6 @@
             label="Kreisverkehr"
             color="grey darken-1"
             hide-details
-            dense
             @change="updateStore"
           />
         </v-col>
@@ -40,8 +39,6 @@
           <v-text-field
             v-model="zaehlung.kreuzungsname"
             label="Kreuzungsname"
-            outlined
-            dense
             @blur="updateStore"
           />
         </v-col>
@@ -62,7 +59,7 @@
               v-model="strassen[0]"
               label="Straßenname Knotenarm 1"
               single-line
-              dense
+              variant="underlined"
               prepend-icon="mdi-numeric-1"
               clearable
               @click:clear="deleteKnotenarm(1)"
@@ -77,7 +74,7 @@
               v-model="strassen[1]"
               label="Straßenname Knotenarm 2"
               single-line
-              dense
+              variant="underlined"
               prepend-icon="mdi-numeric-2"
               clearable
               @click:clear="deleteKnotenarm(2)"
@@ -92,7 +89,7 @@
               v-model="strassen[2]"
               label="Straßenname Knotenarm 3"
               single-line
-              dense
+              variant="underlined"
               prepend-icon="mdi-numeric-3"
               clearable
               @click:clear="deleteKnotenarm(3)"
@@ -107,7 +104,7 @@
               v-model="strassen[3]"
               label="Straßenname Knotenarm 4"
               single-line
-              dense
+              variant="underlined"
               prepend-icon="mdi-numeric-4"
               clearable
               @click:clear="deleteKnotenarm(4)"
@@ -122,7 +119,7 @@
               v-model="strassen[4]"
               label="Straßenname Knotenarm 5"
               single-line
-              dense
+              variant="underlined"
               prepend-icon="mdi-numeric-5"
               clearable
               @click:clear="deleteKnotenarm(5)"
@@ -137,7 +134,7 @@
               v-model="strassen[5]"
               label="Straßenname Knotenarm 6"
               single-line
-              dense
+              variant="underlined"
               prepend-icon="mdi-numeric-6"
               clearable
               @click:clear="deleteKnotenarm(6)"
@@ -152,7 +149,7 @@
               v-model="strassen[6]"
               label="Straßenname Knotenarm 7"
               single-line
-              dense
+              variant="underlined"
               prepend-icon="mdi-numeric-7"
               clearable
               @click:clear="deleteKnotenarm(7)"
@@ -167,7 +164,7 @@
               v-model="strassen[7]"
               label="Straßenname Knotenarm 8"
               single-line
-              dense
+              variant="underlined"
               prepend-icon="mdi-numeric-8"
               clearable
               @click:clear="deleteKnotenarm(8)"
@@ -187,7 +184,7 @@
             width="100%"
             active-color="#1565C0"
             passive-color="#EEEEEE"
-            :knotenarme="knotenarmeStore"
+            :knotenarme="knotenarmeOfStore"
           ></zaehlung-geometrie>
         </v-col>
         <v-spacer />
@@ -197,14 +194,17 @@
 </template>
 
 <script setup lang="ts">
+import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type GeoPoint from "@/domain/GeoPoint";
+import type KnotenarmDTO from "@/domain/KnotenarmDTO";
+
 import { LatLng } from "leaflet";
 import { cloneDeep, isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import GeoPoint from "@/domain/GeoPoint";
-import KnotenarmDTO from "@/domain/KnotenarmDTO";
+import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
+import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
@@ -224,7 +224,7 @@ onMounted(() => {
   updateWorkingCopy();
 });
 
-const knotenarmeStore = computed(() => {
+const knotenarmeOfStore = computed(() => {
   return zaehlungStore.getKnotenarme;
 });
 

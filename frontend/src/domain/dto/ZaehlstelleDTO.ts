@@ -1,6 +1,6 @@
 import type BaseEntity from "@/domain/BaseEntity";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import GeoPoint from "@/domain/GeoPoint";
+import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type GeoPoint from "@/domain/GeoPoint";
 
 export default interface ZaehlstelleDTO extends BaseEntity {
   nummer: string;
