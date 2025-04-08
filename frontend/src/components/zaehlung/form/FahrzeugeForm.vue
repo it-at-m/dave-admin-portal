@@ -11,65 +11,57 @@
           <v-checkbox
             v-model="pkw"
             :label="pkwLabel"
-            color="grey darken-1"
+            color="grey-darken-1"
             hide-details
-            dense
             @click="updateKategorieWithPkw"
           ></v-checkbox>
           <v-checkbox
             v-model="lkw"
             :label="lkwLabel"
-            color="grey darken-1"
+            color="grey-darken-1"
             hide-details
-            dense
             @click="updateKategorieWithLkw"
           ></v-checkbox>
           <v-checkbox
             v-model="lz"
             :label="lzLabel"
-            color="grey darken-1"
+            color="grey-darken-1"
             hide-details
-            dense
             @click="updateKategorieWithLz"
           ></v-checkbox>
           <v-checkbox
             v-model="bus"
             :label="busLabel"
-            color="grey darken-1"
+            color="grey-darken-1"
             hide-details
-            dense
             @click="updateKategorieWithBus"
           ></v-checkbox>
           <v-checkbox
             v-model="krad"
             :label="kradLabel"
-            color="grey darken-1"
+            color="grey-darken-1"
             hide-details
-            dense
             @click="updateKategorieWithKrad"
           ></v-checkbox>
           <v-checkbox
             v-model="rad"
             :label="radLabel"
-            color="grey darken-1"
+            color="grey-darken-1"
             hide-details
-            dense
             @click="updateKategorieWithRad"
           ></v-checkbox>
           <v-checkbox
             v-model="fuss"
             :label="fussLabel"
-            color="grey darken-1"
+            color="grey-darken-1"
             hide-details
-            dense
             @click="updateKategorieWithFuss"
           ></v-checkbox>
           <v-checkbox
             v-model="selectOrDeselectAllVmodel"
             :label="labelSelectOrDeselectAll"
-            color="grey darken-1"
+            color="grey-darken-1"
             hide-details
-            dense
             @click="selectOrDeselectAll()"
           ></v-checkbox>
         </v-col>
@@ -79,10 +71,11 @@
 </template>
 
 <script setup lang="ts">
+import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+
 import { cloneDeep } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 import Fahrzeug from "@/domain/enums/Fahrzeug";
 import { usePkweinheitStore } from "@/store/PkweinheitStore";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
