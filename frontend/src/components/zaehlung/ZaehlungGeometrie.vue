@@ -222,7 +222,6 @@ interface Props {
   width?: string;
   activeColor: string;
   passiveColor?: string;
-  knotenarme?: Array<KnotenarmDTO>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -230,7 +229,10 @@ const props = withDefaults(defineProps<Props>(), {
   width: "72",
   activeColor: "#FFFFFF",
   passiveColor: "#757575",
-  knotenarme: undefined,
+});
+
+const knotenarme = defineModel<Array<KnotenarmDTO>>({
+  required: true,
 });
 
 /**
@@ -239,7 +241,7 @@ const props = withDefaults(defineProps<Props>(), {
  */
 function calculateColor(knotenarm: number): string | undefined {
   let color = props.passiveColor;
-  const gefilteterKnotenarm = props.knotenarme?.filter(
+  const gefilteterKnotenarm = knotenarme.value.filter(
     (k) => k.nummer === knotenarm
   )[0];
   if (gefilteterKnotenarm) {
@@ -250,17 +252,17 @@ function calculateColor(knotenarm: number): string | undefined {
 
 const includesKnotenarm1and3 = computed(() => {
   return (
-    props.knotenarme?.filter((k) => k.nummer === 1)[0] &&
-    props.knotenarme?.filter((k) => k.nummer === 3)[0]
+    knotenarme.value.filter((k) => k.nummer === 1)[0] &&
+    knotenarme.value.filter((k) => k.nummer === 3)[0]
   );
 });
 const includesKnotenarm2and4 = computed(() => {
   return (
-    props.knotenarme?.filter((k) => k.nummer === 2)[0] &&
-    props.knotenarme?.filter((k) => k.nummer === 4)[0]
+    knotenarme.value.filter((k) => k.nummer === 2)[0] &&
+    knotenarme.value.filter((k) => k.nummer === 4)[0]
   );
 });
 const hasKnotenarme = computed(() => {
-  return props.knotenarme && props.knotenarme.length > 0;
+  return knotenarme.value && knotenarme.value.length > 0;
 });
 </script>

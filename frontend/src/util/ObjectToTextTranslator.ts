@@ -1,4 +1,4 @@
-import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
+import type HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 
 export default class ObjectToTextTranslator {
   public static getHochrechnungsfaktorAsText(

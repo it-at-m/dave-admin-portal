@@ -27,7 +27,6 @@
             label="Kreisverkehr"
             color="grey darken-1"
             hide-details
-            @change="updateStore"
           />
         </v-col>
       </v-row>
@@ -39,7 +38,6 @@
           <v-text-field
             v-model="zaehlung.kreuzungsname"
             label="Kreuzungsname"
-            @blur="updateStore"
           />
         </v-col>
       </v-row>
@@ -62,8 +60,8 @@
               variant="underlined"
               prepend-icon="mdi-numeric-1"
               clearable
-              @click:clear="deleteKnotenarm(1)"
-              @blur="addOrUpdateStrassenname(1, strassen[0])"
+              @click:clear="updateModel(1, strassen[0])"
+              @blur="updateModel(1, strassen[0])"
             />
           </v-row>
           <v-row
@@ -77,8 +75,8 @@
               variant="underlined"
               prepend-icon="mdi-numeric-2"
               clearable
-              @click:clear="deleteKnotenarm(2)"
-              @blur="addOrUpdateStrassenname(2, strassen[1])"
+              @click:clear="updateModel(2, strassen[1])"
+              @blur="updateModel(2, strassen[1])"
             />
           </v-row>
           <v-row
@@ -92,8 +90,8 @@
               variant="underlined"
               prepend-icon="mdi-numeric-3"
               clearable
-              @click:clear="deleteKnotenarm(3)"
-              @blur="addOrUpdateStrassenname(3, strassen[2])"
+              @click:clear="updateModel(3, strassen[2])"
+              @blur="updateModel(3, strassen[2])"
             />
           </v-row>
           <v-row
@@ -107,8 +105,8 @@
               variant="underlined"
               prepend-icon="mdi-numeric-4"
               clearable
-              @click:clear="deleteKnotenarm(4)"
-              @blur="addOrUpdateStrassenname(4, strassen[3])"
+              @click:clear="updateModel(4, strassen[3])"
+              @blur="updateModel(4, strassen[3])"
             />
           </v-row>
           <v-row
@@ -122,8 +120,8 @@
               variant="underlined"
               prepend-icon="mdi-numeric-5"
               clearable
-              @click:clear="deleteKnotenarm(5)"
-              @blur="addOrUpdateStrassenname(5, strassen[4])"
+              @click:clear="updateModel(5, strassen[4])"
+              @blur="updateModel(5, strassen[4])"
             />
           </v-row>
           <v-row
@@ -138,7 +136,7 @@
               prepend-icon="mdi-numeric-6"
               clearable
               @click:clear="deleteKnotenarm(6)"
-              @blur="addOrUpdateStrassenname(6, strassen[5])"
+              @blur="updateModel(6, strassen[5])"
             />
           </v-row>
           <v-row
@@ -153,7 +151,7 @@
               prepend-icon="mdi-numeric-7"
               clearable
               @click:clear="deleteKnotenarm(7)"
-              @blur="addOrUpdateStrassenname(7, strassen[6])"
+              @blur="updateModel(7, strassen[6])"
             />
           </v-row>
           <v-row
@@ -168,7 +166,7 @@
               prepend-icon="mdi-numeric-8"
               clearable
               @click:clear="deleteKnotenarm(8)"
-              @blur="addOrUpdateStrassenname(8, strassen[7])"
+              @blur="updateModel(8, strassen[7])"
             />
           </v-row>
         </v-col>
@@ -179,13 +177,12 @@
           align-self="start"
         >
           <zaehlung-geometrie
-            id="geo"
+            v-model="zaehlung.knotenarme"
             height="100%"
             width="100%"
             active-color="#1565C0"
             passive-color="#EEEEEE"
-            :knotenarme="knotenarmeOfStore"
-          ></zaehlung-geometrie>
+          />
         </v-col>
         <v-spacer />
       </v-row>
@@ -194,13 +191,14 @@
 </template>
 
 <script setup lang="ts">
+import type FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
 import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 import type GeoPoint from "@/domain/GeoPoint";
 import type KnotenarmDTO from "@/domain/KnotenarmDTO";
 
 import { LatLng } from "leaflet";
-import { cloneDeep, isEmpty, isNil } from "lodash";
+import { isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
@@ -214,18 +212,16 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const zaehlung = ref(DefaultObjectCreator.createDefaultZaehlungDTO());
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
 
 const strassen = ref<Array<string>>([]);
 
 const zaehlungStore = useZaehlungStore();
 
 onMounted(() => {
-  updateWorkingCopy();
-});
-
-const knotenarmeOfStore = computed(() => {
-  return zaehlungStore.getKnotenarme;
+  resetForm();
 });
 
 watch(
@@ -240,49 +236,58 @@ function resetForm() {
   strassen.value = ["", "", "", "", "", "", "", ""];
 
   // Straßennamen neu setzen, wenn vorhanden
-  const zaehlung: ZaehlungDTO = zaehlungStore.getZaehlung;
-  zaehlung.knotenarme.forEach((arm: KnotenarmDTO) => {
+  zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
     strassen.value[arm.nummer - 1] = arm.strassenname;
   });
 }
 
-watch(
-  () => zaehlungStore.getZaehlung,
-  () => {
-    updateWorkingCopy();
-  },
-  { immediate: true, deep: true }
-);
-
-function updateWorkingCopy(): void {
-  resetForm();
-  zaehlung.value = cloneDeep(zaehlungStore.getZaehlung);
-}
-
-function addOrUpdateStrassenname(nummer: number, name: string) {
-  // Kein Text mehr => löschen
-  if (isNil(name) || isEmpty(name.trim())) {
+function updateModel(knotenarmnummer: number, strassenname: string) {
+  if (isNil(strassenname) || isEmpty(strassenname.trim())) {
     // Knotenarm entfernen
-    zaehlungStore.deleteKnotenarm(nummer);
-    // Fahrbeziehung entfernen
-    zaehlungStore.deleteFahrbeziehungByKnotenarmnummer(nummer);
+    deleteKnotenarm(knotenarmnummer);
   } else {
-    // hinzufügen oder aktualisieren
-    const knotenarm: KnotenarmDTO = {} as KnotenarmDTO;
-    knotenarm.nummer = nummer;
-    knotenarm.strassenname = name.trim();
-    zaehlungStore.addOrUpdateKnotenarm(cloneDeep(knotenarm));
+    // Add or update
+    let updated = false;
+    zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
+      if (arm.nummer === knotenarmnummer) {
+        arm.strassenname = strassenname;
+        updated = true;
+      }
+    });
+    if (!updated) {
+      const knotenarm: KnotenarmDTO = {} as KnotenarmDTO;
+      knotenarm.nummer = knotenarmnummer;
+      knotenarm.strassenname = strassenname.trim();
+      zaehlung.value.knotenarme.push(knotenarm);
+    }
   }
 }
 
 function deleteKnotenarm(nummer: number) {
-  zaehlungStore.deleteKnotenarm(nummer);
-  // Fahrbeziehung entfernen
-  zaehlungStore.deleteFahrbeziehungByKnotenarmnummer(nummer);
+  let toDelete = -1;
+  zaehlung.value.knotenarme.forEach(
+    (knotenarm: KnotenarmDTO, index: number) => {
+      if (knotenarm.nummer === nummer) {
+        toDelete = index;
+      }
+    }
+  );
+  if (toDelete > -1) {
+    zaehlung.value.knotenarme.splice(toDelete, 1);
+  }
 }
-
-function updateStore(): void {
-  zaehlungStore.setZaehlung(cloneDeep(zaehlung.value));
+function deleteFahrbeziehungByKnotenarmnummer(nummer: number) {
+  let toDelete = -1;
+  zaehlung.value.fahrbeziehungen.forEach(
+    (fahrbeziehung: FahrbeziehungDTO, index: number) => {
+      if (fahrbeziehung.knotenarm === nummer) {
+        toDelete = index;
+      }
+    }
+  );
+  if (toDelete > -1) {
+    zaehlung.value.fahrbeziehungen.splice(toDelete, 1);
+  }
 }
 
 const coordsZaehlstelle = computed(() => {
@@ -309,6 +314,5 @@ function updateZaehlungCoords(newCoords: LatLng): void {
   }
   zaehlung.value.punkt.lat = newCoords.lat.toString();
   zaehlung.value.punkt.lon = newCoords.lng.toString();
-  updateStore();
 }
 </script>

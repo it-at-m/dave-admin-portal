@@ -1,6 +1,7 @@
 import type BaseEntity from "@/domain/BaseEntity";
 import type FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
 import type PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
+import type Fahrzeug from "@/domain/enums/Fahrzeug";
 import type GeoPoint from "@/domain/GeoPoint";
 import type KnotenarmDTO from "@/domain/KnotenarmDTO";
 
@@ -29,7 +30,7 @@ export default interface ZaehlungDTO extends BaseEntity {
   zaehlart: Zaehlart;
   knotenarme: KnotenarmDTO[];
   fahrbeziehungen: FahrbeziehungDTO[];
-  kategorien: string[];
+  kategorien: Array<Fahrzeug>;
   pkwEinheit: PkwEinheitDTO;
   customSuchwoerter: string[];
   unreadMessagesMobilitaetsreferat: boolean;

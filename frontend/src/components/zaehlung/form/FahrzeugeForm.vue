@@ -13,57 +13,57 @@
             :label="pkwLabel"
             color="grey-darken-1"
             hide-details
-            @click="updateKategorieWithPkw"
-          ></v-checkbox>
+            @update:model-value="updateKategorieWithPkw"
+          />
           <v-checkbox
             v-model="lkw"
             :label="lkwLabel"
             color="grey-darken-1"
             hide-details
-            @click="updateKategorieWithLkw"
-          ></v-checkbox>
+            @update:model-value="updateKategorieWithLkw"
+          />
           <v-checkbox
             v-model="lz"
             :label="lzLabel"
             color="grey-darken-1"
             hide-details
-            @click="updateKategorieWithLz"
-          ></v-checkbox>
+            @update:model-value="updateKategorieWithLz"
+          />
           <v-checkbox
             v-model="bus"
             :label="busLabel"
             color="grey-darken-1"
             hide-details
-            @click="updateKategorieWithBus"
-          ></v-checkbox>
+            @update:model-value="updateKategorieWithBus"
+          />
           <v-checkbox
             v-model="krad"
             :label="kradLabel"
             color="grey-darken-1"
             hide-details
-            @click="updateKategorieWithKrad"
-          ></v-checkbox>
+            @update:model-value="updateKategorieWithKrad"
+          />
           <v-checkbox
             v-model="rad"
             :label="radLabel"
             color="grey-darken-1"
             hide-details
-            @click="updateKategorieWithRad"
-          ></v-checkbox>
+            @update:model-value="updateKategorieWithRad"
+          />
           <v-checkbox
             v-model="fuss"
             :label="fussLabel"
             color="grey-darken-1"
             hide-details
-            @click="updateKategorieWithFuss"
-          ></v-checkbox>
+            @update:model-value="updateKategorieWithFuss"
+          />
           <v-checkbox
             v-model="selectOrDeselectAllVmodel"
             :label="labelSelectOrDeselectAll"
             color="grey-darken-1"
             hide-details
-            @click="selectOrDeselectAll()"
-          ></v-checkbox>
+            @update:model-value="selectOrDeselectAll()"
+          />
         </v-col>
       </v-row>
     </v-card-text>
@@ -73,7 +73,6 @@
 <script setup lang="ts">
 import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 
-import { cloneDeep } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import Fahrzeug from "@/domain/enums/Fahrzeug";
@@ -84,6 +83,10 @@ interface Props {
   height: string;
 }
 defineProps<Props>();
+
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
 
 const pkweinheitStore = usePkweinheitStore();
 const zaehlungStore = useZaehlungStore();
@@ -101,13 +104,6 @@ const selectOrDeselectAllVmodel = ref(false);
 onMounted(() => {
   resetForm();
 });
-
-watch(
-  () => zaehlungStore.getKategorien,
-  (kategorien) => {
-    selectOrDeselectAllVmodel.value = kategorien.length === 7;
-  }
-);
 
 watch(
   () => zaehlungStore.getResetformevent,
@@ -221,39 +217,44 @@ function selectOrDeselectAll() {
   krad.value = selectOrDeselectAllVmodel.value;
   rad.value = selectOrDeselectAllVmodel.value;
   fuss.value = selectOrDeselectAllVmodel.value;
-  // in den Store schreiben//löschen
   if (selectOrDeselectAllVmodel.value) {
-    const allFahrzeuge: Array<Fahrzeug> = [];
-    allFahrzeuge.push(Fahrzeug.PKW);
-    allFahrzeuge.push(Fahrzeug.LKW);
-    allFahrzeuge.push(Fahrzeug.LZ);
-    allFahrzeuge.push(Fahrzeug.BUS);
-    allFahrzeuge.push(Fahrzeug.KRAD);
-    allFahrzeuge.push(Fahrzeug.RAD);
-    allFahrzeuge.push(Fahrzeug.FUSS);
-    zaehlungStore.addAllKategorien(allFahrzeuge);
+    zaehlung.value.kategorien = [];
+    zaehlung.value.kategorien.push(Fahrzeug.PKW);
+    zaehlung.value.kategorien.push(Fahrzeug.LKW);
+    zaehlung.value.kategorien.push(Fahrzeug.LZ);
+    zaehlung.value.kategorien.push(Fahrzeug.BUS);
+    zaehlung.value.kategorien.push(Fahrzeug.KRAD);
+    zaehlung.value.kategorien.push(Fahrzeug.RAD);
+    zaehlung.value.kategorien.push(Fahrzeug.FUSS);
   } else {
-    zaehlungStore.deleteAllKategorien();
+    zaehlung.value.kategorien = [];
   }
 }
 
 function addKategorie(kategorie: Fahrzeug) {
-  zaehlungStore.addKategorie(cloneDeep(kategorie));
+  zaehlung.value.kategorien.push(kategorie);
 }
 
 function removeKategorie(kategorie: Fahrzeug) {
-  zaehlungStore.deleteKategorie(cloneDeep(kategorie));
+  let toDelete = -1;
+  zaehlung.value.kategorien.forEach((kat: Fahrzeug, index: number) => {
+    if (kat === kategorie) {
+      toDelete = index;
+    }
+  });
+  if (toDelete > -1) {
+    zaehlung.value.kategorien.splice(toDelete, 1);
+  }
 }
 
 function resetForm() {
-  const zaehlung: ZaehlungDTO = zaehlungStore.getZaehlung;
-  pkw.value = zaehlung.kategorien.includes(Fahrzeug.PKW);
-  lkw.value = zaehlung.kategorien.includes(Fahrzeug.LKW);
-  lz.value = zaehlung.kategorien.includes(Fahrzeug.LZ);
-  bus.value = zaehlung.kategorien.includes(Fahrzeug.BUS);
-  krad.value = zaehlung.kategorien.includes(Fahrzeug.KRAD);
-  rad.value = zaehlung.kategorien.includes(Fahrzeug.RAD);
-  fuss.value = zaehlung.kategorien.includes(Fahrzeug.FUSS);
-  selectOrDeselectAllVmodel.value = zaehlung.kategorien.length === 7;
+  pkw.value = zaehlung.value.kategorien.includes(Fahrzeug.PKW);
+  lkw.value = zaehlung.value.kategorien.includes(Fahrzeug.LKW);
+  lz.value = zaehlung.value.kategorien.includes(Fahrzeug.LZ);
+  bus.value = zaehlung.value.kategorien.includes(Fahrzeug.BUS);
+  krad.value = zaehlung.value.kategorien.includes(Fahrzeug.KRAD);
+  rad.value = zaehlung.value.kategorien.includes(Fahrzeug.RAD);
+  fuss.value = zaehlung.value.kategorien.includes(Fahrzeug.FUSS);
+  selectOrDeselectAllVmodel.value = zaehlung.value.kategorien.length === 7;
 }
 </script>

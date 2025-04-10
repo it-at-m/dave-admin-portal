@@ -38,28 +38,31 @@
       <!-- Inhalte -->
       <v-tabs-window-item :value="TAB_INFO">
         <allgemeine-info-form
+          v-model="zaehlung"
           :height="SHEETHEIGHT"
           @is-valid="setAllgemeineFormValid"
         />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_KNOTEN">
         <knoten-lage-form
+          v-model="zaehlung"
           :height="SHEETHEIGHT"
           :zaehlstelle="zaehlstelle"
         />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_FAHRBEZIEHUNG">
-        <!--        <fahrbeziehung-kreisverkehr-form-->
-        <!--          v-if="isKreisverkehr"-->
-        <!--          :height="SHEETHEIGHT"-->
-        <!--        />-->
+        <fahrbeziehung-kreisverkehr-form
+          v-if="zaehlung.kreisverkehr"
+          v-model="zaehlung"
+          :height="SHEETHEIGHT"
+        />
         <!--        <fahrbeziehung-form-->
         <!--          v-else-->
         <!--          :height="SHEETHEIGHT"-->
         <!--        />-->
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_FAHRZEUGE">
-        <fahrzeuge-form :height="SHEETHEIGHT" />
+        <fahrzeuge-form v-model="zaehlung" :height="SHEETHEIGHT" />
       </v-tabs-window-item>
     </v-tabs-window>
 
@@ -85,10 +88,8 @@
 <script setup lang="ts">
 import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import type KnotenarmDTO from "@/domain/KnotenarmDTO";
 
-import { cloneDeep } from "lodash";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 import ZaehlungService from "@/api/service/ZaehlungService";
 import AllgemeineInfoForm from "@/components/zaehlung/form/AllgemeineInfoForm.vue";
@@ -96,11 +97,16 @@ import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
 import KnotenLageForm from "@/components/zaehlung/form/KnotenLageForm.vue";
 import FahrzeugeForm from "@/components/zaehlung/form/FahrzeugeForm.vue";
+import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/FahrbeziehungKreisverkehrForm.vue";
 
 interface Props {
   zaehlstelle: ZaehlstelleDTO;
 }
 const props = defineProps<Props>();
+
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
 
 const SHEETHEIGHT = "580px";
 
@@ -120,28 +126,8 @@ const TAB_KNOTEN = 1;
 const TAB_FAHRBEZIEHUNG = 2;
 const TAB_FAHRZEUGE = 3;
 
-/**
- * Erzeugt eine vorübergehende ID, um die Knotenarme identifizieren zu können.
- * Diese ID wird vor dem Speichern gelöscht
- */
-function generateId(): string {
-  return "xyyxyyx-yxxyxxy".replace(/[xy]/g, function (c) {
-    const r: number = (Math.random() * 16) | 0,
-      v = c == "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
-
 function save(): void {
-  const copy: ZaehlungDTO = cloneDeep(zaehlungStore.getZaehlung);
-  const selfIdLength: number = generateId().length;
-  copy.knotenarme.forEach((arm: KnotenarmDTO) => {
-    // Alle Id's entfernen, die ich selber gesetzt habe
-    if (arm.id && arm.id.length === selfIdLength) {
-      arm.id = "";
-    }
-  });
-  ZaehlungService.saveZaehlung(copy, props.zaehlstelle.id)
+  ZaehlungService.saveZaehlung(zaehlung.value, props.zaehlstelle.id)
     .then(() => {
       emits("saved");
     })
@@ -161,8 +147,4 @@ function cancel(): void {
 function setAllgemeineFormValid(isPartValid: boolean) {
   isAllgemeinFormValid.value = isPartValid;
 }
-
-const isKreisverkehr = computed(() => {
-  return zaehlungStore.getZaehlung.kreisverkehr;
-});
 </script>

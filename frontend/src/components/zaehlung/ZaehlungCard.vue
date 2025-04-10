@@ -48,12 +48,12 @@
         >
           <v-card-title>
             <zaehlung-geometrie
+              v-model="zaehlung.knotenarme"
               height="60"
               width="60"
               active-color="#1565C0"
               passive-color="#EEEEEE"
-              :knotenarme="zaehlung.knotenarme"
-            ></zaehlung-geometrie>
+            />
           </v-card-title>
         </v-col>
       </v-row>
@@ -283,15 +283,18 @@ const deleteDialogText = ref("Wollen Sie die Zählung wirklich löschen?");
 
 interface Props {
   geoPointZaehlstelle: GeoPoint;
-  zaehlung: ZaehlungDTO;
   zaehlstelleId: string;
 }
 const properties = defineProps<Props>();
 
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
+
 const emits = defineEmits<{
   (e: "cancel"): void;
   (e: "deleted"): void;
-  (e: "openZaehlungDialog"): void;
+  (e: "openZaehlungDialog", zaehlung: ZaehlungDTO): void;
   (e: "openZaehlungDatenportal", zaehlungId: string): void;
   (e: "openChatDialog", zaehlungId: string): void;
   (e: "saved", payload: BackendIdDTO): void;
@@ -305,7 +308,7 @@ const deleteDialog = ref(false);
 const isBeauftragen = ref(true);
 
 const unreadMessagesMobilitaetsreferat = ref(
-  properties.zaehlung.unreadMessagesMobilitaetsreferat
+  zaehlung.value.unreadMessagesMobilitaetsreferat
 );
 
 const showBeauftragenDialog = ref(false);
@@ -318,16 +321,16 @@ const coordsZaehlstelle = computed(() => {
 });
 
 const coordsZaehlung = computed(() => {
-  const geoPoint: GeoPoint = properties.zaehlung.punkt;
+  const geoPoint: GeoPoint = zaehlung.value.punkt;
   return createLatLngFromString(geoPoint.lat, geoPoint.lon);
 });
 
 const datum = computed(() => {
-  return dateUtils.getShortVersionOfDate(properties.zaehlung.datum);
+  return dateUtils.getShortVersionOfDate(zaehlung.value.datum);
 });
 
 const streets = computed(() => {
-  return cloneDeep(properties.zaehlung.knotenarme).sort(
+  return cloneDeep(zaehlung.value.knotenarme).sort(
     KnotenarmComparator.sortByNumber
   );
 });
@@ -349,9 +352,7 @@ const streetsHeader: Array<any> = [
 ];
 
 const statusDesign = computed(() => {
-  let design: IconOptions | undefined = statusIcon.get(
-    properties.zaehlung.status
-  );
+  let design: IconOptions | undefined = statusIcon.get(zaehlung.value.status);
   if (!design) {
     design = {} as IconOptions;
     design.color = "deep-orange lighten-4";
@@ -362,33 +363,33 @@ const statusDesign = computed(() => {
 });
 
 const showButtonKorrektur = computed(() => {
-  return properties.zaehlung.status === Status.ACCOMPLISHED;
+  return zaehlung.value.status === Status.ACCOMPLISHED;
 });
 
 const showButtonFreigeben = computed(() => {
-  return properties.zaehlung.status === Status.ACCOMPLISHED;
+  return zaehlung.value.status === Status.ACCOMPLISHED;
 });
 
 const showButtonBeauftragen = computed(() => {
   return (
-    properties.zaehlung.status === Status.CREATED &&
-    properties.zaehlung.knotenarme &&
-    properties.zaehlung.knotenarme.length > 0
+    zaehlung.value.status === Status.CREATED &&
+    zaehlung.value.knotenarme &&
+    zaehlung.value.knotenarme.length > 0
   );
 });
 
 const showButtonDatenportal = computed(() => {
   return (
-    properties.zaehlung.status === Status.ACCOMPLISHED ||
-    properties.zaehlung.status === Status.ACTIVE
+    zaehlung.value.status === Status.ACCOMPLISHED ||
+    zaehlung.value.status === Status.ACTIVE
   );
 });
 
 const showButtonDienstleisterKorrigieren = computed(() => {
   return (
-    properties.zaehlung.status === Status.INSTRUCTED ||
-    properties.zaehlung.status === Status.COUNTING ||
-    properties.zaehlung.status === Status.CORRECTION
+    zaehlung.value.status === Status.INSTRUCTED ||
+    zaehlung.value.status === Status.COUNTING ||
+    zaehlung.value.status === Status.CORRECTION
   );
 });
 
@@ -400,13 +401,13 @@ function createLatLngFromString(lat: string, lng: string): LatLng {
 function zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
   loading.value = true;
   const update: UpdateStatusDTO = {} as UpdateStatusDTO;
-  update.zaehlungId = properties.zaehlung.id;
+  update.zaehlungId = zaehlung.value.id;
   update.status = Status.INSTRUCTED;
   update.dienstleisterkennung = dienstleister.kennung;
   ZaehlungService.updateStatus(update)
     .then((backendIdDTO) => {
       snackbarStore.showInfo(
-        `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${properties.zaehlung.projektName} durchzuführen.`
+        `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${zaehlung.value.projektName} durchzuführen.`
       );
       emits("saved", backendIdDTO);
     })
@@ -425,7 +426,7 @@ function zaehlungLoeschen() {
 function deleteZaehlung() {
   deleteDialog.value = false;
   loading.value = true;
-  ZaehlungService.deleteZaehlungById(properties.zaehlung.id)
+  ZaehlungService.deleteZaehlungById(zaehlung.value.id)
     .then((isDeleted: boolean) => {
       if (isDeleted) {
         snackbarStore.showInfo(
@@ -447,7 +448,7 @@ function deleteZaehlung() {
 function zaehlungFreigeben() {
   loading.value = true;
   const update: UpdateStatusDTO = {} as UpdateStatusDTO;
-  update.zaehlungId = properties.zaehlung.id;
+  update.zaehlungId = zaehlung.value.id;
   update.status = Status.ACTIVE;
   ZaehlungService.updateStatus(update)
     .then((backendIdDTO) => {
@@ -465,7 +466,7 @@ function zaehlungFreigeben() {
 function zaehlungKorrigieren() {
   loading.value = true;
   const update: UpdateStatusDTO = {} as UpdateStatusDTO;
-  update.zaehlungId = properties.zaehlung.id;
+  update.zaehlungId = zaehlung.value.id;
   update.status = Status.CORRECTION;
   ZaehlungService.updateStatus(update)
     .then((backendIdDTO) => {
@@ -481,17 +482,17 @@ function zaehlungKorrigieren() {
 }
 
 function openZaehlungDialog() {
-  zaehlungStore.setZaehlung(cloneDeep(properties.zaehlung));
-  emits("openZaehlungDialog");
+  // zaehlungStore.setZaehlung(cloneDeep(zaehlung.value));
+  emits("openZaehlungDialog", zaehlung.value);
 }
 
 function openZaehlungInDatenportal() {
-  emits("openZaehlungDatenportal", properties.zaehlung.id);
+  emits("openZaehlungDatenportal", zaehlung.value.id);
 }
 
 function zaehlungKopieren() {
   loading.value = true;
-  const zaehlungCopy: ZaehlungDTO = cloneDeep(properties.zaehlung);
+  const zaehlungCopy: ZaehlungDTO = cloneDeep(zaehlung.value);
   zaehlungCopy.id = "";
   zaehlungCopy.kommentar = "";
   zaehlungCopy.zaehlsituation = "";
@@ -519,20 +520,17 @@ function zaehlungKopieren() {
 }
 
 function openChatDialog() {
-  zaehlungStore.setZaehlung(cloneDeep(properties.zaehlung));
+  zaehlungStore.setZaehlung(cloneDeep(zaehlung.value));
   unreadMessagesMobilitaetsreferat.value = false;
-  emits("openChatDialog", properties.zaehlung.id);
+  emits("openChatDialog", zaehlung.value.id);
 }
 
 function dienstleisterKorrigieren(dienstleister: DienstleisterDTO) {
   loading.value = true;
-  ZaehlungService.updateDienstleisterkennung(
-    properties.zaehlung.id,
-    dienstleister
-  )
+  ZaehlungService.updateDienstleisterkennung(zaehlung.value.id, dienstleister)
     .then((backendIdDTO) => {
       snackbarStore.showInfo(
-        `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${properties.zaehlung.projektName} durchzuführen. (Korrektur)`
+        `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${zaehlung.value.projektName} durchzuführen. (Korrektur)`
       );
       emits("saved", backendIdDTO);
     })

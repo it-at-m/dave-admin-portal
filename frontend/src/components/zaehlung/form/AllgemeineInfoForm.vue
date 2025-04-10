@@ -18,7 +18,6 @@
             <v-text-field
               v-model="zaehlung.projektNummer"
               label="Projektnummer"
-              @blur="updateStore"
             />
           </v-col>
           <v-col
@@ -28,7 +27,6 @@
             <v-text-field
               v-model="zaehlung.projektName"
               label="Projektname"
-              @blur="updateStore"
             />
           </v-col>
           <v-spacer />
@@ -44,7 +42,6 @@
               label="Zähldauer"
               :rules="[() => !!zaehlung.zaehldauer || PFLICHTFELD_TEXT]"
               required
-              @blur="updateStore"
             />
           </v-col>
           <v-col
@@ -57,7 +54,6 @@
               label="Zählart"
               :rules="[() => !!zaehlung.zaehlart || PFLICHTFELD_TEXT]"
               required
-              @blur="updateStore"
             ></v-autocomplete>
           </v-col>
           <v-col
@@ -118,7 +114,6 @@
               v-model="zaehlung.quelle"
               :items="quelleDropDown"
               label="Quelle"
-              @blur="updateStore"
             ></v-autocomplete>
           </v-col>
           <v-col
@@ -129,7 +124,6 @@
               v-model="zaehlung.zaehlIntervall"
               :items="ZAEHLINTERVALLE_15"
               label="Zählintervall"
-              @blur="updateStore"
             ></v-autocomplete>
           </v-col>
           <v-spacer />
@@ -144,7 +138,6 @@
               label="Sonderzählung"
               color="grey darken-1"
               hide-details
-              @change="updateStore"
             />
           </v-col>
         </v-row>
@@ -162,7 +155,6 @@
               row-height="10"
               counter="255"
               maxlength="255"
-              @blur="updateStore"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -184,7 +176,7 @@
               append-icon="mdi-plus"
               @click:append="addSuchwortToList"
               @keyup.enter="addSuchwortToList"
-              @blur="addSuchwortToListAndUpdateStore"
+              @blur="addSuchwortToList"
             />
           </v-col>
         </v-row>
@@ -205,7 +197,6 @@
               row-height="10"
               counter="255"
               maxlength="255"
-              @blur="updateStore"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -226,7 +217,6 @@
               row-height="10"
               counter="255"
               maxlength="255"
-              @blur="updateStore"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -238,7 +228,7 @@
 <script setup lang="ts">
 import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 
-import { cloneDeep, isEmpty, isNil } from "lodash";
+import { isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import { quelleDropDown } from "@/domain/enums/Quelle";
@@ -252,6 +242,10 @@ interface Props {
   height: string;
 }
 defineProps<Props>();
+
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
 
 const emits = defineEmits<{
   (e: "isValid", payload: boolean): void;
@@ -269,24 +263,16 @@ const datepickerMenuModel = ref(false);
 const validZaehlung = ref(false);
 // Without Time
 const datepickerModel = ref<Date>(new Date());
-const zaehlung = ref({} as ZaehlungDTO);
 
 onMounted(() => {
   validZaehlung.value = false;
-  updateWorkingCopy();
+  resetDatum();
 });
 
 watch(
   () => validZaehlung.value,
   () => {
     emits("isValid", validZaehlung.value);
-  }
-);
-
-watch(
-  () => zaehlungStore.getZaehlung,
-  () => {
-    updateWorkingCopy();
   }
 );
 
@@ -308,15 +294,6 @@ const formattedDate = computed(() => {
   return datepickerModel.value.toLocaleDateString();
 });
 
-function updateWorkingCopy(): void {
-  zaehlung.value = cloneDeep(zaehlungOfStore.value);
-  resetDatum();
-}
-
-function updateStore(): void {
-  zaehlungStore.setZaehlung(cloneDeep(zaehlung.value));
-}
-
 // Fuegt das eingegebene Wort den Suchwoertern hinzu
 function addSuchwortToList(): void {
   if (isNil(zaehlung.value.customSuchwoerter)) {
@@ -333,15 +310,9 @@ function addSuchwortToList(): void {
   newSuchwort.value = "";
 }
 
-function addSuchwortToListAndUpdateStore(): void {
-  addSuchwortToList();
-  updateStore();
-}
-
 function saveDate(): void {
   datepickerMenuModel.value = false;
   zaehlung.value.datum = dateUtils.formatDateForBackend(datepickerModel.value);
-  updateStore();
 }
 
 function closeMenu(): void {

@@ -103,7 +103,7 @@
         :cols="card.flex"
       >
         <zaehlung-card
-          :zaehlung="card.zaehlung"
+          v-model="card.zaehlung"
           :zaehlstelle-id="zaehlstelle.id"
           :geo-point-zaehlstelle="zaehlstelle.punkt"
           @open-zaehlung-dialog="openZaehlungDialog"
@@ -176,6 +176,7 @@
     />
 
     <zaehlung-dialog
+      v-model="zaehlung"
       :show-dialog="showZaehlungDialog"
       :zaehlstelle="zaehlstelle"
       @saved="reloadDataAndCloseDialog"
@@ -215,14 +216,12 @@ import { zaehlartText } from "@/domain/enums/Zaehlart";
 import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
 import { usePkweinheitStore } from "@/store/PkweinheitStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import ZaehlungCardObjectComparator from "@/util/ZaehlungCardObjectComparator";
 
 const snackbarStore = useSnackbarStore();
 const pkweinheitStore = usePkweinheitStore();
 const hochrechnungsfaktorStore = useHochrechnungsfaktorStore();
-const zaehlungStore = useZaehlungStore();
 const route = useRoute();
 const display = useDisplay();
 
@@ -237,11 +236,14 @@ const query = ref("");
 const reloadZaehlstellenMap = ref(false);
 const showtooltip = ref(false);
 
+const zaehlung = ref<ZaehlungDTO>(createDefaultZaehlungDTO());
+
 /**
  * Die Daten zur Zählstelle und der ausgewählten Zählung wird über die
  * API geladen.
  */
 onMounted(() => {
+  zaehlung.value = createDefaultZaehlungDTO();
   loadZaehlstelle(true);
   loadHochrechnungsfaktoren();
   loadPkwEinheiten();
@@ -384,12 +386,14 @@ function cancelZaehlungDialog() {
   showZaehlungDialog.value = false;
 }
 
-function openZaehlungDialog() {
+function openZaehlungDialog(zaehlungToEdit: ZaehlungDTO) {
+  zaehlung.value = cloneDeep(zaehlungToEdit);
   showZaehlungDialog.value = true;
 }
 
 function createZaehlung() {
-  zaehlungStore.setZaehlung(cloneDeep(createDefaultZaehlungDTO()));
+  zaehlung.value = createDefaultZaehlungDTO();
+  // zaehlungStore.setZaehlung(cloneDeep(createDefaultZaehlungDTO()));
   showZaehlungDialog.value = true;
 }
 
@@ -411,8 +415,7 @@ function closeChatDialog() {
 function openZaehlungWithId(zaehlungId: string): void {
   zaehlungCards.value.forEach((cardObject: ZaehlungCardObject) => {
     if (cardObject.zaehlung.id === zaehlungId) {
-      zaehlungStore.setZaehlung(cloneDeep(cardObject.zaehlung));
-      openZaehlungDialog();
+      openZaehlungDialog(cardObject.zaehlung);
     }
   });
 }

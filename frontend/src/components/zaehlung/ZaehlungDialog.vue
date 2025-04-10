@@ -19,6 +19,7 @@
 
       <v-card-text>
         <zaehlung-form
+          v-model="zaehlung"
           :zaehlstelle="zaehlstelle"
           @cancel="cancelCreate"
           @saved="saved"
@@ -30,6 +31,7 @@
 
 <script setup lang="ts">
 import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 
 import { isEmpty } from "lodash";
 import { computed, watch } from "vue";
@@ -42,6 +44,11 @@ interface Props {
   zaehlstelle: ZaehlstelleDTO;
 }
 const props = defineProps<Props>();
+
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
+
 const showDialogModel = computed(() => {
   return props.showDialog;
 });
