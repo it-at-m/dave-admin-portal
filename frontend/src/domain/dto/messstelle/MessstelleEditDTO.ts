@@ -1,4 +1,5 @@
 import type BaseEntity from "@/domain/BaseEntity";
+
 import MessfaehigkeitEditDTO from "@/domain/dto/messstelle/MessfaehigkeitEditDTO";
 import MessquerschnittEditDTO from "@/domain/dto/messstelle/MessquerschnittEditDTO";
 import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";

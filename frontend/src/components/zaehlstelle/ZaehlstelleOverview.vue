@@ -48,12 +48,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref} from "vue";
+import type OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
+
+import { computed, onMounted, ref } from "vue";
 
 import ZaehlungService from "@/api/service/ZaehlungService";
 import IconOptions from "@/components/icons/IconOptions";
 import OpenZaehlungPanel from "@/components/zaehlung/OpenZaehlungPanel.vue";
-import type OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
 import Status, { statusIcon } from "@/domain/enums/Status";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import ZaehlungComparator from "@/util/ZaehlungComparator";

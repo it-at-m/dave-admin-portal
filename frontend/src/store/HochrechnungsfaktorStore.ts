@@ -1,7 +1,8 @@
+import type HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
+
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import type HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 export const useHochrechnungsfaktorStore = defineStore(
