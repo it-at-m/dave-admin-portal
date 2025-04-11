@@ -62,7 +62,10 @@
         <!--        />-->
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_FAHRZEUGE">
-        <fahrzeuge-form v-model="zaehlung" :height="SHEETHEIGHT" />
+        <fahrzeuge-form
+          v-model="zaehlung"
+          :height="SHEETHEIGHT"
+        />
       </v-tabs-window-item>
     </v-tabs-window>
 
@@ -93,11 +96,11 @@ import { ref } from "vue";
 
 import ZaehlungService from "@/api/service/ZaehlungService";
 import AllgemeineInfoForm from "@/components/zaehlung/form/AllgemeineInfoForm.vue";
+import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/FahrbeziehungKreisverkehrForm.vue";
+import FahrzeugeForm from "@/components/zaehlung/form/FahrzeugeForm.vue";
+import KnotenLageForm from "@/components/zaehlung/form/KnotenLageForm.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
-import KnotenLageForm from "@/components/zaehlung/form/KnotenLageForm.vue";
-import FahrzeugeForm from "@/components/zaehlung/form/FahrzeugeForm.vue";
-import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/FahrbeziehungKreisverkehrForm.vue";
 
 interface Props {
   zaehlstelle: ZaehlstelleDTO;

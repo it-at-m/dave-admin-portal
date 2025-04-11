@@ -25,7 +25,7 @@
           <v-checkbox
             v-model="zaehlung.kreisverkehr"
             label="Kreisverkehr"
-            color="grey darken-1"
+            color="grey-darken-1"
             hide-details
           />
         </v-col>
@@ -191,7 +191,6 @@
 </template>
 
 <script setup lang="ts">
-import type FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
 import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
 import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
 import type GeoPoint from "@/domain/GeoPoint";
@@ -275,19 +274,19 @@ function deleteKnotenarm(nummer: number) {
   if (toDelete > -1) {
     zaehlung.value.knotenarme.splice(toDelete, 1);
   }
+  deleteAllFahrbeziehungByKnotenarmnummer(nummer);
 }
-function deleteFahrbeziehungByKnotenarmnummer(nummer: number) {
-  let toDelete = -1;
-  zaehlung.value.fahrbeziehungen.forEach(
-    (fahrbeziehung: FahrbeziehungDTO, index: number) => {
-      if (fahrbeziehung.knotenarm === nummer) {
-        toDelete = index;
-      }
+
+function deleteAllFahrbeziehungByKnotenarmnummer(nummer: number) {
+  const filtered = zaehlung.value.fahrbeziehungen.filter((fahrbeziehung) => {
+    if (fahrbeziehung.knotenarm === nummer) {
+      fahrbeziehung.active = false;
     }
-  );
-  if (toDelete > -1) {
-    zaehlung.value.fahrbeziehungen.splice(toDelete, 1);
-  }
+    return fahrbeziehung.knotenarm !== nummer;
+  });
+
+  zaehlung.value.fahrbeziehungen = [];
+  zaehlung.value.fahrbeziehungen = [...filtered];
 }
 
 const coordsZaehlstelle = computed(() => {

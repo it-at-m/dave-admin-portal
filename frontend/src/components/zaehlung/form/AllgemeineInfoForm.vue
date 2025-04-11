@@ -136,7 +136,7 @@
             <v-checkbox
               v-model="zaehlung.sonderzaehlung"
               label="Sonderzählung"
-              color="grey darken-1"
+              color="grey-darken-1"
               hide-details
             />
           </v-col>
