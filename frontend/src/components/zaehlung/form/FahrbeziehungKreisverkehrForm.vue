@@ -1,6 +1,5 @@
 <template>
   <v-data-table
-    key="indexKey"
     v-model="zaehlung.fahrbeziehungen"
     :headers="HEADERS as Array<any>"
     :items="allPossibleFahrbeziehungen"
@@ -99,13 +98,13 @@ const HEADERS = [
 ];
 
 onMounted(() => {
-  updateWorkingCopy();
+  updatePossibleFahrbeziehungen();
 });
 
 watch(
   () => zaehlung.value.knotenarme,
   () => {
-    updateWorkingCopy();
+    updatePossibleFahrbeziehungen();
   },
   { deep: true, immediate: true }
 );
@@ -135,7 +134,7 @@ const hochrechnungsfaktoreDropDown = computed(() => {
   allPossibleFahrbeziehungen.value.forEach((fahrbeziehung) => {
     if (
       !isNil(fahrbeziehung.hochrechnungsfaktor) &&
-      !hdskjsa(dropDown, fahrbeziehung.hochrechnungsfaktor)
+      !containsHochrechnungsfaktor(dropDown, fahrbeziehung.hochrechnungsfaktor)
     ) {
       dropDown.push(cloneDeep(fahrbeziehung.hochrechnungsfaktor));
     }
@@ -143,7 +142,7 @@ const hochrechnungsfaktoreDropDown = computed(() => {
   return dropDown;
 });
 
-function hdskjsa(
+function containsHochrechnungsfaktor(
   activeFaktors: Array<HochrechnungsfaktorDTO>,
   faktor: HochrechnungsfaktorDTO
 ) {
@@ -156,7 +155,7 @@ function hdskjsa(
   return contains;
 }
 
-function updateWorkingCopy(): void {
+function updatePossibleFahrbeziehungen(): void {
   allPossibleFahrbeziehungen.value = cloneDeep(
     calculatePossibleFahrbeziehungen()
   );
@@ -177,6 +176,13 @@ function updateWorkingCopy(): void {
       }
     });
   });
+  calculateSelectAllModel();
+}
+
+function calculateSelectAllModel() {
+  selectAllModel.value =
+    zaehlung.value.fahrbeziehungen.length >=
+    allPossibleFahrbeziehungen.value.length / 2;
 }
 
 function updateFahrbeziehung(toSave: FahrbeziehungDTO): void {
@@ -277,15 +283,12 @@ function selectItem(fahrbeziehung: FahrbeziehungDTO) {
   if (fahrbeziehung.active) {
     zaehlung.value.fahrbeziehungen.push(fahrbeziehung);
   } else {
-    // remove fahrbeziehung
-    deleteFahrbeziehung(fahrbeziehung);
+    removeFahrbeziehung(fahrbeziehung);
   }
-  selectAllModel.value =
-    zaehlung.value.fahrbeziehungen.length >=
-    allPossibleFahrbeziehungen.value.length / 2;
+  calculateSelectAllModel();
 }
 
-function deleteFahrbeziehung(toDelete: FahrbeziehungDTO) {
+function removeFahrbeziehung(toDelete: FahrbeziehungDTO) {
   let deleteIndex = -1;
   zaehlung.value.fahrbeziehungen.forEach(
     (fahrbeziehung: FahrbeziehungDTO, index: number) => {

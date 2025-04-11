@@ -56,10 +56,11 @@
           v-model="zaehlung"
           :height="SHEETHEIGHT"
         />
-        <!--        <fahrbeziehung-form-->
-        <!--          v-else-->
-        <!--          :height="SHEETHEIGHT"-->
-        <!--        />-->
+        <fahrbeziehung-form
+          v-else
+          v-model="zaehlung"
+          :height="SHEETHEIGHT"
+        />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_FAHRZEUGE">
         <fahrzeuge-form
@@ -96,6 +97,7 @@ import { ref } from "vue";
 
 import ZaehlungService from "@/api/service/ZaehlungService";
 import AllgemeineInfoForm from "@/components/zaehlung/form/AllgemeineInfoForm.vue";
+import FahrbeziehungForm from "@/components/zaehlung/form/FahrbeziehungForm.vue";
 import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/FahrbeziehungKreisverkehrForm.vue";
 import FahrzeugeForm from "@/components/zaehlung/form/FahrzeugeForm.vue";
 import KnotenLageForm from "@/components/zaehlung/form/KnotenLageForm.vue";
