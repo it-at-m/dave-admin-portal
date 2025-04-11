@@ -168,11 +168,11 @@
       @cancel="cancelZaehlungDialog"
     />
 
-    <!--  TODO muss neu gemacht werden  -->
-    <!--    <chat-dialog-->
-    <!--      :show-dialog="showChatDialog"-->
-    <!--      @closeDialog="closeChatDialog"-->
-    <!--    ></chat-dialog>-->
+    <chat-dialog
+      v-model="zaehlung"
+      :show-dialog="showChatDialog"
+      @close-dialog="closeChatDialog"
+    />
   </v-sheet>
 </template>
 
@@ -191,6 +191,7 @@ import HochrechnungsfaktorService from "@/api/service/HochrechnungsfaktorService
 import PkwEinheitenService from "@/api/service/PkwEinheitenService";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
+import ChatDialog from "@/components/chat/ChatDialog.vue";
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
 import UpdateZaehlstelleDialog from "@/components/zaehlstelle/UpdateZaehlstelleDialog.vue";
 import ZaehlstelleInfo from "@/components/zaehlstelle/ZaehlstelleInfo.vue";
@@ -396,7 +397,8 @@ function openZaehlungDatenportal(zaehlungId: string) {
   window.open(url);
 }
 
-function openChatDialog() {
+function openChatDialog(zaehlungToChat: ZaehlungDTO) {
+  zaehlung.value = cloneDeep(zaehlungToChat);
   showChatDialog.value = true;
 }
 

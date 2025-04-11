@@ -162,7 +162,7 @@
         @click="openChatDialog"
       >
         <v-badge
-          v-if="unreadMessagesMobilitaetsreferat"
+          v-if="zaehlung.unreadMessagesMobilitaetsreferat"
           dot
           color="red"
         >
@@ -295,7 +295,7 @@ const emits = defineEmits<{
   (e: "deleted"): void;
   (e: "openZaehlungDialog", zaehlung: ZaehlungDTO): void;
   (e: "openZaehlungDatenportal", zaehlungId: string): void;
-  (e: "openChatDialog", zaehlungId: string): void;
+  (e: "openChatDialog", zaehlung: ZaehlungDTO): void;
   (e: "saved", payload: BackendIdDTO): void;
 }>();
 
@@ -304,10 +304,6 @@ const dateUtils = useDateUtils();
 const loading = ref(false);
 const deleteDialog = ref(false);
 const isBeauftragen = ref(true);
-
-const unreadMessagesMobilitaetsreferat = ref(
-  zaehlung.value.unreadMessagesMobilitaetsreferat
-);
 
 const showBeauftragenDialog = ref(false);
 
@@ -517,9 +513,8 @@ function zaehlungKopieren() {
 }
 
 function openChatDialog() {
-  // zaehlungStore.setZaehlung(cloneDeep(zaehlung.value));
-  unreadMessagesMobilitaetsreferat.value = false;
-  emits("openChatDialog", zaehlung.value.id);
+  zaehlung.value.unreadMessagesMobilitaetsreferat = false;
+  emits("openChatDialog", zaehlung.value);
 }
 
 function dienstleisterKorrigieren(dienstleister: DienstleisterDTO) {

@@ -1,5 +1,53 @@
 <!-- TODO muss ein neues Framework gesucht werden, da das alte nicht mehr unterstützt wird. -->
-<!--<template>-->
+<template>
+  <v-dialog
+    v-model="showDialogModel"
+    persistent
+    max-width="50%"
+    height="800px"
+  >
+    <v-card
+      width="100%"
+      flat
+    >
+      <v-card-title>
+        <v-icon
+          end
+          icon="mdi-skull-crossbones-outline"
+        />
+        {{ dialogtitle }}
+      </v-card-title>
+
+      <v-card-text>
+        TODO: Es muss ein neues Framework gesucht werden, da das alte nicht mehr
+        unterstützt wird.
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script setup lang="ts">
+import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+
+import { computed } from "vue";
+
+interface Props {
+  showDialog: boolean;
+}
+const props = defineProps<Props>();
+
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
+
+const showDialogModel = computed(() => {
+  return props.showDialog;
+});
+
+const dialogtitle = computed(() => {
+  return `${zaehlung.value.projektName} - ${zaehlung.value.datum}`;
+});
+</script>
 <!--  <v-dialog-->
 <!--    v-model="showDialogModel"-->
 <!--    max-width="50%"-->
