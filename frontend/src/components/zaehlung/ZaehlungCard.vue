@@ -115,7 +115,7 @@
           <v-col md="12">
             <v-data-table
               density="compact"
-              :headers="streetsHeader"
+              :headers="streetsHeader as Array<any>"
               :items="streets"
               item-key="nummer"
               :items-per-page="-1"
@@ -274,7 +274,6 @@ import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
 import Status, { statusIcon } from "@/domain/enums/Status";
 import Wetter from "@/domain/enums/Wetter";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
 import { useDateUtils } from "@/util/DateUtils";
 import KnotenarmComparator from "@/util/KnotenarmComparator";
 
@@ -301,7 +300,6 @@ const emits = defineEmits<{
 }>();
 
 const snackbarStore = useSnackbarStore();
-const zaehlungStore = useZaehlungStore();
 const dateUtils = useDateUtils();
 const loading = ref(false);
 const deleteDialog = ref(false);
@@ -335,7 +333,7 @@ const streets = computed(() => {
   );
 });
 
-const streetsHeader: Array<any> = [
+const streetsHeader = [
   {
     title: "Nummer",
     align: "center",
@@ -482,7 +480,6 @@ function zaehlungKorrigieren() {
 }
 
 function openZaehlungDialog() {
-  // zaehlungStore.setZaehlung(cloneDeep(zaehlung.value));
   emits("openZaehlungDialog", zaehlung.value);
 }
 
@@ -520,7 +517,7 @@ function zaehlungKopieren() {
 }
 
 function openChatDialog() {
-  zaehlungStore.setZaehlung(cloneDeep(zaehlung.value));
+  // zaehlungStore.setZaehlung(cloneDeep(zaehlung.value));
   unreadMessagesMobilitaetsreferat.value = false;
   emits("openChatDialog", zaehlung.value.id);
 }

@@ -7,7 +7,7 @@
     <v-data-table
       :height="tableHeightDienstleister"
       density="compact"
-      :headers="dienstleisterHeaders"
+      :headers="dienstleisterHeaders as Array<any>"
       :items="dienstleister"
       :items-per-page="-1"
       hide-default-footer
@@ -124,7 +124,7 @@
             <v-data-table
               :height="tableHeightMail"
               density="compact"
-              :headers="headerMail"
+              :headers="headerMail as Array<any>"
               :items="emailaddresses"
               :items-per-page="-1"
               hide-default-footer
@@ -395,7 +395,7 @@ watch(
   { immediate: true }
 );
 
-const dienstleisterHeaders: Array<any> = [
+const dienstleisterHeaders = [
   {
     title: "Name",
     align: "start",
@@ -658,7 +658,7 @@ const dialogiconMail = computed(() => {
     : "mdi-email-plus-outline";
 });
 
-const headerMail: Array<any> = [
+const headerMail = [
   {
     title: "E-Mail-Adressen",
     align: "start",

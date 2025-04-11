@@ -7,7 +7,7 @@
     <v-data-table
       :height="tableHeight"
       density="compact"
-      :headers="header"
+      :headers="header as Array<any>"
       :items="emailaddresses"
       :items-per-page="-1"
       hide-default-footer
@@ -312,7 +312,7 @@ const tableHeight = computed(() => {
   );
 });
 
-const header: Array<any> = [
+const header = [
   {
     title: "E-Mail-Adressen",
     align: "start",

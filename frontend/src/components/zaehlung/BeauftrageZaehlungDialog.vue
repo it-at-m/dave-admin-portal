@@ -19,7 +19,7 @@
           v-model="selectedDienstleister"
           :height="tableHeightDienstleister"
           density="compact"
-          :headers="dienstleisterHeaders"
+          :headers="dienstleisterHeaders as Array<any>"
           :items="dienstleister"
           :items-per-page="-1"
           hide-default-footer
@@ -174,7 +174,7 @@ function loadAllActiveDienstleister() {
     });
 }
 
-const dienstleisterHeaders: Array<any> = [
+const dienstleisterHeaders = [
   {
     title: "Name",
     align: "start",

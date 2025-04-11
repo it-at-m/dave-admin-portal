@@ -7,7 +7,7 @@
     <v-data-table
       :height="tableHeight"
       density="compact"
-      :headers="header"
+      :headers="header as Array<any>"
       :items="hochrechnungsfaktoren"
       :items-per-page="-1"
       hide-default-footer
@@ -263,7 +263,7 @@ const editIndex = ref(-1);
 const showEditDialog = ref(false);
 const showDeleteDialog = ref(false);
 
-const header: Array<any> = [
+const header = [
   {
     title: "Matrix",
     align: "center",

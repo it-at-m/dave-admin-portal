@@ -115,58 +115,43 @@
       </v-col>
     </v-row>
 
-    <!--    <v-speed-dial-->
-    <!--      v-model="fab"-->
-    <!--      absolute-->
-    <!--      bottom-->
-    <!--      fixed-->
-    <!--      right-->
-    <!--      open-on-hover-->
-    <!--    >-->
-    <!--      <template #activator>-->
-    <!--        <v-btn-->
-    <!--          v-model="fab"-->
-    <!--          dark-->
-    <!--          fab-->
-    <!--          :color="fabColor"-->
-    <!--        >-->
-    <!--          <v-icon v-if="fab"> mdi-close-thick </v-icon>-->
-    <!--          <v-icon v-else> mdi-plus-thick </v-icon>-->
-    <!--        </v-btn>-->
-    <!--      </template>-->
-    <!--      <v-tooltip left>-->
-    <!--        <template #activator="{ on, attrs }">-->
-    <!--          <v-btn-->
-    <!--            dark-->
-    <!--            fab-->
-    <!--            small-->
-    <!--            color="secondary"-->
-    <!--            v-bind="attrs"-->
-    <!--            @click.stop="createZaehlung"-->
-    <!--            v-on="on"-->
-    <!--          >-->
-    <!--            <v-icon> mdi-calendar-plus </v-icon>-->
-    <!--          </v-btn>-->
-    <!--        </template>-->
-    <!--        <span>Neue Zählung anlegen</span>-->
-    <!--      </v-tooltip>-->
-    <!--      <v-tooltip left>-->
-    <!--        <template #activator="{ on, attrs }">-->
-    <!--          <v-btn-->
-    <!--            fab-->
-    <!--            dark-->
-    <!--            small-->
-    <!--            color="secondary"-->
-    <!--            v-bind="attrs"-->
-    <!--            @click="editZaehlstelle"-->
-    <!--            v-on="on"-->
-    <!--          >-->
-    <!--            <v-icon>mdi-pencil</v-icon>-->
-    <!--          </v-btn>-->
-    <!--        </template>-->
-    <!--        <span>Zählstelle bearbeiten</span>-->
-    <!--      </v-tooltip>-->
-    <!--    </v-speed-dial>-->
+    <v-speed-dial
+      v-model="speedDialOpen"
+      persistent
+      location="top"
+    >
+      <template #activator="{ props: activatorProps }">
+        <v-btn
+          v-bind="activatorProps"
+          key="speedDial"
+          :color="speedDialColor"
+          :icon="speedDialIcon"
+          size="x-large"
+          elevation="6"
+          location="bottom end"
+          position="absolute"
+          class="mr-4 mb-4"
+          style="z-index: 400"
+          :data-x="activatorProps"
+        />
+      </template>
+      <v-btn
+        key="createZaehlung"
+        v-tooltip:start="'Neue Zählung anlegen'"
+        icon="mdi-calendar-plus"
+        size="large"
+        color="secondary"
+        @click="createZaehlung"
+      />
+      <v-btn
+        key="editZaehlstelle"
+        v-tooltip:start="'Zählstelle bearbeiten'"
+        icon="mdi-pencil"
+        size="large"
+        color="secondary"
+        @click="editZaehlstelle"
+      />
+    </v-speed-dial>
 
     <update-zaehlstelle-dialog
       v-model="zaehlstelle"
@@ -231,7 +216,7 @@ const showUpdateZaehlstelleDialog = ref(false);
 const showZaehlungDialog = ref(false);
 const showChatDialog = ref(false);
 const zaehlungCards = ref([] as Array<ZaehlungCardObject>);
-const fab = ref(false);
+const speedDialOpen = ref(false);
 const query = ref("");
 const reloadZaehlstellenMap = ref(false);
 const showtooltip = ref(false);
@@ -265,8 +250,16 @@ function loadPkwEinheiten() {
     .catch((error) => snackbarStore.showApiError(error));
 }
 
-const fabColor = computed(() => {
-  return fab.value ? "grey darken-1" : "secondary";
+const speedDialColor = computed(() => {
+  return speedDialOpen.value ? "grey-darken-1" : "secondary";
+});
+
+const speedDialIcon = computed(() => {
+  let icon = "mdi-plus-thick";
+  if (speedDialOpen.value) {
+    icon = "mdi-close-thick";
+  }
+  return icon;
 });
 
 const kreuzungsname = computed(() => {
@@ -393,7 +386,6 @@ function openZaehlungDialog(zaehlungToEdit: ZaehlungDTO) {
 
 function createZaehlung() {
   zaehlung.value = createDefaultZaehlungDTO();
-  // zaehlungStore.setZaehlung(cloneDeep(createDefaultZaehlungDTO()));
   showZaehlungDialog.value = true;
 }
 

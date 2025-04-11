@@ -235,7 +235,6 @@ import { quelleDropDown } from "@/domain/enums/Quelle";
 import Status from "@/domain/enums/Status";
 import { zaehlartenDropDown } from "@/domain/enums/Zaehlart";
 import { zaehldauerDropDown } from "@/domain/enums/Zaehldauer";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
 import { useDateUtils } from "@/util/DateUtils";
 
 interface Props {
@@ -251,7 +250,6 @@ const emits = defineEmits<{
   (e: "isValid", payload: boolean): void;
 }>();
 
-const zaehlungStore = useZaehlungStore();
 const dateUtils = useDateUtils();
 
 const PFLICHTFELD_TEXT =
@@ -276,10 +274,6 @@ watch(
   }
 );
 
-const zaehlungOfStore = computed(() => {
-  return zaehlungStore.getZaehlung;
-});
-
 const showZaehlsituation = computed(() => {
   const possibleStatus: Array<Status> = [
     Status.ACTIVE,
@@ -287,7 +281,7 @@ const showZaehlsituation = computed(() => {
     Status.CORRECTION,
     Status.COUNTING,
   ];
-  return possibleStatus.includes(zaehlungOfStore.value.status);
+  return possibleStatus.includes(zaehlung.value.status);
 });
 
 const formattedDate = computed(() => {
