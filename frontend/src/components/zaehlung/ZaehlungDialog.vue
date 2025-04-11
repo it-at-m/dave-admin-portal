@@ -60,7 +60,7 @@ const emits = defineEmits<{
 const zaehlungStore = useZaehlungStore();
 
 const editZaehlung = computed(() => {
-  return !isEmpty(zaehlungStore.getZaehlung.id);
+  return !isEmpty(zaehlung.value.id);
 });
 
 const dialogicon = computed(() => {
