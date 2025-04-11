@@ -8,7 +8,7 @@ import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptions
 
 import { LatLng } from "leaflet";
 
-import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
+import MessstelleStatus from "@/domain/enums/MessstelleStatus";
 import Quelle from "@/domain/enums/Quelle";
 import Status from "@/domain/enums/Status";
 import Wetter from "@/domain/enums/Wetter";

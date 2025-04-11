@@ -47,7 +47,7 @@ import { computed, onMounted, ref } from "vue";
 
 import MessstelleService from "@/api/service/MessstelleService";
 import MessstelleOverviewPanel from "@/components/messstelle/MessstelleOverviewPanel.vue";
-import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
+import MessstelleStatus from "@/domain/enums/MessstelleStatus";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 
 const snackbarStore = useSnackbarStore();

@@ -9,8 +9,8 @@
       <v-card-text>
         <v-form>
           <v-data-table
-            dense
-            :headers="header"
+            density="compact"
+            :headers="header as Array<any>"
             :items="messfahigkeiten"
             :items-per-page="-1"
             hide-default-footer
@@ -24,10 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import _ from "lodash";
-import { computed } from "vue";
+import type MessfaehigkeitEditDTO from "@/domain/dto/messstelle/MessfaehigkeitEditDTO";
 
-import MessfaehigkeitEditDTO from "@/domain/dto/messstelle/MessfaehigkeitEditDTO";
+import { isEmpty } from "lodash";
+import { computed } from "vue";
 
 interface Props {
   height: string;
@@ -37,34 +37,34 @@ interface Props {
 defineProps<Props>();
 
 function activeMessfaehigkeit(item: MessfaehigkeitEditDTO) {
-  return _.isEmpty(item.gueltigBis) ? "indigo lighten-5" : "";
+  return isEmpty(item.gueltigBis) ? "indigo-lighten-5" : "";
 }
 
 const header = computed(() => {
   return [
     {
-      text: "Fahrzeugklassen",
+      title: "Fahrzeugklassen",
       align: "start",
       sortable: false,
       value: "fahrzeugklassen",
       divider: true,
     },
     {
-      text: "Intervallwert",
+      title: "Intervallwert",
       align: "start",
       sortable: false,
       value: "intervall",
       divider: true,
     },
     {
-      text: "gültig ab",
+      title: "gültig ab",
       align: "start",
       sortable: false,
       value: "gueltigAb",
       divider: true,
     },
     {
-      text: "gültig bis",
+      title: "gültig bis",
       align: "start",
       sortable: false,
       value: "gueltigBis",

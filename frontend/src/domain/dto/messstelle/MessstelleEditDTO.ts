@@ -1,8 +1,7 @@
 import type BaseEntity from "@/domain/BaseEntity";
-
-import MessfaehigkeitEditDTO from "@/domain/dto/messstelle/MessfaehigkeitEditDTO";
-import MessquerschnittEditDTO from "@/domain/dto/messstelle/MessquerschnittEditDTO";
-import { MessstelleStatus } from "@/domain/enums/MessstelleStatus";
+import type MessfaehigkeitEditDTO from "@/domain/dto/messstelle/MessfaehigkeitEditDTO";
+import type MessquerschnittEditDTO from "@/domain/dto/messstelle/MessquerschnittEditDTO";
+import type MessstelleStatus from "@/domain/enums/MessstelleStatus";
 
 export default interface MessstelleEditDTO extends BaseEntity {
   mstId: string;
@@ -20,7 +19,7 @@ export default interface MessstelleEditDTO extends BaseEntity {
   detektierteVerkehrsarten: string;
   hersteller: string;
 
-  customSuchwoerter: string[];
+  customSuchwoerter: Array<string>;
   kommentar: string;
   standort: string;
   geprueft: boolean;

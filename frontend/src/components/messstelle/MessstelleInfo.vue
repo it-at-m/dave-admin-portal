@@ -9,26 +9,22 @@
     <span class="text-caption">
       Messstelle
       <v-tooltip right>
-        <template #activator="{ on, attrs }">
-          <span
-            v-bind="attrs"
-            v-on="on"
-          >
+        <template #activator="{ props }">
+          <span v-bind="props">
             <v-btn
-              icon
+              icon="mdi-map"
+              color="secondary"
               small
               variant="plain"
               :disabled="!messstelle.lageplanVorhanden"
               @click="loadLageplan"
-              ><v-icon color="secondary">mdi-map</v-icon></v-btn
-            >
+            />
           </span>
         </template>
-        <span>{{
-          messstelle.lageplanVorhanden ? "Lageplan" : "Kein Lageplan vorhanden"
-        }}</span>
-      </v-tooltip> </span
-    ><br />
+        <span>{{ tooltipLageplan }}</span>
+      </v-tooltip>
+    </span>
+    <br />
     <span class="text-h5">{{ messstelle.mstId }}</span>
     <br /><br />
     <span class="text-caption"
@@ -38,31 +34,43 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import type LageplanDTO from "@/domain/dto/lageplan/LageplanDTO";
+import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+
+import { computed, ref } from "vue";
 
 import LageplanService from "@/api/service/LageplanService";
-import LageplanDTO from "@/domain/dto/lageplan/LageplanDTO";
-import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 
 interface Props {
-  messstelle: MessstelleEditDTO;
   height: string;
   minheight: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   minheight: "160px",
 });
+
+const messstelle = defineModel<MessstelleEditDTO>({
+  required: true,
+});
+
 const snackbarStore = useSnackbarStore();
+
 const lageplanLoading = ref(false);
+
+const tooltipLageplan = computed(() => {
+  return messstelle.value.lageplanVorhanden
+    ? "Lageplan"
+    : "Kein Lageplan vorhanden";
+});
 
 function loadLageplan() {
   if (lageplanLoading.value) {
     return;
   }
   lageplanLoading.value = true;
-  LageplanService.loadLageplan(props.messstelle.mstId)
+  LageplanService.loadLageplan(messstelle.value.mstId)
     .then((result: LageplanDTO) => {
       window.open(result.url);
     })

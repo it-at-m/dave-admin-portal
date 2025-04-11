@@ -1,4 +1,4 @@
-export const enum MessstelleStatus {
+enum MessstelleStatus {
   IN_PLANUNG = "IN_PLANUNG",
 
   IN_BESTAND = "IN_BESTAND",
@@ -9,6 +9,8 @@ export const enum MessstelleStatus {
 
   UNBEKANNT = "UNBEKANNT",
 }
+
+export default MessstelleStatus;
 
 export const messstelleStatusText = new Map<string, string>([
   [MessstelleStatus.IN_PLANUNG, "In Planung"],
