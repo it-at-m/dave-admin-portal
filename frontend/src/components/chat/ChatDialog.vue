@@ -22,6 +22,15 @@
         TODO: Es muss ein neues Framework gesucht werden, da das alte nicht mehr
         unterstützt wird.
       </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          color="grey-lighten-1"
+          variant="elevated"
+          text="Abbrechen"
+          @click="closeDialog()"
+        />
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -40,6 +49,10 @@ const zaehlung = defineModel<ZaehlungDTO>({
   required: true,
 });
 
+const emits = defineEmits<{
+  (e: "closeDialog"): void;
+}>();
+
 const showDialogModel = computed(() => {
   return props.showDialog;
 });
@@ -47,6 +60,10 @@ const showDialogModel = computed(() => {
 const dialogtitle = computed(() => {
   return `${zaehlung.value.projektName} - ${zaehlung.value.datum}`;
 });
+
+function closeDialog(): void {
+  emits("closeDialog");
+}
 </script>
 <!--  <v-dialog-->
 <!--    v-model="showDialogModel"-->
