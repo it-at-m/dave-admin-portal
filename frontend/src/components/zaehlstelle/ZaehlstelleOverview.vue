@@ -2,7 +2,6 @@
   <v-sheet
     width="100%"
     color="transparent"
-    class="overflow-y-auto"
   >
     <v-card-title style="font-weight: bold; font-size: x-large"
       >Zählstellen
