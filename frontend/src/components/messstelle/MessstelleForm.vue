@@ -102,7 +102,7 @@
             >
               <v-checkbox
                 v-model="editMessstelle.sichtbarDatenportal"
-                color="grey darken-1"
+                color="grey-darken-1"
                 dense
                 hide-details
                 class="mb-5"
