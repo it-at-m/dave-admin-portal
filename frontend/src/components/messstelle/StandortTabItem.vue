@@ -1,67 +1,46 @@
 <template>
-  <v-sheet
+  <mini-map
+    :coords="coords"
+    :height="height"
     width="100%"
-    :min-height="height"
-    :max-height="height"
-    class="overflow-y-auto"
-  >
-    <v-card elevation="0">
-      <v-card-text>
-        <mini-map
-          :coords="coords"
-          :height="heightMap"
-          width="100%"
-          :is-messstelle="true"
-          :show-attribution="true"
-          :reset-marker="resetMarker"
-          :draggable="draggable"
-          @updateZaehlstellenCoords="updateZaehlstellenCoords"
-        />
-      </v-card-text>
-    </v-card>
-  </v-sheet>
+    :is-messstelle="true"
+    :show-attribution="true"
+    :reset-marker="resetMarker"
+    :draggable="draggable"
+    @update-zaehlstellen-coords="updateZaehlstellenCoords"
+  />
 </template>
 
 <script setup lang="ts">
+import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+
 import { LatLng } from "leaflet";
-import { computed, ComputedRef } from "vue";
+import { computed } from "vue";
 
 import MiniMap from "@/components/map/MiniMap.vue";
-import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 interface Props {
   height: string;
-  heightMap: string;
   resetMarker: boolean;
   draggable: boolean;
-  value: MessstelleEditDTO;
 }
 
-const props = defineProps<Props>();
-
-const emits = defineEmits<{
-  (e: "input", v: MessstelleEditDTO): void;
-}>();
-
-const editMessstelle = computed({
-  get: () => props.value,
-  set: (v) => emits("input", v),
+defineProps<Props>();
+const messstelle = defineModel<MessstelleEditDTO>({
+  required: true,
 });
 
-const coords: ComputedRef<LatLng> = computed(() => {
-  let coords = DefaultObjectCreator.createCenterOfMunichLatLng();
-  if (editMessstelle.value.latitude && editMessstelle.value.longitude) {
-    return new LatLng(
-      editMessstelle.value.latitude,
-      editMessstelle.value.longitude
-    );
+const coords = computed(() => {
+  const coords = DefaultObjectCreator.createCenterOfMunichLatLng();
+  if (messstelle.value.latitude && messstelle.value.longitude) {
+    return new LatLng(messstelle.value.latitude, messstelle.value.longitude);
   }
   return coords;
 });
 
 function updateZaehlstellenCoords(newCoords: LatLng): void {
-  editMessstelle.value.latitude = newCoords.lat;
-  editMessstelle.value.longitude = newCoords.lng;
+  messstelle.value.latitude = newCoords.lat;
+  messstelle.value.longitude = newCoords.lng;
 }
 </script>

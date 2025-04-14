@@ -18,11 +18,11 @@
             >
               <v-autocomplete
                 v-model="selectedMessquerschnitt"
-                outlined
-                :items="editMessstelle.messquerschnitte"
-                item-text="mqId"
+                variant="outlined"
+                :items="messstelle.messquerschnitte"
+                item-title="mqId"
                 return-object
-                dense
+                density="compact"
                 label="ID Messquerschnitt"
               ></v-autocomplete>
             </v-col>
@@ -91,8 +91,8 @@
                 v-model="selectedMessquerschnitt.standort"
                 :rules="[validationUtils.pflichtfeld]"
                 label="Standort MQ"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
                 rows="2"
                 row-height="10"
                 counter="60"
@@ -108,13 +108,12 @@
 </template>
 
 <script setup lang="ts">
-import type { VForm } from "@/util/useVuetify";
+import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+import type { VForm } from "vuetify/components";
 
-import { computed, onMounted, ref, Ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
-import MessquerschnittEditDTO from "@/domain/dto/messstelle/MessquerschnittEditDTO";
-import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import { himmelsRichtungenTextLong } from "@/domain/enums/Himmelsrichtungen";
 import { useValidationUtils } from "@/util/validationUtils";
 
@@ -125,22 +124,17 @@ onMounted(() => validate());
 interface Props {
   height: string;
   disabled: boolean;
-  value: MessstelleEditDTO;
   valid: Map<string, boolean>;
-  reload: boolean;
 }
 
 const props = defineProps<Props>();
+const messstelle = defineModel<MessstelleEditDTO>({
+  required: true,
+});
 
 const emits = defineEmits<{
-  (e: "input", v: MessstelleEditDTO): void;
   (e: "update:valid", v: Map<string, boolean>): void;
 }>();
-
-const editMessstelle = computed({
-  get: () => props.value,
-  set: (v) => emits("input", v),
-});
 
 const isFormValid = computed({
   get: () => props.valid,
@@ -155,18 +149,17 @@ const isMqValid = computed({
 
 const messquerschnittform = ref<VForm>();
 
-const selectedMessquerschnitt: Ref<MessquerschnittEditDTO> = ref(
-  editMessstelle.value.messquerschnitte[0]
-);
+const selectedMessquerschnitt = ref(messstelle.value.messquerschnitte[0]);
 
 function validate() {
   if (messquerschnittform.value) messquerschnittform.value.validate();
 }
 
 watch(
-  () => props.reload,
+  () => messstelle.value,
   () => {
-    selectedMessquerschnitt.value = editMessstelle.value.messquerschnitte[0];
-  }
+    selectedMessquerschnitt.value = messstelle.value.messquerschnitte[0];
+  },
+  { immediate: true, deep: true }
 );
 </script>

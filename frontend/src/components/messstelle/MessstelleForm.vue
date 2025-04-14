@@ -15,7 +15,7 @@
             >
               <lhm-text-field
                 caption="ID Messstelle"
-                :text="editMessstelle.mstId"
+                :text="messstelle.mstId"
               />
             </v-col>
             <v-col
@@ -23,7 +23,7 @@
               md="4"
             >
               <lhm-text-field
-                :text="editMessstelle.name"
+                :text="messstelle.name"
                 caption="Bezeichnung"
               />
             </v-col>
@@ -32,7 +32,7 @@
               md="4"
             >
               <lhm-text-field
-                :text="editMessstelle.detektierteVerkehrsarten"
+                :text="messstelle.detektierteVerkehrsarten"
                 caption="Detektierte Fahrzeuge"
               />
             </v-col>
@@ -72,7 +72,7 @@
               md="4"
             >
               <lhm-text-field
-                :text="messstelleStatusText.get(editMessstelle.status)"
+                :text="messstelleStatusText.get(messstelle.status)"
                 caption="Status"
               />
             </v-col>
@@ -81,7 +81,7 @@
               md="4"
             >
               <lhm-text-field
-                :text="editMessstelle.hersteller"
+                :text="messstelle.hersteller"
                 caption="Hersteller"
               />
             </v-col>
@@ -90,7 +90,7 @@
               md="4"
             >
               <lhm-text-field
-                :text="editMessstelle.fahrzeugKlassen"
+                :text="messstelle.fahrzeugKlassen"
                 caption="FZ-Klassen"
               />
             </v-col>
@@ -101,9 +101,8 @@
               md="12"
             >
               <v-checkbox
-                v-model="editMessstelle.sichtbarDatenportal"
+                v-model="messstelle.sichtbarDatenportal"
                 color="grey-darken-1"
-                dense
                 hide-details
                 class="mb-5"
                 :disabled="disabled"
@@ -126,17 +125,17 @@
               md="12"
             >
               <v-textarea
-                v-model="editMessstelle.standort"
+                v-model="messstelle.standort"
                 label="Standort MS"
                 :disabled="disabled"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
                 :rules="[validationUtils.pflichtfeld]"
                 rows="2"
                 row-height="10"
                 counter="60"
                 maxlength="60"
-              ></v-textarea>
+              />
             </v-col>
           </v-row>
           <v-row dense>
@@ -145,14 +144,14 @@
               md="12"
             >
               <v-textarea
-                v-model="editMessstelle.bemerkung"
+                v-model="messstelle.bemerkung"
                 label="Bemerkung"
-                outlined
+                variant="outlined"
                 disabled
-                dense
+                density="compact"
                 rows="1"
                 row-height="10"
-              ></v-textarea>
+              />
             </v-col>
           </v-row>
           <v-row dense>
@@ -161,22 +160,20 @@
               md="12"
             >
               <v-combobox
-                v-model="editMessstelle.customSuchwoerter"
+                v-model="messstelle.customSuchwoerter"
+                v-model:search-input="newSuchwort"
                 multiple
                 label="Suchwörter"
-                :disabled="disabled"
-                outlined
-                dense
-                small-chips
-                deletable-chips
+                variant="outlined"
+                density="compact"
+                chips
+                closable-chips
                 class="tag-input"
-                :search-input.sync="newSuchwort"
                 append-icon="mdi-plus"
                 @click:append="addSuchwortToList"
                 @keyup.enter="addSuchwortToList"
                 @blur="addSuchwortToList"
-              >
-              </v-combobox>
+              />
             </v-col>
           </v-row>
           <v-row dense>
@@ -185,16 +182,16 @@
               md="12"
             >
               <v-textarea
-                v-model="editMessstelle.kommentar"
+                v-model="messstelle.kommentar"
                 label="Kommentar"
                 :disabled="disabled"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
                 rows="2"
                 row-height="10"
                 counter="255"
                 maxlength="255"
-              ></v-textarea>
+              />
             </v-col>
           </v-row>
         </v-form>
@@ -204,67 +201,64 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, ref, Ref } from "vue";
+import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+
+import { isEmpty, isNil } from "lodash";
+import { computed, ref } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
-import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 import { messstelleStatusText } from "@/domain/enums/MessstelleStatus";
 import { useDateUtils } from "@/util/DateUtils";
 import { useValidationUtils } from "@/util/validationUtils";
 
 const validationUtils = useValidationUtils();
 const dateUtils = useDateUtils();
+
+const newSuchwort = ref("");
+
 interface Props {
   height: string;
   disabled: boolean;
-  value: MessstelleEditDTO;
   valid: boolean;
 }
 
 const props = defineProps<Props>();
+const messstelle = defineModel<MessstelleEditDTO>({
+  required: true,
+});
 
 const emits = defineEmits<{
-  (e: "input", v: MessstelleEditDTO): void;
   (e: "update:valid", v: boolean): void;
 }>();
-
-const editMessstelle = computed({
-  get: () => props.value,
-  set: (v) => emits("input", v),
-});
 
 const isFormValid = computed({
   get: () => props.valid,
   set: (v) => emits("update:valid", v),
 });
 
-const stadtbezirk: ComputedRef<string> = computed(() => {
-  return `${editMessstelle.value.stadtbezirkNummer} - ${editMessstelle.value.stadtbezirk}`;
+const stadtbezirk = computed(() => {
+  return `${messstelle.value.stadtbezirkNummer} - ${messstelle.value.stadtbezirk}`;
 });
 
-const aufbaudatum: ComputedRef<string> = computed(() => {
-  return dateUtils.formatDate(editMessstelle.value.realisierungsdatum);
+const aufbaudatum = computed(() => {
+  return dateUtils.formatDate(messstelle.value.realisierungsdatum);
 });
 
-const abbaudatum: ComputedRef<string> = computed(() => {
-  return dateUtils.formatDate(editMessstelle.value.abbaudatum);
+const abbaudatum = computed(() => {
+  return dateUtils.formatDate(messstelle.value.abbaudatum);
 });
-
-const newSuchwort: Ref<string> = ref("");
 
 function addSuchwortToList(): void {
-  if (!editMessstelle.value.customSuchwoerter) {
-    editMessstelle.value.customSuchwoerter = [];
+  if (isNil(messstelle.value.customSuchwoerter)) {
+    messstelle.value.customSuchwoerter = [];
   }
 
-  if (newSuchwort.value == null || newSuchwort.value.trim() === "") {
+  if (isNil(newSuchwort.value) || isEmpty(newSuchwort.value.trim())) {
     return;
   }
 
-  if (!editMessstelle.value.customSuchwoerter.includes(newSuchwort.value)) {
-    editMessstelle.value.customSuchwoerter.push(
-      ...newSuchwort.value.split(",")
-    );
+  if (!messstelle.value.customSuchwoerter.includes(newSuchwort.value)) {
+    messstelle.value.customSuchwoerter.push(...newSuchwort.value.split(","));
   }
   newSuchwort.value = "";
 }

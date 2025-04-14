@@ -32,16 +32,23 @@
 
     <v-row
       dense
-      class="ma-2"
       no-gutters
     >
-      <!--      <update-messstelle-form-->
-      <!--        v-model="messstelle"-->
-      <!--        :height="heightVh"-->
-      <!--        :content-height="contentHeight"-->
-      <!--        :reload="reloadMessstelle"-->
-      <!--        @reload="loadMessstelle"-->
-      <!--      />-->
+      <v-sheet
+        :height="contentHeightVh"
+        width="100%"
+        style="background-color: red"
+      >
+        <update-messstelle-form
+          v-model="messstelle"
+          :height="contentHeight"
+          :reload="reloadMessstelle"
+          @reload="loadMessstelle"
+        />
+      </v-sheet>
+    </v-row>
+    <v-row no-gutters>
+      <v-spacer />
     </v-row>
   </v-sheet>
 </template>
@@ -50,11 +57,12 @@ import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { useDisplay } from "vuetify";
 
 import MessstelleService from "@/api/service/MessstelleService";
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
 import MessstelleInfo from "@/components/messstelle/MessstelleInfo.vue";
+import UpdateMessstelleForm from "@/components/messstelle/UpdateMessstelleForm.vue";
+import { useDaveUtils } from "@/util/DaveUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 const reloadMessstelle = ref(false);
@@ -62,51 +70,34 @@ const messstelle = ref<MessstelleEditDTO>(
   DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
 const route = useRoute();
-const display = useDisplay();
+const daveUtils = useDaveUtils();
 
 onMounted(() => {
   loadMessstelle();
 });
 
+/** Berechnet die Höhe der Karte*/
 const headerHeight = computed(() => {
-  return 160 / (display.height.value / 100);
+  return daveUtils.pxToVh(160);
 });
 
 const headerHeightVh = computed(() => {
   return `${headerHeight.value}vh`;
 });
 
-const appBarHeight = computed(() => {
-  return 65 / (display.height.value / 100);
-});
-
-const marginContentHeight = computed(() => {
-  return 16 / (display.height.value / 100);
-});
-
 /**
- * Berechnet die Höhe der Inhaltsfläche "vh" - ohne Karte
- */
-const heightVh = computed(() => {
-  return (
-    100 -
-    headerHeight.value -
-    appBarHeight.value -
-    marginContentHeight.value +
-    "vh"
-  );
-});
-
-/**
- * Berechnet die Höhe der Fläche unter den Tabs (72px hoch) in "vh"
+ * Berechnet die Höhe der Fläche unter der Karte in "vh"
  */
 const contentHeight = computed(() => {
   return (
     100 -
-    headerHeight.value -
-    appBarHeight.value -
-    72 / (display.height.value / 100)
+    daveUtils.appBarHeight.value -
+    daveUtils.cardactionHeight.value -
+    headerHeight.value
   );
+});
+const contentHeightVh = computed(() => {
+  return `${contentHeight.value}vh`;
 });
 
 const messstelleId = computed(() => {
