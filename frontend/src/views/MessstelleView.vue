@@ -37,7 +37,6 @@
       <v-sheet
         :height="contentHeightVh"
         width="100%"
-        style="background-color: red"
       >
         <update-messstelle-form
           v-model="messstelle"
