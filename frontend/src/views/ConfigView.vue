@@ -74,7 +74,7 @@ const TAB_DIENSTLEISTER = 2;
 const TAB_INFO = 3;
 
 /**
- * Berechnet die Höhe der Fläche unter den Tabs (72px hoch) in "vh"
+ * Berechnet die Höhe der Fläche unter den Tabs in "vh"
  */
 const contentHeight = computed(() => {
   const height =
