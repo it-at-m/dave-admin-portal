@@ -59,7 +59,7 @@
       >
         <v-text-field
           v-model="query"
-          color="grey darken-1"
+          color="grey-darken-1"
           label="Zählung suchen"
           density="compact"
           variant="outlined"
