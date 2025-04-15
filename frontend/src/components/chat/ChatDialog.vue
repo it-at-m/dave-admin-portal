@@ -70,30 +70,24 @@
           </v-row>
         </v-container>
       </v-layout>
-      <v-footer>
-        <v-container class="ma-0 pa-0">
-          <v-row no-gutters>
-            <v-col>
-              <div class="d-flex flex-row align-center">
-                <v-text-field
-                  v-model="message"
-                  placeholder="Type Something"
-                  @keyup.enter="sendMessage"
-                >
-                  <template #append-inner>
-                    <v-btn
-                      icon="mdi-send"
-                      variant="text"
-                      color="secondary"
-                      @click="sendMessage"
-                    />
-                  </template>
-                </v-text-field>
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-footer>
+      <v-card-actions style="background-color: white">
+        <v-text-field
+          v-model="message"
+          placeholder="Nachricht..."
+          variant="plain"
+          class="mx-2"
+          @keyup.enter="sendMessage"
+        >
+          <template #append-inner>
+            <v-btn
+              icon="mdi-send"
+              variant="text"
+              color="secondary"
+              @click="sendMessage"
+            />
+          </template>
+        </v-text-field>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
