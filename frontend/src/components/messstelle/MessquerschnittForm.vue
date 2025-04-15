@@ -85,6 +85,7 @@
           >
             <v-textarea
               v-model="selectedMessquerschnitt.standort"
+              class="mt-2"
               :rules="[validationUtils.pflichtfeld]"
               label="Standort MQ"
               variant="outlined"
