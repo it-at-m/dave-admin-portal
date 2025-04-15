@@ -4,24 +4,24 @@
     v-model="show"
     :color="color"
     :timeout="timeout"
-    left
-    bottom
     vertical
+    location="bottom left"
   >
-    <div style="font-size: medium">
-      {{ snackbarTextPart1 }}
-    </div>
-    <div style="font-size: small">
-      {{ snackbarTextPart2 }}
-    </div>
-    <v-btn
-      v-if="color === 'error'"
-      color="primary"
-      text
-      @click="show = false"
-    >
-      Schließen
-    </v-btn>
+    <template #text>
+      <div class="text-subtitle-1 pb-2">{{ snackbarTextPart1 }}</div>
+      <p>{{ snackbarTextPart2 }}</p>
+    </template>
+
+    <template #actions>
+      <v-btn
+        v-if="color === 'error'"
+        class="text-none"
+        color="primary"
+        text="Schließen"
+        variant="text"
+        @click="show = false"
+      />
+    </template>
   </v-snackbar>
 </template>
 
@@ -51,7 +51,7 @@ watch(
       color.value = snackbarStore.getLevel;
       switch (color.value) {
         case Levels.ERROR: {
-          timeout.value = 0;
+          timeout.value = -1;
           break;
         }
         case Levels.WARNING: {
@@ -63,7 +63,7 @@ watch(
           break;
         }
         default: {
-          timeout.value = 6000;
+          timeout.value = defaultTimeout;
           break;
         }
       }
