@@ -28,6 +28,9 @@ interface Props {
 
 withDefaults(defineProps<Props>(), {
   minheight: "160px",
+  nummer: "",
+  kreuzungsname: "",
+  stadtbezirk: "",
 });
 
 const emits = defineEmits<{
