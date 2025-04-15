@@ -56,6 +56,7 @@ watch(
     marker.value.removeFrom(minimap);
     marker.value = createMarker();
     marker.value.addTo(minimap);
+    minimap.setView(props.coords, 18);
   }
 );
 
