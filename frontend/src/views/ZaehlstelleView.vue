@@ -29,7 +29,6 @@
           :height="headerHeightVh"
           :minheight="headerHeightVh"
           :show-marker="true"
-          :reload="reloadZaehlstellenMap"
           width="100%"
         />
       </v-col>
@@ -219,7 +218,6 @@ const showChatDialog = ref(false);
 const zaehlungCards = ref([] as Array<ZaehlungCardObject>);
 const speedDialOpen = ref(false);
 const query = ref("");
-const reloadZaehlstellenMap = ref(false);
 const showtooltip = ref(false);
 
 const zaehlung = ref<ZaehlungDTO>(createDefaultZaehlungDTO());
@@ -366,7 +364,6 @@ const zaehlstelleId = computed(() => {
 
 function reloadDataAndCloseDialog() {
   loadZaehlstelle();
-  reloadZaehlstellenMap.value = !reloadZaehlstellenMap.value;
   showUpdateZaehlstelleDialog.value = false;
   showZaehlungDialog.value = false;
 }
