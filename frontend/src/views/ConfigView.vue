@@ -85,8 +85,3 @@ const contentHeight = computed(() => {
   return `${height}vh`;
 });
 </script>
-<style scoped lang="scss">
-@use "vuetify/settings" with (
-  $tab-slider-size: 8px
-);
-</style>

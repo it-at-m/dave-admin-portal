@@ -5,7 +5,7 @@
     max-width="50%"
     height="600px"
   >
-    <v-card flat>
+    <v-card variant="flat">
       <v-card-title>
         <v-icon
           end

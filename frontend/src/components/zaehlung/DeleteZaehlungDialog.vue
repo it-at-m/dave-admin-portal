@@ -4,7 +4,7 @@
     persistent
     width="420px"
   >
-    <v-card flat>
+    <v-card variant="flat">
       <v-card-title>
         <v-icon
           end

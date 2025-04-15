@@ -3,7 +3,7 @@
     width="100%"
     :height="height"
     :max-height="height"
-    flat
+    variant="flat"
   >
     <v-card-title>
       Historisierung der letzten

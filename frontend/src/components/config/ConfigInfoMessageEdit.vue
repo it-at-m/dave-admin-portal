@@ -3,7 +3,7 @@
     width="100%"
     :height="height"
     :max-height="height"
-    flat
+    variant="flat"
   >
     <!-- Eingabefeld -->
     <v-card-title> Anzuzeigende Info-Nachricht </v-card-title>
