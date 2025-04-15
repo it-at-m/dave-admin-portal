@@ -39,6 +39,7 @@
         v-tooltip:bottom="'Such- und Filtereinstellungen'"
         style="opacity: 1"
         :color="isDefaultFilter ? '' : 'secondary'"
+        class="mr-2"
         @click="openSearchAndFilterDialog"
       >
         {{ isDefaultFilter ? "mdi-filter-outline" : "mdi-filter" }}
