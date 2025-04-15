@@ -109,7 +109,6 @@ interface Props {
   width?: string;
   showMarker?: boolean;
   zoom?: number;
-  reload?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
