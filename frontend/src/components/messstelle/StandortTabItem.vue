@@ -18,17 +18,23 @@ import { LatLng } from "leaflet";
 import { computed } from "vue";
 
 import MiniMap from "@/components/map/MiniMap.vue";
+import { useEventbus } from "@/store/Eventbus";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 interface Props {
   height: string;
-  resetMarker: boolean;
   draggable: boolean;
 }
 
 defineProps<Props>();
 const messstelle = defineModel<MessstelleEditDTO>({
   required: true,
+});
+
+const eventbus = useEventbus();
+
+const resetMarker = computed(() => {
+  return eventbus.getReloadEvent;
 });
 
 const coords = computed(() => {

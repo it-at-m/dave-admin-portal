@@ -24,7 +24,6 @@
           :height="headerHeightVh"
           :minheight="headerHeightVh"
           :show-marker="true"
-          :reload="reloadMessstelle"
           width="100%"
         />
       </v-col>
@@ -41,7 +40,6 @@
         <update-messstelle-form
           v-model="messstelle"
           :height="contentHeight"
-          :reload="reloadMessstelle"
           @reload="loadMessstelle"
         />
       </v-sheet>
@@ -61,15 +59,16 @@ import MessstelleService from "@/api/service/MessstelleService";
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
 import MessstelleInfo from "@/components/messstelle/MessstelleInfo.vue";
 import UpdateMessstelleForm from "@/components/messstelle/UpdateMessstelleForm.vue";
+import { useEventbus } from "@/store/Eventbus";
 import { useDaveUtils } from "@/util/DaveUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
-const reloadMessstelle = ref(false);
 const messstelle = ref<MessstelleEditDTO>(
   DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
 const route = useRoute();
 const daveUtils = useDaveUtils();
+const eventbus = useEventbus();
 
 onMounted(() => {
   loadMessstelle();
@@ -125,7 +124,7 @@ function loadMessstelle(): void {
   const messstelleId = route.params.messstelleId as string;
   MessstelleService.getMessstelleToEdit(messstelleId).then((messstelleById) => {
     messstelle.value = messstelleById;
-    reloadMessstelle.value = !reloadMessstelle.value;
+    eventbus.setReloadEvent();
   });
 }
 </script>

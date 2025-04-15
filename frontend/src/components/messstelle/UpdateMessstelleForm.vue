@@ -53,7 +53,6 @@
     <v-tabs-window-item :value="TAB_MESSSTELLE">
       <messstelle-form
         v-model="messstelle"
-        :valid="validMst"
         :height="contentHeight"
         :disabled="isMessstelleReadonly"
       />
@@ -61,7 +60,6 @@
     <v-tabs-window-item :value="TAB_MESSQUERSCHNITT">
       <messquerschnitt-form
         v-model="messstelle"
-        :valid="validMqs"
         :height="contentHeight"
         :disabled="isMessstelleReadonly"
       />
@@ -76,7 +74,6 @@
       <standort-tab-item
         v-model="messstelle"
         :height="contentHeight"
-        :reset-marker="reload"
         :draggable="!isMessstelleReadonly"
       />
     </v-tabs-window-item>
@@ -101,7 +98,8 @@
 <script setup lang="ts">
 import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
 
-import { computed, ref, watch } from "vue";
+import { isEmpty, isNil } from "lodash";
+import { computed, ref } from "vue";
 
 import MessstelleService from "@/api/service/MessstelleService";
 import MessfaehigkeitForm from "@/components/messstelle/MessfaehigkeitForm.vue";
@@ -113,13 +111,9 @@ import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useDaveUtils } from "@/util/DaveUtils";
 
 const activeTab = ref(0);
-const validMst = ref(false);
-const validMqs = ref<Map<string, boolean>>(new Map<string, boolean>());
-const resetMarker = ref(false);
 
 interface Props {
   height: number;
-  reload: boolean;
 }
 
 const props = defineProps<Props>();
@@ -174,29 +168,18 @@ function cancel(): void {
   emits("reload");
 }
 
-watch(
-  () => props.reload,
-  () => {
-    messstelle.value.messquerschnitte.forEach((value) =>
-      validMqs.value.set(value.mqId, !!value.standort)
-    );
-    resetMarker.value = !resetMarker.value;
-  }
-);
-
 function areAllFormsValid(): boolean {
-  const invalidMqs: Array<string> = [];
-  validMqs.value.forEach((value, key) => {
-    if (!value) {
-      invalidMqs.push(key);
-    }
+  const invalidMqs = messstelle.value.messquerschnitte.filter((mq) => {
+    return isNil(mq.standort) || isEmpty(mq.standort);
   });
-  const areAllFormsValid: boolean = validMst.value && invalidMqs.length === 0;
-  if (!areAllFormsValid) {
+  const invalidMst =
+    isNil(messstelle.value.standort) || isEmpty(messstelle.value.standort);
+  const isInvalid = invalidMst || !isEmpty(invalidMqs);
+  if (isInvalid) {
     let errorText = "Der Standort";
-    if (!validMst.value) {
+    if (invalidMst) {
       errorText = `${errorText} der Messstelle ${messstelle.value.mstId}`;
-      if (invalidMqs.length > 0) {
+      if (!isEmpty(invalidMqs)) {
         errorText = `${errorText} und`;
       }
     }
@@ -208,6 +191,6 @@ function areAllFormsValid(): boolean {
     errorText = `${errorText} wurde nicht ausgefüllt.`;
     snackbarStore.showError(errorText);
   }
-  return areAllFormsValid;
+  return !isInvalid;
 }
 </script>
