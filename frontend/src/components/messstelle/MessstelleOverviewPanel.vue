@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleOverviewDTO from "@/domain/dto/messstelle/MessstelleOverviewDTO";
+import type MessstelleOverviewDTO from "@/types/messstelle/MessstelleOverviewDTO";
 
 import { useRouter } from "vue-router";
 

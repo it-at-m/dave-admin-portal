@@ -96,8 +96,8 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import type GeoPoint from "@/domain/GeoPoint";
+import type GeoPoint from "@/types/common/GeoPoint";
+import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";
@@ -106,9 +106,9 @@ import { computed, ref } from "vue";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import MiniMap from "@/components/map/MiniMap.vue";
-import { StadtbezirkToBeschreibung } from "@/domain/enums/Stadtbezirk";
-import { StadtbezirksviertelToBeschreibung } from "@/domain/enums/Stadtbezirksviertel";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import { StadtbezirkToBeschreibung } from "@/types/enum/Stadtbezirk";
+import { StadtbezirksviertelToBeschreibung } from "@/types/enum/Stadtbezirksviertel";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 const zaehlstelle = defineModel<ZaehlstelleDTO>({

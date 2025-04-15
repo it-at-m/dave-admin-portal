@@ -50,7 +50,7 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";

@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 
 import { isEmpty, isNil } from "lodash";
 import { computed, ref } from "vue";
@@ -106,8 +106,8 @@ import MessfaehigkeitForm from "@/components/messstelle/MessfaehigkeitForm.vue";
 import MessquerschnittForm from "@/components/messstelle/MessquerschnittForm.vue";
 import MessstelleForm from "@/components/messstelle/MessstelleForm.vue";
 import StandortTabItem from "@/components/messstelle/StandortTabItem.vue";
-import MessstelleStatus from "@/domain/enums/MessstelleStatus";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import MessstelleStatus from "@/types/enum/MessstelleStatus";
 import { useDaveUtils } from "@/util/DaveUtils";
 
 const activeTab = ref(0);

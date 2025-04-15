@@ -11,7 +11,7 @@ import { computed } from "vue";
 
 import IconTooltip from "@/components/icons/IconTooltip";
 import TooltipWithIcon from "@/components/icons/TooltipWithIcon.vue";
-import Quelle from "@/domain/enums/Quelle";
+import Quelle from "@/types/enum/Quelle";
 
 interface Props {
   size?: string;

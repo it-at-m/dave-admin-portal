@@ -132,9 +132,9 @@
 </template>
 
 <script setup lang="ts">
-import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import type NextZaehlstellennummerDTO from "@/domain/dto/laden/NextZaehlstellennummerDTO";
-import type GeoPoint from "@/domain/GeoPoint";
+import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type GeoPoint from "@/types/common/GeoPoint";
+import type NextZaehlstellennummerDTO from "@/types/zaehlstelle/NextZaehlstellennummerDTO";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";
@@ -143,9 +143,9 @@ import { computed, onMounted, ref, watch } from "vue";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import MiniMap from "@/components/map/MiniMap.vue";
-import { stadtbezirke } from "@/domain/enums/Stadtbezirk";
-import { stadtbezirksviertel } from "@/domain/enums/Stadtbezirksviertel";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import { stadtbezirke } from "@/types/enum/Stadtbezirk";
+import { stadtbezirksviertel } from "@/types/enum/Stadtbezirksviertel";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 const snackbarStore = useSnackbarStore();

@@ -11,7 +11,7 @@ import { computed } from "vue";
 
 import IconTooltip from "@/components/icons/IconTooltip";
 import TooltipWithIcon from "@/components/icons/TooltipWithIcon.vue";
-import Wetter from "@/domain/enums/Wetter";
+import Wetter from "@/types/enum/Wetter";
 
 interface Props {
   size?: string;

@@ -1,6 +1,6 @@
-import type ZaehlungCardObject from "@/domain/ZaehlungCardObject";
+import type ZaehlungCardObject from "@/types/zaehlung/ZaehlungCardObject";
 
-import Zaehlart from "@/domain/enums/Zaehlart";
+import Zaehlart from "@/types/enum/Zaehlart";
 
 export default class ZaehlungCardObjectComparator {
   /**

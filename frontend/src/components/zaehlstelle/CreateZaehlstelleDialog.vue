@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
+import type BackendIdDTO from "@/types/common/BackendIdDTO";
 
 import { LatLng } from "leaflet";
 import { computed } from "vue";

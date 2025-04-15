@@ -1,4 +1,4 @@
-import type FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
+import type FahrbeziehungDTO from "@/types/zaehlung/FahrbeziehungDTO";
 
 export default class FahrbeziehungComparator {
   /**

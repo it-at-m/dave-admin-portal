@@ -61,16 +61,16 @@
 </template>
 
 <script setup lang="ts">
-import type FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
-import type HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
-import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import type KnotenarmDTO from "@/domain/KnotenarmDTO";
+import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type FahrbeziehungDTO from "@/types/zaehlung/FahrbeziehungDTO";
+import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { cloneDeep, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
-import Status from "@/domain/enums/Status";
 import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
+import Status from "@/types/enum/Status";
 import FahrbeziehungComparator from "@/util/FahrbeziehungComparator";
 import ObjectToTextTranslator from "@/util/ObjectToTextTranslator";
 

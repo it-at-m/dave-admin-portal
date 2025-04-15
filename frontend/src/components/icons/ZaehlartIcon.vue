@@ -11,7 +11,7 @@ import { computed } from "vue";
 
 import IconTooltip from "@/components/icons/IconTooltip";
 import TooltipWithIcon from "@/components/icons/TooltipWithIcon.vue";
-import Zaehlart from "@/domain/enums/Zaehlart";
+import Zaehlart from "@/types/enum/Zaehlart";
 
 interface Props {
   size?: string;

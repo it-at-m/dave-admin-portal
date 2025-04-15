@@ -1,6 +1,6 @@
-import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
-import type MessstelleOverviewDTO from "@/domain/dto/messstelle/MessstelleOverviewDTO";
+import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type MessstelleOverviewDTO from "@/types/messstelle/MessstelleOverviewDTO";
 
 import FetchService from "@/api/service/FetchService";
 

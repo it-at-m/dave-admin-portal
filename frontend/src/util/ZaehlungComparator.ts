@@ -1,6 +1,6 @@
-import type OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
+import type OpenZaehlungDTO from "@/types/zaehlung/OpenZaehlungDTO";
 
-import Zaehlart from "@/domain/enums/Zaehlart";
+import Zaehlart from "@/types/enum/Zaehlart";
 
 export default class ZaehlungComparator {
   /**

@@ -59,10 +59,10 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 
-import ConfigDienstleister from "@/components/config/subconfig/ConfigDienstleister.vue";
-import ConfigEmailAddress from "@/components/config/subconfig/ConfigEmailAddress.vue";
-import ConfigHochrechnungsfaktoren from "@/components/config/subconfig/ConfigHochrechnungsfaktoren.vue";
-import ConfigInfoMessage from "@/components/config/subconfig/ConfigInfoMessage.vue";
+import ConfigDienstleister from "@/components/config/ConfigDienstleister.vue";
+import ConfigEmailAddress from "@/components/config/ConfigEmailAddress.vue";
+import ConfigHochrechnungsfaktoren from "@/components/config/ConfigHochrechnungsfaktoren.vue";
+import ConfigInfoMessage from "@/components/config/ConfigInfoMessage.vue";
 import { useDaveUtils } from "@/util/DaveUtils";
 
 const activeTab = ref(0);

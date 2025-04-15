@@ -1,4 +1,4 @@
-import type AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
+import type AnzeigeKarteDTO from "@/types/karte/AnzeigeKarteDTO";
 import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
 import type SucheComplexSuggestsDTO from "@/types/suche/SucheComplexSuggestsDTO";
 

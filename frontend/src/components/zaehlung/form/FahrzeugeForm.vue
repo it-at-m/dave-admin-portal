@@ -71,13 +71,13 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { computed, onMounted, ref, watch } from "vue";
 
-import Fahrzeug from "@/domain/enums/Fahrzeug";
 import { usePkweinheitStore } from "@/store/PkweinheitStore";
 import { useZaehlungStore } from "@/store/ZaehlungStore";
+import Fahrzeug from "@/types/enum/Fahrzeug";
 
 interface Props {
   height: string;

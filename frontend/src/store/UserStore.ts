@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import SsoUserInfoResponse from "@/domain/SsoUserInfoResponse";
+import SsoUserInfoResponse from "@/types/app/SsoUserInfoResponse";
 
 const rolePoweruser = "ROLE_POWERUSER";
 const roleFachadmin = "ROLE_FACHADMIN";

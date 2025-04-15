@@ -40,12 +40,12 @@
 </template>
 
 <script setup lang="ts">
-import type OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
+import type OpenZaehlungDTO from "@/types/zaehlung/OpenZaehlungDTO";
 
 import { useRouter } from "vue-router";
 
 import IconOptions from "@/components/icons/IconOptions";
-import { zaehlartText } from "@/domain/enums/Zaehlart";
+import { zaehlartText } from "@/types/enum/Zaehlart";
 import { useDateUtils } from "@/util/DateUtils";
 
 interface Props {

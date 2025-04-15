@@ -90,8 +90,8 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { ref } from "vue";
 

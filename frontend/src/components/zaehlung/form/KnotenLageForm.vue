@@ -191,10 +191,10 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import type GeoPoint from "@/domain/GeoPoint";
-import type KnotenarmDTO from "@/domain/KnotenarmDTO";
+import type GeoPoint from "@/types/common/GeoPoint";
+import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
+import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";

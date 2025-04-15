@@ -226,15 +226,15 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
-import { quelleDropDown } from "@/domain/enums/Quelle";
-import Status from "@/domain/enums/Status";
-import { zaehlartenDropDown } from "@/domain/enums/Zaehlart";
-import { zaehldauerDropDown } from "@/domain/enums/Zaehldauer";
+import { quelleDropDown } from "@/types/enum/Quelle";
+import Status from "@/types/enum/Status";
+import { zaehlartenDropDown } from "@/types/enum/Zaehlart";
+import { zaehldauerDropDown } from "@/types/enum/Zaehldauer";
 import { useDateUtils } from "@/util/DateUtils";
 
 interface Props {

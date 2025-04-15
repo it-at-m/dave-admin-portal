@@ -1,6 +1,6 @@
-import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import type NextZaehlstellennummerDTO from "@/domain/dto/laden/NextZaehlstellennummerDTO";
-import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
+import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type NextZaehlstellennummerDTO from "@/types/zaehlstelle/NextZaehlstellennummerDTO";
+import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
 
 import FetchService from "@/api/service/FetchService";
 

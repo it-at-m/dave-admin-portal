@@ -68,12 +68,12 @@
 </template>
 
 <script setup lang="ts">
-import type AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
-import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import type MessstelleKarteDTO from "@/domain/dto/messstelle/MessstelleKarteDTO";
-import type TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
-import type TooltipZaehlstelleDTO from "@/domain/dto/TooltipZaehlstelleDTO";
-import type ZaehlstelleKarteDTO from "@/domain/dto/ZaehlstelleKarteDTO";
+import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type AnzeigeKarteDTO from "@/types/karte/AnzeigeKarteDTO";
+import type MessstelleKarteDTO from "@/types/karte/MessstelleKarteDTO";
+import type TooltipMessstelleDTO from "@/types/karte/TooltipMessstelleDTO";
+import type TooltipZaehlstelleDTO from "@/types/karte/TooltipZaehlstelleDTO";
+import type ZaehlstelleKarteDTO from "@/types/karte/ZaehlstelleKarteDTO";
 import type { LeafletMouseEvent } from "leaflet";
 
 import L, { Icon, LatLng, latLng, Marker } from "leaflet";
@@ -117,6 +117,8 @@ const props = withDefaults(defineProps<Props>(), {
   width: "100%",
   showMarker: false,
   zoom: 12,
+  zId: "",
+  latlng: undefined,
 });
 
 const searchStore = useSearchStore();

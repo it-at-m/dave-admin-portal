@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import type DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
+import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
 
 import { isEmpty } from "lodash";
 import { computed, ref, watch } from "vue";

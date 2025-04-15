@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { computed } from "vue";
 

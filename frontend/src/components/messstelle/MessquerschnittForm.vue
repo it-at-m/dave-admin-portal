@@ -103,13 +103,13 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 
 import { onMounted, ref, watch } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
-import { himmelsRichtungenTextLong } from "@/domain/enums/Himmelsrichtungen";
 import { useEventbus } from "@/store/Eventbus";
+import { himmelsRichtungenTextLong } from "@/types/enum/Himmelsrichtungen";
 import { useValidationUtils } from "@/util/validationUtils";
 
 const validationUtils = useValidationUtils();

@@ -34,8 +34,8 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import type LageplanDTO from "@/domain/dto/lageplan/LageplanDTO";
-import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+import type LageplanDTO from "@/types/lageplan/LageplanDTO";
+import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 
 import { computed, ref } from "vue";
 

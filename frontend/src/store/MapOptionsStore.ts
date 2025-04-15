@@ -1,4 +1,4 @@
-import type MapOptions from "@/domain/MapOptions";
+import type MapOptions from "@/types/karte/MapOptions";
 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";

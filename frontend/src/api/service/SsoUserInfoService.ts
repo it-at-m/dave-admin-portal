@@ -1,7 +1,7 @@
 import { ApiError, Levels } from "@/api/error";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import FetchUtils from "@/api/util/FetchUtils";
-import SsoUserInfoResponse from "@/domain/SsoUserInfoResponse";
+import SsoUserInfoResponse from "@/types/app/SsoUserInfoResponse";
 
 export default class SsoUserInfoService {
   private static readonly BASE: string = BaseUrlProvider.getBaseUrl();

@@ -1,4 +1,4 @@
-import type LageplanDTO from "@/domain/dto/lageplan/LageplanDTO";
+import type LageplanDTO from "@/types/lageplan/LageplanDTO";
 
 import FetchService from "@/api/service/FetchService";
 

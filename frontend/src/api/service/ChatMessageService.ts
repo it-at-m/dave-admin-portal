@@ -1,4 +1,4 @@
-import type ChatMessageDTO from "@/domain/dto/ChatMessageDTO";
+import type ChatMessageDTO from "@/types/chat/ChatMessageDTO";
 
 import FetchService from "@/api/service/FetchService";
 

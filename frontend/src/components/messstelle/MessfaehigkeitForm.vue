@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import type MessfaehigkeitEditDTO from "@/domain/dto/messstelle/MessfaehigkeitEditDTO";
+import type MessfaehigkeitEditDTO from "@/types/messstelle/MessfaehigkeitEditDTO";
 
 import { isEmpty } from "lodash";
 

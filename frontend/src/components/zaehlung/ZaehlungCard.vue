@@ -249,13 +249,13 @@
 </template>
 
 <script setup lang="ts">
-import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import type UpdateStatusDTO from "@/domain/dto/bearbeiten/UpdateStatusDTO";
-import type DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
-import type FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
-import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import type GeoPoint from "@/domain/GeoPoint";
-import type KnotenarmDTO from "@/domain/KnotenarmDTO";
+import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type GeoPoint from "@/types/common/GeoPoint";
+import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
+import type FahrbeziehungDTO from "@/types/zaehlung/FahrbeziehungDTO";
+import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type UpdateStatusDTO from "@/types/zaehlung/UpdateStatusDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { LatLng } from "leaflet";
 import { cloneDeep } from "lodash";
@@ -271,9 +271,9 @@ import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
 import BeauftrageZaehlungDialog from "@/components/zaehlung/BeauftrageZaehlungDialog.vue";
 import DeleteZaehlungDialog from "@/components/zaehlung/DeleteZaehlungDialog.vue";
 import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
-import Status, { statusIcon } from "@/domain/enums/Status";
-import Wetter from "@/domain/enums/Wetter";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import Status, { statusIcon } from "@/types/enum/Status";
+import Wetter from "@/types/enum/Wetter";
 import { useDateUtils } from "@/util/DateUtils";
 import KnotenarmComparator from "@/util/KnotenarmComparator";
 

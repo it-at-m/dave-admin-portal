@@ -199,13 +199,13 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 
 import { isEmpty, isNil } from "lodash";
 import { computed, ref } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
-import { messstelleStatusText } from "@/domain/enums/MessstelleStatus";
+import { messstelleStatusText } from "@/types/enum/MessstelleStatus";
 import { useDateUtils } from "@/util/DateUtils";
 import { useValidationUtils } from "@/util/validationUtils";
 

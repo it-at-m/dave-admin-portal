@@ -1,8 +1,8 @@
-import type BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import type UpdateStatusDTO from "@/domain/dto/bearbeiten/UpdateStatusDTO";
-import type DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
-import type OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
-import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
+import type OpenZaehlungDTO from "@/types/zaehlung/OpenZaehlungDTO";
+import type UpdateStatusDTO from "@/types/zaehlung/UpdateStatusDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import FetchService from "@/api/service/FetchService";
 

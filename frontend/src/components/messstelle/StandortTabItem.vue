@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
+import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 
 import { LatLng } from "leaflet";
 import { computed } from "vue";

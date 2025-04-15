@@ -176,10 +176,10 @@
 </template>
 
 <script setup lang="ts">
-import type HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
-import type PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
-import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import type ZaehlungCardObject from "@/domain/ZaehlungCardObject";
+import type PkwEinheitDTO from "@/types/common/PkwEinheitDTO";
+import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type ZaehlungCardObject from "@/types/zaehlung/ZaehlungCardObject";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { cloneDeep } from "lodash";
 import { computed, onMounted, ref } from "vue";
@@ -196,11 +196,11 @@ import UpdateZaehlstelleDialog from "@/components/zaehlstelle/UpdateZaehlstelleD
 import ZaehlstelleInfo from "@/components/zaehlstelle/ZaehlstelleInfo.vue";
 import ZaehlungCard from "@/components/zaehlung/ZaehlungCard.vue";
 import ZaehlungDialog from "@/components/zaehlung/ZaehlungDialog.vue";
-import { wetterText } from "@/domain/enums/Wetter";
-import { zaehlartText } from "@/domain/enums/Zaehlart";
 import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
 import { usePkweinheitStore } from "@/store/PkweinheitStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import { wetterText } from "@/types/enum/Wetter";
+import { zaehlartText } from "@/types/enum/Zaehlart";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import ZaehlungCardObjectComparator from "@/util/ZaehlungCardObjectComparator";
 

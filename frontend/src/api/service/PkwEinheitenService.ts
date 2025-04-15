@@ -1,4 +1,4 @@
-import type PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
+import type PkwEinheitDTO from "@/types/common/PkwEinheitDTO";
 
 import FetchService from "@/api/service/FetchService";
 

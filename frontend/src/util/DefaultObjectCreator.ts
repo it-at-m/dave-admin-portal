@@ -1,17 +1,17 @@
-import type DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
-import type EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
-import type HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
-import type MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
-import type ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
+import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
+import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
+import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
+import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { LatLng } from "leaflet";
 
-import MessstelleStatus from "@/domain/enums/MessstelleStatus";
-import Quelle from "@/domain/enums/Quelle";
-import Status from "@/domain/enums/Status";
-import Wetter from "@/domain/enums/Wetter";
+import MessstelleStatus from "@/types/enum/MessstelleStatus";
+import Quelle from "@/types/enum/Quelle";
+import Status from "@/types/enum/Status";
+import Wetter from "@/types/enum/Wetter";
 import Suggest from "@/types/suche/Suggest";
 
 export default class DefaultObjectCreator {
