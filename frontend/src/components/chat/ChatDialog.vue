@@ -10,19 +10,24 @@
       variant="flat"
       style="background-color: #f5f5f5"
     >
-      <v-layout>
-        <v-app-bar color="primary">
-          <v-toolbar-title :text="dialogtitle" />
+      <v-card-title style="background-color: #c62828">
+        <v-row
+          no-gutters
+          dense
+        >
+          <span class="headline text-white">{{ dialogtitle }}</span>
+          <v-spacer />
           <v-btn
             icon="mdi-close"
+            variant="text"
+            class="text-white"
             @click="closeDialog"
           />
-        </v-app-bar>
+        </v-row>
+      </v-card-title>
 
-        <v-container
-          class="fill-height overflow-y-auto"
-          height="400px"
-        >
+      <v-card-text class="overflow-y-auto">
+        <v-container class="fill-height">
           <v-row
             class="fill-height pb-14"
             align="end"
@@ -69,7 +74,7 @@
             </v-col>
           </v-row>
         </v-container>
-      </v-layout>
+      </v-card-text>
       <v-card-actions style="background-color: white">
         <v-text-field
           v-model="message"
