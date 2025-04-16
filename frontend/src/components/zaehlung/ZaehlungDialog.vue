@@ -17,7 +17,7 @@
         {{ dialogtitle }}
       </v-card-title>
 
-      <v-card-text>
+      <v-card-text class="py-0">
         <zaehlung-form
           v-model="zaehlung"
           :zaehlstelle="zaehlstelle"

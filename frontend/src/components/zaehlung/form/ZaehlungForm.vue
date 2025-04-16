@@ -39,14 +39,14 @@
       <v-tabs-window-item :value="TAB_INFO">
         <allgemeine-info-form
           v-model="zaehlung"
-          :height="SHEETHEIGHT"
+          :height="contentHeight"
           @is-valid="setAllgemeineFormValid"
         />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_KNOTEN">
         <knoten-lage-form
           v-model="zaehlung"
-          :height="SHEETHEIGHT"
+          :height="contentHeight"
           :zaehlstelle="zaehlstelle"
         />
       </v-tabs-window-item>
@@ -54,18 +54,18 @@
         <fahrbeziehung-kreisverkehr-form
           v-if="zaehlung.kreisverkehr"
           v-model="zaehlung"
-          :height="SHEETHEIGHT"
+          :height="contentHeight"
         />
         <fahrbeziehung-form
           v-else
           v-model="zaehlung"
-          :height="SHEETHEIGHT"
+          :height="contentHeight"
         />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_FAHRZEUGE">
         <fahrzeuge-form
           v-model="zaehlung"
-          :height="SHEETHEIGHT"
+          :height="contentHeight"
         />
       </v-tabs-window-item>
     </v-tabs-window>
@@ -76,7 +76,7 @@
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 import AllgemeineInfoForm from "@/components/zaehlung/form/AllgemeineInfoForm.vue";
 import FahrbeziehungForm from "@/components/zaehlung/form/FahrbeziehungForm.vue";
@@ -84,6 +84,7 @@ import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/Fahrbezieh
 import FahrzeugeForm from "@/components/zaehlung/form/FahrzeugeForm.vue";
 import KnotenLageForm from "@/components/zaehlung/form/KnotenLageForm.vue";
 import { useEventbus } from "@/store/Eventbus";
+import { useDaveUtils } from "@/util/DaveUtils";
 
 interface Props {
   zaehlstelle: ZaehlstelleDTO;
@@ -98,8 +99,7 @@ const emits = defineEmits<{
   (e: "isValid", payload: boolean): void;
 }>();
 
-const SHEETHEIGHT = "580px";
-
+const daveUtils = useDaveUtils();
 const eventbus = useEventbus();
 
 const activeTab = ref(0);
@@ -115,6 +115,15 @@ watch(
     activeTab.value = TAB_INFO;
   }
 );
+
+const contentHeight = computed(() => {
+  const height =
+    daveUtils.pxToVh(800) -
+    daveUtils.cardtitleHeight.value -
+    daveUtils.tabHeight.value -
+    daveUtils.cardactionHeight.value;
+  return `${height}vh`;
+});
 
 function setAllgemeineFormValid(isPartValid: boolean) {
   emits("isValid", isPartValid);
