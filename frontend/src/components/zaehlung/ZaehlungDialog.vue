@@ -7,7 +7,7 @@
   >
     <v-card
       width="100%"
-      flat
+      variant="flat"
     >
       <v-card-title>
         <v-icon

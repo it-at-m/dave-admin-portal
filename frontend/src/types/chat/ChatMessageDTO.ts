@@ -1,4 +1,3 @@
-import type MessageTime from "@/types/chat/MessageTime";
 import type BaseEntity from "@/types/common/BaseEntity";
 
 export default interface ChatMessageDTO extends BaseEntity {
@@ -6,7 +5,7 @@ export default interface ChatMessageDTO extends BaseEntity {
   messageId: string; //Wird diese ID benötigt (evtl. zum Sortieren)?
   content: string;
   participantId: number;
-  messageTimeDTO: MessageTime;
+  timestamp: string;
   type: string;
   uploaded: boolean;
   viewed: boolean;

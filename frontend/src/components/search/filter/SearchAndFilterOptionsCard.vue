@@ -1,5 +1,5 @@
 <template>
-  <v-card flat>
+  <v-card variant="flat">
     <v-card-title>
       <v-icon start>mdi-filter-outline</v-icon>
       Sucheinstellungen
