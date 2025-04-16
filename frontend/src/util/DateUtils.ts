@@ -58,6 +58,16 @@ export function useDateUtils() {
     return `${i18n.global.d(date, "short", "de-DE")}`;
   }
 
+  function getShortVersionOfDateWithTime(date: Date | string): string {
+    if (!date) {
+      return "";
+    }
+    if (typeof date === "string") {
+      date = getDatumOfString(date);
+    }
+    return `${getShortVersionOfDate(date)} - ${getTimeOfDate(date)}`;
+  }
+
   function getLongVersionOfDate(date: Date | string): string {
     if (!date) {
       return "";
@@ -91,6 +101,7 @@ export function useDateUtils() {
     formatDateForBackend,
     getTimeOfDate,
     getShortVersionOfDate,
+    getShortVersionOfDateWithTime,
     getLongVersionOfDate,
     getDatumOfString,
   };
