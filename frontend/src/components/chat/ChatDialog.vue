@@ -11,6 +11,7 @@
       rounded
       style="background-color: #f5f5f5"
     >
+      <!-- Farbe ist primary, man muss jedoch den Hex-Wert angeben -->
       <v-card-title style="background-color: #c62828">
         <v-row
           no-gutters
@@ -48,11 +49,34 @@
                   v-if="item.participantId === MOBILITAETSREFERAT_ID"
                   rounded
                   variant="elevated"
+                  density="compact"
                   class="mr-2"
-                  :title="getTitle(item)"
-                  :subtitle="item.content"
                   width="30%"
-                />
+                >
+                  <template #title>
+                    <span style="font-size: medium; font-weight: bold">{{
+                      getTitle(item)
+                    }}</span>
+                  </template>
+                  <template #subtitle>
+                    <span class="text-black">{{ item.content }}</span>
+                  </template>
+                  <template #default>
+                    <v-row
+                      dense
+                      no-gutters
+                      justify="end"
+                      class="mt-2"
+                    >
+                      <span
+                        class="text-grey"
+                        style="font-size: smaller"
+                      >
+                        {{ getMessageTime(item) }}
+                      </span>
+                    </v-row>
+                  </template>
+                </v-list-item>
                 <v-avatar
                   :image="
                     item.participantId === MOBILITAETSREFERAT_ID
@@ -60,17 +84,38 @@
                       : accountTieUrl
                   "
                   size="36"
-                >
-                </v-avatar>
+                />
                 <v-list-item
                   v-if="item.participantId === DIENSTLEISTER_ID"
                   rounded
                   variant="elevated"
-                  class="ml-3"
-                  :title="getTitle(item)"
-                  :subtitle="item.content"
+                  class="ml-2"
                   width="30%"
-                />
+                >
+                  <template #title>
+                    <span style="font-size: medium; font-weight: bold">{{
+                      getTitle(item)
+                    }}</span>
+                  </template>
+                  <template #subtitle>
+                    <span class="text-black">{{ item.content }}</span>
+                  </template>
+                  <template #default>
+                    <v-row
+                      dense
+                      no-gutters
+                      justify="end"
+                      class="mt-2"
+                    >
+                      <span
+                        class="text-grey"
+                        style="font-size: smaller"
+                      >
+                        {{ getMessageTime(item) }}
+                      </span>
+                    </v-row>
+                  </template>
+                </v-list-item>
               </div>
             </v-col>
           </v-row>
@@ -109,7 +154,7 @@ import accountTieUrl from "@/assets/account-tie.png";
 import kindlUrl from "@/assets/kindl.jpg";
 import { useChatStore } from "@/store/ChatStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import {useDateUtils} from "@/util/DateUtils";
+import { useDateUtils } from "@/util/DateUtils";
 
 interface Props {
   showDialog: boolean;
@@ -144,7 +189,6 @@ watch(
   }
 );
 
-// TODO show Timestamp of Message
 const dialogtitle = computed(() => {
   return `${zaehlung.value.projektName} - ${dateUtils.getShortVersionOfDate(zaehlung.value.datum)}`;
 });
@@ -153,6 +197,9 @@ function getTitle(item: ChatMessageDTO) {
   return item.participantId === DIENSTLEISTER_ID
     ? "Dienstleister"
     : "Mobilitätsreferat";
+}
+function getMessageTime(item: ChatMessageDTO) {
+  return dateUtils.getShortVersionOfDateWithTime(item.timestamp);
 }
 
 function loadMessages() {
