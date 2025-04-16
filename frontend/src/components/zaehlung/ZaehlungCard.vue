@@ -349,7 +349,7 @@ const statusDesign = computed(() => {
   let design: IconOptions | undefined = statusIcon.get(zaehlung.value.status);
   if (!design) {
     design = {} as IconOptions;
-    design.color = "deep-orange lighten-4";
+    design.color = "deep-orange-lighten-4";
     design.iconPath = "mdi-calendar-question";
     design.tooltip = "Status unbekannt";
   }

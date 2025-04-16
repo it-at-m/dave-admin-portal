@@ -321,7 +321,7 @@ function createDefaultZaehlungDTO(): ZaehlungDTO {
     minute: "2-digit",
   });
   zaehlung.datum = new Date(
-    new Date().toISOString().substr(0, 10) + "T" + time
+    new Date().toISOString().substring(0, 10) + "T" + time
   ).toISOString();
   return zaehlung;
 }
