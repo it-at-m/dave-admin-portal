@@ -171,10 +171,6 @@ const emits = defineEmits<{
 const DIENSTLEISTER_ID = 1;
 const MOBILITAETSREFERAT_ID = 2;
 
-const showDialogModel = computed(() => {
-  return props.showDialog;
-});
-
 const items = ref<Array<ChatMessageDTO>>([]);
 const message = ref("");
 const snackbarStore = useSnackbarStore();
@@ -187,6 +183,10 @@ watch(
     loadMessages();
   }
 );
+
+const showDialogModel = computed(() => {
+  return props.showDialog;
+});
 
 const dialogtitle = computed(() => {
   return `${zaehlung.value.projektName} - ${dateUtils.getShortVersionOfDate(zaehlung.value.datum)}`;
