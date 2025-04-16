@@ -21,10 +21,25 @@
         <zaehlung-form
           v-model="zaehlung"
           :zaehlstelle="zaehlstelle"
-          @cancel="cancelCreate"
-          @saved="saved"
+          @is-valid="setAllgemeineFormValid"
         />
       </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          color="secondary"
+          text="Speichern"
+          variant="elevated"
+          :disabled="!isValid"
+          @click="save()"
+        />
+        <v-btn
+          color="grey-lighten-1"
+          variant="elevated"
+          text="Abbrechen"
+          @click="cancel()"
+        />
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -34,10 +49,12 @@ import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { isEmpty } from "lodash";
-import { computed, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
+import ZaehlungService from "@/api/service/ZaehlungService";
 import ZaehlungForm from "@/components/zaehlung/form/ZaehlungForm.vue";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
+import { useEventbus } from "@/store/Eventbus";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 
 interface Props {
   showDialog: boolean;
@@ -49,15 +66,21 @@ const zaehlung = defineModel<ZaehlungDTO>({
   required: true,
 });
 
+const isValid = ref(false);
+function setAllgemeineFormValid(isPartValid: boolean) {
+  isValid.value = isPartValid;
+}
+
 const showDialogModel = computed(() => {
   return props.showDialog;
 });
 const emits = defineEmits<{
-  (e: "cancel"): void;
+  (e: "close-dialog"): void;
   (e: "saved"): void;
 }>();
 
-const zaehlungStore = useZaehlungStore();
+const snackbarStore = useSnackbarStore();
+const eventbus = useEventbus();
 
 const editZaehlung = computed(() => {
   return !isEmpty(zaehlung.value.id);
@@ -82,15 +105,23 @@ const dialogtitle = computed(() => {
 watch(
   () => props.showDialog,
   () => {
-    zaehlungStore.setResetformevent(!props.showDialog);
+    eventbus.setReloadEvent();
   }
 );
 
-function cancelCreate(): void {
-  emits("cancel");
+function save(): void {
+  ZaehlungService.saveZaehlung(zaehlung.value, props.zaehlstelle.id)
+    .then(() => {
+      emits("saved");
+    })
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      eventbus.setReloadEvent();
+    });
 }
 
-function saved(): void {
-  emits("saved");
+function cancel(): void {
+  eventbus.setReloadEvent();
+  emits("close-dialog");
 }
 </script>

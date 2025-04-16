@@ -202,7 +202,7 @@ import { computed, onMounted, ref, watch } from "vue";
 
 import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
 import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
+import { useEventbus } from "@/store/Eventbus";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 interface Props {
@@ -217,14 +217,14 @@ const zaehlung = defineModel<ZaehlungDTO>({
 
 const strassen = ref<Array<string>>([]);
 
-const zaehlungStore = useZaehlungStore();
+const eventbus = useEventbus();
 
 onMounted(() => {
   resetForm();
 });
 
 watch(
-  () => zaehlungStore.getResetformevent,
+  () => eventbus.getReloadEvent,
   () => {
     resetForm();
   }

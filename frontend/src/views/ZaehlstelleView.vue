@@ -164,7 +164,7 @@
       :show-dialog="showZaehlungDialog"
       :zaehlstelle="zaehlstelle"
       @saved="reloadDataAndCloseDialog"
-      @cancel="cancelZaehlungDialog"
+      @close-dialog="cancelZaehlungDialog"
     />
 
     <chat-dialog

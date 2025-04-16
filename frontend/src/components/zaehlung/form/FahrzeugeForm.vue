@@ -75,8 +75,8 @@ import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { computed, onMounted, ref, watch } from "vue";
 
+import { useEventbus } from "@/store/Eventbus";
 import { usePkweinheitStore } from "@/store/PkweinheitStore";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
 import Fahrzeug from "@/types/enum/Fahrzeug";
 
 interface Props {
@@ -89,7 +89,7 @@ const zaehlung = defineModel<ZaehlungDTO>({
 });
 
 const pkweinheitStore = usePkweinheitStore();
-const zaehlungStore = useZaehlungStore();
+const eventbus = useEventbus();
 
 // Variablen für die Checkboxen
 const pkw = ref(false);
@@ -106,7 +106,7 @@ onMounted(() => {
 });
 
 watch(
-  () => zaehlungStore.getResetformevent,
+  () => eventbus.getReloadEvent,
   () => {
     resetForm();
   }

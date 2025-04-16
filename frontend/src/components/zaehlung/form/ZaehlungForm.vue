@@ -69,23 +69,6 @@
         />
       </v-tabs-window-item>
     </v-tabs-window>
-
-    <v-card-actions>
-      <v-spacer />
-      <v-btn
-        color="secondary"
-        text="Speichern"
-        variant="elevated"
-        :disabled="!isAllgemeinFormValid"
-        @click="save()"
-      />
-      <v-btn
-        color="grey-lighten-1"
-        variant="elevated"
-        text="Abbrechen"
-        @click="cancel()"
-      />
-    </v-card-actions>
   </v-sheet>
 </template>
 
@@ -93,63 +76,47 @@
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
-import ZaehlungService from "@/api/service/ZaehlungService";
 import AllgemeineInfoForm from "@/components/zaehlung/form/AllgemeineInfoForm.vue";
 import FahrbeziehungForm from "@/components/zaehlung/form/FahrbeziehungForm.vue";
 import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/FahrbeziehungKreisverkehrForm.vue";
 import FahrzeugeForm from "@/components/zaehlung/form/FahrzeugeForm.vue";
 import KnotenLageForm from "@/components/zaehlung/form/KnotenLageForm.vue";
-import { useSnackbarStore } from "@/store/SnackbarStore";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
+import { useEventbus } from "@/store/Eventbus";
 
 interface Props {
   zaehlstelle: ZaehlstelleDTO;
 }
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const zaehlung = defineModel<ZaehlungDTO>({
   required: true,
 });
 
-const SHEETHEIGHT = "580px";
-
-const zaehlungStore = useZaehlungStore();
-const snackbarStore = useSnackbarStore();
-
 const emits = defineEmits<{
-  (e: "cancel"): void;
-  (e: "saved"): void;
+  (e: "isValid", payload: boolean): void;
 }>();
 
+const SHEETHEIGHT = "580px";
+
+const eventbus = useEventbus();
+
 const activeTab = ref(0);
-const isAllgemeinFormValid = ref(false);
 
 const TAB_INFO = 0;
 const TAB_KNOTEN = 1;
 const TAB_FAHRBEZIEHUNG = 2;
 const TAB_FAHRZEUGE = 3;
 
-function save(): void {
-  ZaehlungService.saveZaehlung(zaehlung.value, props.zaehlstelle.id)
-    .then(() => {
-      emits("saved");
-    })
-    .catch((error) => snackbarStore.showApiError(error))
-    .finally(() => {
-      activeTab.value = 0;
-      zaehlungStore.setResetformevent(true);
-    });
-}
-
-function cancel(): void {
-  activeTab.value = 0;
-  zaehlungStore.setResetformevent(true);
-  emits("cancel");
-}
+watch(
+  () => eventbus.getReloadEvent,
+  () => {
+    activeTab.value = TAB_INFO;
+  }
+);
 
 function setAllgemeineFormValid(isPartValid: boolean) {
-  isAllgemeinFormValid.value = isPartValid;
+  emits("isValid", isPartValid);
 }
 </script>

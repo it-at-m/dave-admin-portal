@@ -19,7 +19,7 @@ import L, { CircleMarker, Icon, LatLng, Marker } from "leaflet";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import markerIconRed from "@/assets/marker-icon-red.png";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
+import { useEventbus } from "@/store/Eventbus";
 
 interface Props {
   height?: string;
@@ -47,10 +47,10 @@ let cardmap: L.Map;
 let markerZaehlstelle: L.CircleMarker | null;
 let markerZaehlung: L.Marker | null;
 
-const zaehlungStore = useZaehlungStore();
+const eventbus = useEventbus();
 
 watch(
-  () => zaehlungStore.getResetformevent,
+  () => eventbus.getReloadEvent,
   () => {
     resetMap();
   }
