@@ -9,15 +9,14 @@
       width="100%"
       variant="flat"
       rounded
-      style="background-color: #f5f5f5"
+      class="bg-grey-lighten-4"
     >
-      <!-- Farbe ist primary, man muss jedoch den Hex-Wert angeben -->
-      <v-card-title style="background-color: #c62828">
+      <v-card-title class="bg-primary">
         <v-row
           no-gutters
           dense
         >
-          <span class="headline text-white">{{ dialogtitle }}</span>
+          <span class="text-white">{{ dialogtitle }}</span>
           <v-spacer />
           <v-btn
             icon="mdi-close"
