@@ -3,11 +3,12 @@
     v-model="showDialogModel"
     persistent
     max-width="50%"
-    height="800px"
+    height="600px"
   >
     <v-card
       width="100%"
       variant="flat"
+      rounded
       style="background-color: #f5f5f5"
     >
       <v-card-title style="background-color: #c62828">
@@ -108,6 +109,7 @@ import accountTieUrl from "@/assets/account-tie.png";
 import kindlUrl from "@/assets/kindl.jpg";
 import { useChatStore } from "@/store/ChatStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import {useDateUtils} from "@/util/DateUtils";
 
 interface Props {
   showDialog: boolean;
@@ -129,9 +131,11 @@ const showDialogModel = computed(() => {
   return props.showDialog;
 });
 
-const dialogtitle = computed(() => {
-  return `${zaehlung.value.projektName} - ${zaehlung.value.datum}`;
-});
+const items = ref<Array<ChatMessageDTO>>([]);
+const message = ref("");
+const snackbarStore = useSnackbarStore();
+const chatStore = useChatStore();
+const dateUtils = useDateUtils();
 
 watch(
   () => props.showDialog,
@@ -140,10 +144,10 @@ watch(
   }
 );
 
-const items = ref<Array<ChatMessageDTO>>([]);
-const message = ref("");
-const snackbarStore = useSnackbarStore();
-const chatStore = useChatStore();
+// TODO show Timestamp of Message
+const dialogtitle = computed(() => {
+  return `${zaehlung.value.projektName} - ${dateUtils.getShortVersionOfDate(zaehlung.value.datum)}`;
+});
 
 function getTitle(item: ChatMessageDTO) {
   return item.participantId === DIENSTLEISTER_ID
