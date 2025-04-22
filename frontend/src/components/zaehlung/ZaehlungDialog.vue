@@ -112,6 +112,7 @@ watch(
 function save(): void {
   ZaehlungService.saveZaehlung(zaehlung.value, props.zaehlstelle.id)
     .then(() => {
+      snackbarStore.showSuccess(`Die Zählung wurde erfolgreich gespeichert.`);
       emits("saved");
     })
     .catch((error) => snackbarStore.showApiError(error))
