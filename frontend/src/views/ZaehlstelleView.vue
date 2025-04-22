@@ -50,6 +50,7 @@
     <v-row
       v-else
       dense
+      no-gutters
     >
       <v-spacer />
       <v-col
@@ -95,24 +96,30 @@
       </v-col>
       <v-spacer />
     </v-row>
-    <v-row dense>
-      <v-col
-        v-for="card in filteredZaehlungCardObjects"
-        :key="card.zaehlung.id"
-        :cols="card.flex"
-      >
-        <zaehlung-card
-          v-model="card.zaehlung"
-          :zaehlstelle-id="zaehlstelle.id"
-          :geo-point-zaehlstelle="zaehlstelle.punkt"
-          @open-zaehlung-dialog="openZaehlungDialog"
-          @open-zaehlung-datenportal="openZaehlungDatenportal"
-          @open-chat-dialog="openChatDialog"
-          @saved="reloadDataAndCloseDialog"
-          @deleted="loadZaehlstelle"
-        />
-      </v-col>
-    </v-row>
+    <v-sheet
+      class="overflow-y-auto overflow-x-hidden"
+      :height="contentHeight"
+      width="100%"
+    >
+      <v-row dense>
+        <v-col
+          v-for="card in filteredZaehlungCardObjects"
+          :key="card.zaehlung.id"
+          :cols="card.flex"
+        >
+          <zaehlung-card
+            v-model="card.zaehlung"
+            :zaehlstelle-id="zaehlstelle.id"
+            :geo-point-zaehlstelle="zaehlstelle.punkt"
+            @open-zaehlung-dialog="openZaehlungDialog"
+            @open-zaehlung-datenportal="openZaehlungDatenportal"
+            @open-chat-dialog="openChatDialog"
+            @saved="reloadDataAndCloseDialog"
+            @deleted="loadZaehlstelle"
+          />
+        </v-col>
+      </v-row>
+    </v-sheet>
 
     <v-speed-dial
       v-model="speedDialOpen"
@@ -201,6 +208,7 @@ import { usePkweinheitStore } from "@/store/PkweinheitStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { wetterText } from "@/types/enum/Wetter";
 import { zaehlartText } from "@/types/enum/Zaehlart";
+import { useDaveUtils } from "@/util/DaveUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import ZaehlungCardObjectComparator from "@/util/ZaehlungCardObjectComparator";
 
@@ -231,6 +239,17 @@ onMounted(() => {
   loadZaehlstelle(true);
   loadHochrechnungsfaktoren();
   loadPkwEinheiten();
+});
+
+const daveUtils = useDaveUtils();
+const contentHeight = computed(() => {
+  const height =
+    100 -
+    daveUtils.appBarHeight.value -
+    daveUtils.pxToVh(160) -
+    daveUtils.pxToVh(64);
+
+  return `${height}vh`;
 });
 
 function loadHochrechnungsfaktoren() {
