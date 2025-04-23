@@ -1,6 +1,5 @@
 import type BaseEntity from "@/types/common/BaseEntity";
-
-import { MessstelleStatus } from "@/types/enum/MessstelleStatus";
+import type MessstelleStatus from "@/types/enum/MessstelleStatus";
 
 export default interface MessstelleOverviewDTO extends BaseEntity {
   mstId: string;
