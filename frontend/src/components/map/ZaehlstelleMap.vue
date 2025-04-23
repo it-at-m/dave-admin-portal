@@ -87,6 +87,7 @@ import markerIconDiamondShadow from "@/assets/cards-diamond-shadow.png";
 import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleDialog.vue";
+import { useEventbus } from "@/store/Eventbus";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
@@ -126,6 +127,7 @@ const snackbarStore = useSnackbarStore();
 const router = useRouter();
 const dateUtils = useDateUtils();
 const mapOptionsStore = useMapOptionsStore();
+const eventbus = useEventbus();
 
 const mapRef = ref<HTMLDivElement | null>(null);
 
@@ -428,6 +430,15 @@ const searchResult = computed(() => {
 watch(searchResult, () => {
   resetMarker();
 });
+
+watch(
+  () => [eventbus.getReloadEvent, props.latlng],
+  ([newA, newB], [prevA, prevB]) => {
+    if (newA !== prevA && newB !== prevB) {
+      searchErhebungsstelle();
+    }
+  }
+);
 
 function resetMarker(): void {
   mapMarkerClusterGroup.removeFrom(map);
