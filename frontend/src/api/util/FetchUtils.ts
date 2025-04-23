@@ -83,12 +83,11 @@ export default class FetchUtils {
    * @returns {Headers}
    */
   static getHeaders(): Headers {
-    const headers = new Headers({
+    return new Headers({
       "Content-Type": "application/json",
       "Accept-Language": "de-DE",
       "X-XSRF-TOKEN": XsrfTokenExtractor.getXsrfToken().toString(),
     });
-    return headers;
   }
 
   /**
@@ -121,10 +120,9 @@ export default class FetchUtils {
    * Baut den Header für ein PDF-Request auf
    */
   static getPdfHeaders(): Headers {
-    const headers = new Headers({
+    return new Headers({
       "Accept-Language": "de-DE",
       "X-XSRF-TOKEN": XsrfTokenExtractor.getXsrfToken().toString(),
     });
-    return headers;
   }
 }
