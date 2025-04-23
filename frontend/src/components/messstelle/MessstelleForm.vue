@@ -146,7 +146,7 @@
               v-model="messstelle.bemerkung"
               label="Bemerkung"
               variant="outlined"
-              disabled
+              readonly
               density="compact"
               rows="3"
               row-height="10"
