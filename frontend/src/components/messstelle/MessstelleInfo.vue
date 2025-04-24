@@ -14,7 +14,7 @@
             <v-btn
               icon="mdi-map"
               color="secondary"
-              small
+              size="small"
               variant="plain"
               :disabled="!messstelle.lageplanVorhanden"
               @click="loadLageplan"
