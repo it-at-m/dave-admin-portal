@@ -142,16 +142,4 @@
 
         </profile>
     </profiles>
-
-
-    <build>
-        <resources>
-            <resource>
-                <directory>dist</directory>
-                <targetPath>static</targetPath>
-            </resource>
-        </resources>
-    </build>
-
-
 </project>

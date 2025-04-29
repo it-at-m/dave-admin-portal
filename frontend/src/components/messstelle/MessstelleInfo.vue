@@ -1,77 +1,84 @@
 <template>
-    <v-sheet
-        width="100%"
-        :height="height"
-        :min-height="minheight"
-        color="transparent"
-        class="pa-4"
+  <v-sheet
+    width="100%"
+    :height="height"
+    :min-height="minheight"
+    color="transparent"
+    class="pa-4"
+  >
+    <span class="text-caption">
+      Messstelle
+      <v-tooltip right>
+        <template #activator="{ props }">
+          <span v-bind="props">
+            <v-btn
+              icon="mdi-map"
+              color="secondary"
+              size="small"
+              variant="plain"
+              :disabled="!messstelle.lageplanVorhanden"
+              @click="loadLageplan"
+            />
+          </span>
+        </template>
+        <span>{{ tooltipLageplan }}</span>
+      </v-tooltip>
+    </span>
+    <br />
+    <span class="text-h5">{{ messstelle.mstId }}</span>
+    <br /><br />
+    <span class="text-caption"
+      >Stadtbezirk {{ messstelle.stadtbezirkNummer }},
+      {{ messstelle.stadtbezirk }}</span
     >
-        <span class="text-caption">
-            Messstelle
-            <v-tooltip right>
-                <template #activator="{ on, attrs }">
-                    <span
-                        v-bind="attrs"
-                        v-on="on"
-                    >
-                        <v-btn
-                            icon
-                            small
-                            variant="plain"
-                            :disabled="!messstelle.lageplanVorhanden"
-                            @click="loadLageplan"
-                            ><v-icon color="secondary">mdi-map</v-icon></v-btn
-                        >
-                    </span>
-                </template>
-                <span>{{
-                    messstelle.lageplanVorhanden
-                        ? "Lageplan"
-                        : "Kein Lageplan vorhanden"
-                }}</span>
-            </v-tooltip> </span
-        ><br />
-        <span class="text-h5">{{ messstelle.mstId }}</span>
-        <br /><br />
-        <span class="text-caption"
-            >Stadtbezirk {{ messstelle.stadtbezirkNummer }},
-            {{ messstelle.stadtbezirk }}</span
-        >
-    </v-sheet>
+  </v-sheet>
 </template>
 <script setup lang="ts">
-import MessstelleEditDTO from "@/domain/dto/messstelle/MessstelleEditDTO";
-import { ref } from "vue";
+import type LageplanDTO from "@/types/lageplan/LageplanDTO";
+import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+
+import { computed, ref } from "vue";
+
 import LageplanService from "@/api/service/LageplanService";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import LageplanDTO from "@/domain/dto/lageplan/LageplanDTO";
 
 interface Props {
-    messstelle: MessstelleEditDTO;
-    height: string;
-    minheight: string;
+  height: string;
+  minheight: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-    minheight: "160px",
+withDefaults(defineProps<Props>(), {
+  minheight: "160px",
 });
+
+const messstelle = defineModel<MessstelleEditDTO>({
+  required: true,
+});
+
 const snackbarStore = useSnackbarStore();
+
 const lageplanLoading = ref(false);
 
+const tooltipLageplan = computed(() => {
+  return messstelle.value.lageplanVorhanden
+    ? "Lageplan"
+    : "Kein Lageplan vorhanden";
+});
+
 function loadLageplan() {
-    if (lageplanLoading.value) {
-        return;
-    }
-    lageplanLoading.value = true;
-    LageplanService.loadLageplan(props.messstelle.mstId)
-        .then((result: LageplanDTO) => {
-            window.open(result.url);
-        })
-        .catch((error) => {
-            snackbarStore.showApiError(error);
-        })
-        .finally(() => {
-            lageplanLoading.value = false;
-        });
+  if (lageplanLoading.value) {
+    return;
+  }
+  lageplanLoading.value = true;
+  LageplanService.loadLageplan(messstelle.value.mstId)
+    .then((result: LageplanDTO) => {
+      window.open(result.url);
+    })
+    .catch((error) => {
+      snackbarStore.showApiError(error);
+    })
+    .finally(() => {
+      lageplanLoading.value = false;
+    });
 }
 </script>

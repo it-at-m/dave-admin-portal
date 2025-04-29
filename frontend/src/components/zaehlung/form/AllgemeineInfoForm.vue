@@ -1,405 +1,320 @@
 <template>
-    <v-sheet
-        width="100%"
-        :height="height"
-        :max-height="height"
-        class="overflow-y-auto"
-    >
-        <v-card-text>
-            <v-form
-                ref="form"
-                v-model="validZaehlung"
+  <v-sheet
+    width="100%"
+    :height="height"
+    :max-height="height"
+    class="overflow-y-auto"
+  >
+    <v-card-text>
+      <v-form
+        ref="form"
+        v-model="validZaehlung"
+      >
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-text-field
+              v-model="zaehlung.projektNummer"
+              label="Projektnummer"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-text-field
+              v-model="zaehlung.projektName"
+              label="Projektname"
+            />
+          </v-col>
+          <v-spacer />
+        </v-row>
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-autocomplete
+              v-model="zaehlung.zaehldauer"
+              :items="zaehldauerDropDown"
+              label="Zähldauer"
+              :rules="[() => !!zaehlung.zaehldauer || PFLICHTFELD_TEXT]"
+              required
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-autocomplete
+              v-model="zaehlung.zaehlart"
+              :items="zaehlartenDropDown"
+              label="Zählart"
+              :rules="[() => !!zaehlung.zaehlart || PFLICHTFELD_TEXT]"
+              required
+            ></v-autocomplete>
+          </v-col>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-menu
+              v-model="datepickerMenuModel"
+              :close-on-content-click="false"
             >
-                <v-row dense>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-text-field
-                            v-model="zaehlung.projektNummer"
-                            label="Projektnummer"
-                            outlined
-                            dense
-                            @blur="updateStore"
-                        />
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-text-field
-                            v-model="zaehlung.projektName"
-                            label="Projektname"
-                            outlined
-                            dense
-                            @blur="updateStore"
-                        />
-                    </v-col>
-                    <v-spacer />
-                </v-row>
-                <v-row dense>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-autocomplete
-                            v-model="zaehlung.zaehldauer"
-                            outlined
-                            :items="getZaehldauer"
-                            dense
-                            label="Zähldauer"
-                            :rules="[
-                                () => !!zaehlung.zaehldauer || pflichtfeldText,
-                            ]"
-                            required
-                            @blur="updateStore"
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-autocomplete
-                            v-model="zaehlung.zaehlart"
-                            outlined
-                            :items="getZaehlarten"
-                            dense
-                            label="Zählart"
-                            :rules="[
-                                () => !!zaehlung.zaehlart || pflichtfeldText,
-                            ]"
-                            required
-                            @blur="updateStore"
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-menu
-                            ref="menu"
-                            v-model="menu"
-                            :close-on-content-click="false"
-                            :close-on-click="false"
-                            transition="scale-transition"
-                            offset-y
-                            max-width="290px"
-                            min-width="auto"
-                        >
-                            <template #activator="{ on, attrs }">
-                                <v-text-field
-                                    v-model="computedDateFormatted"
-                                    label="Datum"
-                                    prepend-inner-icon="mdi-calendar"
-                                    readonly
-                                    outlined
-                                    dense
-                                    v-bind="attrs"
-                                    v-on="on"
-                                ></v-text-field>
-                            </template>
-                            <v-date-picker
-                                v-model="date"
-                                no-title
-                                locale="de"
-                                :first-day-of-week="1"
-                            >
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="saveDate"
-                                >
-                                    OK
-                                </v-btn>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="closeMenu"
-                                >
-                                    Abbrechen
-                                </v-btn>
-                            </v-date-picker>
-                        </v-menu>
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-autocomplete
-                            v-model="zaehlung.quelle"
-                            outlined
-                            :items="getQuelle"
-                            dense
-                            label="Quelle"
-                            @blur="updateStore"
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-autocomplete
-                            v-model="zaehlung.zaehlIntervall"
-                            outlined
-                            :items="getZaehlintervalle"
-                            dense
-                            label="Zählintervall"
-                            @blur="updateStore"
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-spacer />
-                </v-row>
-                <v-row dense>
-                    <v-col
-                        cols="12"
-                        md="4"
-                    >
-                        <v-checkbox
-                            v-model="zaehlung.sonderzaehlung"
-                            label="Sonderzählung"
-                            color="grey darken-1"
-                            hide-details
-                            dense
-                            @change="updateStore"
-                        />
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col
-                        cols="12"
-                        md="12"
-                    >
-                        <v-textarea
-                            v-model="zaehlung.kommentar"
-                            label="Kommentar"
-                            outlined
-                            dense
-                            rows="2"
-                            row-height="10"
-                            counter="255"
-                            maxlength="255"
-                            @blur="updateStore"
-                        ></v-textarea>
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col
-                        cols="12"
-                        md="12"
-                    >
-                        <v-combobox
-                            v-model="zaehlung.customSuchwoerter"
-                            multiple
-                            label="Suchwörter"
-                            outlined
-                            dense
-                            small-chips
-                            deletable-chips
-                            class="tag-input"
-                            :search-input.sync="newSuchwort"
-                            append-icon="mdi-plus"
-                            @click:append="addSuchwortToList"
-                            @keyup.enter="addSuchwortToList"
-                            @blur="addSuchwortToListAndUpdateStore"
-                        >
-                        </v-combobox>
-                    </v-col>
-                </v-row>
-                <v-row
-                    v-if="showZaehlsituation"
-                    dense
-                >
-                    <v-col
-                        cols="12"
-                        md="12"
-                    >
-                        <v-textarea
-                            v-model="zaehlung.zaehlsituation"
-                            label="Zählsituation"
-                            outlined
-                            dense
-                            rows="2"
-                            row-height="10"
-                            counter="255"
-                            maxlength="255"
-                            @blur="updateStore"
-                        ></v-textarea>
-                    </v-col>
-                </v-row>
-                <v-row
-                    v-if="showZaehlsituation"
-                    dense
-                >
-                    <v-col
-                        cols="12"
-                        md="12"
-                    >
-                        <v-textarea
-                            v-model="zaehlung.zaehlsituationErweitert"
-                            label="erweiterte Zählsituation"
-                            outlined
-                            dense
-                            rows="2"
-                            row-height="10"
-                            counter="255"
-                            maxlength="255"
-                            @blur="updateStore"
-                        ></v-textarea>
-                    </v-col>
-                </v-row>
-            </v-form>
-        </v-card-text>
-    </v-sheet>
+              <template #activator="{ props }">
+                <v-text-field
+                  v-bind="props"
+                  :model-value="formattedDate"
+                  prepend-inner-icon="mdi-calendar"
+                  readonly
+                />
+              </template>
+              <v-card>
+                <v-card-text>
+                  <v-row style="justify-content: center">
+                    <v-date-picker
+                      v-model="datepickerModel"
+                      width="300"
+                      header=""
+                      title="Datum auswählen"
+                      border
+                      show-adjacent-months
+                      color="primary"
+                    />
+                  </v-row>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn
+                    text="OK"
+                    color="secondary"
+                    variant="elevated"
+                    @click="saveDate"
+                  />
+                  <v-btn
+                    text="Abbrechen"
+                    color="grey-lighten-1"
+                    variant="elevated"
+                    @click="closeMenu"
+                  />
+                </v-card-actions>
+              </v-card>
+            </v-menu>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-autocomplete
+              v-model="zaehlung.quelle"
+              :items="quelleDropDown"
+              label="Quelle"
+            ></v-autocomplete>
+          </v-col>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-autocomplete
+              v-model="zaehlung.zaehlIntervall"
+              :items="ZAEHLINTERVALLE_15"
+              label="Zählintervall"
+            ></v-autocomplete>
+          </v-col>
+          <v-spacer />
+        </v-row>
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-checkbox
+              v-model="zaehlung.sonderzaehlung"
+              label="Sonderzählung"
+              color="grey-darken-1"
+              hide-details
+            />
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="12"
+          >
+            <v-textarea
+              v-model="zaehlung.kommentar"
+              label="Kommentar"
+              variant="outlined"
+              density="compact"
+              rows="2"
+              row-height="10"
+              counter="255"
+              maxlength="255"
+            ></v-textarea>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="12"
+          >
+            <v-combobox
+              v-model="zaehlung.customSuchwoerter"
+              v-model:search-input="newSuchwort"
+              multiple
+              label="Suchwörter"
+              variant="outlined"
+              density="compact"
+              chips
+              closable-chips
+              class="tag-input"
+              append-icon="mdi-plus"
+              @click:append="addSuchwortToList"
+              @keyup.enter="addSuchwortToList"
+              @blur="addSuchwortToList"
+            />
+          </v-col>
+        </v-row>
+        <v-row
+          v-if="showZaehlsituation"
+          dense
+        >
+          <v-col
+            cols="12"
+            md="12"
+          >
+            <v-textarea
+              v-model="zaehlung.zaehlsituation"
+              label="Zählsituation"
+              variant="outlined"
+              density="compact"
+              rows="2"
+              row-height="10"
+              counter="255"
+              maxlength="255"
+            ></v-textarea>
+          </v-col>
+        </v-row>
+        <v-row
+          v-if="showZaehlsituation"
+          dense
+        >
+          <v-col
+            cols="12"
+            md="12"
+          >
+            <v-textarea
+              v-model="zaehlung.zaehlsituationErweitert"
+              label="erweiterte Zählsituation"
+              variant="outlined"
+              density="compact"
+              rows="2"
+              row-height="10"
+              counter="255"
+              maxlength="255"
+            ></v-textarea>
+          </v-col>
+        </v-row>
+      </v-form>
+    </v-card-text>
+  </v-sheet>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import { zaehlartenDropDown } from "@/domain/enums/Zaehlart";
-import KeyVal from "@/domain/KeyVal";
-import { zaehldauerDropDown } from "@/domain/enums/Zaehldauer";
-import { quelleDropDown } from "@/domain/enums/Quelle";
-import { cloneDeep } from "lodash";
-import Status from "@/domain/enums/Status";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
+<script setup lang="ts">
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-@Component
-export default class AllgemeineInfoForm extends Vue {
-    @Prop()
-    readonly height!: string;
+import { isEmpty, isNil } from "lodash";
+import { computed, onMounted, ref, watch } from "vue";
 
-    newSuchwort = "";
+import { quelleDropDown } from "@/types/enum/Quelle";
+import Status from "@/types/enum/Status";
+import { zaehlartenDropDown } from "@/types/enum/Zaehlart";
+import { zaehldauerDropDown } from "@/types/enum/Zaehldauer";
+import { useDateUtils } from "@/util/DateUtils";
 
-    // Without Time
-    date: string = new Date().toISOString().substr(0, 10);
-    menu = false;
-    validZaehlung = false;
+interface Props {
+  height: string;
+}
+defineProps<Props>();
 
-    zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
 
-    private zaehlungStore = useZaehlungStore();
+const emits = defineEmits<{
+  (e: "isValid", payload: boolean): void;
+}>();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @Ref("menu") private vMenu: any;
+const dateUtils = useDateUtils();
 
-    mounted() {
-        this.validZaehlung = false;
-        this.updateWorkingCopy();
-    }
+const PFLICHTFELD_TEXT =
+  "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
+const ZAEHLINTERVALLE_15 = [{ title: "15 min", value: 15 }];
 
-    get zaehlungOfStore(): ZaehlungDTO {
-        return this.zaehlungStore.getZaehlung;
-    }
+const newSuchwort = ref("");
+const datepickerMenuModel = ref(false);
+const validZaehlung = ref(false);
+// Without Time
+const datepickerModel = ref<Date>(new Date());
 
-    get showZaehlsituation(): boolean {
-        let possibleStatus: Array<Status> = [
-            Status.ACTIVE,
-            Status.ACCOMPLISHED,
-            Status.CORRECTION,
-            Status.COUNTING,
-        ];
-        return possibleStatus.includes(this.zaehlungOfStore.status);
-    }
+onMounted(() => {
+  validZaehlung.value = false;
+  resetDatum();
+});
 
-    @Watch("zaehlungStore")
-    updateWorkingCopy(): void {
-        this.zaehlung = cloneDeep(this.zaehlungOfStore);
-        this.resetDatum();
-    }
+watch(
+  () => validZaehlung.value,
+  () => {
+    emits("isValid", validZaehlung.value);
+  }
+);
 
-    @Watch("validZaehlung")
-    sendIsValid(): void {
-        this.$emit("isValid", this.validZaehlung);
-    }
+const showZaehlsituation = computed(() => {
+  const possibleStatus: Array<Status> = [
+    Status.ACTIVE,
+    Status.ACCOMPLISHED,
+    Status.CORRECTION,
+    Status.COUNTING,
+  ];
+  return possibleStatus.includes(zaehlung.value.status);
+});
 
-    updateStore(): void {
-        this.zaehlungStore.setZaehlung(cloneDeep(this.zaehlung));
-    }
+const formattedDate = computed(() => {
+  return datepickerModel.value.toLocaleDateString();
+});
 
-    get computedDateFormatted(): string | null {
-        return this.formatDate(this.date);
-    }
+// Fuegt das eingegebene Wort den Suchwoertern hinzu
+function addSuchwortToList(): void {
+  if (isNil(zaehlung.value.customSuchwoerter)) {
+    zaehlung.value.customSuchwoerter = [];
+  }
 
-    private formatDateForBackend(): string {
-        let time = new Date().toLocaleTimeString(navigator.language, {
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-        return new Date(this.date + "T" + time).toISOString();
-    }
+  if (isNil(newSuchwort.value) || isEmpty(newSuchwort.value.trim())) {
+    return;
+  }
 
-    private formatDate(date: string): string | null {
-        if (!date) {
-            return null;
-        }
-        const [year, month, day] = date.split("-");
-        return `${day}.${month}.${year}`;
-    }
+  if (!zaehlung.value.customSuchwoerter.includes(newSuchwort.value)) {
+    zaehlung.value.customSuchwoerter.push(...newSuchwort.value.split(","));
+  }
+  newSuchwort.value = "";
+}
 
-    get pflichtfeldText(): string {
-        return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
-    }
+function saveDate(): void {
+  datepickerMenuModel.value = false;
+  zaehlung.value.datum = dateUtils.formatDateForBackend(datepickerModel.value);
+}
 
-    get getZaehlarten(): Array<KeyVal> {
-        return zaehlartenDropDown;
-    }
+function closeMenu(): void {
+  datepickerMenuModel.value = false;
+  resetDatum();
+}
 
-    get getZaehldauer(): Array<KeyVal> {
-        return zaehldauerDropDown;
-    }
-
-    get getQuelle(): Array<KeyVal> {
-        return quelleDropDown;
-    }
-
-    /* eslint-disable @typescript-eslint/ban-types */
-    get getZaehlintervalle(): Array<Object> {
-        return [{ text: "15 min", value: 15 }];
-    }
-    /* eslint-enable @typescript-eslint/ban-types */
-
-    // Fuegt das eingegebene Wort den Suchwoertern hinzu
-    addSuchwortToList(): void {
-        if (
-            this.zaehlung.customSuchwoerter === undefined ||
-            this.zaehlung.customSuchwoerter === null
-        ) {
-            this.zaehlung.customSuchwoerter = [];
-        }
-
-        if (this.newSuchwort == null || this.newSuchwort.trim() === "") {
-            return;
-        }
-
-        if (!this.zaehlung.customSuchwoerter.includes(this.newSuchwort)) {
-            this.zaehlung.customSuchwoerter.push(
-                ...this.newSuchwort.split(",")
-            );
-        }
-        this.newSuchwort = "";
-    }
-
-    addSuchwortToListAndUpdateStore(): void {
-        this.addSuchwortToList();
-        this.updateStore();
-    }
-
-    saveDate(): void {
-        this.vMenu.save(this.date);
-        this.zaehlung.datum = this.formatDateForBackend();
-        this.updateStore();
-    }
-
-    closeMenu(): void {
-        this.menu = false;
-        this.resetDatum();
-    }
-
-    private resetDatum(): void {
-        this.date = this.zaehlung.datum.substr(0, 10);
-    }
+function resetDatum(): void {
+  datepickerModel.value = dateUtils.getDatumOfString(zaehlung.value.datum);
 }
 </script>

@@ -1,718 +1,710 @@
 <template>
-    <v-sheet
-        :height="height"
-        :width="width"
-        :min-height="minheight"
+  <v-sheet
+    :height="height"
+    :min-height="minheight"
+    :width="width"
+  >
+    <div
+      id="map"
+      ref="mapRef"
+      :style="{
+        zIndex: 1,
+        cursor: customCursor,
+        width: '100%',
+        height: '100%',
+      }"
+    />
+
+    <v-speed-dial
+      v-if="showSpeedDial"
+      v-model="speedDialOpen"
+      persistent
+      location="top"
     >
-        <l-map
-            ref="map"
-            :center="center"
-            :options="mapOptions"
-            :style="{ zIndex: 1, cursor: customCursor }"
-            @mouseup="mouseUp"
-            @ready="mapReady"
-        >
-            <l-control-layers />
-            <!--      Kartenlayers. Bei layer-type="base" muss bei der Default-Karte :visible auf true gesetzt werden. -->
-            <!--      layer-type="overlay" sind zusätzlich zuschaltbare Ansichten. -->
+      <template #activator="{ props: activatorProps }">
+        <v-btn
+          v-bind="activatorProps"
+          key="speedDial"
+          v-tooltip:start="speedDialTooltip"
+          color="secondary"
+          :icon="speedDialIcon"
+          size="x-large"
+          elevation="6"
+          location="bottom end"
+          position="absolute"
+          class="mr-4 mb-4"
+          style="z-index: 400"
+          :data-x="activatorProps"
+          @click="addZaehlstellenMarker"
+        />
+      </template>
+      <v-btn
+        key="createZaehlstelle"
+        v-tooltip:start="'Bestätigen'"
+        icon="mdi-check"
+        size="large"
+        color="green"
+        :disabled="!hasNewMarker"
+        @click="createZaehlstelle"
+      />
+      <v-btn
+        key="deleteNewMarker"
+        v-tooltip:start="'Entfernen'"
+        icon="mdi-delete"
+        size="large"
+        color="red"
+        :disabled="!hasNewMarker"
+        @click="deleteNewMarker"
+      />
+    </v-speed-dial>
 
-            <!--      Standardkarte Geoportal -->
-            <l-wms-tile-layer
-                base-url="https://geoportal.muenchen.de/geoserver/gsm/wms?"
-                layers="gsm:g_stadtkarte_gesamt"
-                :visible="true"
-                name="Stadtkarte"
-                :attribution="mapAttribution"
-                layer-type="base"
-            />
-            <!--      Luftbild Geoportal -->
-            <l-wms-tile-layer
-                base-url="https://geoportal.muenchen.de/geoserver/gsm/wms?"
-                layers="gsm:g_luftbild"
-                :visible="false"
-                name="Luftbild"
-                :attribution="mapAttribution"
-                layer-type="base"
-            />
-            <!--      OpenStreetMap -->
-            <l-wms-tile-layer
-                :visible="false"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                base-url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-                layer-type="base"
-                name="OpenStreetMap"
-            />
-            <!--      Beginn der overlay Layers   -->
-            <l-wms-tile-layer
-                base-url="https://geoportal.muenchen.de/geoserver/gsm/wms?"
-                layers="gsm:stadtbezirk"
-                :visible="false"
-                :transparent="true"
-                format="image/png"
-                name="Stadtbezirke"
-                :attribution="mapAttribution"
-                layer-type="overlay"
-            />
-            <l-wms-tile-layer
-                :transparent="true"
-                :visible="false"
-                :attribution="mapAttribution"
-                base-url="https://geoportal.muenchen.de/geoserver/gsm/wms?"
-                format="image/png"
-                layer-type="overlay"
-                layers="gsm:vablock_viertel_dave"
-                name="Stadtviertel"
-            />
-        </l-map>
-
-        <div v-if="showSpeedDial">
-            <v-speed-dial
-                v-if="!hasNewMarker"
-                v-model="fab"
-                absolute
-                bottom
-                right
-            >
-                <template #activator>
-                    <v-btn
-                        v-model="fab"
-                        dark
-                        fab
-                        color="secondary"
-                        @click="addZaehlstellenMarker"
-                    >
-                        <v-icon v-if="addMarker"> mdi-close </v-icon>
-                        <v-icon v-else> mdi-map-marker-plus-outline </v-icon>
-                    </v-btn>
-                </template>
-            </v-speed-dial>
-
-            <v-speed-dial
-                v-if="hasNewMarker"
-                v-model="fab2"
-                absolute
-                bottom
-                right
-                open-on-hover
-            >
-                <template #activator>
-                    <v-btn
-                        v-model="fab2"
-                        dark
-                        fab
-                        color="secondary"
-                    >
-                        <v-icon> mdi-check </v-icon>
-                        /
-                        <v-icon> mdi-delete </v-icon>
-                    </v-btn>
-                </template>
-                <v-btn
-                    fab
-                    dark
-                    small
-                    color="green"
-                    @click="createZaehlstelle"
-                >
-                    <v-icon>mdi-check</v-icon>
-                </v-btn>
-                <v-btn
-                    fab
-                    dark
-                    small
-                    color="red"
-                    @click="deleteNewMarker"
-                >
-                    <v-icon>mdi-delete</v-icon>
-                </v-btn>
-            </v-speed-dial>
-        </div>
-
-        <create-zaehlstelle-dialog
-            v-model="showCreateZaehlstelleDialog"
-            :coords="newCoords"
-            @saved="reloadDataAndCloseDialog"
-            @cancel="cancelCreateZaehlstelleDialog"
-        >
-        </create-zaehlstelle-dialog>
-    </v-sheet>
+    <create-zaehlstelle-dialog
+      :show-dialog="showCreateZaehlstelleDialog"
+      :coords="newCoords"
+      @saved="reloadDataAndCloseDialog"
+      @cancel="cancelCreateZaehlstelleDialog"
+    />
+  </v-sheet>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Ref, Watch } from "vue-property-decorator";
-// imports for leaflet
-import {
-    LCircleMarker,
-    LControlLayers,
-    LIcon,
-    LLayerGroup,
-    LMap,
-    LMarker,
-    LTileLayer,
-    LTooltip,
-    LWMSTileLayer,
-} from "vue2-leaflet";
-// Api
+<script setup lang="ts">
+import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type AnzeigeKarteDTO from "@/types/karte/AnzeigeKarteDTO";
+import type MessstelleKarteDTO from "@/types/karte/MessstelleKarteDTO";
+import type TooltipMessstelleDTO from "@/types/karte/TooltipMessstelleDTO";
+import type TooltipZaehlstelleDTO from "@/types/karte/TooltipZaehlstelleDTO";
+import type ZaehlstelleKarteDTO from "@/types/karte/ZaehlstelleKarteDTO";
+import type { LeafletMouseEvent } from "leaflet";
+
+import L, { Icon, LatLng, latLng, Marker } from "leaflet";
+import { cloneDeep } from "lodash";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+
 import SucheService from "@/api/service/SucheService";
-
-/* eslint-disable no-unused-vars */
-import L, {
-    control,
-    Icon,
-    LatLng,
-    latLng,
-    LeafletMouseEvent,
-    Marker,
-} from "leaflet";
-import ZaehlstelleKarteDTO from "@/domain/dto/ZaehlstelleKarteDTO";
-import { Levels } from "@/api/error";
-import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleDialog.vue";
-import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import TooltipZaehlstelleDTO from "@/domain/dto/TooltipZaehlstelleDTO";
-import markerIconRed from "@/assets/marker-icon-red.png";
-import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
-import markerIconDiamondOrange from "@/assets/cards-diamond-orange.png";
 import markerIconDiamondShadow from "@/assets/cards-diamond-shadow.png";
-import TooltipMessstelleDTO from "@/domain/dto/TooltipMessstelleDTO";
-import AnzeigeKarteDTO from "@/domain/dto/AnzeigeKarteDTO";
-import MessstelleKarteDTO from "@/domain/dto/messstelle/MessstelleKarteDTO";
-import {
-    MessstelleStatus,
-    messstelleStatusText,
-} from "@/domain/enums/MessstelleStatus";
-import { useDateUtils } from "@/util/DateUtils";
-import { useSnackbarStore } from "@/store/SnackbarStore";
+import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
+import markerIconRed from "@/assets/marker-icon-red.png";
+import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleDialog.vue";
+import { useEventbus } from "@/store/Eventbus";
+import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
-import _ from "lodash";
-/* eslint-enable no-unused-vars */
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useDateUtils } from "@/util/DateUtils";
+import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
-@Component({
-    components: {
-        CreateZaehlstelleDialog,
-        LIcon,
-        LMap,
-        LTileLayer,
-        LMarker,
-        LCircleMarker,
-        LTooltip,
-        LControlLayers,
-        LLayerGroup,
-        "l-wms-tile-layer": LWMSTileLayer,
+const MUNICH_CENTER_LATITUDE = "48.137227";
+const MUNICH_CENTER_LONGITUDE = "11.575517";
+
+const mapAttributionLhm =
+  '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html" style="color: #c62828">GeodatenService München</a>';
+const mapAttributionOpenStreetMap =
+  '&copy; <a href="https://www.openstreetmap.org/copyright" style="color: #c62828">OpenStreetMap</a>';
+
+interface Props {
+  minheight?: string;
+  zId?: string;
+  latlng?: Array<string>;
+  height?: string;
+  width?: string;
+  showMarker?: boolean;
+  zoom?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  minheight: "160px",
+  height: "15vh",
+  width: "100%",
+  showMarker: false,
+  zoom: 12,
+  zId: "",
+  latlng: undefined,
+});
+
+const searchStore = useSearchStore();
+const snackbarStore = useSnackbarStore();
+const router = useRouter();
+const dateUtils = useDateUtils();
+const mapOptionsStore = useMapOptionsStore();
+const eventbus = useEventbus();
+
+const mapRef = ref<HTMLDivElement | null>(null);
+
+let map: L.Map;
+let mapMarkerClusterGroup = L.markerClusterGroup();
+const zaehlartenLayer = L.layerGroup();
+
+onMounted(() => {
+  initMap();
+});
+
+onBeforeUnmount(() => {
+  map.remove();
+});
+
+function initMap(): void {
+  map = L.map(mapRef.value as HTMLElement, {
+    zoom: zoomValue.value,
+    minZoom: 10,
+    maxZoom: 18,
+    preferCanvas: false,
+    attributionControl: false,
+    fullscreenControl: true,
+    fullscreenControlOptions: {
+      position: "topleft",
     },
-})
-export default class ZaehlstelleMap extends Vue {
-    @Prop({ default: "15vh" })
-    readonly height!: string;
+    center: center.value,
+  });
+  map.whenReady(() => {
+    setTimeout(() => {
+      map.invalidateSize();
+      map.addControl(
+        L.control.attribution({
+          position: "bottomleft",
+          prefix: "Leaflet",
+        })
+      );
+      map.setZoom(zoomValue.value);
+      createLayersAndAddToMap();
+      mapMarkerClusterGroup.addTo(map);
+      searchErhebungsstelle();
+      map.on("click", (e) => {
+        mouseUp(e);
+      });
+    }, 10);
+  });
+}
 
-    @Prop({ default: "160px" })
-    readonly minheight!: string;
+const showSpeedDial = computed(() => {
+  return !(props.latlng !== undefined && props.latlng.length === 2);
+});
 
-    @Prop({ default: "100%" })
-    readonly width!: string;
+const newMarker = ref<Marker | null>(null);
+const speedDialOpen = ref(false);
+const fab = ref(false);
+const fab2 = ref(false);
+const addMarker = ref(false);
+const useCustomCursor = ref(false);
+const showCreateZaehlstelleDialog = ref(false);
+// Schalter zum Wechseln der Buttons
+const hasNewMarker = computed(() => {
+  return newMarker.value !== null;
+});
+const speedDialIcon = computed(() => {
+  let icon = "mdi-map-marker-plus-outline";
+  if (addMarker.value) {
+    icon = "mdi-map-marker-off-outline";
+  }
+  return icon;
+});
+const speedDialTooltip = computed(() => {
+  let icon = "Neue Zählstelle anlegen";
+  if (addMarker.value) {
+    icon = "Anlegen abbrechen";
+  }
+  return icon;
+});
+const customCursor = computed(() => {
+  if (useCustomCursor.value) {
+    return `url("data:image/svg+xml,%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='24' height='24' viewBox='0 0 24 24' xml:space='preserve'%3E %3Cpath d='M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M3.05,13H1V11H3.05C3.5,6.83 6.83,3.5 11,3.05V1H13V3.05C17.17,3.5 20.5,6.83 20.95,11H23V13H20.95C20.5,17.17 17.17,20.5 13,20.95V23H11V20.95C6.83,20.5 3.5,17.17 3.05,13M12,5A7,7 0 0,0 5,12A7,7 0 0,0 12,19A7,7 0 0,0 19,12A7,7 0 0,0 12,5Z'/%3E %3C/svg%3E") 12 12,auto`;
+  } else {
+    return "auto";
+  }
+});
+const newCoords = computed(() => {
+  if (hasNewMarker.value && newMarker.value) {
+    // Da wir gerade auf 'null' überprüft haben können wir dem Compiler mit '!' mitteilen, dass newMarker auf jeden Fall gesetzt ist
+    return newMarker.value.getLatLng();
+  } else {
+    return DefaultObjectCreator.createCenterOfMunichLatLng();
+  }
+});
 
-    @Prop({ default: 12 })
-    zoom!: number;
+function addZaehlstellenMarker() {
+  addMarker.value = !addMarker.value;
+  useCustomCursor.value = !useCustomCursor.value;
+  deleteNewMarker();
+}
 
-    @Ref("map")
-    private readonly theMap!: LMap;
+// Klick-Event zum anlegen eines neuen Markers auf der Karte
+function mouseUp(event: LeafletMouseEvent) {
+  if (addMarker.value && !newMarker.value) {
+    useCustomCursor.value = false;
+    createMarkerForNewZaehlstelle(event.latlng);
+  }
+}
 
-    private snackbarStore = useSnackbarStore();
-    private searchStore = useSearchStore();
+// Legt einen neuen Marker an der Position coords an
+// und fügt diesen der Karte hinzu
+function createMarkerForNewZaehlstelle(coords: LatLng) {
+  newMarker.value = createNewMarker(coords);
+  newMarker.value.addTo(map);
+}
 
-    private static readonly MUNICH_CENTER_LATITUDE: string = "48.137227";
+// Erzeugt einen neuen roten Marker auf der Karte
+function createNewMarker(coords: LatLng): Marker {
+  const defaultIcon = new Icon.Default();
+  defaultIcon.options.iconUrl = markerIconRed;
+  return new Marker(coords, {
+    icon: defaultIcon,
+    opacity: 1.0,
+    draggable: true,
+  });
+}
 
-    private static readonly MUNICH_CENTER_LONGITUDE: string = "11.575517";
+// Klick-Event zum Oeffnen des ZaehlstelleCreateDialog
+function createZaehlstelle() {
+  if (newMarker.value) {
+    showCreateZaehlstelleDialog.value = true;
+  } else {
+    // Fehler Toast, dass kein Marker vorhanden
+    snackbarStore.showWarning(
+      "Es wurde keine neue Zählstelle auf der Karte markiert."
+    );
+  }
+}
 
-    private mapMarkerClusterGroup = L.markerClusterGroup();
+// Wenn ein neuer Marker existiert wird dieser gelöscht
+// und der Anlegen-Modus wird verlassen
+function deleteNewMarker() {
+  if (newMarker.value) {
+    newMarker.value.removeFrom(map);
+    // mapMarkerClusterGroup.removeLayer(newMarker.value);
+    // this.theMap.mapObject.removeLayer(newMarker.value);
+    newMarker.value = null;
+    resetBooleans();
+  }
+}
 
-    private newMarker: Marker | null = null;
+function resetBooleans() {
+  fab.value = false;
+  fab2.value = false;
+  // speedDialOpen.value = false;
+  addMarker.value = false;
+  useCustomCursor.value = false;
+}
 
-    addMarker = false;
+function reloadDataAndCloseDialog(backendIdDTO: BackendIdDTO) {
+  searchErhebungsstelle();
+  resetBooleans();
+  closeDialog();
+  routeToZaehlstelle(backendIdDTO.id);
+}
 
-    fab = false;
-    fab2 = false;
+function cancelCreateZaehlstelleDialog() {
+  deleteNewMarker();
+  resetBooleans();
+  closeDialog();
+}
 
-    private useCustomCursor = false;
+function closeDialog() {
+  showCreateZaehlstelleDialog.value = false;
+}
 
-    showCreateZaehlstelleDialog = false;
+const zoomValue = computed(() => {
+  if (props.latlng && props.latlng.length > 0) {
+    return props.zoom;
+  } else if (
+    mapOptionsStore.getMapOptions &&
+    mapOptionsStore.getMapOptions.zoom
+  ) {
+    return mapOptionsStore.getMapOptions.zoom;
+  } else {
+    return props.zoom;
+  }
+});
 
-    @Prop()
-    private zId?: string;
-    @Prop()
-    private latlng?: string[];
+/**
+ * Die Methode setzt Koordinate auf welche Zentriert werden soll.
+ */
+const center = computed<LatLng>(() => {
+  if (props.latlng && props.latlng.length > 0) {
+    return createLatLngFromString(props.latlng[0], props.latlng[1]);
+  } else if (
+    mapOptionsStore.getMapOptions &&
+    mapOptionsStore.getMapOptions.latitude &&
+    mapOptionsStore.getMapOptions.longitude
+  ) {
+    return createLatLngFromString(
+      mapOptionsStore.getMapOptions.latitude,
+      mapOptionsStore.getMapOptions.longitude
+    );
+  } else {
+    // Mitte von München
+    return createLatLngFromString(
+      MUNICH_CENTER_LATITUDE,
+      MUNICH_CENTER_LONGITUDE
+    );
+  }
+});
 
-    @Prop()
-    private reload?: boolean;
+function createLatLngFromString(lat: string, lng: string): LatLng {
+  return latLng(parseFloat(lat), parseFloat(lng));
+}
 
-    @Ref("map") readonly printMap!: any;
-    @Ref("sheet") readonly sheet!: HTMLDivElement;
-    private base64 = "base64";
+function createLayersAndAddToMap(): void {
+  const baseLayers = createBaseLayers();
+  const overlayLayers = createOverlayLayers();
 
-    readonly mapAttribution =
-        '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
+  baseLayers.Stadtkarte.addTo(map);
+  L.control.layers(baseLayers, overlayLayers).addTo(map);
+}
 
+function createBaseLayers(): L.Control.LayersObject {
+  const stadtkarteGesamt = L.tileLayer.wms(
+    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+    {
+      layers: "gsm:g_stadtkarte_gesamt",
+      className: "Stadtkarte",
+      attribution: mapAttributionLhm,
+    }
+  );
+
+  const luftbild = L.tileLayer.wms(
+    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+    {
+      layers: "gsm:g_luftbild",
+      className: "Luftbild",
+      attribution: mapAttributionLhm,
+    }
+  );
+
+  const osm = L.tileLayer.wms(
+    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      attribution: mapAttributionOpenStreetMap,
+    }
+  );
+
+  return {
+    Stadtkarte: stadtkarteGesamt,
+    Luftbild: luftbild,
+    OpenStreetMap: osm,
+  };
+}
+
+function createOverlayLayers(): L.Control.LayersObject {
+  const stadtbezirke = L.tileLayer.wms(
+    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+    {
+      layers: "gsm:stadtbezirk",
+      className: "Stadtbezirke",
+      transparent: true,
+      format: "image/png",
+      attribution: mapAttributionLhm,
+    }
+  );
+  const stadtviertel = L.tileLayer.wms(
+    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
+    {
+      layers: "gsm:vablock_viertel_dave",
+      className: "Stadtviertel",
+      transparent: true,
+      format: "image/png",
+      attribution: mapAttributionLhm,
+    }
+  );
+  const lichtsignalanlagen = L.tileLayer.wms(
+    "https://geoportal.muenchen.de/geoserver/kvr/wms?",
+    {
+      layers: "kvr:lsa_dave",
+      className: "Lichtsignalanlagen",
+      transparent: true,
+      format: "image/png",
+      attribution: mapAttributionLhm,
+    }
+  );
+
+  return {
+    Stadtbezirke: stadtbezirke,
+    Stadtviertel: stadtviertel,
+    Lichtsignalanlagen: lichtsignalanlagen,
+  };
+}
+
+const searchResult = computed(() => {
+  return searchStore.getSearchResult;
+});
+
+watch(searchResult, () => {
+  resetMarker();
+});
+
+watch(
+  () => [eventbus.getReloadEvent, props.latlng],
+  ([newA, newB], [prevA, prevB]) => {
+    if (newA !== prevA && newB !== prevB) {
+      searchErhebungsstelle();
+    }
+  }
+);
+
+function resetMarker(): void {
+  mapMarkerClusterGroup.removeFrom(map);
+  mapMarkerClusterGroup.clearLayers();
+  zaehlartenLayer.removeFrom(map);
+  setMarkerToMap();
+}
+
+function setMarkerToMap() {
+  mapMarkerClusterGroup.clearLayers();
+  mapMarkerClusterGroup = L.markerClusterGroup({
+    disableClusteringAtZoom: 15,
+    spiderfyOnMaxZoom: false,
+    chunkedLoading: true,
+  });
+  const erhebungsstellenKarte: Array<AnzeigeKarteDTO> = searchResult.value;
+  const markers: Array<Marker> = [];
+  erhebungsstellenKarte.forEach((erhebungsstelleKarte) => {
+    if (erhebungsstelleKarte.type != "messstelle") {
+      markers.push(
+        createMarkerForZaehlstelle(erhebungsstelleKarte as ZaehlstelleKarteDTO)
+      );
+    } else {
+      markers.push(
+        createMarkerForMessstelle(erhebungsstelleKarte as MessstelleKarteDTO)
+      );
+    }
+  });
+
+  mapMarkerClusterGroup.addLayers(markers);
+  mapMarkerClusterGroup.addTo(map);
+  if (erhebungsstellenKarte.length === 1) {
     /**
-     * Optionen fuer die Darstellung der Karte
+     * Falls in der Main.view nach einer bestimmten Zaehlstelle gesucht
+     * und diese Suche mit Druck auf die Enter-Taste eingeleitet wird,
+     * umfasst das Suchergebnis somit nur eine Zaehlstelle.
+     * Auf diese eine mit einem Icon angezeigte Zaehlstelle muss dann zentriert werden.
      */
-    mapOptions: object = {
-        minZoom: 10,
-        maxZoom: 18,
-        preferCanvas: false,
-        attributionControl: false,
-        fullscreenControl: true,
-        fullscreenControlOptions: {
-            position: "topleft",
-        },
-    };
+    map.setView(createLatLng(erhebungsstellenKarte[0]), 18);
+  } else if (props.zId && props.latlng && props.latlng.length > 0) {
+    // Zaehlartenmarker erzeugen
+    map.setView(center.value, zoomValue.value);
+  } else {
+    map.setView(center.value, zoomValue.value);
+  }
+}
 
-    mounted() {
-        this.searchErhebungsstelle();
+function searchErhebungsstelle() {
+  SucheService.searchErhebungsstelle(
+    searchStore.getLastSearchQuery,
+    searchStore.getSearchAndFilterOptions
+  )
+    .then((result) => {
+      searchStore.setSearchResult(cloneDeep(result));
+    })
+    .catch((error) => {
+      snackbarStore.showApiError(error);
+    })
+    .finally(() => {
+      setMarkerToMap();
+    });
+}
+
+function saveMapPosition() {
+  const mapCenter = map.getBounds().getCenter();
+
+  const lat = mapCenter?.lat.toString();
+  const lng = mapCenter?.lng.toString();
+  const zoom = map.getZoom();
+
+  mapOptionsStore.setMapOptions({
+    longitude: lng,
+    latitude: lat,
+    zoom: zoom,
+  });
+}
+
+function routeToZaehlstelle(id: string) {
+  saveMapPosition();
+  router.push("/zaehlstelle/" + id);
+}
+
+function routeToMessstelle(id: string) {
+  saveMapPosition();
+  router.push(`/messstelle/${id}`);
+}
+
+function createLatLng(anzeigeKarte: AnzeigeKarteDTO): LatLng {
+  return latLng(anzeigeKarte.latitude, anzeigeKarte.longitude);
+}
+
+function createMarkerForZaehlstelle(
+  zaehlstelleKarte: ZaehlstelleKarteDTO
+): Marker {
+  const marker: Marker = new Marker(
+    createLatLng(zaehlstelleKarte),
+    markerOptionsZaehlstelle(zaehlstelleKarte)
+  );
+  marker.bindTooltip(createTooltipZaehlstelle(zaehlstelleKarte.tooltip), {
+    direction: "top",
+    offset: [-14, 0],
+  });
+
+  marker.on("click", () => {
+    // Zeige alle Zaehlungen zur Zaehlstelle an.
+    routeToZaehlstelle(zaehlstelleKarte.id);
+  });
+  return marker;
+}
+
+function createMarkerForMessstelle(
+  messstelleKarteDto: MessstelleKarteDTO
+): Marker {
+  const marker: Marker = new Marker(
+    createLatLng(messstelleKarteDto),
+    markerOptionsMessstelle(messstelleKarteDto)
+  );
+  marker.bindTooltip(createTooltipMessstelle(messstelleKarteDto.tooltip), {
+    direction: "top",
+    offset: [0, -25],
+  });
+  marker.on("click", () => {
+    routeToMessstelle(messstelleKarteDto.id);
+  });
+  return marker;
+}
+
+/**
+ * Tooltip wird zur Anzeige von Metainformationen über die Zählstelle benötigt.
+ * Ein Tooltip enthält (wenn vorhanden) folgende Informationne:
+ *  - Zählstellennumer
+ *  - Kreuzungsname
+ *  - Stadtbezirk
+ *  - Stadtbezirksnummer
+ *  - anzahlZaehlungen
+ *  - datumLetzteZaehlung
+ */
+function createTooltipZaehlstelle(tooltipDto: TooltipZaehlstelleDTO): string {
+  if (!tooltipDto) {
+    return "<div></div>";
+  }
+  let tooltip = "<div><b>";
+  if (tooltipDto.zaehlstellennnummer) {
+    tooltip = `${tooltip}Zählstelle: ${tooltipDto.zaehlstellennnummer}</b><br/>`;
+  }
+  if (tooltipDto.kreuzungsname) {
+    tooltip = `${tooltip}${tooltipDto.kreuzungsname}<br/>`;
+  }
+  if (!tooltipDto.zaehlstellennnummer) {
+    tooltip = `${tooltip}</b>`;
+  }
+  tooltip = `${tooltip}<br/>`;
+  if (!tooltipDto.stadtbezirk) {
+    tooltip = `${tooltip}Stadtbezirk: Keine Angabe<br/>`;
+  } else {
+    tooltip = `${tooltip}Stadtbezirk: `;
+    if (tooltipDto.stadtbezirknummer) {
+      tooltip = `${tooltip}${tooltipDto.stadtbezirknummer} - `;
     }
-
-    get getErhebungsstellenKarteFromStore(): AnzeigeKarteDTO[] {
-        return this.searchStore.getSearchResult;
+    tooltip = `${tooltip}${tooltipDto.stadtbezirk}<br/>`;
+  }
+  if (tooltipDto.anzahlZaehlungen) {
+    tooltip = `${tooltip}Anzahl der Zählungen: ${tooltipDto.anzahlZaehlungen}<br/>`;
+    if (tooltipDto.datumLetzteZaehlung) {
+      tooltip = `${tooltip}Letzte Zählung: ${tooltipDto.datumLetzteZaehlung}<br/>`;
     }
+  } else {
+    tooltip = `${tooltip}Noch keine Zählungen vorhanden.`;
+  }
+  tooltip = `${tooltip}</div>`;
+  return tooltip;
+}
 
-    get showSpeedDial(): boolean {
-        return !(this.latlng !== undefined && this.latlng.length === 2);
+function createTooltipMessstelle(tooltipDto: TooltipMessstelleDTO): string {
+  if (!tooltipDto) {
+    return "<div></div>";
+  }
+  let tooltip = "<div>";
+  if (tooltipDto.mstId) {
+    tooltip = `<b>${tooltip}Messstelle: ${tooltipDto.mstId}`;
+    if (tooltipDto.detektierteVerkehrsarten) {
+      tooltip = `${tooltip} (${tooltipDto.detektierteVerkehrsarten})`;
     }
-
-    get zoomValue() {
-        const zoom = this.$router.currentRoute.query.zoom;
-
-        if (zoom != undefined) {
-            return parseFloat(zoom.toString());
-        } else {
-            return this.zoom;
-        }
+    tooltip = `${tooltip}</b><br/>`;
+  }
+  if (tooltipDto.standort) {
+    tooltip = `${tooltip}${tooltipDto.standort}<br/>`;
+  }
+  tooltip = `${tooltip}<br/>`;
+  if (!tooltipDto.stadtbezirk) {
+    tooltip = `${tooltip}Stadtbezirk: Keine Angabe<br/>`;
+  } else {
+    tooltip = `${tooltip}Stadtbezirk: `;
+    if (tooltipDto.stadtbezirknummer) {
+      tooltip = `${tooltip}${tooltipDto.stadtbezirknummer} - `;
     }
-    /**
-     * Die Methode setzt Koordinate auf welche Zentriert werden soll.
-     */
-    get center(): LatLng {
-        const lat = this.$router.currentRoute.query.lat;
-        const lng = this.$router.currentRoute.query.lng;
+    tooltip = `${tooltip}${tooltipDto.stadtbezirk}<br/>`;
+  }
+  if (tooltipDto.realisierungsdatum) {
+    tooltip = `${tooltip} Aufbau: ${dateUtils.formatDate(
+      tooltipDto.realisierungsdatum
+    )}<br/>`;
+  }
+  if (tooltipDto.abbaudatum) {
+    tooltip = `${tooltip}Abbau: ${dateUtils.formatDate(
+      tooltipDto.abbaudatum
+    )}<br/>`;
+  }
+  if (tooltipDto.datumLetztePlausibleMessung) {
+    tooltip = `${tooltip}Letzte plausible Messung: ${dateUtils.formatDate(
+      tooltipDto.datumLetztePlausibleMessung
+    )}<br/>`;
+  }
 
-        if (lat != undefined && lng != undefined) {
-            return this.createLatLngFromString(lat.toString(), lng.toString());
-        } else if (this.latlng && this.latlng.length == 2) {
-            return this.createLatLngFromString(this.latlng[0], this.latlng[1]);
-        } else {
-            // Mitte von München
-            return this.createLatLngFromString(
-                ZaehlstelleMap.MUNICH_CENTER_LATITUDE,
-                ZaehlstelleMap.MUNICH_CENTER_LONGITUDE
-            );
-        }
+  tooltip = `${tooltip}</div>`;
+  return tooltip;
+}
+
+/**
+ * Setzt die Optionen bezüglich verwendetes Icon für den Zaehlstellenmarker.
+ */
+function markerOptionsZaehlstelle(zaehlstelleKarte: ZaehlstelleKarteDTO) {
+  if (props.zId) {
+    if (props.zId === zaehlstelleKarte.id) {
+      const defaultIcon = new Icon.Default();
+      defaultIcon.options.iconUrl = markerIconRed;
+      return { opacity: 1.0, icon: defaultIcon };
+    } else {
+      return { opacity: 0.5 };
     }
+  }
+}
 
-    // Schalter zum Wechseln der Buttons
-    get hasNewMarker(): boolean {
-        return this.newMarker !== null;
+/**
+ * Setzt die Optionen bezüglich verwendetes Icon für den Messstellenmarker.
+ */
+function markerOptionsMessstelle(messstelleKarte: MessstelleKarteDTO) {
+  const defaultIcon = new Icon({
+    iconUrl: markerIconDiamondViolet,
+    shadowUrl: markerIconDiamondShadow,
+    shadowAnchor: [8, 45],
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+  });
+
+  if (props.zId) {
+    if (props.zId === messstelleKarte.id) {
+      defaultIcon.options.iconUrl = markerIconDiamondRed;
+      return { opacity: 1.0, icon: defaultIcon };
+    } else {
+      return { opacity: 0.5, icon: defaultIcon };
     }
-
-    get newCoords(): LatLng {
-        if (this.hasNewMarker) {
-            // Da wir gerade auf 'null' überprüft haben können wir dem Compiler mit '!' mitteilen, dass newMarker auf jeden Fall gesetzt ist
-            return this.newMarker!.getLatLng();
-        } else {
-            return DefaultObjectCreator.createCenterOfMunichLatLng();
-        }
-    }
-
-    get customCursor(): string {
-        if (this.useCustomCursor) {
-            return `url("data:image/svg+xml,%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='24' height='24' viewBox='0 0 24 24' xml:space='preserve'%3E %3Cpath d='M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M3.05,13H1V11H3.05C3.5,6.83 6.83,3.5 11,3.05V1H13V3.05C17.17,3.5 20.5,6.83 20.95,11H23V13H20.95C20.5,17.17 17.17,20.5 13,20.95V23H11V20.95C6.83,20.5 3.5,17.17 3.05,13M12,5A7,7 0 0,0 5,12A7,7 0 0,0 12,19A7,7 0 0,0 19,12A7,7 0 0,0 12,5Z'/%3E %3C/svg%3E") 12 12,auto`;
-        } else {
-            return "auto";
-        }
-    }
-
-    @Watch("getErhebungsstellenKarteFromStore")
-    private resetMarker() {
-        // Alte Layer entfernen bevor neue eingezeichnet werden
-        this.theMap.mapObject.removeLayer(this.mapMarkerClusterGroup);
-        this.deleteNewMarker();
-        this.setMarkerToMap();
-    }
-
-    @Watch("reload")
-    private searchErhebungsstelle() {
-        SucheService.searchErhebungsstelle(this.searchStore.getLastSearchQuery)
-            .then((result) => {
-                this.searchStore.setSearchResult(_.cloneDeep(result));
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.setMarkerToMap();
-            });
-    }
-
-    // Erzeugt für jede vorhandene Zaehl-/Messstelle einen Marker
-    // und fuegt diesen dem MarkerCluster hinzu
-    private setMarkerToMap() {
-        // Setzen einer leeren ZaehlstelleKarte ohne Marker
-        this.mapMarkerClusterGroup.clearLayers();
-        this.mapMarkerClusterGroup = L.markerClusterGroup({
-            disableClusteringAtZoom: 15,
-            spiderfyOnMaxZoom: false,
-            chunkedLoading: true,
-        });
-
-        const erhebungsstellenKarte: AnzeigeKarteDTO[] =
-            this.getErhebungsstellenKarteFromStore;
-        const markers: Array<Marker> = [];
-        erhebungsstellenKarte.forEach((anzeigeKarte) => {
-            if (anzeigeKarte.type == "messstelle") {
-                markers.push(
-                    this.createMarkerForMessstelle(
-                        anzeigeKarte as MessstelleKarteDTO
-                    )
-                );
-            } else {
-                markers.push(
-                    this.createMarkerForZaehlstelle(
-                        anzeigeKarte as ZaehlstelleKarteDTO
-                    )
-                );
-            }
-        });
-        this.mapMarkerClusterGroup.addLayers(markers);
-        this.theMap.mapObject.addLayer(this.mapMarkerClusterGroup);
-
-        if (erhebungsstellenKarte.length === 1) {
-            /**
-             * Falls in der Main.view nach einer bestimmten Zaehlstelle gesucht
-             * und diese Suche mit Druck auf die Enter-Taste eingeleitet wird,
-             * umfasst das Suchergebnis somit nur eine Zaehlstelle.
-             * Auf diese eine mit einem Icon angezeigte Zaehlstelle muss dann zentriert werden.
-             */
-            this.theMap.mapObject.setView(
-                this.createLatLng(erhebungsstellenKarte[0]),
-                18
-            );
-        } else if (this.zId == null) {
-            this.theMap.mapObject.setView(this.center, this.zoomValue);
-        } else {
-            this.theMap.mapObject.setView(this.center, 18);
-        }
-    }
-
-    // Erzeugt einen Marker für die Karte
-    private createMarkerForZaehlstelle(
-        zaehlstelleKarte: ZaehlstelleKarteDTO
-    ): Marker {
-        let marker: Marker = new Marker(
-            this.createLatLng(zaehlstelleKarte),
-            this.markerOptionsZaehlstelle(zaehlstelleKarte)
-        );
-        marker.bindTooltip(
-            this.createTooltipZaehlstelle(zaehlstelleKarte.tooltip),
-            {
-                direction: "top",
-                offset: [-14, 0],
-            }
-        );
-
-        marker.on("click", () => {
-            // Zeige alle Zaehlungen zur Zaehlstelle an.
-            this.routeToZaehlstelle(zaehlstelleKarte.id);
-        });
-        return marker;
-    }
-
-    private createMarkerForMessstelle(
-        messstelleKarteDto: MessstelleKarteDTO
-    ): Marker {
-        let marker: Marker = new Marker(
-            this.createLatLng(messstelleKarteDto),
-            this.markerOptionsMessstelle(messstelleKarteDto)
-        );
-        marker.bindTooltip(
-            this.createTooltipMessstelle(messstelleKarteDto.tooltip),
-            {
-                direction: "top",
-                offset: [0, -25],
-            }
-        );
-        marker.on("click", () => {
-            this.routeToMessstelle(messstelleKarteDto.id);
-        });
-        return marker;
-    }
-
-    /**
-     * Tooltip wird zur Anzeige von Metainformationen über die Zählstelle benötigt.
-     * Ein Tooltip enthält (wenn vorhanden) folgende Informationne:
-     *  - Zählstellennumer
-     *  - Kreuzungsname
-     *  - Stadtbezirk
-     *  - Stadtbezirksnummer
-     *  - anzahlZaehlungen
-     *  - datumLetzteZaehlung
-     */
-    private createTooltipZaehlstelle(
-        tooltipDto: TooltipZaehlstelleDTO
-    ): string {
-        if (!tooltipDto) {
-            return "<div></div>";
-        }
-        let tooltip = "<div><b>";
-        if (tooltipDto.zaehlstellennnummer) {
-            tooltip = `${tooltip}Zählstelle: ${tooltipDto.zaehlstellennnummer}</b><br/>`;
-        }
-        if (tooltipDto.kreuzungsname) {
-            tooltip = `${tooltip}${tooltipDto.kreuzungsname}<br/>`;
-        }
-        if (!tooltipDto.zaehlstellennnummer) {
-            tooltip = `${tooltip}</b>`;
-        }
-        tooltip = `${tooltip}<br/>`;
-        if (!tooltipDto.stadtbezirk) {
-            tooltip = `${tooltip}Stadtbezirk: Keine Angabe<br/>`;
-        } else {
-            tooltip = `${tooltip}Stadtbezirk: `;
-            if (tooltipDto.stadtbezirknummer) {
-                tooltip = `${tooltip}${tooltipDto.stadtbezirknummer} - `;
-            }
-            tooltip = `${tooltip}${tooltipDto.stadtbezirk}<br/>`;
-        }
-        if (tooltipDto.anzahlZaehlungen) {
-            tooltip = `${tooltip}Anzahl der Zählungen: ${tooltipDto.anzahlZaehlungen}<br/>`;
-            if (tooltipDto.datumLetzteZaehlung) {
-                tooltip = `${tooltip}Letzte Zählung: ${tooltipDto.datumLetzteZaehlung}<br/>`;
-            }
-        } else {
-            tooltip = `${tooltip}Noch keine Zählungen vorhanden.`;
-        }
-        tooltip = `${tooltip}</div>`;
-        return tooltip;
-    }
-
-    private createTooltipMessstelle(tooltipDto: TooltipMessstelleDTO): string {
-        if (!tooltipDto) {
-            return "<div></div>";
-        }
-        let tooltip = "<div><b>";
-        if (tooltipDto.mstId) {
-            tooltip = `${tooltip}Messstelle: ${tooltipDto.mstId}`;
-            if (tooltipDto.detektierteVerkehrsarten) {
-                tooltip = `${tooltip} (${tooltipDto.detektierteVerkehrsarten})`;
-            }
-            tooltip = `${tooltip}</b><br/>`;
-        }
-        if (tooltipDto.standort) {
-            tooltip = `${tooltip}${tooltipDto.standort}<br/>`;
-        }
-        tooltip = `${tooltip}<br/>`;
-        if (!tooltipDto.stadtbezirk) {
-            tooltip = `${tooltip}Stadtbezirk: Keine Angabe<br/>`;
-        } else {
-            tooltip = `${tooltip}Stadtbezirk: `;
-            if (tooltipDto.stadtbezirknummer) {
-                tooltip = `${tooltip}${tooltipDto.stadtbezirknummer} - `;
-            }
-            tooltip = `${tooltip}${tooltipDto.stadtbezirk}<br/>`;
-        }
-        if (tooltipDto.realisierungsdatum) {
-            tooltip = `${tooltip} Aufbau: ${useDateUtils().formatDate(
-                tooltipDto.realisierungsdatum
-            )}<br/>`;
-        }
-        if (tooltipDto.abbaudatum) {
-            tooltip = `${tooltip}Abbau: ${useDateUtils().formatDate(
-                tooltipDto.abbaudatum
-            )}<br/>`;
-        }
-        if (tooltipDto.datumLetztePlausibleMessung) {
-            tooltip = `${tooltip}Letzte plausible Messung: ${useDateUtils().formatDate(
-                tooltipDto.datumLetztePlausibleMessung
-            )}<br/>`;
-        }
-
-        tooltip = `${tooltip}</div>`;
-        return tooltip;
-    }
-
-    /**
-     * Setzt die Optionen bezüglich verwendetes Icon für den Zaehlstellenmarker.
-     */
-    private markerOptionsZaehlstelle(zaehlstelleKarte: ZaehlstelleKarteDTO) {
-        if (this.zId) {
-            if (this.zId === zaehlstelleKarte.id) {
-                let defaultIcon = new Icon.Default();
-                defaultIcon.options.iconUrl = markerIconRed;
-                return { opacity: 1.0, icon: defaultIcon };
-            } else {
-                return { opacity: 0.5 };
-            }
-        } else {
-            return { opacity: 1.0 };
-        }
-    }
-
-    /**
-     * Setzt die Optionen bezüglich verwendetes Icon für den Messstellenmarker.
-     */
-    private markerOptionsMessstelle(messstelleKarte: MessstelleKarteDTO) {
-        let defaultIcon = new Icon({
-            iconUrl: markerIconDiamondViolet,
-            shadowUrl: markerIconDiamondShadow,
-            shadowAnchor: [8, 45],
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-        });
-
-        if (messstelleKarte.status === MessstelleStatus.IN_PLANUNG) {
-            defaultIcon.options.iconUrl = markerIconDiamondOrange;
-        }
-
-        if (this.zId) {
-            if (this.zId === messstelleKarte.id) {
-                defaultIcon.options.iconUrl = markerIconDiamondRed;
-                return { opacity: 1.0, icon: defaultIcon };
-            } else {
-                return { opacity: 0.5, icon: defaultIcon };
-            }
-        } else {
-            return { opacity: 1.0, icon: defaultIcon };
-        }
-    }
-
-    // Extrahiert aus der Zaehlstelle die Koordinaten
-    private createLatLng(anzeigeKarte: AnzeigeKarteDTO): LatLng {
-        return latLng(anzeigeKarte.latitude, anzeigeKarte.longitude);
-    }
-
-    // Erzeugt aus den String Koordinaten ein Objekt von Typ LatLng
-    private createLatLngFromString(lat: string, lng: string): LatLng {
-        return latLng(parseFloat(lat), parseFloat(lng));
-    }
-
-    // Button-Klick-Event um in den Anlegen-Modus zu wechseln.
-    addZaehlstellenMarker() {
-        this.addMarker = !this.addMarker;
-        this.useCustomCursor = !this.useCustomCursor;
-        this.deleteNewMarker();
-    }
-
-    // Klick-Event zum anlegen eines neuen Markers auf der Karte
-    mouseUp(event: LeafletMouseEvent) {
-        if (this.addMarker && !this.newMarker) {
-            this.useCustomCursor = false;
-            this.createMarkerForNewZaehlstelle(event.latlng);
-        }
-    }
-
-    // Legt einen neuen Marker an der Position coords an
-    // und fügt diesen der Karte hinzu
-    private createMarkerForNewZaehlstelle(coords: LatLng) {
-        this.newMarker = this.createNewMarker(coords);
-        this.newMarker.addTo(this.theMap.mapObject);
-    }
-
-    // Erzeugt einen neuen roten Marker auf der Karte
-    private createNewMarker(coords: LatLng): Marker {
-        let defaultIcon = new Icon.Default();
-        defaultIcon.options.iconUrl = markerIconRed;
-        return new Marker(coords, {
-            icon: defaultIcon,
-            opacity: 1.0,
-            draggable: true,
-        });
-    }
-
-    // Klick-Event zum Oeffnen des ZaehlstelleCreateDialog
-    createZaehlstelle() {
-        if (this.newMarker) {
-            this.showCreateZaehlstelleDialog = true;
-        } else {
-            // Fehler Toast, dass kein Marker vorhanden
-            this.snackbarStore.showWarning(
-                "Es wurde keine neue Zählstelle auf der Karte markiert."
-            );
-        }
-    }
-
-    // Wenn ein neuer Marker existiert wird dieser gelöscht
-    // und der Anlegen-Modus wird verlassen
-    deleteNewMarker() {
-        if (this.newMarker) {
-            this.theMap.mapObject.removeLayer(this.newMarker);
-            this.newMarker = null;
-            this.resetBooleans();
-        }
-    }
-
-    reloadDataAndCloseDialog(backendIdDTO: BackendIdDTO) {
-        this.searchErhebungsstelle();
-        this.resetBooleans();
-        this.closeDialog();
-        this.routeToZaehlstelle(backendIdDTO.id);
-    }
-
-    cancelCreateZaehlstelleDialog() {
-        this.deleteNewMarker();
-        this.resetBooleans();
-        this.closeDialog();
-    }
-
-    private resetBooleans() {
-        this.fab = false;
-        this.fab2 = false;
-        this.addMarker = false;
-        this.useCustomCursor = false;
-    }
-
-    private closeDialog() {
-        this.showCreateZaehlstelleDialog = false;
-    }
-
-    private saveMapPositionInUrl() {
-        const map = this.theMap.mapObject;
-        const mapCenter = map.getBounds().getCenter();
-        const lat = mapCenter.lat.toString();
-        const lng = mapCenter.lng.toString();
-        const zoom = map.getZoom().toString();
-        this.$router.replace({
-            path: this.$router.currentRoute.path,
-            query: { lat: lat, lng: lng, zoom: zoom },
-        });
-    }
-
-    private routeToZaehlstelle(id: string) {
-        this.saveMapPositionInUrl();
-        this.$router.push(`/zaehlstelle/${id}`);
-    }
-
-    private routeToMessstelle(id: string) {
-        this.saveMapPositionInUrl();
-        this.$router.push(`/messstelle/${id}`);
-    }
-
-    mapReady() {
-        this.theMap.mapObject.addControl(
-            control.attribution({
-                position: "bottomleft",
-                prefix: "",
-            })
-        );
-        this.theMap.mapObject.setZoom(this.zoomValue);
-    }
+  } else {
+    return { opacity: 1.0, icon: defaultIcon };
+  }
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 /* Zoom-Buttons verwenden per Default die Farbe 'primary'. Da diese im Button kaum zu erkennen ist,
 wurden die Farbe auf schwarz gesetzt */
 .leaflet-control-zoom a.leaflet-control-zoom-in {
-    color: black;
+  color: black;
 }
 
 .leaflet-control-zoom a.leaflet-control-zoom-out {
-    color: black;
+  color: black;
 }
 </style>
