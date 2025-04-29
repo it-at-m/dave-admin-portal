@@ -96,6 +96,7 @@
 </template>
 
 <script setup lang="ts">
+import type MessquerschnittEditDTO from "@/types/messstelle/MessquerschnittEditDTO";
 import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 
 import { isEmpty, isNil } from "lodash";
@@ -169,9 +170,13 @@ function cancel(): void {
 }
 
 function areAllFormsValid(): boolean {
-  const invalidMqs = messstelle.value.messquerschnitte.filter((mq) => {
-    return isNil(mq.standort) || isEmpty(mq.standort);
-  });
+  const invalidMqs = messstelle.value.messquerschnitte
+    .filter((mq) => {
+      return isNil(mq.standort) || isEmpty(mq.standort);
+    })
+    .map((messquerschnitt: MessquerschnittEditDTO) => {
+      return messquerschnitt.mqId;
+    });
   const invalidMst =
     isNil(messstelle.value.standort) || isEmpty(messstelle.value.standort);
   const isInvalid = invalidMst || !isEmpty(invalidMqs);
