@@ -27,7 +27,10 @@
         </v-row>
       </v-card-title>
 
-      <v-card-text class="overflow-y-auto">
+      <v-card-text
+        id="chat-v-card-text"
+        class="overflow-y-auto"
+      >
         <v-container class="fill-height">
           <v-row
             class="fill-height pb-14"
@@ -58,7 +61,16 @@
                     }}</span>
                   </template>
                   <template #subtitle>
-                    <span class="text-black">{{ item.content }}</span>
+                    <v-textarea
+                      v-model="item.content"
+                      readonly
+                      auto-grow
+                      variant="plain"
+                      rows="1"
+                      density="compact"
+                      hide-details
+                      single-line
+                    />
                   </template>
                   <template #default>
                     <v-row
@@ -97,7 +109,16 @@
                     }}</span>
                   </template>
                   <template #subtitle>
-                    <span class="text-black">{{ item.content }}</span>
+                    <v-textarea
+                      v-model="item.content"
+                      readonly
+                      auto-grow
+                      variant="plain"
+                      rows="1"
+                      density="compact"
+                      hide-details
+                      single-line
+                    />
                   </template>
                   <template #default>
                     <v-row
@@ -121,12 +142,16 @@
         </v-container>
       </v-card-text>
       <v-card-actions style="background-color: white">
-        <v-text-field
+        <v-textarea
           v-model="message"
           placeholder="Nachricht..."
           variant="plain"
           class="mx-2"
-          @keyup.enter="sendMessage"
+          rows="1"
+          auto-grow
+          single-line
+          @keyup.enter.exact.prevent="sendMessage"
+          @keyup.enter.shift.exact.prevent="addNewLine"
         >
           <template #append-inner>
             <v-btn
@@ -136,7 +161,7 @@
               @click="sendMessage"
             />
           </template>
-        </v-text-field>
+        </v-textarea>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -207,7 +232,10 @@ function loadMessages() {
       .then((messageDTOs) => {
         items.value = messageDTOs;
       })
-      .catch((error) => snackbarStore.showApiError(error));
+      .catch((error) => snackbarStore.showApiError(error))
+      .finally(() => {
+        scrollToEnd();
+      });
 
     ChatMessageService.updateUnreadMessages(
       zaehlung.value.id,
@@ -238,10 +266,24 @@ function sendMessage() {
       items.value.push(response);
       message.value = "";
     })
-    .catch((error) => snackbarStore.showApiError(error));
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      scrollToEnd();
+    });
 }
 
 function closeDialog(): void {
   emits("closeDialog");
+}
+
+function scrollToEnd() {
+  const elementById = document.getElementById("chat-v-card-text");
+  if (elementById) {
+    elementById.scrollTo(0, elementById.scrollHeight);
+  }
+}
+
+function addNewLine() {
+  message.value = `${message.value} \n`;
 }
 </script>
