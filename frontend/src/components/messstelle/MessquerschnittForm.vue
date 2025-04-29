@@ -95,6 +95,7 @@
               counter="60"
               maxlength="60"
               :disabled="disabled"
+              auto-grow
             ></v-textarea>
           </v-col>
         </v-row>

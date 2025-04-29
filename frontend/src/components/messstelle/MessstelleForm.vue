@@ -134,6 +134,7 @@
               row-height="10"
               counter="60"
               maxlength="60"
+              auto-grow
             />
           </v-col>
         </v-row>
@@ -146,7 +147,8 @@
               v-model="messstelle.bemerkung"
               label="Bemerkung"
               variant="outlined"
-              readonly
+              disabled
+              auto-grow
               density="compact"
               rows="3"
               row-height="10"
@@ -190,6 +192,7 @@
               row-height="10"
               counter="255"
               maxlength="255"
+              auto-grow
             />
           </v-col>
         </v-row>
