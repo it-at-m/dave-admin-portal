@@ -24,6 +24,7 @@
     <v-card-actions style="position: absolute; top: 0; right: 0">
       <v-btn
         color="secondary"
+        :prepend-icon="prependIcon"
         :text="buttonNameShowHistory"
         variant="elevated"
         @click="changeInfoMessageView"
@@ -106,5 +107,8 @@ function changeInfoMessageView(): void {
 }
 const buttonNameShowHistory = computed(() => {
   return showHistory.value ? "Eingabe" : "Historie";
+});
+const prependIcon = computed(() => {
+  return showHistory.value ? "mdi-invoice-text-edit-outline" : "mdi-history";
 });
 </script>
