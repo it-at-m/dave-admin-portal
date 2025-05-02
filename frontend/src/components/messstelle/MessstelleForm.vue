@@ -233,7 +233,7 @@ const stadtbezirk = computed(() => {
 });
 
 const fahrzeugklasse = computed(() => {
-  const fahrzeugklasse = messstelle.value.fahrzeugKlassen;
+  const fahrzeugklasse = messstelle.value.fahrzeugklasse;
   let result = isNil(fahrzeugklasse)
     ? undefined
     : FahrzeugklasseToBeschreibung.get(fahrzeugklasse);
