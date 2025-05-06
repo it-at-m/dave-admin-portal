@@ -88,14 +88,12 @@ import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleDialog.vue";
 import { useEventbus } from "@/store/Eventbus";
+import { useMapConfigStore } from "@/store/MapConfigStore";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useDateUtils } from "@/util/DateUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-
-const MUNICH_CENTER_LATITUDE = "48.137227";
-const MUNICH_CENTER_LONGITUDE = "11.575517";
 
 const mapAttributionLhm =
   '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html" style="color: #c62828">GeodatenService München</a>';
@@ -127,6 +125,7 @@ const snackbarStore = useSnackbarStore();
 const router = useRouter();
 const dateUtils = useDateUtils();
 const mapOptionsStore = useMapOptionsStore();
+const mapConfigStore = useMapConfigStore();
 const eventbus = useEventbus();
 
 const mapRef = ref<HTMLDivElement | null>(null);
@@ -146,7 +145,7 @@ onBeforeUnmount(() => {
 function initMap(): void {
   map = L.map(mapRef.value as HTMLElement, {
     zoom: zoomValue.value,
-    minZoom: 10,
+    minZoom: 8,
     maxZoom: 18,
     preferCanvas: false,
     attributionControl: false,
@@ -175,6 +174,19 @@ function initMap(): void {
     }, 10);
   });
 }
+
+const zoomValue = computed(() => {
+  if (props.latlng && props.latlng.length > 0) {
+    return props.zoom;
+  } else if (
+    mapOptionsStore.getMapOptions &&
+    mapOptionsStore.getMapOptions.zoom
+  ) {
+    return mapOptionsStore.getMapOptions.zoom;
+  } else {
+    return props.zoom;
+  }
+});
 
 const showSpeedDial = computed(() => {
   return !(props.latlng !== undefined && props.latlng.length === 2);
@@ -302,19 +314,6 @@ function closeDialog() {
   showCreateZaehlstelleDialog.value = false;
 }
 
-const zoomValue = computed(() => {
-  if (props.latlng && props.latlng.length > 0) {
-    return props.zoom;
-  } else if (
-    mapOptionsStore.getMapOptions &&
-    mapOptionsStore.getMapOptions.zoom
-  ) {
-    return mapOptionsStore.getMapOptions.zoom;
-  } else {
-    return props.zoom;
-  }
-});
-
 /**
  * Die Methode setzt Koordinate auf welche Zentriert werden soll.
  */
@@ -331,10 +330,9 @@ const center = computed<LatLng>(() => {
       mapOptionsStore.getMapOptions.longitude
     );
   } else {
-    // Mitte von München
     return createLatLngFromString(
-      MUNICH_CENTER_LATITUDE,
-      MUNICH_CENTER_LONGITUDE
+      mapConfigStore.getMapConfig.lat,
+      mapConfigStore.getMapConfig.lng
     );
   }
 });

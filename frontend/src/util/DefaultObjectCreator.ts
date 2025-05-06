@@ -1,6 +1,7 @@
 import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
 import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
 import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type MapConfigDTO from "@/types/karte/MapConfigDTO";
 import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
@@ -99,5 +100,14 @@ export default class DefaultObjectCreator {
       searchInMessstellen: true,
       searchInZaehlstellen: true,
     } as SearchAndFilterOptionsDTO;
+  }
+
+  public static createDefaultMapConfigDTO(): MapConfigDTO {
+    return {
+      // München Zentrum
+      lat: "48.137227",
+      lng: "11.575517",
+      zoom: 12,
+    };
   }
 }
