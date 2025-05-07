@@ -14,7 +14,7 @@
     <template #[`header.data-table-select`]="{}">
       <v-checkbox-btn
         v-model="selectAllModel"
-        color="grey-darken-1"
+        color="quaternary"
         density="compact"
         @update:model-value="selectAll"
       />
@@ -22,7 +22,7 @@
     <template #[`item.data-table-select`]="{ item }">
       <v-checkbox-btn
         v-model="item.active"
-        color="grey-darken-1"
+        color="quaternary"
         density="compact"
         @update:model-value="selectItem(item)"
       />

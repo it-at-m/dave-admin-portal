@@ -49,7 +49,7 @@
           />
           <v-checkbox
             v-model="zaehlstelle.sichtbarDatenportal"
-            color="grey-darken-1"
+            color="quaternary"
             hide-details
           >
             <template #label>
@@ -72,7 +72,7 @@
               @click="save()"
             />
             <v-btn
-              color="grey-lighten-1"
+              color="tertiary"
               text="Abbrechen"
               variant="elevated"
               @click="cancel()"

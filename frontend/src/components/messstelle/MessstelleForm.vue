@@ -101,7 +101,7 @@
           >
             <v-checkbox
               v-model="messstelle.sichtbarDatenportal"
-              color="grey-darken-1"
+              color="quaternary"
               hide-details
               class="mb-5"
               :disabled="disabled"

@@ -190,7 +190,7 @@
           @click="saveEditDienstleisterDialog"
         />
         <v-btn
-          color="grey-lighten-1"
+          color="tertiary"
           variant="elevated"
           text="Abbrechen"
           @click="closeEditDienstleisterDialog"
@@ -233,7 +233,7 @@
           @click="deleteDienstleisterConfirm"
         />
         <v-btn
-          color="grey-lighten-1"
+          color="tertiary"
           text="Abbrechen"
           variant="elevated"
           @click="closeDeleteDienstleisterDialog"
@@ -285,7 +285,7 @@
           @click="saveEditMailDialog"
         />
         <v-btn
-          color="grey-lighten-1"
+          color="tertiary"
           variant="elevated"
           text="Abbrechen"
           @click="closeEditMailDialog"
@@ -318,7 +318,7 @@
           @click="deleteMailConfirm"
         />
         <v-btn
-          color="grey-lighten-1"
+          color="tertiary"
           text="Abbrechen"
           variant="elevated"
           @click="closeMailDelete"

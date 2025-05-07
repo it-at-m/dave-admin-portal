@@ -25,7 +25,7 @@
           <v-checkbox
             v-model="zaehlung.kreisverkehr"
             label="Kreisverkehr"
-            color="grey-darken-1"
+            color="quaternary"
             hide-details
           />
         </v-col>

@@ -59,7 +59,7 @@
       >
         <v-text-field
           v-model="query"
-          color="grey-darken-1"
+          color="quaternary"
           label="Zählung suchen"
           density="compact"
           variant="outlined"
@@ -269,7 +269,7 @@ function loadPkwEinheiten() {
 }
 
 const speedDialColor = computed(() => {
-  return speedDialOpen.value ? "grey-darken-1" : "secondary";
+  return speedDialOpen.value ? "quaternary" : "secondary";
 });
 
 const speedDialIcon = computed(() => {

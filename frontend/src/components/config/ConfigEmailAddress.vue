@@ -100,7 +100,7 @@
           @click="saveEditItemDialog"
         />
         <v-btn
-          color="grey-lighten-1"
+          color="tertiary"
           variant="elevated"
           text="Abbrechen"
           @click="closeEditItemDialog"
@@ -133,7 +133,7 @@
           @click="deleteItemConfirm"
         />
         <v-btn
-          color="grey-lighten-1"
+          color="tertiary"
           text="Abbrechen"
           variant="elevated"
           @click="closeDelete"

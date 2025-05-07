@@ -11,56 +11,56 @@
           <v-checkbox
             v-model="pkw"
             :label="pkwLabel"
-            color="grey-darken-1"
+            color="quaternary"
             hide-details
             @update:model-value="updateKategorieWithPkw"
           />
           <v-checkbox
             v-model="lkw"
             :label="lkwLabel"
-            color="grey-darken-1"
+            color="quaternary"
             hide-details
             @update:model-value="updateKategorieWithLkw"
           />
           <v-checkbox
             v-model="lz"
             :label="lzLabel"
-            color="grey-darken-1"
+            color="quaternary"
             hide-details
             @update:model-value="updateKategorieWithLz"
           />
           <v-checkbox
             v-model="bus"
             :label="busLabel"
-            color="grey-darken-1"
+            color="quaternary"
             hide-details
             @update:model-value="updateKategorieWithBus"
           />
           <v-checkbox
             v-model="krad"
             :label="kradLabel"
-            color="grey-darken-1"
+            color="quaternary"
             hide-details
             @update:model-value="updateKategorieWithKrad"
           />
           <v-checkbox
             v-model="rad"
             :label="radLabel"
-            color="grey-darken-1"
+            color="quaternary"
             hide-details
             @update:model-value="updateKategorieWithRad"
           />
           <v-checkbox
             v-model="fuss"
             :label="fussLabel"
-            color="grey-darken-1"
+            color="quaternary"
             hide-details
             @update:model-value="updateKategorieWithFuss"
           />
           <v-checkbox
             v-model="selectOrDeselectAllVmodel"
             :label="labelSelectOrDeselectAll"
-            color="grey-darken-1"
+            color="quaternary"
             hide-details
             @update:model-value="selectOrDeselectAll()"
           />
