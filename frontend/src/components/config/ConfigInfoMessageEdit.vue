@@ -64,7 +64,7 @@
                 />
                 <v-btn
                   text="Abbrechen"
-                  color="grey-lighten-1"
+                  color="tertiary"
                   variant="elevated"
                   @click="closeMenu"
                 />
@@ -95,13 +95,13 @@
       />
       <v-btn
         text="Deaktivieren"
-        color="grey-lighten-1"
+        color="tertiary"
         variant="elevated"
         @click="deactivateInfoMessage"
       />
       <v-btn
         text="Abbrechen"
-        color="grey-lighten-1"
+        color="tertiary"
         variant="elevated"
         @click="cancel"
       />

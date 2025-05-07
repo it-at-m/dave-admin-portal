@@ -2,8 +2,8 @@
   <v-tabs
     v-model="activeTab"
     fixed-tabs
-    bg-color="grey-darken-1"
-    slider-color="grey-lighten-1"
+    bg-color="quaternary"
+    slider-color="tertiary"
     stacked
     density="compact"
     color="white"
@@ -87,7 +87,7 @@
       @click="save()"
     />
     <v-btn
-      color="grey-lighten-1"
+      color="tertiary"
       variant="elevated"
       text="Abbrechen"
       @click="cancel()"

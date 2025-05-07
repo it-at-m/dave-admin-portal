@@ -19,7 +19,7 @@
 
       <v-card-actions style="justify-content: center">
         <v-btn
-          color="grey-lighten-1"
+          color="tertiary"
           variant="elevated"
           text="Löschen"
           @click="deleteIt()"
