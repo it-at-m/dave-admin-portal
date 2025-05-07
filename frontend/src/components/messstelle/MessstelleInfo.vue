@@ -12,10 +12,11 @@
         <template #activator="{ props }">
           <span v-bind="props">
             <v-btn
+              class="ma-0 pa-0"
               icon="mdi-map"
               color="secondary"
-              size="small"
-              variant="plain"
+              min-width="0"
+              variant="text"
               :disabled="!messstelle.lageplanVorhanden"
               @click="loadLageplan"
             />
