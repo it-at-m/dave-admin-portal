@@ -34,7 +34,7 @@
           @click="save()"
         />
         <v-btn
-          color="grey-lighten-1"
+          color="tertiary"
           variant="elevated"
           text="Abbrechen"
           @click="cancel()"

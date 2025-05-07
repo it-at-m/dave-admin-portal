@@ -108,7 +108,7 @@
               @click="save()"
             />
             <v-btn
-              color="grey-lighten-1"
+              color="tertiary"
               text="Abbrechen"
               variant="elevated"
               @click="cancel()"

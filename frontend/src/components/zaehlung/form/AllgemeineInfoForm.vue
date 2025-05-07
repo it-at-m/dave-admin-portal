@@ -96,7 +96,7 @@
                   />
                   <v-btn
                     text="Abbrechen"
-                    color="grey-lighten-1"
+                    color="tertiary"
                     variant="elevated"
                     @click="closeMenu"
                   />
@@ -136,7 +136,7 @@
             <v-checkbox
               v-model="zaehlung.sonderzaehlung"
               label="Sonderzählung"
-              color="grey-darken-1"
+              color="quaternary"
               hide-details
             />
           </v-col>

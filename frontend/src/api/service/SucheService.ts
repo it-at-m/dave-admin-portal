@@ -9,9 +9,13 @@ export default class SucheService {
 
   // Die Query muss als letzter Parameter mitgeschickt werden, damit mögliche Leerzeichen
   // am Ende automatisch entfernt werden
-  static getSuggestions(query: string): Promise<SucheComplexSuggestsDTO> {
-    return FetchService.getData(
-      `${this.ENDPOINT}/suggest?nofilter=true&query=${query}`,
+  static getSuggestions(
+    query: string,
+    searchAndFilterOptions: SearchAndFilterOptionsDTO
+  ): Promise<SucheComplexSuggestsDTO> {
+    return FetchService.postData(
+      searchAndFilterOptions,
+      `${this.ENDPOINT}/suggest?query=${query}`,
       "Beim Lesen der Vorschläge ist ein Fehler aufgetreten."
     );
   }
