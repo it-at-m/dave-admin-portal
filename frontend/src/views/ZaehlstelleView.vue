@@ -132,11 +132,12 @@
           key="speedDial"
           :color="speedDialColor"
           :icon="speedDialIcon"
-          size="x-large"
+          size="large"
           elevation="6"
           location="bottom end"
           position="absolute"
           class="mr-4 mb-4"
+          density="default"
           style="z-index: 400"
           :data-x="activatorProps"
         />
@@ -145,16 +146,18 @@
         key="createZaehlung"
         v-tooltip:start="'Neue Zählung anlegen'"
         icon="mdi-calendar-plus"
-        size="large"
+        size="small"
         color="secondary"
+        density="default"
         @click="createZaehlung"
       />
       <v-btn
         key="editZaehlstelle"
         v-tooltip:start="'Zählstelle bearbeiten'"
         icon="mdi-pencil"
-        size="large"
+        size="small"
         color="secondary"
+        density="default"
         @click="editZaehlstelle"
       />
     </v-speed-dial>
