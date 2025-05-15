@@ -264,7 +264,7 @@ const datepickerModel = ref<Date>(new Date());
 
 onMounted(() => {
   validZaehlung.value = false;
-  resetDatum();
+  resetDatumToValueOfZaehlung();
 });
 
 watch(
@@ -311,10 +311,10 @@ function saveDate(): void {
 
 function closeMenu(): void {
   datepickerMenuModel.value = false;
-  resetDatum();
+  resetDatumToValueOfZaehlung();
 }
 
-function resetDatum(): void {
+function resetDatumToValueOfZaehlung(): void {
   datepickerModel.value = dateUtils.getDatumOfString(zaehlung.value.datum);
 }
 </script>
