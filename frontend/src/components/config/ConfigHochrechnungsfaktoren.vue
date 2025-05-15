@@ -496,7 +496,7 @@ function getAllHochrechnungsfaktoren() {
     .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
       hochrechnungsfaktorStore.setHochrechnungsfaktoren(cloneDeep(faktoren));
       hochrechnungsfaktoren.value =
-        hochrechnungsfaktorStore.getHochrechnungsfaktoren;
+        hochrechnungsfaktorStore.getHochrechnungsfaktorenWithDefaultAtFirstPosition;
       initDataStructureForInputValidation();
     })
     .catch((error) => snackbarStore.showApiError(error));
