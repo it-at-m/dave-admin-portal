@@ -39,6 +39,7 @@
                   () => !!zaehlstelle.stadtbezirkNummer || pflichtfeldText,
                 ]"
                 required
+                @blur="setNextZaehlstellennummerToZaehlstelle"
               ></v-autocomplete>
             </v-col>
           </v-row>
@@ -56,6 +57,7 @@
                 :rules="[() => !!stadtbezirksviertelModel || pflichtfeldText]"
                 required
                 :disabled="!zaehlstelle.stadtbezirkNummer"
+                @blur="setNextZaehlstellennummerToZaehlstelle"
               />
             </v-col>
           </v-row>
@@ -204,18 +206,23 @@ watch(
   }
 );
 
-watch(stadtbezirksviertelModel, () => {
-  const idStartsWith = `${zaehlstelle.value.stadtbezirkNummer}${stadtbezirksviertelModel.value}`;
-  ZaehlstellenService.getNextZaehlstellennummer(
-    idStartsWith,
-    zaehlstelle.value.stadtbezirkNummer
-  )
-    .then((result: NextZaehlstellennummerDTO) => {
-      zaehlstelle.value.nummer = result.nummer;
-      laufendeNummer.value = result.nummer;
-    })
-    .catch((error) => snackbarStore.showApiError(error));
-});
+function setNextZaehlstellennummerToZaehlstelle(): void {
+  if (
+    !isNil(zaehlstelle.value.stadtbezirkNummer) &&
+    !isEmpty(stadtbezirksviertelModel.value)
+  ) {
+    const idStartsWith = `${zaehlstelle.value.stadtbezirkNummer}${stadtbezirksviertelModel.value}`;
+    ZaehlstellenService.getNextZaehlstellennummer(
+      idStartsWith,
+      zaehlstelle.value.stadtbezirkNummer
+    )
+      .then((result: NextZaehlstellennummerDTO) => {
+        zaehlstelle.value.nummer = result.nummer;
+        laufendeNummer.value = result.nummer;
+      })
+      .catch((error) => snackbarStore.showApiError(error));
+  }
+}
 
 // Fuegt das eingegebene Wort den Suchwoertern hinzu
 function addSuchwortToList() {
