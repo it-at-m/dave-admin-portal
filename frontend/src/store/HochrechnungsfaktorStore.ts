@@ -8,12 +8,16 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 export const useHochrechnungsfaktorStore = defineStore(
   "hochrechnungsfaktorStore",
   () => {
-    // ref()s become state properties
     const hochrechnungsfaktoren = ref<Array<HochrechnungsfaktorDTO>>([]);
-    // computed()s become getters
-    const getHochrechnungsfaktoren = computed(
-      () => hochrechnungsfaktoren.value
-    );
+    const getHochrechnungsfaktorenWithDefaultAtFirstPosition = computed(() => {
+      const defaultFactors = hochrechnungsfaktoren.value.filter(
+        (hochrechnungsfaktor) => hochrechnungsfaktor.defaultFaktor
+      );
+      const nonDefaultFactors = hochrechnungsfaktoren.value.filter(
+        (hochrechnungsfaktor) => !hochrechnungsfaktor.defaultFaktor
+      );
+      return defaultFactors.concat(nonDefaultFactors);
+    });
     const getStandardHochrechnungsfaktor = computed(() => {
       let standardFaktor: HochrechnungsfaktorDTO =
         DefaultObjectCreator.createDefaultHochrechnungsfaktor();
@@ -29,7 +33,7 @@ export const useHochrechnungsfaktorStore = defineStore(
       hochrechnungsfaktoren.value = payload;
     }
     return {
-      getHochrechnungsfaktoren,
+      getHochrechnungsfaktorenWithDefaultAtFirstPosition,
       getStandardHochrechnungsfaktor,
       setHochrechnungsfaktoren,
     };
