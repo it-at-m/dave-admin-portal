@@ -3,8 +3,8 @@
     width="100%"
     color="transparent"
   >
-    <v-card-title style="font-weight: bold; font-size: x-large"
-      >Zählstellen
+    <v-card-title>
+      <h3>Zählstellen</h3>
     </v-card-title>
     <v-expansion-panels
       v-if="hasOpenZaehlungen"
