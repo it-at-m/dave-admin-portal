@@ -30,6 +30,7 @@
           :no-results-text="getNoResultText"
           show-select
           single-select
+          return-object
         >
           <template #top>
             <v-toolbar
