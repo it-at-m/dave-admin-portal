@@ -234,13 +234,9 @@ const stadtbezirk = computed(() => {
 
 const fahrzeugklasse = computed(() => {
   const fahrzeugklasse = messstelle.value.fahrzeugklasse;
-  let result = isNil(fahrzeugklasse)
-    ? undefined
+  return isNil(fahrzeugklasse)
+    ? "Keine Fahrzeugklasse vorhanden"
     : FahrzeugklasseToBeschreibung.get(fahrzeugklasse);
-  if (isNil(result)) {
-    result = "Keine Fahrzeugklasse vorhanden";
-  }
-  return result;
 });
 
 const aufbaudatum = computed(() => {

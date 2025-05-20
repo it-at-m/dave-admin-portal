@@ -7,6 +7,7 @@ export enum ZaehldatenIntervall {
 
 export const ZaehldatenIntervallToBeschreibung = new Map<string, string>([
   [ZaehldatenIntervall.STUNDE_VIERTEL, "15 Min"],
+  [ZaehldatenIntervall.STUNDE_VIERTEL_EINGESCHRAENKT, "15 Min eingeschränkt"],
   [ZaehldatenIntervall.STUNDE_HALB, "30 Min"],
   [ZaehldatenIntervall.STUNDE_KOMPLETT, "60 Min"],
 ]);
