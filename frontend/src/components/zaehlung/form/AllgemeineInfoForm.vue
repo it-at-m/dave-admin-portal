@@ -78,8 +78,7 @@
                     <v-date-picker
                       v-model="datepickerDate"
                       width="300"
-                      header=""
-                      title="Datum auswählen"
+                      hide-header
                       border
                       show-adjacent-months
                       color="primary"
@@ -226,7 +225,6 @@
 </template>
 
 <script setup lang="ts">
-import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { cloneDeep, isEmpty, isNil } from "lodash";
