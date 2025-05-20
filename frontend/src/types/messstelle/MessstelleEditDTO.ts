@@ -15,7 +15,7 @@ export default interface MessstelleEditDTO extends BaseEntity {
   realisierungsdatum: string;
   abbaudatum: string;
   datumLetztePlausibleMessung: string;
-  fahrzeugKlassen: string;
+  fahrzeugklasse: string;
   detektierteVerkehrsarten: string;
   hersteller: string;
 
