@@ -5,19 +5,19 @@
         <div style="align-self: center">
           <v-avatar
             :color="statusDesign.color"
-            size="x-large"
+            :size="50"
           >
             <v-icon
-              size="xx-large"
+              :size="35"
               :icon="statusDesign.iconPath"
             />
           </v-avatar>
         </div>
         <div
-          style="font-size: x-large; align-self: center"
-          class="pl-5"
+          style="align-self: center"
+          class="pl-4"
         >
-          {{ header }}
+          <h2 style="font-weight: normal">{{ header }}</h2>
         </div>
         <v-spacer />
       </v-row>
