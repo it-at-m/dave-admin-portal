@@ -167,6 +167,7 @@
         <v-badge
           v-if="zaehlung.unreadMessagesMobilitaetsreferat"
           dot
+          floating
           color="red"
         >
           <v-icon>mdi-tooltip-account</v-icon>
