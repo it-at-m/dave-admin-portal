@@ -197,7 +197,7 @@
       <v-card-title>
         <span>Soll der Hochrechnungsfaktor</span>
         <span
-          class="font-italic mx-1"
+          class="mx-1"
           style="color: crimson"
         >
           {{ editHochrechnungsfaktor.matrix }}
