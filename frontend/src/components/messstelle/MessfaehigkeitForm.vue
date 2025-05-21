@@ -17,9 +17,7 @@ import type MessfaehigkeitEditDTO from "@/types/messstelle/MessfaehigkeitEditDTO
 import { isEmpty, isNil } from "lodash";
 
 import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
-import ZaehldatenIntervall, {
-  ZaehldatenIntervallToBeschreibung,
-} from "@/domain/enums/ZaehldatenIntervall";
+import { ZaehldatenIntervallToBeschreibung } from "@/domain/enums/ZaehldatenIntervall";
 
 interface Props {
   height: string;
