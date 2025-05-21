@@ -40,18 +40,21 @@
           <v-btn
             v-tooltip:bottom="'Zählungen & Messstellen'"
             class="mx-3"
+            density="compact"
             icon="mdi-clipboard-list-outline"
             to="/erhebungsstellenOverview"
           />
           <v-btn
             v-tooltip:bottom="'Konfiguration'"
             class="mr-3"
+            density="compact"
             icon="mdi-cogs"
             to="/config"
           />
           <v-btn
             v-tooltip:bottom="'Anwenderhandbuch'"
             class="mr-3"
+            density="compact"
             icon="mdi-clippy"
             @click="navigateToHandbuch"
           />
