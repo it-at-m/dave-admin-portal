@@ -51,7 +51,7 @@ const header = [
     align: "start",
     sortable: false,
     key: "fahrzeugklasse",
-    value: (messfaehigkeit) =>
+    value: (messfaehigkeit: MessfaehigkeitEditDTO) =>
       getDescriptionFahrzeugklasse(messfaehigkeit.fahrzeugklasse),
     lastFixed: true,
   },
@@ -60,7 +60,7 @@ const header = [
     align: "start",
     sortable: false,
     key: "intervall",
-    value: (messfaehigkeit) =>
+    value: (messfaehigkeit: MessfaehigkeitEditDTO) =>
       getDescriptionIntervall(messfaehigkeit.intervall),
     lastFixed: true,
   },
