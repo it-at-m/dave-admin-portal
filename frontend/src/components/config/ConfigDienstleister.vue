@@ -71,7 +71,7 @@
   <v-dialog
     v-model="showEditDiensleisterDialog"
     width="50%"
-    height="600px"
+    :height="editDiensteiserDialogHeight"
     persistent
   >
     <v-card>
@@ -131,7 +131,6 @@
               fixed-header
               :search="filterEmailaddress"
               no-data-text="Es muss mindestens eine E-Mail-Adresse angegeben werden."
-              style="background-color: #e57373"
             >
               <template #top>
                 <v-toolbar
@@ -349,6 +348,8 @@ const props = defineProps<Props>();
 const snackbarStore = useSnackbarStore();
 const validationUtils = useValidationUtils();
 const daveUtils = useDaveUtils();
+
+const editDiensteiserDialogHeight = 480;
 
 // Dienstleister
 const dienstleister = ref<Array<DienstleisterDTO>>([]);
@@ -634,7 +635,7 @@ function initDataStructureForInputValidation(): void {
 // Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
 const tableHeightMail = computed(() => {
   return (
-    daveUtils.pxToVh(600) -
+    daveUtils.pxToVh(editDiensteiserDialogHeight) -
     daveUtils.cardtitleHeight.value -
     daveUtils.cardactionHeight.value -
     // Zeile 1
