@@ -33,6 +33,7 @@
             />
           </v-toolbar-title>
           <v-btn
+            class="mr-2"
             prepend-icon="mdi-email-plus-outline"
             text="E-Mail-Adresse anlegen"
             variant="elevated"

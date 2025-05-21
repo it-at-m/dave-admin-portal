@@ -2,6 +2,7 @@
   <v-btn
     id="menu-activator"
     v-tooltip:bottom="'Ungelesene Nachrichten'"
+    density="compact"
     icon="mdi-email"
   />
 

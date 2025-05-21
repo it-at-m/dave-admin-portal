@@ -34,6 +34,7 @@
             />
           </v-toolbar-title>
           <v-btn
+            class="mr-2"
             prepend-icon="mdi-account-plus-outline"
             text="Dienstleister anlegen"
             variant="elevated"

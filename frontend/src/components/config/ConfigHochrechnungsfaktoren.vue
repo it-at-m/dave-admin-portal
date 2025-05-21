@@ -33,6 +33,7 @@
             />
           </v-toolbar-title>
           <v-btn
+            class="mr-2"
             prepend-icon="mdi-data-matrix-plus"
             text="Hochrechnungsfaktor anlegen"
             variant="elevated"
