@@ -90,10 +90,11 @@ const selectAllModel = ref(false);
 const HEADERS = [
   {
     title: "Knotenarm",
-    align: "start",
+    align: "center",
     value: "knotenarm",
+    width: "10%",
   },
-  { title: "Typ", value: "kreisverkehrTyp" },
+  { title: "Typ", align: "center", value: "kreisverkehrTyp", width: "10%" },
   { title: "Hochrechnungsfaktor", value: "hochrechnungsfaktor" },
 ];
 
@@ -122,11 +123,12 @@ const isHochrechnungsfaktorEditable = computed(() => {
  * Ansonsten würde dieser inaktive Hochrechnungsfaktoren nicht Eingabefeld angezeigt werden.
  */
 const hochrechnungsfaktoreDropDown = computed(() => {
-  const activeFactors = hochrechnungsfaktorenStore.getHochrechnungsfaktoren
-    .filter((value) => value.active)
-    .flatMap((value) => {
-      return cloneDeep(value);
-    });
+  const activeFactors =
+    hochrechnungsfaktorenStore.getHochrechnungsfaktorenWithDefaultAtFirstPosition
+      .filter((value) => value.active)
+      .flatMap((value) => {
+        return cloneDeep(value);
+      });
   const dropDown: Array<HochrechnungsfaktorDTO> = [...activeFactors];
 
   // Falls in Fahrbeziehung gespeicherter HOFA nachträglich inaktiv gesetzt wurde,
