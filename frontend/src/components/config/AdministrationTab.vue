@@ -35,7 +35,7 @@
     width="800"
   >
     <v-card>
-      <v-card-title> Suchvorschläge zurücksetzen </v-card-title>
+      <v-card-title>Suchvorschläge zurücksetzen</v-card-title>
       <v-card-text>
         {{ dialogtext }}
       </v-card-text>
