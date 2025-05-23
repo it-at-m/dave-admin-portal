@@ -35,7 +35,7 @@
     width="800"
   >
     <v-card>
-      <v-card-title> Suchvorschläge löschen </v-card-title>
+      <v-card-title> Suchvorschläge zurücksetzen </v-card-title>
       <v-card-text>
         {{ dialogtext }}
       </v-card-text>
@@ -43,7 +43,7 @@
         <v-spacer></v-spacer>
         <v-btn
           color="red-lighten-1"
-          text="Löschen"
+          text="Zurücksetzen"
           variant="elevated"
           @click="confirmDelete"
         />
