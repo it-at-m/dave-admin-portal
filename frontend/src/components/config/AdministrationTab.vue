@@ -9,7 +9,20 @@
       class="ml-3 mt-3"
       max-width="374"
     >
-      <v-card-title>Suchvorschläge zurücksetzen</v-card-title>
+      <v-card-title>
+        <v-row
+          dense
+          no-gutters
+        >
+          <span>Suchvorschläge zurücksetzen</span>
+          <v-spacer />
+          <v-icon
+            v-tooltip:end="TOOLTIP_RESET_SUGGESTIONS"
+            size="small"
+            icon="mdi-information-outline"
+          />
+        </v-row>
+      </v-card-title>
       <v-card-actions>
         <v-btn
           variant="outlined"
@@ -77,6 +90,9 @@ const resetMessstellenFlag = ref(false);
 const resetZaehlstellenFlag = ref(false);
 const openDialogModel = ref(false);
 const dialogtext = ref("Hier könnte Ihre Werbung stehen.");
+
+const TOOLTIP_RESET_SUGGESTIONS =
+  "Die Suchvorschläge sollten zurückgesetzt werden, wenn Zählstellen oder Messstellen gelöscht wurden";
 
 function closeDialog() {
   openDialogModel.value = false;
