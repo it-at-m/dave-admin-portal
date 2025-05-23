@@ -40,7 +40,7 @@
         {{ dialogtext }}
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="red-lighten-1"
           text="Zurücksetzen"
@@ -53,7 +53,7 @@
           variant="elevated"
           @click="closeDialog"
         />
-        <v-spacer></v-spacer>
+        <v-spacer />
       </v-card-actions>
     </v-card>
   </v-dialog>
