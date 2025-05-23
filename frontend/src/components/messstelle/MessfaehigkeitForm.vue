@@ -14,7 +14,10 @@
 <script setup lang="ts">
 import type MessfaehigkeitEditDTO from "@/types/messstelle/MessfaehigkeitEditDTO";
 
-import { isEmpty } from "lodash";
+import { isEmpty, isNil } from "lodash";
+
+import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
+import { ZaehldatenIntervallToBeschreibung } from "@/domain/enums/ZaehldatenIntervall";
 
 interface Props {
   height: string;
@@ -30,19 +33,35 @@ function rowClasses(item: MessfaehigkeitEditDTO) {
   return isEmpty(item.gueltigBis) ? { class: "bg-indigo-lighten-5" } : {};
 }
 
+function getDescriptionFahrzeugklasse(fahrzeugklasse: string | undefined) {
+  return isNil(fahrzeugklasse)
+    ? "Keine Fahrzeugklasse vorhanden"
+    : FahrzeugklasseToBeschreibung.get(fahrzeugklasse);
+}
+
+function getDescriptionIntervall(intervall: string | undefined) {
+  return isNil(intervall)
+    ? "Keine Fahrzeugklasse vorhanden"
+    : ZaehldatenIntervallToBeschreibung.get(intervall);
+}
+
 const header = [
   {
-    title: "Fahrzeugklassen",
+    title: "Fahrzeugklasse",
     align: "start",
     sortable: false,
-    value: "fahrzeugklassen",
+    key: "fahrzeugklasse",
+    value: (messfaehigkeit: MessfaehigkeitEditDTO) =>
+      getDescriptionFahrzeugklasse(messfaehigkeit.fahrzeugklasse),
     lastFixed: true,
   },
   {
     title: "Intervallwert",
     align: "start",
     sortable: false,
-    value: "intervall",
+    key: "intervall",
+    value: (messfaehigkeit: MessfaehigkeitEditDTO) =>
+      getDescriptionIntervall(messfaehigkeit.intervall),
     lastFixed: true,
   },
   {

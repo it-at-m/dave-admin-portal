@@ -76,10 +76,9 @@
                 <v-card-text>
                   <v-row style="justify-content: center">
                     <v-date-picker
-                      v-model="datepickerModel"
+                      v-model="datepickerDate"
                       width="300"
-                      header=""
-                      title="Datum auswählen"
+                      hide-header
                       border
                       show-adjacent-months
                       color="primary"
@@ -228,7 +227,7 @@
 <script setup lang="ts">
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { isEmpty, isNil } from "lodash";
+import { cloneDeep, isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import { quelleDropDown } from "@/types/enum/Quelle";
@@ -264,7 +263,7 @@ const datepickerModel = ref<Date>(new Date());
 
 onMounted(() => {
   validZaehlung.value = false;
-  resetDatum();
+  resetDatumToValueOfZaehlung();
 });
 
 watch(
@@ -273,6 +272,17 @@ watch(
     emits("isValid", validZaehlung.value);
   }
 );
+
+const datepickerDate = computed({
+  get() {
+    return datepickerModel.value;
+  },
+  set(date: Date) {
+    const dateToSet = cloneDeep(date);
+    dateToSet.setHours(5);
+    datepickerModel.value = dateToSet;
+  },
+});
 
 const showZaehlsituation = computed(() => {
   const possibleStatus: Array<Status> = [
@@ -285,7 +295,7 @@ const showZaehlsituation = computed(() => {
 });
 
 const formattedDate = computed(() => {
-  return datepickerModel.value.toLocaleDateString();
+  return datepickerDate.value.toLocaleDateString();
 });
 
 // Fuegt das eingegebene Wort den Suchwoertern hinzu
@@ -306,15 +316,15 @@ function addSuchwortToList(): void {
 
 function saveDate(): void {
   datepickerMenuModel.value = false;
-  zaehlung.value.datum = dateUtils.formatDateForBackend(datepickerModel.value);
+  zaehlung.value.datum = dateUtils.formatDateForBackend(datepickerDate.value);
 }
 
 function closeMenu(): void {
   datepickerMenuModel.value = false;
-  resetDatum();
+  resetDatumToValueOfZaehlung();
 }
 
-function resetDatum(): void {
-  datepickerModel.value = dateUtils.getDatumOfString(zaehlung.value.datum);
+function resetDatumToValueOfZaehlung(): void {
+  datepickerDate.value = dateUtils.getDatumOfString(zaehlung.value.datum);
 }
 </script>

@@ -33,6 +33,7 @@
             />
           </v-toolbar-title>
           <v-btn
+            class="mr-2"
             prepend-icon="mdi-data-matrix-plus"
             text="Hochrechnungsfaktor anlegen"
             variant="elevated"
@@ -197,7 +198,7 @@
       <v-card-title>
         <span>Soll der Hochrechnungsfaktor</span>
         <span
-          class="font-italic mx-1"
+          class="mx-1"
           style="color: crimson"
         >
           {{ editHochrechnungsfaktor.matrix }}
@@ -496,7 +497,7 @@ function getAllHochrechnungsfaktoren() {
     .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
       hochrechnungsfaktorStore.setHochrechnungsfaktoren(cloneDeep(faktoren));
       hochrechnungsfaktoren.value =
-        hochrechnungsfaktorStore.getHochrechnungsfaktoren;
+        hochrechnungsfaktorStore.getHochrechnungsfaktorenWithDefaultAtFirstPosition;
       initDataStructureForInputValidation();
     })
     .catch((error) => snackbarStore.showApiError(error));

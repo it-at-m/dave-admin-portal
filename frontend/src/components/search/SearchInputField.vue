@@ -64,9 +64,9 @@
           <v-btn
             v-bind="props"
             icon="mdi-information"
+            density="compact"
             @click="showtooltip = !showtooltip"
-          >
-          </v-btn>
+          />
         </template>
         <span>
           <b>Beispiele, wonach gesucht werden kann:</b><br />

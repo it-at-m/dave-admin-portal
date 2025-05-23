@@ -105,6 +105,7 @@
               color="secondary"
               text="Speichern"
               variant="elevated"
+              :disabled="!isZaehlstellePersistable"
               @click="save()"
             />
             <v-btn
@@ -137,7 +138,7 @@ import type GeoPoint from "@/types/common/GeoPoint";
 import type NextZaehlstellennummerDTO from "@/types/zaehlstelle/NextZaehlstellennummerDTO";
 
 import { LatLng } from "leaflet";
-import { isEmpty, isNil } from "lodash";
+import { isEmpty, isEqual, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
@@ -197,25 +198,51 @@ const pflichtfeldText = computed(() => {
   return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
 });
 
+const isZaehlstellePersistable = computed(() => {
+  return (
+    !isEmpty(zaehlstelle.value.nummer) &&
+    !isEmpty(stadtbezirksviertelModel.value) &&
+    !isEmpty(zaehlstelle.value.stadtbezirkNummer)
+  );
+});
+
 watch(
   () => zaehlstelle.value.stadtbezirkNummer,
   () => {
     stadtbezirksviertelModel.value = undefined;
+    zaehlstelle.value.nummer = "";
   }
 );
 
-watch(stadtbezirksviertelModel, () => {
-  const idStartsWith = `${zaehlstelle.value.stadtbezirkNummer}${stadtbezirksviertelModel.value}`;
-  ZaehlstellenService.getNextZaehlstellennummer(
-    idStartsWith,
-    zaehlstelle.value.stadtbezirkNummer
-  )
-    .then((result: NextZaehlstellennummerDTO) => {
-      zaehlstelle.value.nummer = result.nummer;
-      laufendeNummer.value = result.nummer;
-    })
-    .catch((error) => snackbarStore.showApiError(error));
-});
+watch(
+  () => stadtbezirksviertelModel.value,
+  (newViertel, oldViertel) => {
+    if (!isEqual(newViertel, oldViertel)) {
+      zaehlstelle.value.nummer = "";
+      if (!isEmpty(newViertel)) {
+        setNextZaehlstellennummerToZaehlstelleWhenBezirkAndViertelIsSet();
+      }
+    }
+  }
+);
+
+function setNextZaehlstellennummerToZaehlstelleWhenBezirkAndViertelIsSet(): void {
+  if (
+    !isNil(zaehlstelle.value.stadtbezirkNummer) &&
+    !isEmpty(stadtbezirksviertelModel.value)
+  ) {
+    const idStartsWith = `${zaehlstelle.value.stadtbezirkNummer}${stadtbezirksviertelModel.value}`;
+    ZaehlstellenService.getNextZaehlstellennummer(
+      idStartsWith,
+      zaehlstelle.value.stadtbezirkNummer
+    )
+      .then((result: NextZaehlstellennummerDTO) => {
+        zaehlstelle.value.nummer = result.nummer;
+        laufendeNummer.value = result.nummer;
+      })
+      .catch((error) => snackbarStore.showApiError(error));
+  }
+}
 
 // Fuegt das eingegebene Wort den Suchwoertern hinzu
 function addSuchwortToList() {
