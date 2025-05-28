@@ -92,9 +92,9 @@ const HEADERS = [
     title: "von",
     align: "center",
     value: "von",
-    width: "10%",
+    width: "12%",
   },
-  { title: "nach", align: "center", value: "nach", width: "10%" },
+  { title: "nach", align: "center", value: "nach", width: "15%" },
   { title: "Hochrechnungsfaktor", value: "hochrechnungsfaktor" },
 ];
 
@@ -252,7 +252,7 @@ function removeFahrbeziehung(toDelete: FahrbeziehungDTO) {
   zaehlung.value.fahrbeziehungen.forEach(
     (fahrbeziehung: FahrbeziehungDTO, index: number) => {
       if (
-        fahrbeziehung.von === toDelete.nach &&
+        fahrbeziehung.von === toDelete.von &&
         fahrbeziehung.nach === toDelete.nach
       ) {
         deleteIndex = index;

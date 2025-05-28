@@ -92,9 +92,9 @@ const HEADERS = [
     title: "Knotenarm",
     align: "center",
     value: "knotenarm",
-    width: "10%",
+    width: "12%",
   },
-  { title: "Typ", align: "center", value: "kreisverkehrTyp", width: "10%" },
+  { title: "Typ", align: "center", value: "kreisverkehrTyp", width: "15%" },
   { title: "Hochrechnungsfaktor", value: "hochrechnungsfaktor" },
 ];
 
