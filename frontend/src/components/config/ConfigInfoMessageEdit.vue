@@ -32,24 +32,25 @@
                   <v-date-picker
                     v-model="datepickerModelVon"
                     width="300"
-                    header=""
                     title="Datum 'von' auswählen"
                     border
                     show-adjacent-months
                     color="primary"
                     :max="datepickerModelBis"
-                  />
+                  >
+                    <template #header />
+                  </v-date-picker>
                   <v-date-picker
                     v-model="datepickerModelBis"
                     class="ml-3"
                     width="300"
                     title="Datum 'bis' auswählen"
-                    header=""
                     border
                     show-adjacent-months
                     color="primary"
                     :min="datepickerModelVon"
                   >
+                    <template #header />
                   </v-date-picker>
                 </v-row>
               </v-card-text>
