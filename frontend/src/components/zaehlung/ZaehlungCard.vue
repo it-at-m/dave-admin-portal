@@ -1,6 +1,6 @@
 <template>
   <v-card
-    class="mx-auto my-12"
+    class="mx-auto mt-1 mb-4"
     max-width="374"
   >
     <zaehlung-card-map
