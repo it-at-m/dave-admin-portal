@@ -252,7 +252,7 @@ function removeFahrbeziehung(toDelete: FahrbeziehungDTO) {
   zaehlung.value.fahrbeziehungen.forEach(
     (fahrbeziehung: FahrbeziehungDTO, index: number) => {
       if (
-        fahrbeziehung.von === toDelete.nach &&
+        fahrbeziehung.von === toDelete.von &&
         fahrbeziehung.nach === toDelete.nach
       ) {
         deleteIndex = index;
