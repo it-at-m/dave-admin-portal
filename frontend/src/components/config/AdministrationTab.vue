@@ -7,14 +7,14 @@
   >
     <v-row dense>
       <v-col cols="3">
-        <reload-unauffaelliger-tag-card :max-width="MAX_CARD_WIDTH" />
+        <reload-auffaelligkeiten-card :max-width="MAX_CARD_WIDTH" />
       </v-col>
     </v-row>
   </v-sheet>
 </template>
 
 <script setup lang="ts">
-import ReloadUnauffaelligerTagCard from "@/components/administration/ReloadUnauffaelligerTagCard.vue";
+import ReloadAuffaelligkeitenCard from "@/components/administration/ReloadAuffaelligkeitenCard.vue";
 
 interface Props {
   height: string;
