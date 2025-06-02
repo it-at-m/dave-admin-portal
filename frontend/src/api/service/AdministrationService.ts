@@ -12,7 +12,7 @@ export default class AdministrationService {
     return FetchService.postData(
       data,
       `${this.ENDPOINT}/reload-unauffaelliger-tag`,
-      "Beim Neuladen des Unauffälligen Tages ist ein Fehler aufgetreten."
+      "Beim Neuladen des unauffälligen Tages ist ein Fehler aufgetreten."
     );
   }
 }
