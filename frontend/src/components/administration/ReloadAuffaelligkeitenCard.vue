@@ -89,7 +89,7 @@ const openDialogModel = ref(false);
 const dialogtext = ref("Hier könnte Ihre Werbung stehen.");
 
 const TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG =
-  "Wenn es in Mobidam nachträgliche Änderungen bei den auffälligen Tagen gab, sollten diese neu geladen werden.";
+  "Bei nachträglichen Änderungen an den auffälligen Tagen in Mobidam sollten diese neu geladen werden.";
 
 const dateToReload = ref(new Date());
 
