@@ -28,7 +28,7 @@
       <v-btn
         variant="outlined"
         text="Prüfen"
-        @click="reloadUnauffaelligerTag"
+        @click="resetAuffaelligkeiten"
       />
     </v-card-actions>
   </v-card>
@@ -54,7 +54,7 @@
           color="red-lighten-1"
           text="Ja"
           variant="elevated"
-          @click="confirmReload"
+          @click="confirmReset"
         />
         <v-btn
           color="tertiary"
@@ -74,7 +74,7 @@ import { computed, ref } from "vue";
 
 import AdministrationService from "@/api/service/AdministrationService";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import ReloadAuffaelligkeitenDTO from "@/types/config/ReloadAuffaelligkeitenDTO";
+import ResetAuffaelligkeitenDTO from "@/types/config/ResetAuffaelligkeitenDTO";
 import { useDateUtils } from "@/util/DateUtils";
 
 interface Props {
@@ -91,13 +91,13 @@ const dialogtext = ref("Hier könnte Ihre Werbung stehen.");
 const TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG =
   "Bei nachträglichen Änderungen an den auffälligen Tagen in Mobidam sollten diese neu geladen werden.";
 
-const dateToReload = ref(new Date());
+const dateToReset = ref(new Date());
 
 const choosenDate = computed({
   get() {
     let date = new Date();
-    if (!isNil(dateToReload.value)) {
-      date = dateToReload.value;
+    if (!isNil(dateToReset.value)) {
+      date = dateToReset.value;
       date.setHours(5);
     }
     return date;
@@ -107,12 +107,12 @@ const choosenDate = computed({
     if (!isNil(date)) {
       date.setHours(5);
     }
-    dateToReload.value = date;
+    dateToReset.value = date;
   },
 });
 
 function closeDialog() {
-  dateToReload.value = new Date();
+  dateToReset.value = new Date();
   openDialogModel.value = false;
 }
 
@@ -121,24 +121,24 @@ function openDialog(title: string) {
   openDialogModel.value = true;
 }
 
-function reloadUnauffaelligerTag() {
-  if (!isNil(dateToReload.value)) {
+function resetAuffaelligkeiten() {
+  if (!isNil(dateToReset.value)) {
     openDialog(
-      `Soll der ${dateUtils.getShortVersionOfDate(dateToReload.value)} erneut auf Auffälligkeiten überprüft werden?
+      `Soll der ${dateUtils.getShortVersionOfDate(dateToReset.value)} erneut auf Auffälligkeiten überprüft werden?
             </br> Die bereits ermittelten Auffälligkeiten werden dabei überschrieben.`
     );
   }
 }
 
-function confirmReload() {
-  if (dateToReload.value) {
-    const reloadAuffaelligkeiten = new ReloadAuffaelligkeitenDTO(
-      dateToReload.value
+function confirmReset() {
+  if (dateToReset.value) {
+    const resetAuffaelligkeiten = new ResetAuffaelligkeitenDTO(
+      dateToReset.value
     );
-    AdministrationService.reloadUnauffaelligerTag(reloadAuffaelligkeiten)
+    AdministrationService.resetAuffaelligerTag(resetAuffaelligkeiten)
       .then(() => {
         snackbarStore.showSuccess(
-          `Der ${dateUtils.getShortVersionOfDate(reloadAuffaelligkeiten.dateToReload)} wurde erneut auf Auffälligkeiten überprüft.`
+          `Der ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.dateToReset)} wurde erneut auf Auffälligkeiten überprüft.`
         );
       })
       .catch((error) => {

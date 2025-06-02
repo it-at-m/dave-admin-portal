@@ -7,14 +7,14 @@
   >
     <v-row dense>
       <v-col cols="3">
-        <reload-auffaelligkeiten-card :max-width="MAX_CARD_WIDTH" />
+        <reset-auffaelligkeiten-card :max-width="MAX_CARD_WIDTH" />
       </v-col>
     </v-row>
   </v-sheet>
 </template>
 
 <script setup lang="ts">
-import ReloadAuffaelligkeitenCard from "@/components/administration/ReloadAuffaelligkeitenCard.vue";
+import ResetAuffaelligkeitenCard from "@/components/administration/ResetAuffaelligkeitenCard.vue";
 
 interface Props {
   height: string;
