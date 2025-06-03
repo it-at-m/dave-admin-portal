@@ -34,6 +34,10 @@
         <v-icon>mdi-message-text-outline</v-icon>
         Info-Nachricht
       </v-tab>
+      <v-tab :value="TAB_ADMINISTRATION">
+        <v-icon>mdi-shield-crown-outline</v-icon>
+        Administration
+      </v-tab>
     </v-tabs>
     <v-tabs-window
       v-model="activeTab"
@@ -52,6 +56,9 @@
       <v-tabs-window-item :value="TAB_INFO">
         <config-info-message :height="contentHeight" />
       </v-tabs-window-item>
+      <v-tabs-window-item :value="TAB_ADMINISTRATION">
+        <administration-tab :height="contentHeight" />
+      </v-tabs-window-item>
     </v-tabs-window>
   </v-sheet>
 </template>
@@ -59,6 +66,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 
+import AdministrationTab from "@/components/config/AdministrationTab.vue";
 import ConfigDienstleister from "@/components/config/ConfigDienstleister.vue";
 import ConfigEmailAddress from "@/components/config/ConfigEmailAddress.vue";
 import ConfigHochrechnungsfaktoren from "@/components/config/ConfigHochrechnungsfaktoren.vue";
@@ -72,6 +80,7 @@ const TAB_HOCHRECHNUNG = 0;
 const TAB_EMAIL = 1;
 const TAB_DIENSTLEISTER = 2;
 const TAB_INFO = 3;
+const TAB_ADMINISTRATION = 4;
 
 /**
  * Berechnet die Höhe der Fläche unter den Tabs in "vh"
