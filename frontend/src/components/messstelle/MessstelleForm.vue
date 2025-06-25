@@ -169,6 +169,7 @@
               density="compact"
               chips
               closable-chips
+              :disabled="disabled"
               class="tag-input"
               append-icon="mdi-plus"
               @click:append="addSuchwortToList"
