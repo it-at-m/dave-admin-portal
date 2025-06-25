@@ -85,6 +85,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 import SucheService from "@/api/service/SucheService";
+import markerIconDiamondOrange from "@/assets/cards-diamond-orange.png";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 import markerIconDiamondShadow from "@/assets/cards-diamond-shadow.png";
 import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
@@ -95,6 +96,7 @@ import { useMapConfigStore } from "@/store/MapConfigStore";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import MessstelleStatus from "@/types/enum/MessstelleStatus";
 import { useDateUtils } from "@/util/DateUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
@@ -677,8 +679,12 @@ function markerOptionsZaehlstelle(zaehlstelleKarte: ZaehlstelleKarteDTO) {
  * Setzt die Optionen bezüglich verwendetes Icon für den Messstellenmarker.
  */
 function markerOptionsMessstelle(messstelleKarte: MessstelleKarteDTO) {
+  const isMessstelleInPlanung =
+    messstelleKarte.status === MessstelleStatus.IN_PLANUNG;
   const defaultIcon = new Icon({
-    iconUrl: markerIconDiamondViolet,
+    iconUrl: isMessstelleInPlanung
+      ? markerIconDiamondOrange
+      : markerIconDiamondViolet,
     shadowUrl: markerIconDiamondShadow,
     shadowAnchor: [8, 45],
     iconSize: [25, 41],
