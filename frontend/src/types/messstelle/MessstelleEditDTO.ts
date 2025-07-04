@@ -1,3 +1,4 @@
+import type DetektierteVerkehrsart from "@/domain/enums/DetektierteVerkehrsart";
 import type BaseEntity from "@/types/common/BaseEntity";
 import type MessstelleStatus from "@/types/enum/MessstelleStatus";
 import type MessfaehigkeitEditDTO from "@/types/messstelle/MessfaehigkeitEditDTO";
@@ -16,7 +17,7 @@ export default interface MessstelleEditDTO extends BaseEntity {
   abbaudatum: string;
   datumLetztePlausibleMessung: string;
   fahrzeugklasse: string;
-  detektierteVerkehrsarten: string;
+  detektierteVerkehrsart: DetektierteVerkehrsart;
   hersteller: string;
 
   customSuchwoerter: Array<string>;

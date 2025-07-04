@@ -31,7 +31,7 @@
             md="4"
           >
             <lhm-text-field
-              :text="messstelle.detektierteVerkehrsarten"
+              :text="messstelle.detektierteVerkehrsart"
               caption="Detektierte Fahrzeuge"
             />
           </v-col>
