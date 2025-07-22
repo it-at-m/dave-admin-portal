@@ -32,7 +32,6 @@
     v-if="isMessstelleReadonly"
     lines="one"
     width="100%"
-    text="Zählstelle besitzt aktuell keine Zählungen."
     style="justify-items: center"
   >
     <template #text>

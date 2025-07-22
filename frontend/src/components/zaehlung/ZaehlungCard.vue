@@ -1,6 +1,6 @@
 <template>
   <v-card
-    class="mx-auto my-12"
+    class="mx-auto mt-1 mb-4"
     max-width="374"
   >
     <zaehlung-card-map
@@ -405,7 +405,7 @@ function zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
   ZaehlungService.updateStatus(update)
     .then((backendIdDTO) => {
       snackbarStore.showInfo(
-        `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${zaehlung.value.projektName} durchzuführen.`
+        `Der Zähldienstleister wurde beauftragt die Zählung ${zaehlung.value.projektName} durchzuführen.`
       );
       emits("saved", backendIdDTO);
     })
@@ -526,7 +526,7 @@ function dienstleisterKorrigieren(dienstleister: DienstleisterDTO) {
   ZaehlungService.updateDienstleisterkennung(zaehlung.value.id, dienstleister)
     .then((backendIdDTO) => {
       snackbarStore.showInfo(
-        `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${zaehlung.value.projektName} durchzuführen. (Korrektur)`
+        `Der Zähldienstleister wurde beauftragt die Zählung ${zaehlung.value.projektName} durchzuführen. (Korrektur)`
       );
       emits("saved", backendIdDTO);
     })
