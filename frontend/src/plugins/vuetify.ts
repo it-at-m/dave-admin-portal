@@ -85,6 +85,9 @@ export default createVuetify({
     VSelect: {
       itemColor: "primary",
     },
+    VDataTable: {
+      hover: true,
+    },
     VBtn: {
       class: "text-none",
       variant: "elevated",

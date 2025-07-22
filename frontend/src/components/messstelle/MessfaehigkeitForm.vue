@@ -7,14 +7,13 @@
     hide-default-footer
     fixed-header
     :height="height"
-    :row-props="(item: any) => rowClasses(item.item)"
   />
 </template>
 
 <script setup lang="ts">
 import type MessfaehigkeitEditDTO from "@/types/messstelle/MessfaehigkeitEditDTO";
 
-import { isEmpty, isNil } from "lodash";
+import { isNil } from "lodash";
 
 import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
 import { ZaehldatenIntervallToBeschreibung } from "@/domain/enums/ZaehldatenIntervall";
@@ -28,10 +27,6 @@ defineProps<Props>();
 const messfahigkeiten = defineModel<Array<MessfaehigkeitEditDTO>>({
   required: true,
 });
-
-function rowClasses(item: MessfaehigkeitEditDTO) {
-  return isEmpty(item.gueltigBis) ? { class: "bg-indigo-lighten-5" } : {};
-}
 
 function getDescriptionFahrzeugklasse(fahrzeugklasse: string | undefined) {
   return isNil(fahrzeugklasse)
