@@ -1,4 +1,4 @@
-import type DetektierteVerkehrsart from "@/domain/enums/DetektierteVerkehrsart";
+import type Verkehrsart from "@/domain/enums/Verkehrsart";
 import type MessstelleStatus from "@/types/enum/MessstelleStatus";
 
 export default interface SearchAndFilterOptionsDTO {
@@ -6,5 +6,5 @@ export default interface SearchAndFilterOptionsDTO {
   searchInZaehlstellen: boolean;
 
   messstelleStatus: MessstelleStatus;
-  messstelleVerkehrsart: DetektierteVerkehrsart;
+  messstelleVerkehrsart: Verkehrsart;
 }
