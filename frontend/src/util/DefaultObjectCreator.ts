@@ -9,6 +9,7 @@ import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { LatLng } from "leaflet";
 
+import Verkehrsart from "@/domain/enums/Verkehrsart";
 import MessstelleStatus from "@/types/enum/MessstelleStatus";
 import Quelle from "@/types/enum/Quelle";
 import Status from "@/types/enum/Status";
@@ -99,6 +100,11 @@ export default class DefaultObjectCreator {
     return {
       searchInMessstellen: true,
       searchInZaehlstellen: true,
+      messstelleVerkehrsart: [
+        Verkehrsart.KFZ,
+        Verkehrsart.RAD,
+        Verkehrsart.UNBEKANNT,
+      ],
     } as SearchAndFilterOptionsDTO;
   }
 
