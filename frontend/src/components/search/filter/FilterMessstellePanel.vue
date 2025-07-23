@@ -22,6 +22,8 @@
           multiple
           :items="selectableVerkehrsarten"
           density="compact"
+          chips
+          closable-chips
         />
       </v-col>
       <v-spacer />
