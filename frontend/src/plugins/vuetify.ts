@@ -29,6 +29,8 @@ import zaehldauer13h from "@/components/icons/ZaehldauerIcons/Zaehldauer13hIcon.
 import zaehldauer16h from "@/components/icons/ZaehldauerIcons/Zaehldauer16hIcon.vue";
 import zaehldauer24h from "@/components/icons/ZaehldauerIcons/Zaehldauer24hIcon.vue";
 import zaehldauerSoZ from "@/components/icons/ZaehldauerIcons/ZaehldauerSoZIcon.vue";
+// SearchAndFilter
+import searchAndFilter from "@/components/search/filter/SearchAndFilterIcon.vue";
 
 const theme = {
   themes: {
@@ -75,6 +77,8 @@ export default createVuetify({
       artR,
       artT,
       artTK,
+      // SearchAndFilter
+      searchAndFilter,
     },
   },
   locale: {
