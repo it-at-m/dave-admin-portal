@@ -112,7 +112,7 @@ export default class DefaultObjectCreator {
 
   public static createDefaultConfigurationDTO(): ConfigurationDTO {
     return {
-      map: this.createDefaultMapConfigDTO(),
+      map: this.createDefaultMapConfigurationDTO(),
       zaehlstelle: this.createDefaultZaehlstelleConfigurationDTO(),
     };
   }
@@ -123,7 +123,7 @@ export default class DefaultObjectCreator {
     };
   }
 
-  public static createDefaultMapConfigDTO(): MapConfigurationDTO {
+  public static createDefaultMapConfigurationDTO(): MapConfigurationDTO {
     return {
       // München Zentrum
       lat: "48.137227",
