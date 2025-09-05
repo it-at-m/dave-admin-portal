@@ -3,7 +3,7 @@
     <zaehlstelle-map
       height="100%"
       width="100%"
-      :zoom="mapConfigStore.getMapConfig.zoom"
+      :zoom="configurationStore.getMapConfiguration.zoom"
     />
   </v-main>
 </template>
@@ -12,9 +12,9 @@
 import { onMounted } from "vue";
 
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
-import { useMapConfigStore } from "@/store/MapConfigStore";
+import { useConfigrationStore } from "@/store/ConfigrationStore";
 
-const mapConfigStore = useMapConfigStore();
+const configurationStore = useConfigrationStore();
 
 onMounted(() => {
   window.scrollTo(0, 0);
