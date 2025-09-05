@@ -93,8 +93,12 @@
 </template>
 
 <script setup lang="ts">
+import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
+
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
+
+import ConfigurationService from "@/api/service/ConfigurationService";
 import SsoUserInfoService from "@/api/service/SsoUserInfoService";
 import VersionInfoService from "@/api/service/VersionInfoService";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
@@ -108,8 +112,6 @@ import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useUserStore } from "@/store/UserStore";
 import SsoUserInfoResponse from "@/types/app/SsoUserInfoResponse";
 import VersionInfoResponse from "@/types/app/VersionInfoResponse";
-import ConfigurationService from "@/api/service/ConfigurationService";
-import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
 
 const URL_HANDBUCH_LINK =
   "https://wilma.muenchen.de/web/senders/af10dc2a-8da5-4d24-815a-b6a9df4c686b/documents/54ddf065-d01f-4965-9bdf-c66ea47927c8";
@@ -152,9 +154,11 @@ function created() {
     .catch(() => {
       backendVersion.value = "error";
     });
-  ConfigurationService.getConfiguration().then((configuration: ConfigurationDTO) => {
-    configurationStore.setConfiguration(configuration);
-  });
+  ConfigurationService.getConfiguration().then(
+    (configuration: ConfigurationDTO) => {
+      configurationStore.setConfiguration(configuration);
+    }
+  );
 }
 
 function navigateToHandbuch() {

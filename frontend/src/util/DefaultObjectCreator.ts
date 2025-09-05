@@ -1,6 +1,9 @@
 import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
 import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
 import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
+import type MapConfigurationDTO from "@/types/configuration/MapConfigurationDTO";
+import type ZaehlstelleConfigurationDTO from "@/types/configuration/ZaehlstelleConfigurationDTO";
 import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
@@ -14,9 +17,6 @@ import Quelle from "@/types/enum/Quelle";
 import Status from "@/types/enum/Status";
 import Wetter from "@/types/enum/Wetter";
 import Suggest from "@/types/suche/Suggest";
-import type MapConfigurationDTO from "@/types/configuration/MapConfigurationDTO";
-import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
-import type ZaehlstelleConfigurationDTO from "@/types/configuration/ZaehlstelleConfigurationDTO";
 
 export default class DefaultObjectCreator {
   private static readonly MUNICH_CENTER_LATITUDE: number = 48.137227;
