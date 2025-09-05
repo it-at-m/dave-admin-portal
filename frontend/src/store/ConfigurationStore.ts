@@ -4,7 +4,7 @@ import { computed, ref } from "vue";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
 
-export const useConfigrationStore = defineStore("configrationStore", () => {
+export const useConfigurationStore = defineStore("configrationStore", () => {
 
   const configuration = ref<ConfigurationDTO>(
     DefaultObjectCreator.createDefaultConfigurationDTO()

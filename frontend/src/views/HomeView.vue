@@ -12,9 +12,9 @@
 import { onMounted } from "vue";
 
 import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
-import { useConfigrationStore } from "@/store/ConfigrationStore";
+import { useConfigurationStore } from "@/store/ConfigurationStore";
 
-const configurationStore = useConfigrationStore();
+const configurationStore = useConfigurationStore();
 
 onMounted(() => {
   window.scrollTo(0, 0);

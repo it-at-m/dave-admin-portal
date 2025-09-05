@@ -101,7 +101,7 @@ import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import UnreadMessages from "@/components/app/UnreadMessages.vue";
 import TheSnackbar from "@/components/common/TheSnackbar.vue";
 import SearchInputField from "@/components/search/SearchInputField.vue";
-import { useConfigrationStore } from "@/store/ConfigrationStore";
+import { useConfigurationStore } from "@/store/ConfigurationStore";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
@@ -123,7 +123,7 @@ const userStore = useUserStore();
 const searchStore = useSearchStore();
 const route = useRoute();
 const mapOptionsStore = useMapOptionsStore();
-const configurationStore = useConfigrationStore();
+const configurationStore = useConfigurationStore();
 
 created();
 

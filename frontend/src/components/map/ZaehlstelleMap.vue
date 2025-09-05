@@ -92,7 +92,7 @@ import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleDialog.vue";
 import { useEventbus } from "@/store/Eventbus";
-import { useConfigrationStore } from "@/store/ConfigrationStore";
+import { useConfigurationStore } from "@/store/ConfigurationStore";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
@@ -130,7 +130,7 @@ const snackbarStore = useSnackbarStore();
 const router = useRouter();
 const dateUtils = useDateUtils();
 const mapOptionsStore = useMapOptionsStore();
-const configurationStore = useConfigrationStore();
+const configurationStore = useConfigurationStore();
 const eventbus = useEventbus();
 
 const mapRef = ref<HTMLDivElement | null>(null);
