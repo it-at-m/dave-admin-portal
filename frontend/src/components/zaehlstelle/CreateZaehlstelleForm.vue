@@ -32,7 +32,6 @@
                 label="Zählstellennummer"
                 variant="outlined"
                 density="compact"
-                counter="255"
                 :rules="[pflichtfeld, mustBePositivNumber]"
               />
             </v-col>
@@ -151,7 +150,7 @@ import type GeoPoint from "@/types/common/GeoPoint";
 import type NextZaehlstellennummerDTO from "@/types/zaehlstelle/NextZaehlstellennummerDTO";
 
 import { LatLng } from "leaflet";
-import { isEmpty, isEqual, isNil, isNumber } from "lodash";
+import { isEmpty, isEqual, isNaN, isNil, toNumber } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
@@ -225,7 +224,11 @@ watch(
   () => zaehlstelle.value.stadtbezirkNummer,
   () => {
     stadtbezirksviertelModel.value = undefined;
-    zaehlstelle.value.nummer = "";
+    if (
+      configurationStore.getZaehlstelleConfiguration.automaticNumberAssignment
+    ) {
+      zaehlstelle.value.nummer = "";
+    }
   }
 );
 
@@ -327,8 +330,9 @@ function pflichtfeld(value: string | number): boolean | string {
 /**
  * Prüft, ob der übergebene Wert eine Zahl ist.
  */
-function mustBePositivNumber(value: string | number): boolean | string {
-  if (!isNumber(value) || value < 0) {
+function mustBePositivNumber(value: string): boolean | string {
+  const number = toNumber(value);
+  if (isNaN(number) || number <= 0) {
     return "Bitte eine Zählstellennummer >= 0 eingeben";
   }
   return true;
