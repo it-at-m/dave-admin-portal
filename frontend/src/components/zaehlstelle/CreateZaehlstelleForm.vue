@@ -33,6 +33,7 @@
                 variant="outlined"
                 density="compact"
                 counter="255"
+                :rules="[pflichtfeld, mustBePositivNumber]"
               />
             </v-col>
           </v-row>
@@ -150,7 +151,7 @@ import type GeoPoint from "@/types/common/GeoPoint";
 import type NextZaehlstellennummerDTO from "@/types/zaehlstelle/NextZaehlstellennummerDTO";
 
 import { LatLng } from "leaflet";
-import { isEmpty, isEqual, isNil } from "lodash";
+import { isEmpty, isEqual, isNil, isNumber } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
@@ -311,5 +312,25 @@ function updateZaehlstellenCoords(newCoords: LatLng): void {
   }
   zaehlstelle.value.punkt.lat = newCoords.lat.toString();
   zaehlstelle.value.punkt.lon = newCoords.lng.toString();
+}
+
+/**
+ *  Prüft, ob ein Wert gesetzt ist.
+ */
+function pflichtfeld(value: string | number): boolean | string {
+  if (!isEmpty(value)) {
+    return true;
+  }
+  return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
+}
+
+/**
+ * Prüft, ob der übergebene Wert eine Zahl ist.
+ */
+function mustBePositivNumber(value: string | number): boolean | string {
+  if (!isNumber(value) || value < 0) {
+    return "Bitte eine Zählstellennummer >= 0 eingeben";
+  }
+  return true;
 }
 </script>
