@@ -32,7 +32,10 @@
                 label="Zählstellennummer"
                 variant="outlined"
                 density="compact"
-                :rules="[pflichtfeld, mustBePositivNumber]"
+                :rules="[
+                  validationUtils.pflichtfeld,
+                  validationUtils.mustBePositivNumber,
+                ]"
               />
             </v-col>
           </v-row>
@@ -150,7 +153,7 @@ import type GeoPoint from "@/types/common/GeoPoint";
 import type NextZaehlstellennummerDTO from "@/types/zaehlstelle/NextZaehlstellennummerDTO";
 
 import { LatLng } from "leaflet";
-import { isEmpty, isEqual, isNaN, isNil, toNumber } from "lodash";
+import { isEmpty, isEqual, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
@@ -161,9 +164,11 @@ import { useSnackbarStore } from "@/store/SnackbarStore";
 import { stadtbezirke } from "@/types/enum/Stadtbezirk";
 import { stadtbezirksviertel } from "@/types/enum/Stadtbezirksviertel";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import { useValidationUtils } from "@/util/validationUtils";
 
 const snackbarStore = useSnackbarStore();
 const configurationStore = useConfigurationStore();
+const validationUtils = useValidationUtils();
 const validZaehlstelle = ref(false);
 
 const zaehlstelle = ref(DefaultObjectCreator.createDefaultZaehlstelleDTO());
@@ -315,26 +320,5 @@ function updateZaehlstellenCoords(newCoords: LatLng): void {
   }
   zaehlstelle.value.punkt.lat = newCoords.lat.toString();
   zaehlstelle.value.punkt.lon = newCoords.lng.toString();
-}
-
-/**
- *  Prüft, ob ein Wert gesetzt ist.
- */
-function pflichtfeld(value: string | number): boolean | string {
-  if (!isEmpty(value)) {
-    return true;
-  }
-  return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
-}
-
-/**
- * Prüft, ob der übergebene Wert eine Zahl ist.
- */
-function mustBePositivNumber(value: string): boolean | string {
-  const number = toNumber(value);
-  if (isNaN(number) || number <= 0) {
-    return "Bitte eine Zählstellennummer >= 0 eingeben";
-  }
-  return true;
 }
 </script>
