@@ -15,7 +15,7 @@
           <v-row no-gutters>
             <v-col
               cols="12"
-              md="6"
+              md="12"
             >
               <lhm-text-field
                 v-if="
