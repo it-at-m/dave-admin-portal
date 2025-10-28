@@ -15,12 +15,27 @@
           <v-row no-gutters>
             <v-col
               cols="12"
-              md="6"
+              md="12"
             >
               <lhm-text-field
+                v-if="
+                  configurationStore.getZaehlstelleConfiguration
+                    .automaticNumberAssignment
+                "
                 caption="Zählstellennummer"
                 :text="zaehlstellenummer"
                 add-extra-br
+              />
+              <v-text-field
+                v-else
+                v-model="zaehlstelle.nummer"
+                label="Zählstellennummer"
+                variant="outlined"
+                density="compact"
+                :rules="[
+                  validationUtils.pflichtfeld,
+                  validationUtils.mustBePositivNumber,
+                ]"
               />
             </v-col>
           </v-row>
@@ -144,12 +159,16 @@ import { computed, onMounted, ref, watch } from "vue";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import MiniMap from "@/components/map/MiniMap.vue";
+import { useConfigurationStore } from "@/store/ConfigurationStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { stadtbezirke } from "@/types/enum/Stadtbezirk";
 import { stadtbezirksviertel } from "@/types/enum/Stadtbezirksviertel";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import { useValidationUtils } from "@/util/validationUtils";
 
 const snackbarStore = useSnackbarStore();
+const configurationStore = useConfigurationStore();
+const validationUtils = useValidationUtils();
 const validZaehlstelle = ref(false);
 
 const zaehlstelle = ref(DefaultObjectCreator.createDefaultZaehlstelleDTO());
@@ -210,14 +229,22 @@ watch(
   () => zaehlstelle.value.stadtbezirkNummer,
   () => {
     stadtbezirksviertelModel.value = undefined;
-    zaehlstelle.value.nummer = "";
+    if (
+      configurationStore.getZaehlstelleConfiguration.automaticNumberAssignment
+    ) {
+      zaehlstelle.value.nummer = "";
+    }
   }
 );
 
 watch(
   () => stadtbezirksviertelModel.value,
   (newViertel, oldViertel) => {
-    if (!isEqual(newViertel, oldViertel)) {
+    if (
+      configurationStore.getZaehlstelleConfiguration
+        .automaticNumberAssignment &&
+      !isEqual(newViertel, oldViertel)
+    ) {
       zaehlstelle.value.nummer = "";
       if (!isEmpty(newViertel)) {
         setNextZaehlstellennummerToZaehlstelleWhenBezirkAndViertelIsSet();
