@@ -303,7 +303,6 @@ function resetBooleans() {
 }
 
 function reloadDataAndCloseDialog(backendIdDTO: BackendIdDTO) {
-  searchErhebungsstelle();
   resetBooleans();
   closeDialog();
   routeToZaehlstelle(backendIdDTO.id);
