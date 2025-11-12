@@ -52,28 +52,17 @@ const zaehlartIcons: Map<string, IconTooltip> = new Map([
   ],
   [Zaehlart.R, new IconTooltip("$artR", "Radverkehrszählung")],
   [
-    Zaehlart.QF,
-    new IconTooltip("mdi-emoticon-outline", "Querschnitt Fußverkehr"),
+    Zaehlart.QJS,
+    new IconTooltip("mdi-emoticon-outline", "Querschnitt je Straßenseite"),
   ],
   [
-    Zaehlart.QFR,
+    Zaehlart.FJS,
     new IconTooltip(
       "mdi-emoticon-outline",
-      "Querschnitt Fußverkehr Radverkehr"
+      "Fußverkehr/Radverkehr je Straßenseite"
     ),
   ],
-  [
-    Zaehlart.QFS,
-    new IconTooltip(
-      "mdi-emoticon-outline",
-      "Querschnitt Fußverkehr Straßenseite"
-    ),
-  ],
-  [
-    Zaehlart.FS,
-    new IconTooltip("mdi-emoticon-outline", "Fußverkehr Straßenseite"),
-  ],
-  [Zaehlart.FQ, new IconTooltip("mdi-emoticon-outline", "Fußverkehr Querung")],
+  [Zaehlart.QU, new IconTooltip("mdi-emoticon-outline", "Querung")],
   [Zaehlart.T, new IconTooltip("$artT", "Tunnel/Unterführung/Tief")],
   [Zaehlart.TK, new IconTooltip("$artTK", "Teilknoten")],
 ]);
