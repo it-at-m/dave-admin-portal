@@ -9,8 +9,8 @@ import "vuetify/styles";
 import { mdi, aliases as mdiAliases } from "vuetify/iconsets/mdi";
 import { de } from "vuetify/locale";
 
-import artFJS from "@/components/icons/ArtIcons/ArtFJS.vue";
 // Zaehlart
+import artFJS from "@/components/icons/ArtIcons/ArtFJS.vue";
 import artH from "@/components/icons/ArtIcons/ArtH.vue";
 import artN from "@/components/icons/ArtIcons/ArtN.vue";
 import artQ from "@/components/icons/ArtIcons/ArtQ.vue";
