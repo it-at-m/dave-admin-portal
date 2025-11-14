@@ -17,5 +17,6 @@
 <style lang="css">
 .svg-text {
   font: bold 23px Arial;
+  font-stretch: condensed;
 }
 </style>

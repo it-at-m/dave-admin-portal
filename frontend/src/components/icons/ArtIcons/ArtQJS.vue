@@ -7,7 +7,6 @@
       x="16"
       y="26"
       class="svg-text"
-      textLength="100%"
       text-anchor="middle"
       fill="currentColor"
     >
@@ -18,5 +17,6 @@
 <style lang="css">
 .svg-text {
   font: bold 23px Arial;
+  font-stretch: condensed;
 }
 </style>
