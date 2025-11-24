@@ -42,7 +42,6 @@
           v-model:is-valid="isAllgemeineInfoFormValid"
           :height="contentHeight"
         />
-        <!--          @is-valid="setAllgemeineFormValid"-->
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_KNOTEN">
         <knoten-lage-form
