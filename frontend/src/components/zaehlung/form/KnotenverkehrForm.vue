@@ -1036,7 +1036,6 @@ function validateSelection() {
   const selectedKnotenarmNummern = selectedKnotenarme.value.map(
     (knotenarm: string) => knotenarm.charAt(0)
   );
-  // TODO richtige Validierug einbauen
   isValid.value =
     availableNodes.value.filter(
       (nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber)
