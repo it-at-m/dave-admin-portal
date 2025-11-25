@@ -20,7 +20,7 @@
       <g
         id="nodes5To8"
         class="Page"
-        transform="rotate(45,14353.769,17883.631)"
+        transform="rotate(45,14344.644,17924.82)"
       >
         <g
           id="node8_group"
@@ -458,7 +458,7 @@
       <g
         id="nodes1To4"
         class="Page"
-        transform="translate(61.589959,29.395208)"
+        transform="translate(88.042487,47.911987)"
       >
         <g
           id="node4_group"
@@ -896,6 +896,14 @@
           </g>
         </g>
       </g>
+
+      <path
+        v-if="hasAvailableNodes"
+        id="center"
+        d="m 14253.004,17465.11 166.703,0 117.876,117.877 0,166.702 -117.876,117.877 -166.703,0 -117.876,-117.877 0,-166.702 z"
+        transform="matrix(0.37991612,-0.37991612,0.37991612,0.37991612,2288.1609,16577.386)"
+        fill="#1565c0"
+      />
     </svg>
   </v-sheet>
 </template>
@@ -926,6 +934,9 @@ const selectedKnotenarme = ref<Array<string>>([]);
 
 const availableNodes = computed(() => {
   return zaehlung.value.knotenarme.map((arm) => `${arm.nummer}`);
+});
+const hasAvailableNodes = computed(() => {
+  return availableNodes.value.length > 0;
 });
 
 onMounted(() => {
