@@ -18,26 +18,20 @@
       xml:space="preserve"
     >
       <g
-        id="layer1"
-        transform="translate(-13682.197,-17142.499)"
+        id="querschnitt"
+        transform="rotate(0,700,700)"
       >
-        <g
-          id="g5"
-          transform="matrix(0,-0.6666814,0.66728202,0,2306.3104,27427.361)"
-        >
-          <g
-            id="node4-5"
-            transform="translate(577.29494,-599.92464)"
-          >
+        <g id="description">
+          <g id="second_street">
             <text
-              id="text22"
+              id="text5"
               xml:space="preserve"
               style="
                 font-style: normal;
                 font-variant: normal;
                 font-weight: normal;
                 font-stretch: normal;
-                font-size: 50.312px;
+                font-size: 33.4058px;
                 font-family: sans-serif;
                 font-variant-ligatures: normal;
                 font-variant-caps: normal;
@@ -50,29 +44,27 @@
                 fill: #000000;
                 stroke-width: 39.1848;
               "
-              x="19651.174"
-              y="-13382.24"
-              transform="matrix(0,0.97107714,-1.0297843,0,0,0)"
+              x="949.72992"
+              y="712.17938"
             >
               <tspan
                 id="tspan21"
-                x="19651.174"
-                y="-13382.24"
-                transform="translate(0,-2.8480775e-4)"
                 style="stroke-width: 39.1848"
+                x="949.72992"
+                y="712.17938"
               >
                 1234567890123
               </tspan>
             </text>
             <text
-              id="text18"
+              id="text6"
               xml:space="preserve"
               style="
                 font-style: normal;
                 font-variant: normal;
                 font-weight: normal;
                 font-stretch: normal;
-                font-size: 50.312px;
+                font-size: 33.4058px;
                 font-family: sans-serif;
                 font-variant-ligatures: normal;
                 font-variant-caps: normal;
@@ -85,91 +77,79 @@
                 fill: #000000;
                 stroke-width: 39.1848;
               "
-              x="19651.174"
-              y="-13413.685"
-              transform="matrix(0,0.97107715,-1.0297843,0,0,0)"
+              y="691.19336"
+              x="951.76886"
             >
               <tspan
                 id="tspan17"
-                x="19651.174"
-                y="-13413.685"
-                transform="translate(0,-2.8480775e-4)"
                 style="stroke-width: 39.1848"
+                x="951.76886"
+                y="691.19336"
               >
                 1234567890123
               </tspan>
               <tspan
                 id="tspan18"
-                x="19651.174"
-                y="-13350.795"
-                transform="translate(0,-2.8480775e-4)"
                 style="stroke-width: 39.1848"
+                x="951.76886"
+                y="732.95062"
               >
                 4567890123456
               </tspan>
             </text>
           </g>
-          <g
-            id="second_number"
-            transform="matrix(0.79386182,0,0,0.79386182,2963.6448,4304.3997)"
-          >
+          <g id="second_number">
             <ellipse
               id="ellipse13"
               style="
                 fill: none;
                 fill-opacity: 1;
                 stroke: #000000;
-                stroke-width: 1.93458;
+                stroke-width: 1.02435;
                 stroke-dasharray: none;
                 stroke-opacity: 1;
               "
-              cx="17797.072"
-              cy="-14376.974"
-              transform="rotate(90)"
-              rx="38.675568"
-              ry="38.710403"
+              cx="924"
+              cy="700"
+              rx="20.487822"
+              ry="20.487823"
             />
             <text
               id="text14"
               xml:space="preserve"
               style="
-                font-size: 63.0885px;
+                font-size: 33.4058px;
+                font-family: sans-serif;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #000000;
-                stroke-width: 38.9418;
-                font-family: sans-serif;
-                font-weight: normal;
-                font-style: normal;
-                font-stretch: normal;
-                font-variant: normal;
-                font-variant-ligatures: normal;
-                font-variant-caps: normal;
-                font-variant-numeric: normal;
-                font-variant-east-asian: normal;
+                stroke-width: 52.2711;
               "
-              x="18421.684"
-              y="-13851.564"
-              transform="matrix(0,0.96505433,-1.0362111,0,0,0)"
+              x="914.59186"
+              y="711.73895"
             >
-              <tspan id="tspan14">2</tspan>
+              <tspan
+                id="tspan14"
+                x="914.59186"
+                y="711.73895"
+                style="stroke-width: 52.2711"
+              >
+                4
+              </tspan>
             </text>
           </g>
-          <g
-            id="g22"
-            transform="translate(577.29494,-599.92464)"
-          >
+          <g id="first_street">
             <text
-              id="text3"
+              id="singlerow"
               xml:space="preserve"
               style="
                 font-style: normal;
                 font-variant: normal;
                 font-weight: normal;
                 font-stretch: normal;
-                font-size: 50.312px;
+                font-size: 33.4058px;
                 font-family: sans-serif;
                 font-variant-ligatures: normal;
                 font-variant-caps: normal;
@@ -182,29 +162,27 @@
                 fill: #000000;
                 stroke-width: 39.1848;
               "
-              x="18441.266"
-              y="-13382.24"
-              transform="matrix(0,0.97107714,-1.0297843,0,0,0)"
+              x="171.32993"
+              y="712.17938"
             >
               <tspan
                 id="tspan15"
-                x="18441.266"
-                y="-13382.24"
-                transform="translate(0,-2.8480775e-4)"
                 style="stroke-width: 39.1848"
+                x="171.32993"
+                y="712.17938"
               >
                 1234567890123
               </tspan>
             </text>
             <text
-              id="text20"
+              id="multirow"
               xml:space="preserve"
               style="
                 font-style: normal;
                 font-variant: normal;
                 font-weight: normal;
                 font-stretch: normal;
-                font-size: 50.312px;
+                font-size: 33.4058px;
                 font-family: sans-serif;
                 font-variant-ligatures: normal;
                 font-variant-caps: normal;
@@ -217,67 +195,67 @@
                 fill: #000000;
                 stroke-width: 39.1848;
               "
-              x="18441.266"
-              y="-13413.685"
-              transform="matrix(0,0.97107715,-1.0297843,0,0,0)"
+              x="173.36885"
+              y="691.19336"
             >
               <tspan
                 id="tspan19"
-                x="18441.266"
-                y="-13413.685"
-                transform="translate(0,-2.8480775e-4)"
                 style="stroke-width: 39.1848"
+                x="173.36885"
+                y="691.19336"
               >
                 1234567890123
               </tspan>
               <tspan
                 id="tspan20"
-                x="18441.266"
-                y="-13350.795"
-                transform="translate(0,-2.8480775e-4)"
                 style="stroke-width: 39.1848"
+                x="173.36885"
+                y="732.95062"
               >
                 4567890123456
               </tspan>
             </text>
           </g>
-          <g
-            id="first_number"
-            transform="matrix(0.79386181,0,0,0.79386183,2963.6448,3633.0195)"
-          >
+          <g id="first_number">
             <ellipse
               id="ellipse3"
               style="
                 fill: none;
                 fill-opacity: 1;
                 stroke: #000000;
-                stroke-width: 1.93458;
+                stroke-width: 1.02435;
                 stroke-dasharray: none;
                 stroke-opacity: 1;
               "
-              cx="17797.072"
-              cy="-14376.974"
-              transform="rotate(90)"
-              rx="38.675568"
-              ry="38.710403"
+              cx="476"
+              cy="700"
+              rx="20.487822"
+              ry="20.487823"
             />
             <text
-              id="text4"
+              id="text1"
               xml:space="preserve"
               style="
-                font-size: 63.0885px;
+                font-size: 33.4058px;
+                font-family: sans-serif;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #000000;
-                stroke-width: 38.9418;
+                stroke-width: 52.2711;
               "
-              x="18421.684"
-              y="-13851.564"
-              transform="matrix(0,0.96505433,-1.0362111,0,0,0)"
+              y="711.73895"
+              x="465.80084"
             >
-              4
+              <tspan
+                id="tspan2"
+                style="stroke-width: 52.2711"
+                x="465.80084"
+                y="711.73895"
+              >
+                4
+              </tspan>
             </text>
           </g>
         </g>
@@ -286,56 +264,52 @@
             <path
               id="path2-8"
               style="fill: #000000; stroke-width: 43.1576"
-              d="m 13857.197,17982.499 v -28 h 1050 v 27.997 z"
-              transform="translate(6.4702126e-6,-8.0463116e-5)"
+              d="m 175,839.99999 v -28 h 1050 v 27.997 z"
             />
             <path
               id="path24"
               style="fill: #000000; stroke-width: 78.3672"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
-              transform="matrix(0.09192953,0,0,0.07964786,13538.802,16577.046)"
+              transform="matrix(0.09192953,0,0,0.07964786,-143.39551,-565.45264)"
             />
           </g>
           <g id="g27">
             <path
               id="path1-8"
               style="fill: #000000; stroke-width: 43.1576"
-              d="m 13857.197,17926.499 v -28 h 1050 v 27.997 z"
-              transform="translate(6.4702126e-6,-8.0463116e-5)"
+              d="m 175,783.99999 v -28 h 1050 v 27.997 z"
             />
             <path
               id="path23"
               style="fill: #000000; stroke-width: 78.3672"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
-              transform="matrix(-0.09192953,0,0,-0.07964786,15225.592,19303.952)"
+              transform="matrix(-0.09192953,0,0,-0.07964786,1543.3955,2161.4526)"
             />
           </g>
           <g id="g28">
             <path
               id="path2"
               style="fill: #000000; stroke-width: 43.1577"
-              d="m 13857.197,17786.499 v -28 h 1050 v 27.997 z"
-              transform="translate(6.4702126e-6,-8.0463116e-5)"
+              d="m 175,644 v -28 h 1050 v 27.997 z"
             />
             <path
               id="path25"
               style="fill: #000000; stroke-width: 78.3672"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
-              transform="matrix(0.09192953,0,0,0.07964786,13538.802,16381.046)"
+              transform="matrix(0.09192953,0,0,0.07964786,-143.39551,-761.45264)"
             />
           </g>
           <g id="g29">
             <path
               id="path1"
               style="fill: #000000; stroke-width: 43.1578"
-              d="m 13857.197,17730.499 v -28 h 1050 v 27.998 z"
-              transform="translate(6.4702126e-6,-8.0463116e-5)"
+              d="m 175,588 v -28 h 1050.0001 v 27.998 z"
             />
             <path
               id="path22"
               style="fill: #000000; stroke-width: 78.3672"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
-              transform="matrix(-0.09192953,0,0,-0.07964786,15225.592,19107.952)"
+              transform="matrix(-0.09192953,0,0,-0.07964786,1543.3955,1965.4526)"
             />
           </g>
         </g>
