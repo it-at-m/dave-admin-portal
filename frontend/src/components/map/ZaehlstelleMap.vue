@@ -91,8 +91,8 @@ import markerIconDiamondShadow from "@/assets/cards-diamond-shadow.png";
 import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleDialog.vue";
+import { useConfigurationStore } from "@/store/ConfigurationStore";
 import { useEventbus } from "@/store/Eventbus";
-import { useMapConfigStore } from "@/store/MapConfigStore";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
@@ -130,7 +130,7 @@ const snackbarStore = useSnackbarStore();
 const router = useRouter();
 const dateUtils = useDateUtils();
 const mapOptionsStore = useMapOptionsStore();
-const mapConfigStore = useMapConfigStore();
+const configurationStore = useConfigurationStore();
 const eventbus = useEventbus();
 
 const mapRef = ref<HTMLDivElement | null>(null);
@@ -332,8 +332,8 @@ const center = computed<LatLng>(() => {
     );
   } else {
     return createLatLngFromString(
-      mapConfigStore.getMapConfig.lat,
-      mapConfigStore.getMapConfig.lng
+      configurationStore.getMapConfiguration.lat,
+      configurationStore.getMapConfiguration.lng
     );
   }
 });

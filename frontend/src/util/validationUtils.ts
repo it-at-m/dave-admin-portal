@@ -1,3 +1,5 @@
+import { toNumber } from "lodash";
+
 export function useValidationUtils() {
   function pflichtfeld(value: string): boolean | string {
     if (value) {
@@ -13,8 +15,20 @@ export function useValidationUtils() {
     return pattern.test(email);
   }
 
+  /**
+   * Prüft, ob der übergebene Wert eine Zahl ist.
+   */
+  function mustBePositivNumber(value: string): boolean | string {
+    const number = toNumber(value);
+    if (isNaN(number) || number <= 0) {
+      return "Bitte eine Zählstellennummer >= 0 eingeben";
+    }
+    return true;
+  }
+
   return {
     pflichtfeld,
     isEmailValid,
+    mustBePositivNumber,
   };
 }
