@@ -101,10 +101,7 @@
               </tspan>
             </text>
           </g>
-          <g
-            id="second_number"
-            style="cursor: pointer"
-          >
+          <g id="second_number">
             <ellipse
               id="ellipse13"
               style="
@@ -224,10 +221,7 @@
               </tspan>
             </text>
           </g>
-          <g
-            id="first_number"
-            style="cursor: pointer"
-          >
+          <g id="first_number">
             <ellipse
               id="ellipse3"
               style="
@@ -271,54 +265,70 @@
           </g>
         </g>
         <g id="arrows">
-          <g id="arrow4">
+          <g
+            id="arrow4"
+            style="cursor: pointer"
+            @click="activateArrow(4)"
+          >
             <path
               id="path4"
-              :fill="calculateColor('4')"
+              :fill="calculateColor(4)"
               d="m 69.999999,860.99999 v -28 H 1330 v 27.997 z"
             />
             <path
               id="spike4"
-              style="fill: #000000; stroke-width: 78.3672"
+              :fill="calculateColor(4)"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-544.45264)"
             />
           </g>
-          <g id="arrow3">
+          <g
+            id="arrow3"
+            style="cursor: pointer"
+            @click="activateArrow(3)"
+          >
             <path
               id="path3"
-              style="fill: #000000; stroke-width: 47.2768"
+              :fill="calculateColor(3)"
               d="m 69.999999,804.99999 v -28 H 1330 v 27.997 z"
             />
             <path
               id="spike3"
-              style="fill: #000000; stroke-width: 78.3672"
+              :fill="calculateColor(3)"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,2182.4526)"
             />
           </g>
-          <g id="arrow2">
+          <g
+            id="arrow2"
+            style="cursor: pointer"
+            @click="activateArrow(2)"
+          >
             <path
               id="path2"
-              style="fill: #000000; stroke-width: 47.2769"
+              :fill="calculateColor(2)"
               d="M 69.999999,623 V 595 H 1330 v 27.997 z"
             />
             <path
               id="spike2"
-              style="fill: #000000; stroke-width: 78.3672"
+              :fill="calculateColor(2)"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-782.45264)"
             />
           </g>
-          <g id="arrow1">
+          <g
+            id="arrow1"
+            style="cursor: pointer"
+            @click="activateArrow(1)"
+          >
             <path
               id="path1"
-              style="fill: #000000; stroke-width: 47.277"
+              :fill="calculateColor(1)"
               d="M 69.999999,567 V 539 H 1330 v 27.998 z"
             />
             <path
               id="spike1"
-              style="fill: #000000; stroke-width: 78.3672"
+              :fill="calculateColor(1)"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,1944.4526)"
             />
@@ -348,10 +358,9 @@
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { first, last } from "lodash";
+import { first, isEmpty, last } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
-import Zaehlart from "@/types/enum/Zaehlart";
 import KnotenarmComparator from "@/util/KnotenarmComparator";
 
 interface Props {
@@ -369,12 +378,12 @@ const isValid = defineModel<boolean>("isValid", {
 const activeColor = "#D50000";
 const passiveColor = "#9E9E9E";
 
-const selectedKnotenarme = ref<Array<string>>([]);
+const selectedArrows = ref<Array<number>>([]);
 const firstStreetname = ref<Array<string>>([]);
 const secondStreetname = ref<Array<string>>([]);
 
 const availableNodeNumbers = computed(() => {
-  return availableNodes.value.map((arm) => `${arm.nummer}`);
+  return availableNodes.value.map((arm) => arm.nummer);
 });
 const availableNodes = computed(() => {
   return zaehlung.value.knotenarme
@@ -390,16 +399,16 @@ const secondNode = computed(() => {
 });
 const rotateSvg = computed(() => {
   let rotation = "rotate(0,700,700)";
-  if (availableNodeNumbers.value.includes("1")) {
+  if (availableNodeNumbers.value.includes(1)) {
     rotation = "rotate(-90,700,700)";
   }
-  if (availableNodeNumbers.value.includes("2")) {
+  if (availableNodeNumbers.value.includes(2)) {
     rotation = "rotate(0,700,700)";
   }
-  if (availableNodeNumbers.value.includes("5")) {
+  if (availableNodeNumbers.value.includes(5)) {
     rotation = "rotate(-45,700,700)";
   }
-  if (availableNodeNumbers.value.includes("6")) {
+  if (availableNodeNumbers.value.includes(6)) {
     rotation = "rotate(45,700,700)";
   }
   return rotation;
@@ -430,94 +439,35 @@ watch(
   { deep: true, immediate: true }
 );
 
-function isNodeAvailable(node: string): boolean {
-  return availableNodeNumbers.value.includes(node);
-}
-
 /**
- * Wenn für die knotenarm im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
+ * Wenn die Nummer des Pfeils im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
  * ansonsten in der passiveColor.
  */
-function calculateColor(knotenarm: string): string | undefined {
+function calculateColor(arrow: number): string | undefined {
   let color = passiveColor;
-  const gefilteterKnotenarm = selectedKnotenarme.value.filter(
-    (k) => k === knotenarm
-  )[0];
-  if (gefilteterKnotenarm) {
+  if (!isEmpty(selectedArrows.value.filter((k) => k === arrow))) {
     color = activeColor;
   }
   return color;
 }
 
-function activateNode(knotenarm: string) {
-  if (!selectedKnotenarme.value.includes(knotenarm)) {
-    selectedKnotenarme.value.push(knotenarm);
+function activateArrow(arrow: number): void {
+  if (!selectedArrows.value.includes(arrow)) {
+    selectedArrows.value.push(arrow);
   } else {
-    selectedKnotenarme.value.splice(
-      selectedKnotenarme.value.indexOf(knotenarm),
-      1
-    );
+    selectedArrows.value.splice(selectedArrows.value.indexOf(arrow), 1);
   }
   validateSelection();
-}
-
-function activateOrDeactivateTotalNode(knotenarm: string) {
-  if (!isNodeAvailable(knotenarm)) {
-    //  remove all
-    return;
-  }
-
-  const endings = [];
-
-  if (zaehlung.value.zaehlart === Zaehlart.QU) {
-    endings.push("CL2R");
-    endings.push("CR2L");
-  }
-  if (zaehlung.value.zaehlart === Zaehlart.FJS) {
-    endings.push("LU");
-    endings.push("LD");
-    endings.push("RU");
-    endings.push("RD");
-  }
-
-  const nodeStrings = endings.map((value) => knotenarm + value);
-
-  let nothingRemoved = true;
-
-  nodeStrings.forEach((nodeString) => {
-    if (selectedKnotenarme.value.includes(nodeString)) {
-      nothingRemoved = false;
-      selectedKnotenarme.value.splice(
-        selectedKnotenarme.value.indexOf(nodeString),
-        1
-      );
-    }
-  });
-
-  if (nothingRemoved && isNodeAvailable(knotenarm)) {
-    nodeStrings.forEach((value) => {
-      activateNode(value);
-    });
-  }
-  validateSelection();
-}
-
-function getCursorType(knotenarm: string) {
-  if (isNodeAvailable(knotenarm)) {
-    return `pointer`;
-  } else {
-    return "default";
-  }
 }
 
 function resetForm(): void {
-  selectedKnotenarme.value = [];
+  selectedArrows.value = [];
   firstStreetname.value = [];
   secondStreetname.value = [];
   validateSelection();
 }
 
-function prepareStreetnames() {
+function prepareStreetnames(): void {
   firstStreetname.value = getStreetname(firstNode.value);
   secondStreetname.value = getStreetname(secondNode.value);
 }
@@ -561,12 +511,8 @@ function getStreetname(knotenarm: KnotenarmDTO | undefined): Array<string> {
 }
 
 function validateSelection(): void {
-  const selectedKnotenarmNummern = selectedKnotenarme.value.map(
-    (knotenarm: string) => knotenarm.charAt(0)
-  );
   isValid.value =
-    availableNodeNumbers.value.filter(
-      (nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber)
-    ).length === 0;
+    (selectedArrows.value.includes(1) && selectedArrows.value.includes(2)) ||
+    (selectedArrows.value.includes(3) && selectedArrows.value.includes(4));
 }
 </script>
