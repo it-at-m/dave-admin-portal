@@ -7,6 +7,7 @@
     class="d-flex flex-row justify-center overflow-y-auto"
   >
     <svg
+      v-if="areAvailableNodesValid"
       :height="height"
       :width="height"
       viewBox="0 0 1400 1400"
@@ -19,11 +20,12 @@
     >
       <g
         id="querschnitt"
-        transform="rotate(0,700,700)"
+        :transform="rotateSvg"
       >
         <g id="description">
           <g id="second_street">
             <text
+              v-if="secondStreetname.length === 1"
               id="singlerow2"
               xml:space="preserve"
               style="
@@ -49,14 +51,15 @@
             >
               <tspan
                 id="tspan21"
-                style="stroke-width: 38.9194"
+                style="stroke-width: 38.9194; unicode-bidi: plaintext"
                 x="1332.2212"
                 y="712.01141"
               >
-                45678901234567890
+                {{ secondStreetname[0] }}
               </tspan>
             </text>
             <text
+              v-if="secondStreetname.length === 2"
               id="multirow2"
               xml:space="preserve"
               style="
@@ -82,23 +85,26 @@
             >
               <tspan
                 id="tspan17"
-                style="stroke-width: 39.1848"
+                style="stroke-width: 39.1848; unicode-bidi: plaintext"
                 x="1332.2212"
                 y="691.19336"
               >
-                45678901234567890
+                {{ secondStreetname[0] }}
               </tspan>
               <tspan
                 id="tspan18"
-                style="stroke-width: 39.1848"
+                style="stroke-width: 39.1848; unicode-bidi: plaintext"
                 x="1332.2212"
                 y="732.95062"
               >
-                45678901234567890
+                {{ secondStreetname[1] }}
               </tspan>
             </text>
           </g>
-          <g id="second_number">
+          <g
+            id="second_number"
+            style="cursor: pointer"
+          >
             <ellipse
               id="ellipse13"
               style="
@@ -136,12 +142,13 @@
                 y="711.73895"
                 style="stroke-width: 52.2711"
               >
-                4
+                {{ secondNode?.nummer }}
               </tspan>
             </text>
           </g>
           <g id="first_street">
             <text
+              v-if="firstStreetname.length === 1"
               id="singlerow"
               xml:space="preserve"
               style="
@@ -171,10 +178,11 @@
                 x="68.368858"
                 y="712.17938"
               >
-                45678901234567890
+                {{ firstStreetname[0] }}
               </tspan>
             </text>
             <text
+              v-if="firstStreetname.length === 2"
               id="multirow"
               xml:space="preserve"
               style="
@@ -204,7 +212,7 @@
                 x="68.368858"
                 y="691.19336"
               >
-                45678901234567890
+                {{ firstStreetname[0] }}
               </tspan>
               <tspan
                 id="tspan1"
@@ -212,11 +220,14 @@
                 x="68.368858"
                 y="732.95062"
               >
-                45678901234567890
+                {{ firstStreetname[1] }}
               </tspan>
             </text>
           </g>
-          <g id="first_number">
+          <g
+            id="first_number"
+            style="cursor: pointer"
+          >
             <ellipse
               id="ellipse3"
               style="
@@ -254,59 +265,59 @@
                 x="465.80084"
                 y="711.73895"
               >
-                4
+                {{ firstNode?.nummer }}
               </tspan>
             </text>
           </g>
         </g>
         <g id="arrows">
-          <g id="g26">
+          <g id="arrow4">
             <path
-              id="path2-8"
-              style="fill: #000000; stroke-width: 47.2768"
+              id="path4"
+              :fill="calculateColor('4')"
               d="m 69.999999,860.99999 v -28 H 1330 v 27.997 z"
             />
             <path
-              id="path24"
+              id="spike4"
               style="fill: #000000; stroke-width: 78.3672"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-544.45264)"
             />
           </g>
-          <g id="g27">
+          <g id="arrow3">
             <path
-              id="path1-8"
+              id="path3"
               style="fill: #000000; stroke-width: 47.2768"
               d="m 69.999999,804.99999 v -28 H 1330 v 27.997 z"
             />
             <path
-              id="path23"
+              id="spike3"
               style="fill: #000000; stroke-width: 78.3672"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,2182.4526)"
             />
           </g>
-          <g id="g28">
+          <g id="arrow2">
             <path
               id="path2"
               style="fill: #000000; stroke-width: 47.2769"
               d="M 69.999999,623 V 595 H 1330 v 27.997 z"
             />
             <path
-              id="path25"
+              id="spike2"
               style="fill: #000000; stroke-width: 78.3672"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-782.45264)"
             />
           </g>
-          <g id="g29">
+          <g id="arrow1">
             <path
               id="path1"
               style="fill: #000000; stroke-width: 47.277"
               d="M 69.999999,567 V 539 H 1330 v 27.998 z"
             />
             <path
-              id="path22"
+              id="spike1"
               style="fill: #000000; stroke-width: 78.3672"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,1944.4526)"
@@ -315,142 +326,247 @@
         </g>
       </g>
     </svg>
+
+    <v-banner
+      v-else
+      lines="one"
+      width="100%"
+      text="Es wurde nicht exakt 2 gegenüberliegende Knotenarme ausgewählt."
+    >
+      <template #prepend>
+        <v-icon
+          icon="mdi-alert-decagram-outline"
+          size="36"
+          color="error"
+        />
+      </template>
+    </v-banner>
   </v-sheet>
 </template>
 
 <script setup lang="ts">
+import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+
+import { first, last } from "lodash";
+import { computed, onMounted, ref, watch } from "vue";
+
+import Zaehlart from "@/types/enum/Zaehlart";
+import KnotenarmComparator from "@/util/KnotenarmComparator";
+
 interface Props {
   height: string;
 }
 defineProps<Props>();
 
-// const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
-//   required: false,
-// });
-// const isValid = defineModel<boolean>("isValid", {
-//   required: false,
-// });
+const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
+  required: true,
+});
+const isValid = defineModel<boolean>("isValid", {
+  required: false,
+});
 
-// const activeColor = "#D50000";
-// const passiveColor = "#9E9E9E";
-//
-// const selectedKnotenarme = ref<Array<string>>([]);
+const activeColor = "#D50000";
+const passiveColor = "#9E9E9E";
 
-// const availableNodes = computed(() => {
-//   return zaehlung.value.knotenarme.map((arm) => `${arm.nummer}`);
-// });
+const selectedKnotenarme = ref<Array<string>>([]);
+const firstStreetname = ref<Array<string>>([]);
+const secondStreetname = ref<Array<string>>([]);
 
-// onMounted(() => {
-//   resetForm();
-// });
-//
-// watch(
-//   () => zaehlung.value.knotenarme,
-//   () => {
-//     resetForm();
-//   },
-//   { deep: true, immediate: true }
-// );
-//
-// function isNodeAvailable(node: string): boolean {
-//   return availableNodes.value.includes(node);
-// }
-// /**
-//  * Wenn für die knotenarm im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
-//  * ansonsten in der passiveColor.
-//  */
-// function calculateColor(knotenarm: string): string | undefined {
-//   let color = passiveColor;
-//   const gefilteterKnotenarm = selectedKnotenarme.value.filter(
-//     (k) => k === knotenarm
-//   )[0];
-//   if (gefilteterKnotenarm) {
-//     color = activeColor;
-//   }
-//   return color;
-// }
-//
-// function activateNode(knotenarm: string) {
-//   if (!selectedKnotenarme.value.includes(knotenarm)) {
-//     selectedKnotenarme.value.push(knotenarm);
-//   } else {
-//     selectedKnotenarme.value.splice(
-//       selectedKnotenarme.value.indexOf(knotenarm),
-//       1
-//     );
-//   }
-//   validateSelection();
-// }
-//
-// function activateOrDeactivateTotalNode(knotenarm: string) {
-//   if (!isNodeAvailable(knotenarm)) {
-//   //  remove all
-// return;
-// }
-//
-// const endings = [];
-//
-// if (zaehlung.value.zaehlart === Zaehlart.QU) {
-//   endings.push("CL2R");
-//   endings.push("CR2L");
-// }
-// if (zaehlung.value.zaehlart === Zaehlart.FJS) {
-//   endings.push("LU");
-//   endings.push("LD");
-//   endings.push("RU");
-//   endings.push("RD");
-// }
-//
-// const nodeStrings = endings.map((value) => knotenarm + value);
-//
-// let nothingRemoved = true;
-//
-// nodeStrings.forEach((nodeString) => {
-//   if (selectedKnotenarme.value.includes(nodeString)) {
-//     nothingRemoved = false;
-//     selectedKnotenarme.value.splice(
-//       selectedKnotenarme.value.indexOf(nodeString),
-//       1
-//     );
-//   }
-// });
-//
-// if (nothingRemoved && isNodeAvailable(knotenarm)) {
-//   nodeStrings.forEach((value) => {
-//     activateNode(value);
-//   });
-// }
-// validateSelection();
-// }
-//
-// function getCursorType(knotenarm: string) {
-//   if (isNodeAvailable(knotenarm)) {
-//     return `pointer`;
-//   } else {
-//     return "default";
-//   }
-// }
-//
-// function getColorOfNode(knotenarm: string) {
-//   if (isNodeAvailable(knotenarm)) {
-//     return `#1565C0`;
-//   } else {
-//     return `#EEEEEE`;
-//   }
-// }
-//
-// function resetForm() {
-//   selectedKnotenarme.value = [];
-//   validateSelection();
-// }
-//
-// function validateSelection() {
-//   const selectedKnotenarmNummern = selectedKnotenarme.value.map(
-//     (knotenarm: string) => knotenarm.charAt(0)
-//   );
-//   isValid.value =
-//     availableNodes.value.filter(
-//       (nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber)
-//     ).length === 0;
-// }
+const availableNodeNumbers = computed(() => {
+  return availableNodes.value.map((arm) => `${arm.nummer}`);
+});
+const availableNodes = computed(() => {
+  return zaehlung.value.knotenarme
+    .toSorted(KnotenarmComparator.sortByNumber)
+    .reverse();
+});
+
+const firstNode = computed(() => {
+  return first(availableNodes.value);
+});
+const secondNode = computed(() => {
+  return last(availableNodes.value);
+});
+const rotateSvg = computed(() => {
+  let rotation = "rotate(0,700,700)";
+  if (availableNodeNumbers.value.includes("1")) {
+    rotation = "rotate(-90,700,700)";
+  }
+  if (availableNodeNumbers.value.includes("2")) {
+    rotation = "rotate(0,700,700)";
+  }
+  if (availableNodeNumbers.value.includes("5")) {
+    rotation = "rotate(-45,700,700)";
+  }
+  if (availableNodeNumbers.value.includes("6")) {
+    rotation = "rotate(45,700,700)";
+  }
+  return rotation;
+});
+const areAvailableNodesValid = computed(() => {
+  let result = availableNodes.value.length === 2;
+  // Erlaubte Kombinationen: 1 & 3, 2 & 4, 5 & 7, 6 & 8
+  // => Absolute Subtraktion der Kontenarmnummern muss immer 2 sein
+  if (firstNode.value && secondNode.value) {
+    result =
+      result &&
+      Math.abs(firstNode.value.nummer - secondNode.value.nummer) === 2;
+  }
+  return result;
+});
+
+onMounted(() => {
+  resetForm();
+  prepareStreetnames();
+});
+
+watch(
+  () => zaehlung.value.knotenarme,
+  () => {
+    resetForm();
+    prepareStreetnames();
+  },
+  { deep: true, immediate: true }
+);
+
+function isNodeAvailable(node: string): boolean {
+  return availableNodeNumbers.value.includes(node);
+}
+
+/**
+ * Wenn für die knotenarm im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
+ * ansonsten in der passiveColor.
+ */
+function calculateColor(knotenarm: string): string | undefined {
+  let color = passiveColor;
+  const gefilteterKnotenarm = selectedKnotenarme.value.filter(
+    (k) => k === knotenarm
+  )[0];
+  if (gefilteterKnotenarm) {
+    color = activeColor;
+  }
+  return color;
+}
+
+function activateNode(knotenarm: string) {
+  if (!selectedKnotenarme.value.includes(knotenarm)) {
+    selectedKnotenarme.value.push(knotenarm);
+  } else {
+    selectedKnotenarme.value.splice(
+      selectedKnotenarme.value.indexOf(knotenarm),
+      1
+    );
+  }
+  validateSelection();
+}
+
+function activateOrDeactivateTotalNode(knotenarm: string) {
+  if (!isNodeAvailable(knotenarm)) {
+    //  remove all
+    return;
+  }
+
+  const endings = [];
+
+  if (zaehlung.value.zaehlart === Zaehlart.QU) {
+    endings.push("CL2R");
+    endings.push("CR2L");
+  }
+  if (zaehlung.value.zaehlart === Zaehlart.FJS) {
+    endings.push("LU");
+    endings.push("LD");
+    endings.push("RU");
+    endings.push("RD");
+  }
+
+  const nodeStrings = endings.map((value) => knotenarm + value);
+
+  let nothingRemoved = true;
+
+  nodeStrings.forEach((nodeString) => {
+    if (selectedKnotenarme.value.includes(nodeString)) {
+      nothingRemoved = false;
+      selectedKnotenarme.value.splice(
+        selectedKnotenarme.value.indexOf(nodeString),
+        1
+      );
+    }
+  });
+
+  if (nothingRemoved && isNodeAvailable(knotenarm)) {
+    nodeStrings.forEach((value) => {
+      activateNode(value);
+    });
+  }
+  validateSelection();
+}
+
+function getCursorType(knotenarm: string) {
+  if (isNodeAvailable(knotenarm)) {
+    return `pointer`;
+  } else {
+    return "default";
+  }
+}
+
+function resetForm(): void {
+  selectedKnotenarme.value = [];
+  firstStreetname.value = [];
+  secondStreetname.value = [];
+  validateSelection();
+}
+
+function prepareStreetnames() {
+  firstStreetname.value = getStreetname(firstNode.value);
+  secondStreetname.value = getStreetname(secondNode.value);
+}
+
+function getStreetname(knotenarm: KnotenarmDTO | undefined): Array<string> {
+  let strasse = "";
+  if (knotenarm && knotenarm.strassenname) {
+    strasse = knotenarm.strassenname;
+  }
+  let pieces = [strasse];
+  const zeichen = strasse.length;
+  // Anzahl Zeichen
+  if (zeichen > 17) {
+    pieces = ["", ""];
+    if (strasse.endsWith("str.")) {
+      const index = strasse.indexOf("str.");
+      pieces[0] = strasse.substring(0, zeichen - 4);
+      pieces[1] = strasse.substring(index, 4);
+    }
+    // Platz
+    if (strasse.endsWith("pl.")) {
+      const index = strasse.indexOf("pl.");
+      pieces[0] = strasse.substring(0, zeichen - 3);
+      pieces[1] = strasse.substring(index, 3);
+    }
+    // Bindestrich
+    if (strasse.includes("-")) {
+      // pieces = strasse.split(trenner);
+      const index = strasse.indexOf("-");
+      pieces[0] = strasse.substring(0, index + 1);
+      pieces[1] = strasse.substring(index + 1);
+    }
+    // Leerzeichen
+    else if (strasse.includes(" ")) {
+      const index = strasse.indexOf(" ");
+      pieces[0] = strasse.substring(0, index + 1);
+      pieces[1] = strasse.substring(index + 1);
+    }
+  }
+  return pieces;
+}
+
+function validateSelection(): void {
+  const selectedKnotenarmNummern = selectedKnotenarme.value.map(
+    (knotenarm: string) => knotenarm.charAt(0)
+  );
+  isValid.value =
+    availableNodeNumbers.value.filter(
+      (nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber)
+    ).length === 0;
+}
 </script>
