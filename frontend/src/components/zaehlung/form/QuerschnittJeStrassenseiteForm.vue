@@ -341,7 +341,7 @@
       v-else
       lines="one"
       width="100%"
-      text="Es wurde nicht exakt 2 gegenüberliegende Knotenarme ausgewählt."
+      text="Es wurden nicht exakt 2 gegenüberliegende Knotenarme ausgewählt."
     >
       <template #prepend>
         <v-icon
