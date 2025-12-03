@@ -287,8 +287,6 @@ function createZaehlstelle() {
 function deleteNewMarker() {
   if (newMarker.value) {
     newMarker.value.removeFrom(map);
-    // mapMarkerClusterGroup.removeLayer(newMarker.value);
-    // this.theMap.mapObject.removeLayer(newMarker.value);
     newMarker.value = null;
     resetBooleans();
   }
@@ -297,13 +295,11 @@ function deleteNewMarker() {
 function resetBooleans() {
   fab.value = false;
   fab2.value = false;
-  // speedDialOpen.value = false;
   addMarker.value = false;
   useCustomCursor.value = false;
 }
 
 function reloadDataAndCloseDialog(backendIdDTO: BackendIdDTO) {
-  searchErhebungsstelle();
   resetBooleans();
   closeDialog();
   routeToZaehlstelle(backendIdDTO.id);
