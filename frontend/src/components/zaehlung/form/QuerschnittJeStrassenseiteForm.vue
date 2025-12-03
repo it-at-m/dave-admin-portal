@@ -398,6 +398,7 @@ const secondNode = computed(() => {
   return last(availableNodes.value);
 });
 const rotateSvg = computed(() => {
+  // Die Viewbox der SVG liegt bei 1400 1400. Die Rotation muss in deren Zentrum stattfinden, daher 700 700
   let rotation = "rotate(0,700,700)";
   if (availableNodeNumbers.value.includes(1)) {
     rotation = "rotate(-90,700,700)";
@@ -445,7 +446,11 @@ watch(
  */
 function calculateColor(arrow: number): string | undefined {
   let color = passiveColor;
-  if (!isEmpty(selectedArrows.value.filter((k) => k === arrow))) {
+  if (
+    !isEmpty(
+      selectedArrows.value.filter((selectedArrow) => selectedArrow === arrow)
+    )
+  ) {
     color = activeColor;
   }
   return color;
@@ -510,6 +515,7 @@ function getStreetname(knotenarm: KnotenarmDTO | undefined): Array<string> {
   return pieces;
 }
 
+// Validierung der Pfeile, ob auf mindestens einer Seite beide ausgewaehlt wurden
 function validateSelection(): void {
   isValid.value =
     (selectedArrows.value.includes(1) && selectedArrows.value.includes(2)) ||

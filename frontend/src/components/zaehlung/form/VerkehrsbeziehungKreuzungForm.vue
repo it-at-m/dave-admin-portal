@@ -146,7 +146,7 @@ const hochrechnungsfaktoreDropDown = computed(() => {
 function containsHochrechnungsfaktor(
   activeFaktors: Array<HochrechnungsfaktorDTO>,
   faktor: HochrechnungsfaktorDTO
-) {
+): boolean {
   let contains = false;
   activeFaktors.forEach((value) => {
     if (value.matrix === faktor.matrix) {
@@ -175,7 +175,7 @@ function updatePossibleFahrbeziehungen(): void {
   calculateSelectAllModel();
 }
 
-function calculateSelectAllModel() {
+function calculateSelectAllModel(): void {
   selectAllModel.value =
     zaehlung.value.fahrbeziehungen.length >=
     allPossibleFahrbeziehungen.value.length / 2;
@@ -219,7 +219,7 @@ function getHochrechnungsfaktorAsText(hf: HochrechnungsfaktorDTO): string {
   return ObjectToTextTranslator.getHochrechnungsfaktorAsText(hf);
 }
 
-function selectAll() {
+function selectAll(): void {
   if (selectAllModel.value) {
     zaehlung.value.fahrbeziehungen = [];
     zaehlung.value.fahrbeziehungen = [...allPossibleFahrbeziehungen.value];
@@ -238,7 +238,7 @@ function selectAll() {
   }
 }
 
-function selectItem(fahrbeziehung: FahrbeziehungDTO) {
+function selectItem(fahrbeziehung: FahrbeziehungDTO): void {
   if (fahrbeziehung.active) {
     zaehlung.value.fahrbeziehungen.push(fahrbeziehung);
   } else {
@@ -247,7 +247,7 @@ function selectItem(fahrbeziehung: FahrbeziehungDTO) {
   calculateSelectAllModel();
 }
 
-function removeFahrbeziehung(toDelete: FahrbeziehungDTO) {
+function removeFahrbeziehung(toDelete: FahrbeziehungDTO): void {
   let deleteIndex = -1;
   zaehlung.value.fahrbeziehungen.forEach(
     (fahrbeziehung: FahrbeziehungDTO, index: number) => {

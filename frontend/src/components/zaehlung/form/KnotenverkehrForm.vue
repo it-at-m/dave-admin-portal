@@ -911,6 +911,7 @@
 <script setup lang="ts">
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
+import { isEmpty } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import Zaehlart from "@/types/enum/Zaehlart";
@@ -955,15 +956,18 @@ function isNodeAvailable(node: string): boolean {
   return availableNodes.value.includes(node);
 }
 /**
- * Wenn für die knotenarm im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
- * ansonsten in der passiveColor.
+ * Wenn die Knotenarmnummer im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
+ * ansonsten in der "passiveColor".
  */
 function calculateColor(knotenarm: string): string | undefined {
   let color = passiveColor;
-  const gefilteterKnotenarm = selectedKnotenarme.value.filter(
-    (k) => k === knotenarm
-  )[0];
-  if (gefilteterKnotenarm) {
+  if (
+    !isEmpty(
+      selectedKnotenarme.value.filter(
+        (selectedKnotenarm) => selectedKnotenarm === knotenarm
+      )
+    )
+  ) {
     color = activeColor;
   }
   return color;
@@ -973,10 +977,9 @@ function activateNode(knotenarm: string) {
   if (!selectedKnotenarme.value.includes(knotenarm)) {
     selectedKnotenarme.value.push(knotenarm);
   } else {
-    selectedKnotenarme.value.splice(
-      selectedKnotenarme.value.indexOf(knotenarm),
-      1
-    );
+    const indexOfSelectedKnotenarmToDelete =
+      selectedKnotenarme.value.indexOf(knotenarm);
+    selectedKnotenarme.value.splice(indexOfSelectedKnotenarmToDelete, 1);
   }
   validateSelection();
 }
@@ -1043,13 +1046,14 @@ function resetForm() {
   validateSelection();
 }
 
+// Validierung, ob für jeden Knotenarm mindestens ein Pfeil ausgewaehlt wurde
 function validateSelection() {
   const selectedKnotenarmNummern = selectedKnotenarme.value.map(
     (knotenarm: string) => knotenarm.charAt(0)
   );
-  isValid.value =
-    availableNodes.value.filter(
-      (nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber)
-    ).length === 0;
+  const notSelectedKnotenarme = availableNodes.value.filter(
+    (nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber)
+  );
+  isValid.value = isEmpty(notSelectedKnotenarme);
 }
 </script>
