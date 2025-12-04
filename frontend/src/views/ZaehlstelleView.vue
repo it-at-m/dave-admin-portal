@@ -341,6 +341,7 @@ function createDefaultZaehlungDTO(): ZaehlungDTO {
   const time = new Date().toLocaleTimeString(navigator.language, {
     hour: "2-digit",
     minute: "2-digit",
+    hour12: false,
   });
   zaehlung.datum = new Date(
     new Date().toISOString().substring(0, 10) + "T" + time
