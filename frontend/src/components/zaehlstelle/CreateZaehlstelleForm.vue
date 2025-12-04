@@ -1,289 +1,297 @@
 <template>
-    <v-sheet
-        width="100%"
-        class="d-flex flex-column"
-    >
-        <v-row>
+  <v-sheet
+    width="100%"
+    class="d-flex flex-column"
+  >
+    <v-row>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <v-form
+          ref="form"
+          v-model="validZaehlstelle"
+        >
+          <v-row no-gutters>
             <v-col
-                cols="12"
-                md="6"
+              cols="12"
+              md="6"
             >
-                <v-form
-                    ref="form"
-                    v-model="validZaehlstelle"
-                >
-                    <v-row no-gutters>
-                        <v-col
-                            cols="12"
-                            md="6"
-                        >
-                            <div>
-                                <span class="text-caption"
-                                    >Zählstellennummer</span
-                                ><br />
-                                <span class="text text-info">{{
-                                    zaehlstellenummer
-                                }}</span
-                                ><br /><br />
-                            </div>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters>
-                        <v-col
-                            cols="12"
-                            md="12"
-                        >
-                            <v-autocomplete
-                                v-model="zaehlstelle.stadtbezirkNummer"
-                                outlined
-                                :items="getStadtbezirke"
-                                dense
-                                label="Stadtbezirk"
-                                :rules="[
-                                    () =>
-                                        !!zaehlstelle.stadtbezirkNummer ||
-                                        pflichtfeldText,
-                                ]"
-                                required
-                            ></v-autocomplete>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters>
-                        <v-col
-                            cols="12"
-                            md="12"
-                        >
-                            <v-autocomplete
-                                v-model="stadtbezirksviertel"
-                                outlined
-                                :items="getStadtbezirksviertel"
-                                dense
-                                label="Stadtbezirksviertel"
-                                :rules="[
-                                    () =>
-                                        !!stadtbezirksviertelModel ||
-                                        pflichtfeldText,
-                                ]"
-                                required
-                                :disabled="!zaehlstelle.stadtbezirkNummer"
-                                return-object
-                            ></v-autocomplete>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters>
-                        <v-col
-                            cols="12"
-                            md="12"
-                        >
-                            <v-textarea
-                                v-model="zaehlstelle.kommentar"
-                                label="Kommentar"
-                                outlined
-                                dense
-                                rows="2"
-                                row-height="15"
-                                counter="255"
-                                maxlength="255"
-                            ></v-textarea>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters>
-                        <v-col
-                            cols="12"
-                            md="12"
-                        >
-                            <v-combobox
-                                v-model="suchwoerter"
-                                multiple
-                                label="Suchwörter"
-                                outlined
-                                dense
-                                small-chips
-                                deletable-chips
-                                class="tag-input"
-                                :search-input.sync="newSuchwort"
-                                append-icon="mdi-plus"
-                                @click:append="addSuchwortToList"
-                                @blur="addSuchwortToList"
-                                @keyup.enter="addSuchwortToList"
-                            >
-                            </v-combobox>
-                        </v-col>
-                    </v-row>
-                    <v-card-actions>
-                        <v-spacer />
-                        <v-btn
-                            color="secondary"
-                            @click="save()"
-                            >Speichern
-                        </v-btn>
-                        <v-btn
-                            color="grey lighten-1"
-                            @click="cancel()"
-                            >Abbrechen
-                        </v-btn>
-                    </v-card-actions>
-                </v-form>
+              <lhm-text-field
+                caption="Zählstellennummer"
+                :text="zaehlstellenummer"
+                add-extra-br
+              />
             </v-col>
+          </v-row>
+          <v-row no-gutters>
             <v-col
-                cols="12"
-                md="6"
+              cols="12"
+              md="12"
             >
-                <mini-map
-                    :coords="coords"
-                    height="100%"
-                    width="100%"
-                    @updateZaehlstellenCoords="updateZaehlstellenCoords"
-                />
+              <v-autocomplete
+                v-model="zaehlstelle.stadtbezirkNummer"
+                :items="getStadtbezirke"
+                variant="outlined"
+                density="compact"
+                label="Stadtbezirk"
+                :rules="[
+                  () => !!zaehlstelle.stadtbezirkNummer || pflichtfeldText,
+                ]"
+                required
+              ></v-autocomplete>
             </v-col>
-        </v-row>
-    </v-sheet>
+          </v-row>
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              md="12"
+            >
+              <v-autocomplete
+                v-model="stadtbezirksviertelModel"
+                variant="outlined"
+                :items="getStadtbezirksviertel"
+                density="compact"
+                label="Stadtbezirksviertel"
+                :rules="[() => !!stadtbezirksviertelModel || pflichtfeldText]"
+                required
+                :disabled="!zaehlstelle.stadtbezirkNummer"
+              />
+            </v-col>
+          </v-row>
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              md="12"
+            >
+              <v-textarea
+                v-model="zaehlstelle.kommentar"
+                label="Kommentar"
+                variant="outlined"
+                density="compact"
+                rows="2"
+                row-height="15"
+                counter="255"
+                maxlength="255"
+              />
+            </v-col>
+          </v-row>
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              md="12"
+            >
+              <v-combobox
+                v-model="suchwoerter"
+                v-model:search-input="newSuchwort"
+                multiple
+                label="Suchwörter"
+                variant="outlined"
+                density="compact"
+                chips
+                closable-chips
+                class="tag-input"
+                append-icon="mdi-plus"
+                @click:append="addSuchwortToList"
+                @blur="addSuchwortToList"
+                @keyup.enter="addSuchwortToList"
+              />
+            </v-col>
+          </v-row>
+          <v-row no-gutters>
+            <v-spacer />
+            <v-btn
+              class="mr-2"
+              color="secondary"
+              text="Speichern"
+              variant="elevated"
+              :disabled="!isZaehlstellePersistable"
+              @click="save()"
+            />
+            <v-btn
+              color="tertiary"
+              text="Abbrechen"
+              variant="elevated"
+              @click="cancel()"
+            />
+          </v-row>
+        </v-form>
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <mini-map
+          :coords="coords"
+          height="100%"
+          width="100%"
+          @update-zaehlstellen-coords="updateZaehlstellenCoords"
+        />
+      </v-col>
+    </v-row>
+  </v-sheet>
 </template>
 
-<script lang="ts">
-import { stadtbezirke } from "@/domain/enums/Stadtbezirk";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
+<script setup lang="ts">
+import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type GeoPoint from "@/types/common/GeoPoint";
+import type NextZaehlstellennummerDTO from "@/types/zaehlstelle/NextZaehlstellennummerDTO";
+
 import { LatLng } from "leaflet";
-import { stadtbezirksviertel } from "@/domain/enums/Stadtbezirksviertel";
-import KeyVal from "@/domain/KeyVal";
+import { isEmpty, isEqual, isNil } from "lodash";
+import { computed, onMounted, ref, watch } from "vue";
+
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
-import NextZaehlstellennummerDTO from "@/domain/dto/laden/NextZaehlstellennummerDTO";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import GeoPoint from "@/domain/GeoPoint";
+import LhmTextField from "@/components/common/LhmTextField.vue";
 import MiniMap from "@/components/map/MiniMap.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-/* eslint-enable no-unused-vars */
-@Component({
-    components: { MiniMap },
-})
-export default class ZaehlstelleForm extends Vue {
-    private snackbarStore = useSnackbarStore();
-    validZaehlstelle = false;
+import { stadtbezirke } from "@/types/enum/Stadtbezirk";
+import { stadtbezirksviertel } from "@/types/enum/Stadtbezirksviertel";
+import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
-    zaehlstelle: ZaehlstelleDTO =
-        DefaultObjectCreator.createDefaultZaehlstelleDTO();
+const snackbarStore = useSnackbarStore();
+const validZaehlstelle = ref(false);
 
-    stadtbezirksviertelModel = "";
-    private laufendeNummer = "";
+const zaehlstelle = ref(DefaultObjectCreator.createDefaultZaehlstelleDTO());
 
-    newSuchwort = "";
+const stadtbezirksviertelModel = ref<string | undefined>(undefined);
+const laufendeNummer = ref("");
 
-    stadtbezirksviertel: KeyVal = {} as KeyVal;
+const newSuchwort = ref("");
 
-    @Prop({ default: DefaultObjectCreator.createCenterOfMunichLatLng() })
-    coords!: LatLng;
+const suchwoerter = ref<Array<string>>([]);
 
-    suchwoerter: Array<string> = [];
+interface Props {
+  coords: LatLng;
+}
+const props = withDefaults(defineProps<Props>(), {
+  coords: () => DefaultObjectCreator.createCenterOfMunichLatLng(),
+});
 
-    mounted() {
-        this.zaehlstelle = DefaultObjectCreator.createDefaultZaehlstelleDTO();
-        this.validZaehlstelle = false;
+const emits = defineEmits<{
+  (e: "cancel"): void;
+  (e: "saved", payload: BackendIdDTO): void;
+}>();
+
+onMounted(() => {
+  zaehlstelle.value = DefaultObjectCreator.createDefaultZaehlstelleDTO();
+  validZaehlstelle.value = false;
+});
+
+const getStadtbezirke = computed(() => {
+  return stadtbezirke;
+});
+
+const getStadtbezirksviertel = computed(() => {
+  return stadtbezirksviertel(
+    zaehlstelle.value.stadtbezirkNummer
+      ? zaehlstelle.value.stadtbezirkNummer.toString()
+      : ""
+  );
+});
+
+const zaehlstellenummer = computed(() => {
+  return laufendeNummer.value;
+});
+
+const pflichtfeldText = computed(() => {
+  return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
+});
+
+const isZaehlstellePersistable = computed(() => {
+  return (
+    !isEmpty(zaehlstelle.value.nummer) &&
+    !isEmpty(stadtbezirksviertelModel.value) &&
+    !isEmpty(zaehlstelle.value.stadtbezirkNummer)
+  );
+});
+
+watch(
+  () => zaehlstelle.value.stadtbezirkNummer,
+  () => {
+    stadtbezirksviertelModel.value = undefined;
+    zaehlstelle.value.nummer = "";
+  }
+);
+
+watch(
+  () => stadtbezirksviertelModel.value,
+  (newViertel, oldViertel) => {
+    if (!isEqual(newViertel, oldViertel)) {
+      zaehlstelle.value.nummer = "";
+      if (!isEmpty(newViertel)) {
+        setNextZaehlstellennummerToZaehlstelleWhenBezirkAndViertelIsSet();
+      }
     }
+  }
+);
 
-    get getStadtbezirke(): Array<KeyVal> {
-        return stadtbezirke;
-    }
+function setNextZaehlstellennummerToZaehlstelleWhenBezirkAndViertelIsSet(): void {
+  if (
+    !isNil(zaehlstelle.value.stadtbezirkNummer) &&
+    !isEmpty(stadtbezirksviertelModel.value)
+  ) {
+    const idStartsWith = `${zaehlstelle.value.stadtbezirkNummer}${stadtbezirksviertelModel.value}`;
+    ZaehlstellenService.getNextZaehlstellennummer(
+      idStartsWith,
+      zaehlstelle.value.stadtbezirkNummer
+    )
+      .then((result: NextZaehlstellennummerDTO) => {
+        zaehlstelle.value.nummer = result.nummer;
+        laufendeNummer.value = result.nummer;
+      })
+      .catch((error) => snackbarStore.showApiError(error));
+  }
+}
 
-    get getStadtbezirksviertel(): Array<KeyVal> {
-        return stadtbezirksviertel(
-            this.zaehlstelle.stadtbezirkNummer
-                ? this.zaehlstelle.stadtbezirkNummer.toString()
-                : ""
-        );
-    }
+// Fuegt das eingegebene Wort den Suchwoertern hinzu
+function addSuchwortToList() {
+  if (isNil(newSuchwort.value) || isEmpty(newSuchwort.value.trim())) {
+    return;
+  }
+  if (!suchwoerter.value.includes(newSuchwort.value)) {
+    suchwoerter.value.push(...newSuchwort.value.split(","));
+  }
+  newSuchwort.value = "";
+}
 
-    get zaehlstellenummer(): string {
-        return this.laufendeNummer;
-    }
+function save(): void {
+  if (validZaehlstelle.value) {
+    zaehlstelle.value.lat = props.coords.lat;
+    zaehlstelle.value.lng = props.coords.lng;
+    zaehlstelle.value.customSuchwoerter = suchwoerter.value;
+    zaehlstelle.value.sichtbarDatenportal = true;
+    ZaehlstellenService.saveZaehlstelle(zaehlstelle.value)
+      .then((backendIdDTO) => {
+        resetZaehlstelle();
+        emits("saved", backendIdDTO);
+      })
+      .catch((error) => snackbarStore.showApiError(error));
+  } else {
+    // Fehler Toast, dass kein Marker vorhanden
+    snackbarStore.showWarning("Es wurde nicht alle Pflichtfelder ausgefüllt.");
+  }
+}
 
-    get pflichtfeldText(): string {
-        return "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
-    }
+function cancel(): void {
+  resetZaehlstelle();
+  emits("cancel");
+}
 
-    @Watch("zaehlstelle.stadtbezirkNummer")
-    updateStadtbezirk(): void {
-        this.stadtbezirksviertelModel = "";
-        this.stadtbezirksviertel = {} as KeyVal;
-    }
+function resetZaehlstelle() {
+  zaehlstelle.value = DefaultObjectCreator.createDefaultZaehlstelleDTO();
+  stadtbezirksviertelModel.value = undefined;
+  laufendeNummer.value = "";
+  suchwoerter.value = [];
+  newSuchwort.value = "";
+  validZaehlstelle.value = false;
+}
 
-    @Watch("stadtbezirksviertel")
-    createZaehlstellennummer(stadtbezirksviertel: KeyVal): void {
-        if (stadtbezirksviertel && stadtbezirksviertel.value) {
-            this.stadtbezirksviertelModel = stadtbezirksviertel.value;
-            const idStartsWith = `${this.zaehlstelle.stadtbezirkNummer}${this.stadtbezirksviertelModel}`;
-            ZaehlstellenService.getNextZaehlstellennummer(
-                idStartsWith,
-                this.zaehlstelle.stadtbezirkNummer
-            )
-                .then((result: NextZaehlstellennummerDTO) => {
-                    this.zaehlstelle.nummer = result.nummer;
-                    this.laufendeNummer = result.nummer;
-                })
-                .catch((error) => this.snackbarStore.showApiError(error));
-        }
-    }
-
-    // Fuegt das eingegebene Wort den Suchwoertern hinzu
-    addSuchwortToList() {
-        if (this.newSuchwort == null || this.newSuchwort.trim() === "") {
-            return;
-        }
-        if (!this.suchwoerter.includes(this.newSuchwort)) {
-            this.suchwoerter.push(...this.newSuchwort.split(","));
-        }
-        this.newSuchwort = "";
-    }
-
-    save(): void {
-        if (this.validZaehlstelle) {
-            this.zaehlstelle.lat = this.coords.lat;
-            this.zaehlstelle.lng = this.coords.lng;
-            this.zaehlstelle.customSuchwoerter = this.suchwoerter;
-            this.zaehlstelle.sichtbarDatenportal = true;
-            ZaehlstellenService.saveZaehlstelle(this.zaehlstelle)
-                .then((backendIdDTO) => {
-                    this.resetZaehlstelle();
-                    this.$emit("saved", backendIdDTO);
-                })
-                .catch((error) => this.snackbarStore.showApiError(error));
-        } else {
-            // Fehler Toast, dass kein Marker vorhanden
-            this.snackbarStore.showWarning(
-                "Es wurde nicht alle Pflichtfelder ausgefüllt."
-            );
-        }
-    }
-
-    cancel(): void {
-        this.resetZaehlstelle();
-        this.$emit("cancel");
-    }
-
-    private resetZaehlstelle() {
-        this.zaehlstelle = DefaultObjectCreator.createDefaultZaehlstelleDTO();
-        this.stadtbezirksviertelModel = "";
-        this.stadtbezirksviertel = {} as KeyVal;
-        this.laufendeNummer = "";
-        this.suchwoerter = [];
-        this.newSuchwort = "";
-        this.validZaehlstelle = false;
-    }
-
-    updateZaehlstellenCoords(newCoords: LatLng): void {
-        if (!this.zaehlstelle.punkt) {
-            this.zaehlstelle.punkt = {} as GeoPoint;
-        }
-        this.zaehlstelle.punkt.lat = newCoords.lat.toString();
-        this.zaehlstelle.punkt.lon = newCoords.lng.toString();
-    }
+function updateZaehlstellenCoords(newCoords: LatLng): void {
+  if (!zaehlstelle.value.punkt) {
+    zaehlstelle.value.punkt = {} as GeoPoint;
+  }
+  zaehlstelle.value.punkt.lat = newCoords.lat.toString();
+  zaehlstelle.value.punkt.lon = newCoords.lng.toString();
 }
 </script>
-
-<style scoped>
-.text-info {
-    font-size: 18px;
-    color: black;
-}
-</style>

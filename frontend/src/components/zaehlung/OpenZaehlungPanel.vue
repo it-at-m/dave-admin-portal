@@ -1,87 +1,75 @@
 <template>
-    <v-expansion-panel>
-        <v-expansion-panel-header>
-            <v-row no-gutters>
-                <div style="align-self: center">
-                    <v-avatar
-                        :color="statusDesign.color"
-                        size="50"
-                    >
-                        <v-icon
-                            large
-                            dense
-                            >{{ statusDesign.iconPath }}</v-icon
-                        >
-                    </v-avatar>
-                </div>
-                <div
-                    style="font-size: x-large; align-self: center"
-                    class="pl-5"
-                >
-                    {{ header }}
-                </div>
-                <v-spacer />
-            </v-row>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content class="mt-1">
-            <v-list>
-                <v-list-item
-                    v-for="(zaehlung, index) in zaehlungen"
-                    :key="index"
-                    @click="openZaehlung(zaehlung)"
-                >
-                    <!--eslint-disable vue/no-v-text-v-html-on-component-->
-                    <v-list-item-content>
-                        <v-list-item-title v-text="getItemTitle(zaehlung)" />
-                        <v-list-item-subtitle
-                            v-text="getItemSubtitle(zaehlung)"
-                        />
-                    </v-list-item-content>
-                    <!--eslint-enable vue/no-v-text-v-html-on-component-->
-                </v-list-item>
-            </v-list>
-        </v-expansion-panel-content>
-    </v-expansion-panel>
+  <v-expansion-panel>
+    <v-expansion-panel-title>
+      <v-row no-gutters>
+        <div style="align-self: center">
+          <v-avatar
+            :color="statusDesign.color"
+            :size="50"
+          >
+            <v-icon
+              :size="35"
+              :icon="statusDesign.iconPath"
+            />
+          </v-avatar>
+        </div>
+        <div
+          style="align-self: center"
+          class="pl-4"
+        >
+          <h2 style="font-weight: normal">{{ header }}</h2>
+        </div>
+        <v-spacer />
+      </v-row>
+    </v-expansion-panel-title>
+    <v-expansion-panel-text class="mt-1">
+      <v-list>
+        <v-list-item
+          v-for="(zaehlung, index) in zaehlungen"
+          :key="index"
+          @click="openZaehlung(zaehlung)"
+        >
+          <v-list-item-title> {{ getItemTitle(zaehlung) }} </v-list-item-title>
+          <v-list-item-subtitle>
+            {{ getItemSubtitle(zaehlung) }}
+          </v-list-item-subtitle>
+        </v-list-item>
+      </v-list>
+    </v-expansion-panel-text>
+  </v-expansion-panel>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
+import type OpenZaehlungDTO from "@/types/zaehlung/OpenZaehlungDTO";
 
-// Typen
-/* eslint-disable no-unused-vars */
+import { useRouter } from "vue-router";
+
 import IconOptions from "@/components/icons/IconOptions";
-import OpenZaehlungDTO from "@/domain/dto/OpenZaehlungDTO";
-import { zaehlartText } from "@/domain/enums/Zaehlart";
-/* eslint-enable no-unused-vars */
+import { zaehlartText } from "@/types/enum/Zaehlart";
+import { useDateUtils } from "@/util/DateUtils";
 
-@Component
-export default class OpenZaehlungPanel extends Vue {
-    @Prop() header!: string;
+interface Props {
+  header: string;
+  statusDesign: IconOptions;
+  zaehlungen: Array<OpenZaehlungDTO>;
+}
 
-    @Prop() statusDesign!: IconOptions;
+defineProps<Props>();
 
-    @Prop() zaehlungen!: Array<OpenZaehlungDTO>;
+const router = useRouter();
+const dateUtils = useDateUtils();
 
-    getItemTitle(zaehlung: OpenZaehlungDTO) {
-        return `Zählung vom ${this.$d(
-            new Date(zaehlung.datum),
-            "short",
-            "de-DE"
-        )} an Zählstelle ${zaehlung.zaehlstellenNummer} in ${
-            zaehlung.stadtbezirk
-        }`;
-    }
+function getItemTitle(zaehlung: OpenZaehlungDTO) {
+  return `Zählung vom ${dateUtils.getShortVersionOfDate(zaehlung.datum)} an Zählstelle ${zaehlung.zaehlstellenNummer} in ${zaehlung.stadtbezirk}`;
+}
 
-    getItemSubtitle(zaehlung: OpenZaehlungDTO) {
-        return `Projektnummer: ${zaehlung.projektNummer}, Projektname: ${
-            zaehlung.projektName
-        }, Zählart: ${zaehlartText.get(zaehlung.zaehlart)}`;
-    }
+function getItemSubtitle(zaehlung: OpenZaehlungDTO) {
+  return `Projektnummer: ${zaehlung.projektNummer}, Projektname: ${
+    zaehlung.projektName
+  }, Zählart: ${zaehlartText.get(zaehlung.zaehlart)}`;
+}
 
-    openZaehlung(zaehlung: OpenZaehlungDTO): void {
-        this.$router.push(
-            `/zaehlstelle/${zaehlung.zaehlstellenId}/${zaehlung.id}`
-        );
-    }
+function openZaehlung(zaehlung: OpenZaehlungDTO): void {
+  router.push(`/zaehlstelle/${zaehlung.zaehlstellenId}/${zaehlung.id}`);
 }
 </script>

@@ -1,77 +1,76 @@
 <template>
-    <v-sheet
-        width="100%"
-        :min-height="height"
-        :max-height="height"
-    >
-        <v-card elevation="0">
-            <v-card-text>
-                <v-form>
-                    <v-data-table
-                        class="overflow-y-auto"
-                        :height="tableHeight"
-                        dense
-                        :headers="header"
-                        :items="messfahigkeiten"
-                        :items-per-page="-1"
-                        hide-default-footer
-                        fixed-header
-                        :item-class="activeMessfaehigkeit"
-                    />
-                </v-form>
-            </v-card-text>
-        </v-card>
-    </v-sheet>
+  <v-data-table
+    density="compact"
+    :headers="header as Array<any>"
+    :items="messfahigkeiten"
+    :items-per-page="-1"
+    hide-default-footer
+    fixed-header
+    :height="height"
+  />
 </template>
 
 <script setup lang="ts">
-import MessfaehigkeitEditDTO from "@/domain/dto/messstelle/MessfaehigkeitEditDTO";
-import { computed, ComputedRef } from "vue";
-import _ from "lodash";
+import type MessfaehigkeitEditDTO from "@/types/messstelle/MessfaehigkeitEditDTO";
+
+import { isNil } from "lodash";
+
+import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
+import { ZaehldatenIntervallToBeschreibung } from "@/domain/enums/ZaehldatenIntervall";
 
 interface Props {
-    height: string;
-    messfahigkeiten: Array<MessfaehigkeitEditDTO>;
+  height: string;
 }
 
-const props = defineProps<Props>();
-const tableHeight: ComputedRef<string> = computed(() => {
-    return parseInt(props.height.replace("px", "")) - 136 + "px";
+defineProps<Props>();
+
+const messfahigkeiten = defineModel<Array<MessfaehigkeitEditDTO>>({
+  required: true,
 });
 
-function activeMessfaehigkeit(item: MessfaehigkeitEditDTO) {
-    return _.isEmpty(item.gueltigBis) ? "indigo lighten-5" : "";
+function getDescriptionFahrzeugklasse(fahrzeugklasse: string | undefined) {
+  return isNil(fahrzeugklasse)
+    ? "Keine Fahrzeugklasse vorhanden"
+    : FahrzeugklasseToBeschreibung.get(fahrzeugklasse);
 }
 
-const header = computed(() => {
-    return [
-        {
-            text: "Fahrzeugklassen",
-            align: "start",
-            sortable: false,
-            value: "fahrzeugklassen",
-            divider: true,
-        },
-        {
-            text: "Intervallwert",
-            align: "start",
-            sortable: false,
-            value: "intervall",
-            divider: true,
-        },
-        {
-            text: "gültig ab",
-            align: "start",
-            sortable: false,
-            value: "gueltigAb",
-            divider: true,
-        },
-        {
-            text: "gültig bis",
-            align: "start",
-            sortable: false,
-            value: "gueltigBis",
-        },
-    ];
-});
+function getDescriptionIntervall(intervall: string | undefined) {
+  return isNil(intervall)
+    ? "Keine Fahrzeugklasse vorhanden"
+    : ZaehldatenIntervallToBeschreibung.get(intervall);
+}
+
+const header = [
+  {
+    title: "Fahrzeugklasse",
+    align: "start",
+    sortable: false,
+    key: "fahrzeugklasse",
+    value: (messfaehigkeit: MessfaehigkeitEditDTO) =>
+      getDescriptionFahrzeugklasse(messfaehigkeit.fahrzeugklasse),
+    lastFixed: true,
+  },
+  {
+    title: "Intervallwert",
+    align: "start",
+    sortable: false,
+    key: "intervall",
+    value: (messfaehigkeit: MessfaehigkeitEditDTO) =>
+      getDescriptionIntervall(messfaehigkeit.intervall),
+    lastFixed: true,
+  },
+  {
+    title: "gültig ab",
+    align: "start",
+    sortable: false,
+    value: "gueltigAb",
+    lastFixed: true,
+  },
+  {
+    title: "gültig bis",
+    align: "start",
+    sortable: false,
+    value: "gueltigBis",
+  },
+];
 </script>

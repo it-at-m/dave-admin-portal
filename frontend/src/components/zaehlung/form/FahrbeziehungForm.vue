@@ -1,216 +1,267 @@
 <template>
-    <v-data-table
-        key="indexKey"
-        v-model="selectedFahrbeziehungen"
-        :headers="headersFahrbeziehungen"
-        :items="allPossibleFahrbeziehungen"
-        item-key="indexKey"
-        show-select
-        hide-default-footer
-        dense
-        fixed-header
-        :items-per-page="-1"
-        :height="height"
-        @toggle-select-all="selectAll"
-        @item-selected="selectItem"
-    >
-        <template #[`item.hochrechnungsfaktor`]="{ item }">
-            <v-autocomplete
-                v-if="isHochrechnungsfaktorEditable"
-                v-model="item.hochrechnungsfaktor"
-                outlined
-                :items="hochrechnungsfaktoreDropDown"
-                item-text="matrix"
-                item-value="matrix"
-                return-object
-                dense
-                required
-                single-line
-                :disabled="!item.active"
-                @change="updateFahrbeziehung(item)"
-            ></v-autocomplete>
-            <lhm-text-field
-                v-else
-                :text="getHochrechnungsfaktorAsText(item.hochrechnungsfaktor)"
-                :fahrbeziehung="true"
-            />
-        </template>
-    </v-data-table>
+  <v-data-table
+    v-model="zaehlung.fahrbeziehungen"
+    :headers="HEADERS as Array<any>"
+    :items="allPossibleFahrbeziehungen"
+    show-select
+    return-object
+    hide-default-footer
+    density="compact"
+    fixed-header
+    :items-per-page="-1"
+    :height="height"
+  >
+    <template #[`header.data-table-select`]="{}">
+      <v-checkbox-btn
+        v-model="selectAllModel"
+        color="quaternary"
+        density="compact"
+        @update:model-value="selectAll"
+      />
+    </template>
+    <template #[`item.data-table-select`]="{ item }">
+      <v-checkbox-btn
+        v-model="item.active"
+        color="quaternary"
+        density="compact"
+        @update:model-value="selectItem(item)"
+      />
+    </template>
+    <template #[`item.hochrechnungsfaktor`]="{ item }">
+      <v-autocomplete
+        v-if="isHochrechnungsfaktorEditable"
+        v-model="item.hochrechnungsfaktor"
+        variant="outlined"
+        :items="hochrechnungsfaktoreDropDown"
+        item-title="matrix"
+        item-value="matrix"
+        return-object
+        density="compact"
+        required
+        single-line
+        :disabled="!item.active"
+        hide-details
+        class="my-1"
+        @update:model-value="updateFahrbeziehung(item)"
+      />
+      <v-autocomplete
+        v-else
+        :value="getHochrechnungsfaktorAsText(item.hochrechnungsfaktor)"
+        variant="outlined"
+        menu-icon=""
+        density="compact"
+        single-line
+        readonly
+        hide-details
+        class="my-1"
+        @update:model-value="updateFahrbeziehung(item)"
+      />
+    </template>
+  </v-data-table>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
-import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
-import FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
-import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
+<script setup lang="ts">
+import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type FahrbeziehungDTO from "@/types/zaehlung/FahrbeziehungDTO";
+import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+
 import { cloneDeep, isNil } from "lodash";
-import KnotenarmDTO from "@/domain/KnotenarmDTO";
-import LhmTextField from "@/components/common/LhmTextField.vue";
-import ObjectToTextTranslator from "@/util/ObjectToTextTranslator";
-import FahrbeziehungComparator from "@/util/FahrbeziehungComparator";
+import { computed, onMounted, ref, watch } from "vue";
+
 import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
-@Component({
-    components: {
-        LhmTextField,
-        ZaehlungCardMap,
-        ZaehlungGeometrie,
-    },
-})
-export default class FahrbeziehungForm extends Vue {
-    @Prop()
-    readonly height!: string;
+import Status from "@/types/enum/Status";
+import FahrbeziehungComparator from "@/util/FahrbeziehungComparator";
+import ObjectToTextTranslator from "@/util/ObjectToTextTranslator";
 
-    private fahrbeziehungen: Array<FahrbeziehungDTO> = [];
+interface Props {
+  height: string;
+}
+defineProps<Props>();
 
-    allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
 
-    private hochrechnungsfaktorenStore = useHochrechnungsfaktorStore();
-    private zaehlungStore = useZaehlungStore();
+const hochrechnungsfaktorenStore = useHochrechnungsfaktorStore();
 
-    mounted() {
-        this.updateWorkingCopy();
+const allPossibleFahrbeziehungen = ref<Array<FahrbeziehungDTO>>([]);
+const selectAllModel = ref(false);
+const HEADERS = [
+  {
+    title: "von",
+    align: "center",
+    value: "von",
+    width: "12%",
+  },
+  { title: "nach", align: "center", value: "nach", width: "15%" },
+  { title: "Hochrechnungsfaktor", value: "hochrechnungsfaktor" },
+];
+
+onMounted(() => {
+  updatePossibleFahrbeziehungen();
+});
+
+watch(
+  () => zaehlung.value.knotenarme,
+  () => {
+    updatePossibleFahrbeziehungen();
+  },
+  { deep: true, immediate: true }
+);
+
+const isHochrechnungsfaktorEditable = computed(() => {
+  return [Status.CREATED, Status.INSTRUCTED].includes(zaehlung.value.status);
+});
+/**
+ * Gibt die im Dropdown anzuzeigenden Hochrechnungsfaktoren zurück.
+ * Diese umfassen alle Hochrechnungsfaktoren welche "aktiv" sind.
+ *
+ * Des Weiteren werden die der Fahrbeziehung zugeordneten Hochrechnungsfaktoren
+ * hinzugefügt, falls die den Status "inaktiv" haben.
+ * Ansonsten würde dieser inaktive Hochrechnungsfaktoren nicht Eingabefeld angezeigt werden.
+ */
+const hochrechnungsfaktoreDropDown = computed(() => {
+  const activeFactors =
+    hochrechnungsfaktorenStore.getHochrechnungsfaktorenWithDefaultAtFirstPosition
+      .filter((value) => value.active)
+      .flatMap((value) => {
+        return cloneDeep(value);
+      });
+  const dropDown: Array<HochrechnungsfaktorDTO> = [...activeFactors];
+
+  // Falls in Fahrbeziehung gespeicherter HOFA nachträglich inaktiv gesetzt wurde,
+  // wird dieser trotzdem dem Dropdown hinzugefügt.
+  allPossibleFahrbeziehungen.value.forEach((fahrbeziehung) => {
+    if (
+      !isNil(fahrbeziehung.hochrechnungsfaktor) &&
+      !containsHochrechnungsfaktor(dropDown, fahrbeziehung.hochrechnungsfaktor)
+    ) {
+      dropDown.push(cloneDeep(fahrbeziehung.hochrechnungsfaktor));
     }
+  });
+  return dropDown;
+});
 
-    get isHochrechnungsfaktorEditable(): boolean {
-        return this.zaehlungStore.isHochrechnungsfaktorEditable;
+function containsHochrechnungsfaktor(
+  activeFaktors: Array<HochrechnungsfaktorDTO>,
+  faktor: HochrechnungsfaktorDTO
+) {
+  let contains = false;
+  activeFaktors.forEach((value) => {
+    if (value.matrix === faktor.matrix) {
+      contains = true;
     }
+  });
+  return contains;
+}
 
-    get fahrbeziehungStore(): Array<FahrbeziehungDTO> {
-        return this.zaehlungStore.getFahrbeziehungen;
-    }
-
-    get knotenarmStore(): Array<KnotenarmDTO> {
-        return this.zaehlungStore.getKnotenarme;
-    }
-
-    @Watch("knotenarmStore", { deep: true, immediate: true })
-    updateWorkingCopy(): void {
-        this.selectedFahrbeziehungen = [];
-        this.allPossibleFahrbeziehungen = cloneDeep(
-            this.calculatePossibleFahrbeziehungen()
-        );
-        this.fahrbeziehungen = cloneDeep(this.fahrbeziehungStore);
-        this.allPossibleFahrbeziehungen.forEach((pos: FahrbeziehungDTO) => {
-            this.fahrbeziehungen.forEach((fahr: FahrbeziehungDTO) => {
-                if (pos.von === fahr.von && pos.nach === fahr.nach) {
-                    pos.hochrechnungsfaktor = cloneDeep(
-                        fahr.hochrechnungsfaktor
-                    );
-                    if (fahr.id) {
-                        pos.active = true;
-                    } else {
-                        pos.active = fahr.active;
-                    }
-                }
-            });
-            if (pos.active) {
-                this.selectedFahrbeziehungen.push(cloneDeep(pos));
-            }
-        });
-    }
-
-    private calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
-        let standardFaktor: HochrechnungsfaktorDTO =
-            this.hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
-        let allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
-        let possibleArms: Array<number> = [];
-        this.knotenarmStore.forEach((arm: KnotenarmDTO) => {
-            possibleArms.push(arm.nummer);
-        });
-        possibleArms.forEach((vonNummer: number) => {
-            possibleArms.forEach((nachNummer: number) => {
-                let newFzVon: FahrbeziehungDTO = {} as FahrbeziehungDTO;
-                newFzVon.von = vonNummer;
-                newFzVon.nach = nachNummer;
-                newFzVon.active = false;
-                newFzVon.hochrechnungsfaktor = cloneDeep(standardFaktor);
-                newFzVon.indexKey = `${vonNummer}${nachNummer}`;
-                allPossibleFahrbeziehungen.push(newFzVon);
-            });
-        });
-        allPossibleFahrbeziehungen.sort(
-            FahrbeziehungComparator.sortByVonAndNach
-        );
-        return allPossibleFahrbeziehungen;
-    }
-
-    /**
-     * Gibt die im Dropdown anzuzeigenden Hochrechnungsfaktoren zurück.
-     * Diese umfassen alle Hochrechnungsfaktoren welche "aktiv" sind.
-     *
-     * Des Weiteren werden die der Fahrbeziehung zugeordneten Hochrechnungsfaktoren
-     * hinzugefügt, falls die den Status "inaktiv" haben.
-     * Ansonsten würde dieser inaktive Hochrechnungsfaktoren nicht Eingabefeld angezeigt werden.
-     */
-    get hochrechnungsfaktoreDropDown(): Array<HochrechnungsfaktorDTO> {
-        const dropDown: Array<HochrechnungsfaktorDTO> = [];
-        this.hochrechnungsfaktorenStore.getHochrechnungsfaktoren.forEach(
-            (faktor: HochrechnungsfaktorDTO) => {
-                if (faktor.active) {
-                    const copy: HochrechnungsfaktorDTO = cloneDeep(faktor);
-                    dropDown.push(copy);
-                }
-            }
-        );
-        // Falls in Fahrbeziehung gespeicherter HOFA nachträglich inaktiv gesetzt wurde,
-        // wird dieser trotzdem dem Dropdown hinzugefügt.
-        this.allPossibleFahrbeziehungen.forEach(
-            (fahrbeziehung: FahrbeziehungDTO) => {
-                if (
-                    !isNil(fahrbeziehung.hochrechnungsfaktor) &&
-                    !dropDown.includes(fahrbeziehung.hochrechnungsfaktor)
-                ) {
-                    dropDown.push(cloneDeep(fahrbeziehung.hochrechnungsfaktor));
-                }
-            }
-        );
-        return dropDown;
-    }
-
-    updateFahrbeziehung(fahrbeziehung: FahrbeziehungDTO): void {
-        if (fahrbeziehung.active) {
-            // aktualisieren
-            this.zaehlungStore.updateFahrbeziehung(cloneDeep(fahrbeziehung));
+function updatePossibleFahrbeziehungen(): void {
+  allPossibleFahrbeziehungen.value = cloneDeep(
+    calculatePossibleFahrbeziehungen()
+  );
+  allPossibleFahrbeziehungen.value.forEach((pos: FahrbeziehungDTO) => {
+    zaehlung.value.fahrbeziehungen.forEach((fahr: FahrbeziehungDTO) => {
+      if (pos.von === fahr.von && pos.nach === fahr.nach) {
+        pos.hochrechnungsfaktor = cloneDeep(fahr.hochrechnungsfaktor);
+        if (fahr.id) {
+          pos.active = true;
         } else {
-            // löschen
-            this.zaehlungStore.deleteFahrbeziehung(cloneDeep(fahrbeziehung));
+          pos.active = fahr.active;
         }
-        this.updateWorkingCopy();
-    }
+      }
+    });
+  });
+  calculateSelectAllModel();
+}
 
-    getHochrechnungsfaktorAsText(hf: HochrechnungsfaktorDTO): string {
-        return ObjectToTextTranslator.getHochrechnungsfaktorAsText(hf);
-    }
+function calculateSelectAllModel() {
+  selectAllModel.value =
+    zaehlung.value.fahrbeziehungen.length >=
+    allPossibleFahrbeziehungen.value.length / 2;
+}
 
-    // Neu
-    selectedFahrbeziehungen = new Array<FahrbeziehungDTO>();
-    headersFahrbeziehungen = [
-        {
-            text: "von",
-            align: "start",
-            value: "von",
-        },
-        { text: "nach", value: "nach" },
-        { text: "Hochrechnungsfaktor", value: "hochrechnungsfaktor" },
-    ];
+function calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
+  const standardFaktor: HochrechnungsfaktorDTO =
+    hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
+  const allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
+  const possibleArms: Array<number> = [];
+  zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
+    possibleArms.push(arm.nummer);
+  });
+  possibleArms.forEach((vonNummer: number) => {
+    possibleArms.forEach((nachNummer: number) => {
+      const newFzVon: FahrbeziehungDTO = {} as FahrbeziehungDTO;
+      newFzVon.von = vonNummer;
+      newFzVon.nach = nachNummer;
+      newFzVon.active = false;
+      newFzVon.hochrechnungsfaktor = cloneDeep(standardFaktor);
+      newFzVon.indexKey = `${vonNummer}${nachNummer}`;
+      allPossibleFahrbeziehungen.push(newFzVon);
+    });
+  });
+  allPossibleFahrbeziehungen.sort(FahrbeziehungComparator.sortByVonAndNach);
+  return allPossibleFahrbeziehungen;
+}
 
-    selectAll(event: any) {
-        if (event.items) {
-            event.items.forEach((item: FahrbeziehungDTO) => {
-                item.active = event.value;
-                this.updateFahrbeziehung(item);
-            });
-        }
+function updateFahrbeziehung(toSave: FahrbeziehungDTO): void {
+  zaehlung.value.fahrbeziehungen.forEach((fahrbeziehung: FahrbeziehungDTO) => {
+    if (
+      fahrbeziehung.von === toSave.von &&
+      fahrbeziehung.nach === toSave.nach
+    ) {
+      fahrbeziehung.hochrechnungsfaktor = toSave.hochrechnungsfaktor;
     }
+  });
+}
 
-    selectItem(event: any) {
-        if (event.item) {
-            event.item.active = event.value;
-            this.selectedFahrbeziehungen.push(cloneDeep(event.item));
-            this.updateFahrbeziehung(event.item);
-        }
+function getHochrechnungsfaktorAsText(hf: HochrechnungsfaktorDTO): string {
+  return ObjectToTextTranslator.getHochrechnungsfaktorAsText(hf);
+}
+
+function selectAll() {
+  if (selectAllModel.value) {
+    zaehlung.value.fahrbeziehungen = [];
+    zaehlung.value.fahrbeziehungen = [...allPossibleFahrbeziehungen.value];
+    zaehlung.value.fahrbeziehungen.forEach(
+      (fahrbeziehung: FahrbeziehungDTO) => {
+        fahrbeziehung.active = selectAllModel.value;
+      }
+    );
+  } else {
+    zaehlung.value.fahrbeziehungen.forEach(
+      (fahrbeziehung: FahrbeziehungDTO) => {
+        fahrbeziehung.active = selectAllModel.value;
+      }
+    );
+    zaehlung.value.fahrbeziehungen = [];
+  }
+}
+
+function selectItem(fahrbeziehung: FahrbeziehungDTO) {
+  if (fahrbeziehung.active) {
+    zaehlung.value.fahrbeziehungen.push(fahrbeziehung);
+  } else {
+    removeFahrbeziehung(fahrbeziehung);
+  }
+  calculateSelectAllModel();
+}
+
+function removeFahrbeziehung(toDelete: FahrbeziehungDTO) {
+  let deleteIndex = -1;
+  zaehlung.value.fahrbeziehungen.forEach(
+    (fahrbeziehung: FahrbeziehungDTO, index: number) => {
+      if (
+        fahrbeziehung.von === toDelete.von &&
+        fahrbeziehung.nach === toDelete.nach
+      ) {
+        deleteIndex = index;
+        fahrbeziehung.active = false;
+      }
     }
+  );
+  if (deleteIndex > -1) {
+    zaehlung.value.fahrbeziehungen.splice(deleteIndex, 1);
+  }
 }
 </script>

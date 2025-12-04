@@ -1,268 +1,200 @@
 <template>
-    <v-sheet
-        width="100%"
-        class="d-flex flex-column"
-    >
-        <v-row>
-            <v-col
-                cols="12"
-                md="6"
-            >
-                <v-form ref="form">
-                    <v-row no-gutters>
-                        <v-col
-                            cols="12"
-                            md="6"
-                        >
-                            <span class="text-caption">Zählstellennummer</span
-                            ><br />
-                            <span class="text text-info">{{
-                                cloneOfZaehlstelle.nummer
-                            }}</span
-                            ><br />
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters>
-                        <v-col
-                            cols="12"
-                            md="12"
-                        >
-                            <span class="text-caption">Stadtbezirk</span><br />
-                            <span class="text text-info">{{
-                                getStadtbezirksnummer
-                            }}</span
-                            ><br />
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters>
-                        <v-col
-                            cols="12"
-                            md="12"
-                        >
-                            <span class="text-caption">Stadtbezirksviertel</span
-                            ><br />
-                            <span class="text text-info">{{
-                                getStadtbezirksviertel
-                            }}</span
-                            ><br />
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col
-                            cols="12"
-                            md="12"
-                        >
-                            <v-textarea
-                                v-model="cloneOfZaehlstelle.kommentar"
-                                label="Kommentar"
-                                outlined
-                                dense
-                                rows="2"
-                                row-height="15"
-                                counter="255"
-                                maxlength="255"
-                            ></v-textarea>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters>
-                        <v-col
-                            cols="12"
-                            md="12"
-                        >
-                            <v-combobox
-                                v-model="cloneOfZaehlstelle.customSuchwoerter"
-                                multiple
-                                label="Suchwörter"
-                                outlined
-                                dense
-                                small-chips
-                                deletable-chips
-                                class="tag-input"
-                                :search-input.sync="newSuchwort"
-                                append-icon="mdi-plus"
-                                @click:append="addSuchwortToList"
-                                @keyup.enter="addSuchwortToList"
-                                @blur="addSuchwortToList"
-                            >
-                            </v-combobox>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters>
-                        <v-col
-                            cols="12"
-                            md="12"
-                        >
-                            <v-checkbox
-                                v-model="cloneOfZaehlstelle.sichtbarDatenportal"
-                                color="grey darken-1"
-                                hide-details
-                                dense
-                            >
-                                <template #label>
-                                    <v-icon
-                                        class="mr-1"
-                                        color="red darken-1"
-                                    >
-                                        mdi-alert-outline
-                                    </v-icon>
-                                    <div>
-                                        Sichtbarkeitsstatus Datenportal<br />
-                                    </div>
-                                </template>
-                            </v-checkbox>
-                        </v-col>
-                    </v-row>
+  <v-sheet
+    width="100%"
+    class="d-flex flex-column"
+  >
+    <v-row>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <v-form ref="form">
+          <lhm-text-field
+            caption="Zählstellennummer"
+            :text="zaehlstelle.nummer"
+          />
+          <lhm-text-field
+            caption="Stadtbezirk"
+            :text="getStadtbezirksnummer"
+          />
+          <lhm-text-field
+            caption="Stadtbezirksviertel"
+            :text="getStadtbezirksviertel"
+            add-extra-br
+          />
+          <v-textarea
+            v-model="zaehlstelle.kommentar"
+            label="Kommentar"
+            variant="outlined"
+            density="compact"
+            rows="2"
+            row-height="15"
+            counter="255"
+            maxlength="255"
+          />
+          <v-combobox
+            v-model="zaehlstelle.customSuchwoerter"
+            v-model:search-input="newSuchwort"
+            multiple
+            label="Suchwörter"
+            variant="outlined"
+            density="compact"
+            chips
+            closable-chips
+            class="tag-input"
+            append-icon="mdi-plus"
+            @click:append="addSuchwortToList"
+            @blur="addSuchwortToList"
+            @keyup.enter="addSuchwortToList"
+          />
+          <v-checkbox
+            v-model="zaehlstelle.sichtbarDatenportal"
+            color="quaternary"
+            hide-details
+          >
+            <template #label>
+              <v-icon
+                class="mr-1"
+                color="red-darken-1"
+                icon="mdi-alert-outline"
+              />
+              <div>Sichtbarkeitsstatus Datenportal<br /></div>
+            </template>
+          </v-checkbox>
 
-                    <v-card-actions>
-                        <v-spacer />
-                        <v-btn
-                            color="secondary"
-                            @click="save()"
-                            >Speichern
-                        </v-btn>
-                        <v-btn
-                            color="grey lighten-1"
-                            @click="cancel()"
-                            >Abbrechen
-                        </v-btn>
-                    </v-card-actions>
-                </v-form>
-            </v-col>
-            <v-col
-                cols="12"
-                md="6"
-            >
-                <mini-map
-                    :coords="coords"
-                    height="100%"
-                    width="100%"
-                    @updateZaehlstellenCoords="updateZaehlstellenCoords"
-                />
-            </v-col>
-        </v-row>
-    </v-sheet>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              class="mr-2"
+              color="secondary"
+              text="Speichern"
+              variant="elevated"
+              @click="save()"
+            />
+            <v-btn
+              color="tertiary"
+              text="Abbrechen"
+              variant="elevated"
+              @click="cancel()"
+            />
+          </v-card-actions>
+        </v-form>
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <mini-map
+          :coords="coords"
+          height="100%"
+          width="100%"
+          @update-zaehlstellen-coords="updateZaehlstellenCoords"
+        />
+      </v-col>
+    </v-row>
+  </v-sheet>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-import { StadtbezirkToBeschreibung } from "@/domain/enums/Stadtbezirk";
-import { StadtbezirksviertelToBeschreibung } from "@/domain/enums/Stadtbezirksviertel";
-import ZaehlstellenService from "@/api/service/ZaehlstellenService";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import _ from "lodash";
+<script setup lang="ts">
+import type GeoPoint from "@/types/common/GeoPoint";
+import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
+
 import { LatLng } from "leaflet";
-import GeoPoint from "@/domain/GeoPoint";
-import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import { isEmpty, isNil } from "lodash";
+import { computed, ref } from "vue";
+
+import ZaehlstellenService from "@/api/service/ZaehlstellenService";
+import LhmTextField from "@/components/common/LhmTextField.vue";
 import MiniMap from "@/components/map/MiniMap.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-/* eslint-enable no-unused-vars */
-@Component({
-    components: { MiniMap },
-})
-export default class UpdateZaehlstelleForm extends Vue {
-    @Prop({ default: {} }) zaehlstelle!: ZaehlstelleDTO;
+import { StadtbezirkToBeschreibung } from "@/types/enum/Stadtbezirk";
+import { StadtbezirksviertelToBeschreibung } from "@/types/enum/Stadtbezirksviertel";
+import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
-    private snackbarStore = useSnackbarStore();
+const zaehlstelle = defineModel<ZaehlstelleDTO>({
+  required: true,
+});
 
-    newSuchwort = "";
+const emits = defineEmits<{
+  (e: "cancel"): void;
+  (e: "saved"): void;
+}>();
 
-    get cloneOfZaehlstelle(): ZaehlstelleDTO {
-        return _.cloneDeep(this.zaehlstelle);
+const snackbarStore = useSnackbarStore();
+
+const newSuchwort = ref("");
+
+const coords = computed(() => {
+  const punkt: GeoPoint = zaehlstelle.value.punkt;
+  if (punkt) return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+  else return DefaultObjectCreator.createCenterOfMunichLatLng();
+});
+
+const getStadtbezirksnummer = computed(() => {
+  const stadtbezirksnummer: string | undefined = StadtbezirkToBeschreibung.get(
+    zaehlstelle.value.stadtbezirkNummer
+  );
+  if (!isNil(stadtbezirksnummer)) {
+    return stadtbezirksnummer;
+  }
+  return "Der Stadtbezirk konnte nicht ermittelt werden.";
+});
+
+const getStadtbezirksviertel = computed(() => {
+  const stadtbezirksviertelMap: Map<number, string> | undefined =
+    StadtbezirksviertelToBeschreibung.get(zaehlstelle.value.stadtbezirkNummer);
+  if (!isNil(stadtbezirksviertelMap)) {
+    const stadtbezirksviertelnummer: string | undefined =
+      stadtbezirksviertelMap.get(getStadtbezirksviertelNummer.value);
+    if (!isNil(stadtbezirksviertelnummer)) {
+      return stadtbezirksviertelnummer;
     }
+  }
+  return "Das Stadtbezirksviertel konnte nicht ermittelt werden.";
+});
 
-    get getStadtbezirksnummer(): string {
-        const stadtbezirksnummer: string | undefined =
-            StadtbezirkToBeschreibung.get(
-                this.cloneOfZaehlstelle.stadtbezirkNummer
-            );
-        if (stadtbezirksnummer != undefined) {
-            return stadtbezirksnummer;
-        }
-        return "Der Stadtbezirk konnte nicht ermittelt werden.";
+const getStadtbezirksviertelNummer = computed(() => {
+  if (!isNil(zaehlstelle.value.nummer)) {
+    if (zaehlstelle.value.nummer.length === 5) {
+      return parseInt(zaehlstelle.value.nummer.substring(1, 3));
+    } else if (zaehlstelle.value.nummer.length === 6) {
+      return parseInt(zaehlstelle.value.nummer.substring(2, 4));
     }
+  }
+  return -1;
+});
 
-    get getStadtbezirksviertel(): string {
-        const stadtbezirksviertelMap: Map<number, string> | undefined =
-            StadtbezirksviertelToBeschreibung.get(
-                this.cloneOfZaehlstelle.stadtbezirkNummer
-            );
-        if (stadtbezirksviertelMap != undefined) {
-            const stadtbezirksviertelnummer: string | undefined =
-                stadtbezirksviertelMap.get(this.getStadtbezirksviertelNummer);
-            if (stadtbezirksviertelnummer != undefined) {
-                return stadtbezirksviertelnummer;
-            }
-        }
-        return "Das Stadtbezirksviertel konnte nicht ermittelt werden.";
-    }
+// Fuegt das eingegebene Wort den Suchwoertern hinzu
+function addSuchwortToList() {
+  if (isNil(zaehlstelle.value.customSuchwoerter)) {
+    zaehlstelle.value.customSuchwoerter = [];
+  }
+  if (isNil(newSuchwort.value) || isEmpty(newSuchwort.value.trim())) {
+    return;
+  }
+  if (!zaehlstelle.value.customSuchwoerter.includes(newSuchwort.value)) {
+    zaehlstelle.value.customSuchwoerter.push(...newSuchwort.value.split(","));
+  }
+  newSuchwort.value = "";
+}
 
-    get getStadtbezirksviertelNummer(): number {
-        if (this.cloneOfZaehlstelle.nummer != null) {
-            if (this.cloneOfZaehlstelle.nummer.length == 5) {
-                return parseInt(this.cloneOfZaehlstelle.nummer.substr(1, 2));
-            } else if (this.cloneOfZaehlstelle.nummer.length == 6) {
-                return parseInt(this.cloneOfZaehlstelle.nummer.substr(2, 2));
-            }
-        }
-        return -1;
-    }
+function save(): void {
+  ZaehlstellenService.saveZaehlstelle(zaehlstelle.value)
+    .then(() => {
+      emits("saved");
+    })
+    .catch((error) => snackbarStore.showApiError(error));
+}
 
-    // Fuegt das eingegebene Wort den Suchwoertern hinzu
-    addSuchwortToList() {
-        if (_.isNil(this.cloneOfZaehlstelle.customSuchwoerter)) {
-            this.cloneOfZaehlstelle.customSuchwoerter = [];
-        }
+function cancel(): void {
+  emits("cancel");
+}
 
-        if (this.newSuchwort == null || this.newSuchwort.trim() === "") {
-            return;
-        }
-
-        if (
-            !this.cloneOfZaehlstelle.customSuchwoerter.includes(
-                this.newSuchwort
-            )
-        ) {
-            this.cloneOfZaehlstelle.customSuchwoerter.push(
-                ...this.newSuchwort.split(",")
-            );
-        }
-        this.newSuchwort = "";
-    }
-
-    save(): void {
-        ZaehlstellenService.saveZaehlstelle(this.cloneOfZaehlstelle)
-            .then(() => {
-                this.$emit("saved");
-            })
-            .catch((error) => this.snackbarStore.showApiError(error));
-    }
-
-    cancel(): void {
-        this.$emit("cancel");
-    }
-
-    get coords(): LatLng {
-        let punkt: GeoPoint = this.cloneOfZaehlstelle.punkt;
-        if (punkt)
-            return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
-        else return DefaultObjectCreator.createCenterOfMunichLatLng();
-    }
-
-    updateZaehlstellenCoords(newCoords: LatLng): void {
-        if (!this.cloneOfZaehlstelle.punkt) {
-            this.cloneOfZaehlstelle.punkt = {} as GeoPoint;
-        }
-        this.cloneOfZaehlstelle.punkt.lat = newCoords.lat.toString();
-        this.cloneOfZaehlstelle.punkt.lon = newCoords.lng.toString();
-    }
+function updateZaehlstellenCoords(newCoords: LatLng): void {
+  if (!zaehlstelle.value.punkt) {
+    zaehlstelle.value.punkt = {} as GeoPoint;
+  }
+  zaehlstelle.value.punkt.lat = newCoords.lat.toString();
+  zaehlstelle.value.punkt.lon = newCoords.lng.toString();
 }
 </script>
-
-
-<style scoped>
-.text-info {
-    font-size: 18px;
-    color: black;
-}
-</style>

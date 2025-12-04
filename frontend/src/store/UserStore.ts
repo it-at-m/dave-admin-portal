@@ -1,6 +1,7 @@
-import SsoUserInfoResponse from "@/domain/SsoUserInfoResponse";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
+
+import SsoUserInfoResponse from "@/types/app/SsoUserInfoResponse";
 
 const rolePoweruser = "ROLE_POWERUSER";
 const roleFachadmin = "ROLE_FACHADMIN";
@@ -11,34 +12,34 @@ const roleFachadmin = "ROLE_FACHADMIN";
  * der Oberfläche nur für bestimmte Rollen sichtbar sein sollen.
  */
 export const useUserStore = defineStore("userStore", () => {
-    // ref()s become state properties
-    const ssoUserInfoResponse = ref<SsoUserInfoResponse>(
-        {} as SsoUserInfoResponse
-    );
-    // computed()s become getters
-    const getName = computed(() => ssoUserInfoResponse.value.name);
-    const isPoweruser = computed(() =>
-        ssoUserInfoResponse.value.authorities?.includes(rolePoweruser)
-    );
-    const isFachadmin = computed(() =>
-        ssoUserInfoResponse.value.authorities?.includes(roleFachadmin)
-    );
-    const hasNoAuthorities = computed(
-        () =>
-            ssoUserInfoResponse.value.authorities === undefined ||
-            ssoUserInfoResponse.value.authorities.length === 0
-    );
+  // ref()s become state properties
+  const ssoUserInfoResponse = ref<SsoUserInfoResponse>(
+    {} as SsoUserInfoResponse
+  );
+  // computed()s become getters
+  const getName = computed(() => ssoUserInfoResponse.value.name);
+  const isPoweruser = computed(() =>
+    ssoUserInfoResponse.value.authorities?.includes(rolePoweruser)
+  );
+  const isFachadmin = computed(() =>
+    ssoUserInfoResponse.value.authorities?.includes(roleFachadmin)
+  );
+  const hasNoAuthorities = computed(
+    () =>
+      ssoUserInfoResponse.value.authorities === undefined ||
+      ssoUserInfoResponse.value.authorities.length === 0
+  );
 
-    // function()s become actions
-    function setSsoUserInfoResponse(payload: SsoUserInfoResponse) {
-        ssoUserInfoResponse.value = payload;
-    }
+  // function()s become actions
+  function setSsoUserInfoResponse(payload: SsoUserInfoResponse) {
+    ssoUserInfoResponse.value = payload;
+  }
 
-    return {
-        getName,
-        isPoweruser,
-        isFachadmin,
-        hasNoAuthorities,
-        setSsoUserInfoResponse,
-    };
+  return {
+    getName,
+    isPoweruser,
+    isFachadmin,
+    hasNoAuthorities,
+    setSsoUserInfoResponse,
+  };
 });

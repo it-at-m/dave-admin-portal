@@ -1,54 +1,63 @@
 <template>
-    <v-dialog
-        v-model="value"
-        persistent
-        max-width="900px"
+  <v-dialog
+    v-model="showDialogModel"
+    persistent
+    max-width="900px"
+  >
+    <v-card
+      width="900px"
+      variant="flat"
     >
-        <v-card
-            width="900px"
-            flat
-        >
-            <v-card-title>
-                <v-icon left>mdi-map-marker-plus-outline</v-icon>
-                {{ dialogtitle }}
-            </v-card-title>
+      <v-card-title>
+        <v-icon
+          start
+          icon="mdi-map-marker-plus-outline"
+        />
+        {{ DIALOG_TITLE }}
+      </v-card-title>
 
-            <v-card-text>
-                <update-zaehlstelle-form
-                    :zaehlstelle="zaehlstelle"
-                    @cancel="cancelCreate"
-                    @saved="saved"
-                />
-            </v-card-text>
-        </v-card>
-    </v-dialog>
+      <v-card-text>
+        <update-zaehlstelle-form
+          v-model="zaehlstelle"
+          @cancel="cancelCreate"
+          @saved="saved"
+        />
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-/* eslint-enable no-unused-vars */
+<script setup lang="ts">
+import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
+
+import { computed } from "vue";
+
 import UpdateZaehlstelleForm from "@/components/zaehlstelle/UpdateZaehlstelleForm.vue";
 
-@Component({
-    components: { UpdateZaehlstelleForm },
-})
-export default class UpdateZaehlstelleDialog extends Vue {
-    /**
-     * Steuerflag für den Dialog
-     */
-    @Prop() value!: boolean;
-    @Prop() zaehlstelle!: ZaehlstelleDTO;
+interface Props {
+  showDialog: boolean;
+}
+const props = defineProps<Props>();
 
-    dialogtitle = "Zählstelle bearbeiten";
+const zaehlstelle = defineModel<ZaehlstelleDTO>({
+  required: true,
+});
 
-    cancelCreate(): void {
-        this.$emit("cancel");
-    }
+const showDialogModel = computed(() => {
+  return props.showDialog;
+});
 
-    saved(): void {
-        this.$emit("saved");
-    }
+const emits = defineEmits<{
+  (e: "cancel"): void;
+  (e: "saved"): void;
+}>();
+const DIALOG_TITLE = "Zählstelle bearbeiten";
+
+function cancelCreate(): void {
+  emits("cancel");
+}
+
+function saved(): void {
+  emits("saved");
 }
 </script>

@@ -1,206 +1,220 @@
 <template>
-    <v-dialog
-        v-model="showDialog"
-        persistent
-        max-width="50%"
-        height="600px"
-    >
-        <v-card flat>
-            <v-card-title>
-                <v-icon left> {{ dialogicon }} </v-icon>
-                {{ dialogtitle }}
-            </v-card-title>
+  <v-dialog
+    v-model="showDialog"
+    persistent
+    max-width="50%"
+    height="600px"
+  >
+    <v-card variant="flat">
+      <v-card-title>
+        <v-icon
+          end
+          :icon="dialogicon"
+        />
+        {{ dialogtitle }}
+      </v-card-title>
 
-            <v-card-text>
-                <v-data-table
-                    v-model="selectedDienstleister"
-                    class="overflow-y-auto"
-                    :height="tableHeightDienstleister"
-                    dense
-                    :headers="dienstleisterHeaders"
-                    :items="getDienstleister"
-                    :items-per-page="-1"
-                    hide-default-footer
-                    fixed-header
-                    :search="filterDienstleister"
-                    :loading="dienstleisterIsLoading"
-                    no-data-text="Keine aktiven Dienstleister vorhanden."
-                    :no-results-text="getNoResultText"
-                    show-select
-                    single-select
-                >
-                    <template #top>
-                        <v-toolbar flat>
-                            <!-- Eingabefeld zum Filtern der Dienstleister -->
-                            <v-text-field
-                                v-model="filterDienstleister"
-                                append-icon="mdi-filter"
-                                label="Dienstleister nach dem gefiltert werden soll"
-                                single-line
-                                hide-details
-                            ></v-text-field>
-                        </v-toolbar>
-                    </template>
-                </v-data-table>
-            </v-card-text>
+      <v-card-text class="py-0">
+        <v-data-table
+          v-model="selectedDienstleister"
+          :height="tableHeightDienstleister"
+          density="compact"
+          :headers="dienstleisterHeaders as Array<any>"
+          :items="dienstleister"
+          :items-per-page="-1"
+          hide-default-footer
+          fixed-header
+          :search="filterDienstleister"
+          :loading="dienstleisterIsLoading"
+          no-data-text="Keine aktiven Dienstleister vorhanden."
+          :no-results-text="getNoResultText"
+          show-select
+          single-select
+          return-object
+        >
+          <template #top>
+            <v-toolbar
+              flat
+              color="white"
+            >
+              <v-toolbar-title>
+                <!-- Eingabefeld zum Filtern der Dienstleister -->
+                <v-text-field
+                  v-model="filterDienstleister"
+                  append-inner-icon="mdi-filter"
+                  label="Dienstleister nach dem gefiltert werden soll"
+                  single-line
+                  hide-details
+                  variant="underlined"
+                  width="50%"
+                  density="compact"
+                />
+              </v-toolbar-title>
+            </v-toolbar>
+          </template>
+        </v-data-table>
+      </v-card-text>
 
-            <v-card-actions>
-                <v-spacer />
-                <v-btn
-                    v-if="showButtonBeauftragen"
-                    color="secondary"
-                    @click="beauftragen()"
-                >
-                    Beauftragen
-                </v-btn>
-                <v-btn
-                    v-if="showButtonKorrigieren"
-                    color="secondary"
-                    @click="korrigieren()"
-                >
-                    Korrigieren
-                </v-btn>
-                <v-btn
-                    color="grey lighten-1"
-                    @click="cancel()"
-                >
-                    Abbrechen
-                </v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          v-if="showButtonBeauftragen"
+          color="secondary"
+          variant="elevated"
+          text="Beauftragen"
+          @click="beauftragen()"
+        />
+        <v-btn
+          v-if="showButtonKorrigieren"
+          color="secondary"
+          variant="elevated"
+          text="Korrigieren"
+          @click="korrigieren()"
+        />
+        <v-btn
+          color="tertiary"
+          variant="elevated"
+          text="Abbrechen"
+          @click="cancel()"
+        />
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
+<script setup lang="ts">
+import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
+
+import { isEmpty } from "lodash";
+import { computed, ref, watch } from "vue";
+
 import DienstleisterService from "@/api/service/DienstleisterService";
-import { ApiError } from "@/api/error";
-import _ from "lodash";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-/* eslint-enable no-unused-vars */
-@Component
-export default class BeauftrageZaehlungDialog extends Vue {
-    /**
-     * Steuerflag für den Dialog
-     */
-    @Prop() showDialog!: boolean;
-    @Prop({ default: "" }) dienstleisterkennung?: string;
-    @Prop() isBeauftragen!: boolean;
+import { useDaveUtils } from "@/util/DaveUtils";
 
-    private snackbarStore = useSnackbarStore();
-
-    filterDienstleister = "";
-    dienstleisterIsLoading = false;
-    private dienstleister: Array<DienstleisterDTO> = [];
-    selectedDienstleister: Array<DienstleisterDTO> = [];
-
-    @Watch("showDialog")
-    private initOnOpen() {
-        if (this.showDialog) {
-            this.filterDienstleister = "";
-            this.dienstleister = [];
-            this.selectedDienstleister = [];
-            this.dienstleisterIsLoading = false;
-            this.loadAllActiveDienstleister();
-        }
-    }
-
-    cancel(): void {
-        this.$emit("cancel");
-    }
-
-    beauftragen(): void {
-        if (this.selectedDienstleister.length === 1) {
-            this.$emit("beauftragen", this.selectedDienstleister[0]);
-        }
-    }
-
-    korrigieren(): void {
-        if (this.selectedDienstleister.length === 1) {
-            this.$emit("korrigieren", this.selectedDienstleister[0]);
-        }
-    }
-
-    get dialogtitle(): string {
-        return this.isBeauftragen
-            ? "Dienstleister beauftragen"
-            : "Dienstleister korrigieren";
-    }
-
-    get dialogicon(): string {
-        return this.isBeauftragen
-            ? "mdi-account-arrow-right"
-            : "mdi-account-convert-outline";
-    }
-
-    private loadAllActiveDienstleister() {
-        this.dienstleister = [];
-        this.dienstleisterIsLoading = true;
-        DienstleisterService.getAllActive()
-            .then((dienstleisterDTOS: Array<DienstleisterDTO>) => {
-                this.dienstleister = dienstleisterDTOS;
-                if (!_.isEmpty(this.dienstleisterkennung)) {
-                    this.dienstleister.forEach((value: DienstleisterDTO) => {
-                        if (value.kennung === this.dienstleisterkennung) {
-                            this.selectedDienstleister.push(value);
-                        }
-                    });
-                }
-            })
-            .catch((error) => this.snackbarStore.showApiError(error))
-            .finally(() => {
-                this.dienstleisterIsLoading = false;
-            });
-    }
-
-    get getDienstleister(): Array<DienstleisterDTO> {
-        return this.dienstleister;
-    }
-
-    get dienstleisterHeaders(): Array<any> {
-        return [
-            {
-                text: "Name",
-                align: "start",
-                value: "name",
-                divider: true,
-            },
-            {
-                text: "Kennung",
-                value: "kennung",
-                divider: true,
-            },
-            {
-                text: "Email",
-                value: "emailAddressesAsString",
-            },
-        ];
-    }
-
-    /*
-  Von der Sheet-Height alles abziehen, was nicht die Tabelle ist
-  64px Suche in Tabelle
-  20px Padding Bottom
-  52px Button
-   */
-    get tableHeightDienstleister(): string {
-        // return parseInt(this.height.replace('px', '')) - 136 + 'px';
-        // return '400px'
-        return 600 - 58 - 64 - 52 + "px";
-    }
-
-    get getNoResultText(): string {
-        return `Kein Dienstleister zum Filter '${this.filterDienstleister}' gefunden.`;
-    }
-
-    get showButtonBeauftragen(): boolean {
-        return this.selectedDienstleister.length > 0 && this.isBeauftragen;
-    }
-
-    get showButtonKorrigieren(): boolean {
-        return this.selectedDienstleister.length > 0 && !this.isBeauftragen;
-    }
+interface Props {
+  isBeauftragen: boolean;
+  dienstleisterkennung?: string;
 }
+const props = withDefaults(defineProps<Props>(), {
+  dienstleisterkennung: "",
+});
+const showDialog = defineModel<boolean>({
+  required: true,
+});
+const emits = defineEmits<{
+  (e: "cancel"): void;
+  (e: "beauftragen", payload: DienstleisterDTO): void;
+  (e: "korrigieren", payload: DienstleisterDTO): void;
+}>();
+
+const snackbarStore = useSnackbarStore();
+const daveUtils = useDaveUtils();
+
+const filterDienstleister = ref("");
+const dienstleisterIsLoading = ref(false);
+const dienstleister = ref<Array<DienstleisterDTO>>([]);
+const selectedDienstleister = ref<Array<DienstleisterDTO>>([]);
+
+watch(
+  () => showDialog.value,
+  () => {
+    if (showDialog.value) {
+      filterDienstleister.value = "";
+      dienstleister.value = [];
+      selectedDienstleister.value = [];
+      dienstleisterIsLoading.value = false;
+      loadAllActiveDienstleister();
+    }
+  }
+);
+
+function cancel(): void {
+  emits("cancel");
+}
+
+function beauftragen(): void {
+  if (selectedDienstleister.value.length === 1) {
+    emits("beauftragen", selectedDienstleister.value[0]);
+  }
+}
+
+function korrigieren(): void {
+  if (selectedDienstleister.value.length === 1) {
+    emits("korrigieren", selectedDienstleister.value[0]);
+  }
+}
+
+const dialogtitle = computed(() => {
+  return props.isBeauftragen
+    ? "Dienstleister beauftragen"
+    : "Dienstleister korrigieren";
+});
+
+const dialogicon = computed(() => {
+  return props.isBeauftragen
+    ? "mdi-account-arrow-right"
+    : "mdi-account-convert-outline";
+});
+
+function loadAllActiveDienstleister() {
+  dienstleister.value = [];
+  dienstleisterIsLoading.value = true;
+  DienstleisterService.getAllActive()
+    .then((dienstleisterDTOS: Array<DienstleisterDTO>) => {
+      dienstleister.value = dienstleisterDTOS;
+      if (!isEmpty(props.dienstleisterkennung)) {
+        selectedDienstleister.value = dienstleister.value.filter(
+          (value) => value.kennung === props.dienstleisterkennung
+        );
+      }
+    })
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      dienstleisterIsLoading.value = false;
+    });
+}
+
+const dienstleisterHeaders = [
+  {
+    title: "Name",
+    align: "start",
+    value: "name",
+    lastFixed: true,
+  },
+  {
+    title: "Kennung",
+    value: "kennung",
+    lastFixed: true,
+  },
+  {
+    title: "Email",
+    value: "emailAddressesAsString",
+  },
+];
+
+/*
+  Von der Table-Height alles abziehen, was nicht die Tabelle ist
+*/
+const tableHeightDienstleister = computed(() => {
+  return (
+    daveUtils.pxToVh(600) -
+    daveUtils.cardtitleHeight.value -
+    daveUtils.datatableFilterHeight.value -
+    daveUtils.cardactionHeight.value +
+    "vh"
+  );
+});
+
+const getNoResultText = computed(() => {
+  return `Kein Dienstleister zum Filter '${filterDienstleister.value}' gefunden.`;
+});
+
+const showButtonBeauftragen = computed(() => {
+  return selectedDienstleister.value.length > 0 && props.isBeauftragen;
+});
+
+const showButtonKorrigieren = computed(() => {
+  return selectedDienstleister.value.length > 0 && !props.isBeauftragen;
+});
 </script>

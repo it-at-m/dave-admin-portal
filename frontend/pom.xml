@@ -6,7 +6,7 @@
 
     <groupId>de.muenchen.dave.frontend</groupId>
     <artifactId>dave-adminportal-frontend</artifactId>
-    <version>1.14.1-SNAPSHOT</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
     <name>dave_adminportal_frontend</name>
 
@@ -16,8 +16,8 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
-        <exec.maven.plugin>3.0.0</exec.maven.plugin>
-        <maven.clean.plugin>3.1.0</maven.clean.plugin>
+        <exec.maven.plugin>3.5.0</exec.maven.plugin>
+        <maven.clean.plugin>3.4.1</maven.clean.plugin>
         <sonar.sources>src,public</sonar.sources>
         <sonar.coverage.exclusions>src,public</sonar.coverage.exclusions>
     </properties>
@@ -142,16 +142,4 @@
 
         </profile>
     </profiles>
-
-
-    <build>
-        <resources>
-            <resource>
-                <directory>dist</directory>
-                <targetPath>static</targetPath>
-            </resource>
-        </resources>
-    </build>
-
-
 </project>

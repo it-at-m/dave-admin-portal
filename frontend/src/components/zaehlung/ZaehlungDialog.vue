@@ -1,89 +1,128 @@
 <template>
-    <v-dialog
-        v-model="showDialog"
-        persistent
-        max-width="50%"
-        height="600px"
+  <v-dialog
+    v-model="showDialogModel"
+    persistent
+    max-width="50%"
+    height="800px"
+  >
+    <v-card
+      width="100%"
+      variant="flat"
     >
-        <v-card
-            width="100%"
-            flat
-        >
-            <v-card-title>
-                <v-icon
-                    v-if="editZaehlung"
-                    left
-                    >mdi-calendar-edit</v-icon
-                >
-                <v-icon
-                    v-else
-                    left
-                    >mdi-calendar-plus</v-icon
-                >
-                {{ dialogtitle }}
-            </v-card-title>
+      <v-card-title>
+        <v-icon
+          end
+          :icon="dialogicon"
+        />
+        {{ dialogtitle }}
+      </v-card-title>
 
-            <v-card-text>
-                <zaehlung-form
-                    :zaehlstelle="zaehlstelle"
-                    @cancel="cancelCreate"
-                    @saved="saved"
-                />
-            </v-card-text>
-        </v-card>
-    </v-dialog>
+      <v-card-text class="py-0">
+        <zaehlung-form
+          v-model="zaehlung"
+          :zaehlstelle="zaehlstelle"
+          @is-valid="setAllgemeineFormValid"
+        />
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          color="secondary"
+          text="Speichern"
+          variant="elevated"
+          :disabled="!isValid"
+          @click="save()"
+        />
+        <v-btn
+          color="tertiary"
+          variant="elevated"
+          text="Abbrechen"
+          @click="cancel()"
+        />
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import ZaehlstelleForm from "@/components/zaehlstelle/CreateZaehlstelleForm.vue";
-/* eslint-disable no-unused-vars */
-import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import ZaehlungForm from "@/components/zaehlung/form/ZaehlungForm.vue";
-import { useZaehlungStore } from "@/store/ZaehlungStore";
+<script setup lang="ts">
+import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+
 import { isEmpty } from "lodash";
-/* eslint-enable no-unused-vars */
-@Component({
-    components: {
-        ZaehlungForm,
-        ZaehlstelleForm,
-    },
-})
-export default class ZaehlungDialog extends Vue {
-    /**
-     * Steuerflag für den Dialog
-     */
-    @Prop() showDialog!: boolean;
-    @Prop() zaehlstelle!: ZaehlstelleDTO;
+import { computed, ref, watch } from "vue";
 
-    private zaehlungStore = useZaehlungStore();
+import ZaehlungService from "@/api/service/ZaehlungService";
+import ZaehlungForm from "@/components/zaehlung/form/ZaehlungForm.vue";
+import { useEventbus } from "@/store/Eventbus";
+import { useSnackbarStore } from "@/store/SnackbarStore";
 
-    get editZaehlung(): boolean {
-        return !isEmpty(this.zaehlungStore.getZaehlung.id);
-    }
+interface Props {
+  showDialog: boolean;
+  zaehlstelle: ZaehlstelleDTO;
+}
+const props = defineProps<Props>();
 
-    get dialogtitle(): string {
-        if (this.editZaehlung) {
-            return "Zählung bearbeiten";
-        } else {
-            return "Neue Zählung anlegen";
-        }
-    }
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
 
-    @Watch("showDialog")
-    openOrCloseDialog() {
-        // value === true, if open
-        // value === false, if close
-        this.zaehlungStore.setResetformevent(!this.showDialog);
-    }
+const isValid = ref(false);
+function setAllgemeineFormValid(isPartValid: boolean) {
+  isValid.value = isPartValid;
+}
 
-    cancelCreate(): void {
-        this.$emit("cancel");
-    }
+const showDialogModel = computed(() => {
+  return props.showDialog;
+});
+const emits = defineEmits<{
+  (e: "close-dialog"): void;
+  (e: "saved"): void;
+}>();
 
-    saved(backendIdDTO: BackendIdDTO): void {
-        this.$emit("saved", backendIdDTO);
-    }
+const snackbarStore = useSnackbarStore();
+const eventbus = useEventbus();
+
+const editZaehlung = computed(() => {
+  return !isEmpty(zaehlung.value.id);
+});
+
+const dialogicon = computed(() => {
+  if (editZaehlung.value) {
+    return "mdi-calendar-edit";
+  } else {
+    return "mdi-calendar-plus";
+  }
+});
+
+const dialogtitle = computed(() => {
+  if (editZaehlung.value) {
+    return "Zählung bearbeiten";
+  } else {
+    return "Neue Zählung anlegen";
+  }
+});
+
+watch(
+  () => props.showDialog,
+  () => {
+    eventbus.setReloadEvent();
+  }
+);
+
+function save(): void {
+  ZaehlungService.saveZaehlung(zaehlung.value, props.zaehlstelle.id)
+    .then(() => {
+      snackbarStore.showSuccess(`Die Zählung wurde erfolgreich gespeichert.`);
+      emits("saved");
+    })
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      eventbus.setReloadEvent();
+    });
+}
+
+function cancel(): void {
+  eventbus.setReloadEvent();
+  emits("close-dialog");
 }
 </script>
