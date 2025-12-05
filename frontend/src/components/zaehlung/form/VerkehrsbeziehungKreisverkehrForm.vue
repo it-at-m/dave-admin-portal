@@ -89,12 +89,12 @@ const allPossibleFahrbeziehungen = ref<Array<FahrbeziehungDTO>>([]);
 const selectAllModel = ref(false);
 const HEADERS = [
   {
-    title: "von",
+    title: "Knotenarm",
     align: "center",
-    value: "von",
+    value: "knotenarm",
     width: "12%",
   },
-  { title: "nach", align: "center", value: "nach", width: "15%" },
+  { title: "Typ", align: "center", value: "kreisverkehrTyp", width: "15%" },
   { title: "Hochrechnungsfaktor", value: "hochrechnungsfaktor" },
 ];
 
@@ -113,6 +113,7 @@ watch(
 const isHochrechnungsfaktorEditable = computed(() => {
   return [Status.CREATED, Status.INSTRUCTED].includes(zaehlung.value.status);
 });
+
 /**
  * Gibt die im Dropdown anzuzeigenden Hochrechnungsfaktoren zurück.
  * Diese umfassen alle Hochrechnungsfaktoren welche "aktiv" sind.
@@ -146,7 +147,7 @@ const hochrechnungsfaktoreDropDown = computed(() => {
 function containsHochrechnungsfaktor(
   activeFaktors: Array<HochrechnungsfaktorDTO>,
   faktor: HochrechnungsfaktorDTO
-) {
+): boolean {
   let contains = false;
   activeFaktors.forEach((value) => {
     if (value.matrix === faktor.matrix) {
@@ -162,7 +163,12 @@ function updatePossibleFahrbeziehungen(): void {
   );
   allPossibleFahrbeziehungen.value.forEach((pos: FahrbeziehungDTO) => {
     zaehlung.value.fahrbeziehungen.forEach((fahr: FahrbeziehungDTO) => {
-      if (pos.von === fahr.von && pos.nach === fahr.nach) {
+      if (
+        pos.knotenarm === fahr.knotenarm &&
+        pos.heraus === fahr.heraus &&
+        pos.vorbei === fahr.vorbei &&
+        pos.hinein === fahr.hinein
+      ) {
         pos.hochrechnungsfaktor = cloneDeep(fahr.hochrechnungsfaktor);
         if (fahr.id) {
           pos.active = true;
@@ -175,51 +181,88 @@ function updatePossibleFahrbeziehungen(): void {
   calculateSelectAllModel();
 }
 
-function calculateSelectAllModel() {
+function calculateSelectAllModel(): void {
   selectAllModel.value =
     zaehlung.value.fahrbeziehungen.length >=
     allPossibleFahrbeziehungen.value.length / 2;
 }
 
-function calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
-  const standardFaktor: HochrechnungsfaktorDTO =
-    hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
-  const allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
-  const possibleArms: Array<number> = [];
-  zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
-    possibleArms.push(arm.nummer);
-  });
-  possibleArms.forEach((vonNummer: number) => {
-    possibleArms.forEach((nachNummer: number) => {
-      const newFzVon: FahrbeziehungDTO = {} as FahrbeziehungDTO;
-      newFzVon.von = vonNummer;
-      newFzVon.nach = nachNummer;
-      newFzVon.active = false;
-      newFzVon.hochrechnungsfaktor = cloneDeep(standardFaktor);
-      newFzVon.indexKey = `${vonNummer}${nachNummer}`;
-      allPossibleFahrbeziehungen.push(newFzVon);
-    });
-  });
-  allPossibleFahrbeziehungen.sort(FahrbeziehungComparator.sortByVonAndNach);
-  return allPossibleFahrbeziehungen;
-}
-
 function updateFahrbeziehung(toSave: FahrbeziehungDTO): void {
   zaehlung.value.fahrbeziehungen.forEach((fahrbeziehung: FahrbeziehungDTO) => {
     if (
-      fahrbeziehung.von === toSave.von &&
-      fahrbeziehung.nach === toSave.nach
+      fahrbeziehung.knotenarm === toSave.knotenarm &&
+      fahrbeziehung.heraus === toSave.heraus &&
+      fahrbeziehung.hinein === toSave.hinein &&
+      fahrbeziehung.vorbei === toSave.vorbei
     ) {
       fahrbeziehung.hochrechnungsfaktor = toSave.hochrechnungsfaktor;
     }
   });
 }
 
+function getType(fz: FahrbeziehungDTO): string {
+  if (fz.hinein) {
+    return "in den Kreis";
+  } else if (fz.vorbei) {
+    return "Vorbeifahrend";
+  } else if (fz.heraus) {
+    return "aus dem Kreis";
+  } else {
+    return "unbekannt";
+  }
+}
+
+/**
+ * Erzeugt aus den vorhandenen Knotenarmen alle möglichen Fahrbeziehungen.
+ * @private
+ */
+function calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
+  const standardFaktor: HochrechnungsfaktorDTO =
+    hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
+  const allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
+  zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
+    const newFzHeraus: FahrbeziehungDTO = {} as FahrbeziehungDTO;
+    newFzHeraus.knotenarm = arm.nummer;
+    newFzHeraus.hinein = false;
+    newFzHeraus.vorbei = false;
+    newFzHeraus.heraus = true;
+    newFzHeraus.active = false;
+    newFzHeraus.hochrechnungsfaktor = cloneDeep(standardFaktor);
+    newFzHeraus.kreisverkehrTyp = getType(newFzHeraus);
+    newFzHeraus.indexKey = `${newFzHeraus.knotenarm}${newFzHeraus.kreisverkehrTyp}`;
+    allPossibleFahrbeziehungen.push(newFzHeraus);
+    const newFzVorbei: FahrbeziehungDTO = {} as FahrbeziehungDTO;
+    newFzVorbei.knotenarm = arm.nummer;
+    newFzVorbei.hinein = false;
+    newFzVorbei.vorbei = true;
+    newFzVorbei.heraus = false;
+    newFzVorbei.active = false;
+    newFzVorbei.kreisverkehrTyp = getType(newFzVorbei);
+    newFzVorbei.hochrechnungsfaktor = cloneDeep(standardFaktor);
+    newFzVorbei.indexKey = `${newFzVorbei.knotenarm}${newFzVorbei.kreisverkehrTyp}`;
+    allPossibleFahrbeziehungen.push(newFzVorbei);
+    const newFzHinein: FahrbeziehungDTO = {} as FahrbeziehungDTO;
+    newFzHinein.knotenarm = arm.nummer;
+    newFzHinein.hinein = true;
+    newFzHinein.vorbei = false;
+    newFzHinein.heraus = false;
+    newFzHinein.active = false;
+    newFzHinein.kreisverkehrTyp = getType(newFzHinein);
+    newFzHinein.hochrechnungsfaktor = cloneDeep(standardFaktor);
+    newFzHinein.indexKey = `${newFzHinein.knotenarm}${newFzHinein.kreisverkehrTyp}`;
+    allPossibleFahrbeziehungen.push(newFzHinein);
+  });
+  allPossibleFahrbeziehungen.sort(
+    FahrbeziehungComparator.sortKreisverkehrByVonAndNach
+  );
+  return allPossibleFahrbeziehungen;
+}
+
 function getHochrechnungsfaktorAsText(hf: HochrechnungsfaktorDTO): string {
   return ObjectToTextTranslator.getHochrechnungsfaktorAsText(hf);
 }
 
-function selectAll() {
+function selectAll(): void {
   if (selectAllModel.value) {
     zaehlung.value.fahrbeziehungen = [];
     zaehlung.value.fahrbeziehungen = [...allPossibleFahrbeziehungen.value];
@@ -238,7 +281,7 @@ function selectAll() {
   }
 }
 
-function selectItem(fahrbeziehung: FahrbeziehungDTO) {
+function selectItem(fahrbeziehung: FahrbeziehungDTO): void {
   if (fahrbeziehung.active) {
     zaehlung.value.fahrbeziehungen.push(fahrbeziehung);
   } else {
@@ -247,13 +290,15 @@ function selectItem(fahrbeziehung: FahrbeziehungDTO) {
   calculateSelectAllModel();
 }
 
-function removeFahrbeziehung(toDelete: FahrbeziehungDTO) {
+function removeFahrbeziehung(toDelete: FahrbeziehungDTO): void {
   let deleteIndex = -1;
   zaehlung.value.fahrbeziehungen.forEach(
     (fahrbeziehung: FahrbeziehungDTO, index: number) => {
       if (
-        fahrbeziehung.von === toDelete.von &&
-        fahrbeziehung.nach === toDelete.nach
+        fahrbeziehung.knotenarm === toDelete.knotenarm &&
+        fahrbeziehung.heraus === toDelete.heraus &&
+        fahrbeziehung.vorbei === toDelete.vorbei &&
+        fahrbeziehung.hinein === toDelete.hinein
       ) {
         deleteIndex = index;
         fahrbeziehung.active = false;
