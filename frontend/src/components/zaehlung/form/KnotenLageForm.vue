@@ -5,6 +5,20 @@
     :max-height="height"
     class="overflow-y-auto"
   >
+    <v-banner
+      v-if="!areAvailableNodesValid"
+      lines="one"
+      width="100%"
+      text="Es wurden nicht exakt 2 gegenüberliegende Knotenarme ausgewählt."
+    >
+      <template #prepend>
+        <v-icon
+          icon="mdi-alert-decagram-outline"
+          size="36"
+          color="error"
+        />
+      </template>
+    </v-banner>
     <v-card-text>
       <v-row dense>
         <zaehlung-card-map
@@ -208,10 +222,11 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 interface Props {
   height: string;
   zaehlstelle: ZaehlstelleDTO;
+  areAvailableNodesValid: boolean;
 }
 const props = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
   required: true,
 });
 

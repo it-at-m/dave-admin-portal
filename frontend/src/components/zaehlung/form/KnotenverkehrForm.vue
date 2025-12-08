@@ -912,8 +912,9 @@
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { isEmpty } from "lodash";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 
+import { useEventbus } from "@/store/Eventbus";
 import Zaehlart from "@/types/enum/Zaehlart";
 
 interface Props {
@@ -924,20 +925,20 @@ defineProps<Props>();
 const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
   required: true,
 });
-const isValid = defineModel<boolean>("isValid", {
-  required: false,
-});
 
 const activeColor = "#D50000";
 const passiveColor = "#9E9E9E";
-
-const selectedKnotenarme = ref<Array<string>>([]);
 
 const availableNodes = computed(() => {
   return zaehlung.value.knotenarme.map((arm) => `${arm.nummer}`);
 });
 const hasAvailableNodes = computed(() => {
   return availableNodes.value.length > 0;
+});
+
+const eventbus = useEventbus();
+const selectedKnotenarme = computed(() => {
+  return eventbus.getSelectedKnotenarme;
 });
 
 onMounted(() => {
@@ -974,13 +975,7 @@ function calculateColor(knotenarm: string): string | undefined {
 }
 
 function activateNode(knotenarm: string) {
-  if (!selectedKnotenarme.value.includes(knotenarm)) {
-    selectedKnotenarme.value.push(knotenarm);
-  } else {
-    const indexOfSelectedKnotenarmToDelete =
-      selectedKnotenarme.value.indexOf(knotenarm);
-    selectedKnotenarme.value.splice(indexOfSelectedKnotenarmToDelete, 1);
-  }
+  eventbus.activateNode(knotenarm);
   validateSelection();
 }
 
@@ -1010,10 +1005,7 @@ function activateOrDeactivateTotalNode(knotenarm: string) {
   nodeStrings.forEach((nodeString) => {
     if (selectedKnotenarme.value.includes(nodeString)) {
       nothingRemoved = false;
-      selectedKnotenarme.value.splice(
-        selectedKnotenarme.value.indexOf(nodeString),
-        1
-      );
+      eventbus.deactivateNode(nodeString);
     }
   });
 
@@ -1042,18 +1034,18 @@ function getColorOfNode(knotenarm: string) {
 }
 
 function resetForm() {
-  selectedKnotenarme.value = [];
+  eventbus.resetSelectedKnotenarme();
   validateSelection();
 }
 
 // Validierung, ob für jeden Knotenarm mindestens ein Pfeil ausgewaehlt wurde
 function validateSelection() {
-  const selectedKnotenarmNummern = selectedKnotenarme.value.map(
-    (knotenarm: string) => knotenarm.charAt(0)
-  );
-  const notSelectedKnotenarme = availableNodes.value.filter(
-    (nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber)
-  );
-  isValid.value = isEmpty(notSelectedKnotenarme);
+  // const selectedKnotenarmNummern = selectedKnotenarme.value.map(
+  //   (knotenarm: string) => knotenarm.charAt(0)
+  // );
+  // const notSelectedKnotenarme = availableNodes.value.filter(
+  //   (nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber)
+  // );
+  // isValid.value = isEmpty(notSelectedKnotenarme);
 }
 </script>

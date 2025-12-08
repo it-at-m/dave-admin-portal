@@ -9,14 +9,13 @@
       zaehlung.zaehlart === Zaehlart.FJS || zaehlung.zaehlart === Zaehlart.QU
     "
     v-model:zaehlung="zaehlung"
-    v-model:is-valid="isValid"
     :height="height"
   />
   <querschnitt-je-strassenseite-form
     v-else-if="zaehlung.zaehlart === Zaehlart.QJS"
     v-model:zaehlung="zaehlung"
-    v-model:is-valid="isValid"
     :height="height"
+    :are-available-nodes-valid="areAvailableNodesValid"
   />
   <verkehrsbeziehung-kreuzung-form
     v-else
@@ -36,13 +35,11 @@ import Zaehlart from "@/types/enum/Zaehlart";
 
 interface Props {
   height: string;
+  areAvailableNodesValid: boolean;
 }
 defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
-  required: true,
-});
-const isValid = defineModel<boolean>("isValid", {
+const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
   required: true,
 });
 </script>
