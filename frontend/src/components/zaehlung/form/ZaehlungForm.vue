@@ -152,9 +152,8 @@ const contentHeight = computed(() => {
 
 // Validierung, ob für jeden Knotenarm mindestens ein Pfeil ausgewaehlt wurde
 function validateZaehlung() {
-  let validation: boolean;
+  let validation: boolean = true;
   const selectedKnotenarme = eventbus.getSelectedKnotenarme;
-  // Validierung für QJS
   if (zaehlung.value.zaehlart === Zaehlart.QJS) {
     // Erlaubte Kombinationen: 1 & 3, 2 & 4, 5 & 7, 6 & 8
     // => Absolute Subtraktion der Kontenarmnummern muss immer 2 sein
@@ -174,7 +173,11 @@ function validateZaehlung() {
       validation = false;
     }
     isKnotenLageFormValid.value = areSelectedNodesValid;
-  } else {
+  }
+  if (
+    zaehlung.value.zaehlart === Zaehlart.FJS ||
+    zaehlung.value.zaehlart === Zaehlart.QU
+  ) {
     const selectedKnotenarmNummern = selectedKnotenarme.map(
       (knotenarm: string) => knotenarm.charAt(0)
     );
