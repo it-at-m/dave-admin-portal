@@ -67,9 +67,6 @@ const zaehlung = defineModel<ZaehlungDTO>({
 });
 
 const isValid = ref(false);
-// function setAllgemeineFormValid(isPartValid: boolean) {
-//   isValid.value = isPartValid;
-// }
 
 const showDialogModel = computed(() => {
   return props.showDialog;

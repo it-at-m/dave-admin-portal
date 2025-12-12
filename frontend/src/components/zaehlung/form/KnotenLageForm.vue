@@ -6,10 +6,10 @@
     class="overflow-y-auto"
   >
     <v-banner
-      v-if="!areAvailableNodesValid"
+      v-if="!isKnotenLageFormValid"
       lines="one"
       width="100%"
-      text="Es wurden nicht exakt 2 gegenüberliegende Knotenarme ausgewählt."
+      text="Es müssen exakt 2 gegenüberliegende Knotenarme ausgewählt werden."
     >
       <template #prepend>
         <v-icon
@@ -222,7 +222,7 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 interface Props {
   height: string;
   zaehlstelle: ZaehlstelleDTO;
-  areAvailableNodesValid: boolean;
+  isKnotenLageFormValid: boolean;
 }
 const props = defineProps<Props>();
 

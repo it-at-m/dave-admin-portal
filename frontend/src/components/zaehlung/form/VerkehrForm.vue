@@ -15,7 +15,7 @@
     v-else-if="zaehlung.zaehlart === Zaehlart.QJS"
     v-model:zaehlung="zaehlung"
     :height="height"
-    :are-available-nodes-valid="areAvailableNodesValid"
+    :is-knoten-lage-form-valid="isKnotenLageFormValid"
   />
   <verkehrsbeziehung-kreuzung-form
     v-else
@@ -35,7 +35,7 @@ import Zaehlart from "@/types/enum/Zaehlart";
 
 interface Props {
   height: string;
-  areAvailableNodesValid: boolean;
+  isKnotenLageFormValid: boolean;
 }
 defineProps<Props>();
 

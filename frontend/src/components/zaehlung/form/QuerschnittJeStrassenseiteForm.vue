@@ -7,7 +7,7 @@
     class="d-flex flex-row justify-center overflow-y-auto"
   >
     <svg
-      v-if="areAvailableNodesValid"
+      v-if="isKnotenLageFormValid"
       :height="height"
       :width="height"
       viewBox="0 0 1400 1400"
@@ -366,7 +366,7 @@ import KnotenarmComparator from "@/util/KnotenarmComparator";
 
 interface Props {
   height: string;
-  areAvailableNodesValid: boolean;
+  isKnotenLageFormValid: boolean;
 }
 defineProps<Props>();
 
@@ -416,17 +416,6 @@ const rotateSvg = computed(() => {
   }
   return rotation;
 });
-// const areAvailableNodesValid = computed(() => {
-//   let result = availableNodes.value.length === 2;
-//   // Erlaubte Kombinationen: 1 & 3, 2 & 4, 5 & 7, 6 & 8
-//   // => Absolute Subtraktion der Kontenarmnummern muss immer 2 sein
-//   if (firstNode.value && secondNode.value) {
-//     result =
-//       result &&
-//       Math.abs(firstNode.value.nummer - secondNode.value.nummer) === 2;
-//   }
-//   return result;
-// });
 
 onMounted(() => {
   resetForm();
@@ -461,15 +450,13 @@ function calculateColor(arrow: string): string | undefined {
 }
 
 function activateArrow(arrow: string): void {
-  eventbus.activateNode(arrow);
-  validateSelection();
+  eventbus.activateKnotenarm(arrow);
 }
 
 function resetForm(): void {
   eventbus.resetSelectedKnotenarme();
   firstStreetname.value = [];
   secondStreetname.value = [];
-  validateSelection();
 }
 
 function prepareStreetnames(): void {
@@ -513,12 +500,5 @@ function getStreetname(knotenarm: KnotenarmDTO | undefined): Array<string> {
     }
   }
   return pieces;
-}
-
-// Validierung der Pfeile, ob auf mindestens einer Seite beide ausgewaehlt wurden
-function validateSelection(): void {
-  // isValid.value =
-  //   (selectedArrows.value.includes(1) && selectedArrows.value.includes(2)) ||
-  //   (selectedArrows.value.includes(3) && selectedArrows.value.includes(4));
 }
 </script>

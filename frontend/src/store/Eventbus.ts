@@ -15,14 +15,14 @@ export const useEventbus = defineStore("eventbus", () => {
   // neuen Zaehlarten an der Zaehlung gespeichert werden.
   const selectedKnotenarme = ref<Array<string>>([]);
   const getSelectedKnotenarme = computed(() => selectedKnotenarme.value);
-  function activateNode(knotenarm: string) {
+  function activateKnotenarm(knotenarm: string) {
     if (!selectedKnotenarme.value.includes(knotenarm)) {
       selectedKnotenarme.value.push(knotenarm);
     } else {
-      deactivateNode(knotenarm);
+      deactivateKnotenarm(knotenarm);
     }
   }
-  function deactivateNode(knotenarm: string) {
+  function deactivateKnotenarm(knotenarm: string) {
     const indexOfSelectedKnotenarmToDelete =
       selectedKnotenarme.value.indexOf(knotenarm);
     selectedKnotenarme.value.splice(indexOfSelectedKnotenarmToDelete, 1);
@@ -36,8 +36,8 @@ export const useEventbus = defineStore("eventbus", () => {
     setReloadEvent,
     // Wieder entfernen
     getSelectedKnotenarme,
-    activateNode,
-    deactivateNode,
+    activateKnotenarm,
+    deactivateKnotenarm,
     resetSelectedKnotenarme,
   };
 });

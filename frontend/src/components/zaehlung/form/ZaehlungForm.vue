@@ -48,14 +48,14 @@
           v-model:zaehlung="zaehlung"
           :height="contentHeight"
           :zaehlstelle="zaehlstelle"
-          :are-available-nodes-valid="isKnotenLageFormValid"
+          :is-knoten-lage-form-valid="isKnotenLageFormValid"
         />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_FAHRBEZIEHUNG">
         <verkehr-form
           v-model:zaehlung="zaehlung"
           :height="contentHeight"
-          :are-available-nodes-valid="isKnotenLageFormValid"
+          :is-knoten-lage-form-valid="isKnotenLageFormValid"
         />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_FAHRZEUGE">
@@ -91,12 +91,9 @@ defineProps<Props>();
 const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
   required: true,
 });
-const isValid = defineModel<boolean>("isValid", {
+const isZaehlungValid = defineModel<boolean>("isValid", {
   required: false,
 });
-// const emits = defineEmits<{
-//   (e: "isValid", payload: boolean): void;
-// }>();
 
 const daveUtils = useDaveUtils();
 const eventbus = useEventbus();
@@ -150,34 +147,44 @@ const contentHeight = computed(() => {
   return `${height}vh`;
 });
 
-// Validierung, ob für jeden Knotenarm mindestens ein Pfeil ausgewaehlt wurde
-function validateZaehlung() {
-  let validation: boolean = true;
-  const selectedKnotenarme = eventbus.getSelectedKnotenarme;
+function validateZaehlung(): void {
+  isKnotenLageFormValid.value = validateKnotenLageForm();
+  const isVerkehrFormValid = validateVerkehrForm();
+  isZaehlungValid.value =
+    isAllgemeineInfoFormValid.value !== null &&
+    isAllgemeineInfoFormValid.value &&
+    isKnotenLageFormValid.value &&
+    isVerkehrFormValid;
+}
+
+function validateKnotenLageForm(): boolean {
+  let isValid = true;
   if (zaehlung.value.zaehlart === Zaehlart.QJS) {
     // Erlaubte Kombinationen: 1 & 3, 2 & 4, 5 & 7, 6 & 8
     // => Absolute Subtraktion der Kontenarmnummern muss immer 2 sein
-    const areSelectedNodesValid =
+    isValid =
       zaehlung.value.knotenarme.length === 2 &&
       Math.abs(
         zaehlung.value.knotenarme[0].nummer -
           zaehlung.value.knotenarme[1].nummer
       ) === 2;
-    if (areSelectedNodesValid) {
-      // Validiert, ob auf mindestens einer Seite beide Richtungen gewaehlt wurden
-      validation =
-        (selectedKnotenarme.includes("1") &&
-          selectedKnotenarme.includes("2")) ||
-        (selectedKnotenarme.includes("3") && selectedKnotenarme.includes("4"));
-    } else {
-      validation = false;
-    }
-    isKnotenLageFormValid.value = areSelectedNodesValid;
   }
-  if (
+  return isValid;
+}
+
+function validateVerkehrForm(): boolean {
+  const selectedKnotenarme = eventbus.getSelectedKnotenarme;
+  let validation = true;
+  if (zaehlung.value.zaehlart === Zaehlart.QJS) {
+    // Bei QJS muessen auf mind. einer Straßenseite beide Pfeile aktiv sein
+    validation =
+      (selectedKnotenarme.includes("1") && selectedKnotenarme.includes("2")) ||
+      (selectedKnotenarme.includes("3") && selectedKnotenarme.includes("4"));
+  } else if (
     zaehlung.value.zaehlart === Zaehlart.FJS ||
     zaehlung.value.zaehlart === Zaehlart.QU
   ) {
+    // Bei FJS und QU muss mind. 1 Pfeil pro Knotenarm aktiv sein
     const selectedKnotenarmNummern = selectedKnotenarme.map(
       (knotenarm: string) => knotenarm.charAt(0)
     );
@@ -186,9 +193,6 @@ function validateZaehlung() {
       .filter((nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber));
     validation = isEmpty(notSelectedKnotenarme);
   }
-  isValid.value =
-    isAllgemeineInfoFormValid.value !== null &&
-    isAllgemeineInfoFormValid.value &&
-    validation;
+  return validation;
 }
 </script>
