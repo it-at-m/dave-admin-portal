@@ -164,7 +164,7 @@ import { useSnackbarStore } from "@/store/SnackbarStore";
 import { stadtbezirke } from "@/types/enum/Stadtbezirk";
 import { stadtbezirksviertel } from "@/types/enum/Stadtbezirksviertel";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import { useValidationUtils } from "@/util/validationUtils";
+import { useValidationUtils } from "@/util/ValidationUtils";
 
 const snackbarStore = useSnackbarStore();
 const configurationStore = useConfigurationStore();

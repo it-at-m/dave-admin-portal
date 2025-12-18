@@ -80,7 +80,7 @@ import VerkehrForm from "@/components/zaehlung/form/VerkehrForm.vue";
 import VerkehrsartForm from "@/components/zaehlung/form/VerkehrsartForm.vue";
 import { useEventbus } from "@/store/Eventbus";
 import { useDaveUtils } from "@/util/DaveUtils";
-import { useValidationUtils } from "@/util/validationUtils";
+import { useValidationUtils } from "@/util/ValidationUtils";
 
 interface Props {
   zaehlstelle: ZaehlstelleDTO;

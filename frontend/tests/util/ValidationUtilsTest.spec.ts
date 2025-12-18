@@ -4,9 +4,9 @@ import { describe, expect, it } from "vitest";
 
 import Zaehlart from "@/types/enum/Zaehlart";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import { useValidationUtils } from "@/util/validationUtils";
+import { useValidationUtils } from "@/util/ValidationUtils";
 
-describe("validationUtils.ts", () => {
+describe("ValidationUtils.ts", () => {
   it("validateVerkehrForm", () => {
     const validationUtils = useValidationUtils();
 
