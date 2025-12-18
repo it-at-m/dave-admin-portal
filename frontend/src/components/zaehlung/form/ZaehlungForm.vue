@@ -148,23 +148,17 @@ const contentHeight = computed(() => {
 });
 
 function validateZaehlung(): void {
-  isKnotenLageFormValid.value = validateKnotenLageForm();
-  const isVerkehrFormValid = validateVerkehrForm();
+  isKnotenLageFormValid.value = validationUtils.validateKnotenLageForm(
+    zaehlung.value
+  );
+  const isVerkehrFormValid = validationUtils.validateVerkehrForm(
+    zaehlung.value,
+    eventbus.getSelectedKnotenarme
+  );
   isZaehlungValid.value =
     isAllgemeineInfoFormValid.value !== null &&
     isAllgemeineInfoFormValid.value &&
     isKnotenLageFormValid.value &&
     isVerkehrFormValid;
-}
-
-function validateKnotenLageForm(): boolean {
-  return validationUtils.validateKnotenLageForm(zaehlung.value);
-}
-
-function validateVerkehrForm(): boolean {
-  return validationUtils.validateVerkehrForm(
-    zaehlung.value,
-    eventbus.getSelectedKnotenarme
-  );
 }
 </script>
