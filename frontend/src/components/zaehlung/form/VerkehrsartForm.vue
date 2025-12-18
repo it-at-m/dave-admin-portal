@@ -128,7 +128,7 @@ const labelSelectOrDeselectAll = computed(() => {
 
 const notOnlyRadAndFussIsAllowed = computed(() => {
   const zaehlarten = [Zaehlart.QJS, Zaehlart.QU, Zaehlart.FJS];
-  return zaehlarten.includes(zaehlung.value.zaehlart);
+  return !zaehlarten.includes(zaehlung.value.zaehlart);
 });
 
 const pkwLabel = computed(() => {
