@@ -72,7 +72,6 @@
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { isEmpty } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import AllgemeineInfoForm from "@/components/zaehlung/form/AllgemeineInfoForm.vue";
@@ -80,8 +79,8 @@ import KnotenLageForm from "@/components/zaehlung/form/KnotenLageForm.vue";
 import VerkehrForm from "@/components/zaehlung/form/VerkehrForm.vue";
 import VerkehrsartForm from "@/components/zaehlung/form/VerkehrsartForm.vue";
 import { useEventbus } from "@/store/Eventbus";
-import Zaehlart from "@/types/enum/Zaehlart";
 import { useDaveUtils } from "@/util/DaveUtils";
+import { useValidationUtils } from "@/util/validationUtils";
 
 interface Props {
   zaehlstelle: ZaehlstelleDTO;
@@ -97,6 +96,7 @@ const isZaehlungValid = defineModel<boolean>("isValid", {
 
 const daveUtils = useDaveUtils();
 const eventbus = useEventbus();
+const validationUtils = useValidationUtils();
 
 const activeTab = ref(0);
 // Kann auch null sein, da es in einer v-form als v-model genutzt wird.
@@ -158,41 +158,13 @@ function validateZaehlung(): void {
 }
 
 function validateKnotenLageForm(): boolean {
-  let isValid = true;
-  if (zaehlung.value.zaehlart === Zaehlart.QJS) {
-    // Erlaubte Kombinationen: 1 & 3, 2 & 4, 5 & 7, 6 & 8
-    // => Absolute Subtraktion der Kontenarmnummern muss immer 2 sein
-    isValid =
-      zaehlung.value.knotenarme.length === 2 &&
-      Math.abs(
-        zaehlung.value.knotenarme[0].nummer -
-          zaehlung.value.knotenarme[1].nummer
-      ) === 2;
-  }
-  return isValid;
+  return validationUtils.validateKnotenLageForm(zaehlung.value);
 }
 
 function validateVerkehrForm(): boolean {
-  const selectedKnotenarme = eventbus.getSelectedKnotenarme;
-  let validation = true;
-  if (zaehlung.value.zaehlart === Zaehlart.QJS) {
-    // Bei QJS muessen auf mind. einer Straßenseite beide Pfeile aktiv sein
-    validation =
-      (selectedKnotenarme.includes("1") && selectedKnotenarme.includes("2")) ||
-      (selectedKnotenarme.includes("3") && selectedKnotenarme.includes("4"));
-  } else if (
-    zaehlung.value.zaehlart === Zaehlart.FJS ||
-    zaehlung.value.zaehlart === Zaehlart.QU
-  ) {
-    // Bei FJS und QU muss mind. 1 Pfeil pro Knotenarm aktiv sein
-    const selectedKnotenarmNummern = selectedKnotenarme.map(
-      (knotenarm: string) => knotenarm.charAt(0)
-    );
-    const notSelectedKnotenarme = zaehlung.value.knotenarme
-      .map((arm) => `${arm.nummer}`)
-      .filter((nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber));
-    validation = isEmpty(notSelectedKnotenarme);
-  }
-  return validation;
+  return validationUtils.validateVerkehrForm(
+    zaehlung.value,
+    eventbus.getSelectedKnotenarme
+  );
 }
 </script>
