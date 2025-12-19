@@ -7,7 +7,7 @@
     class="d-flex flex-row justify-center overflow-y-auto"
   >
     <svg
-      v-if="areAvailableNodesValid"
+      v-if="isKnotenLageFormValid"
       :height="height"
       :width="height"
       viewBox="0 0 1400 1400"
@@ -268,16 +268,16 @@
           <g
             id="arrow4"
             style="cursor: pointer"
-            @click="activateArrow(4)"
+            @click="activateArrow('4')"
           >
             <path
               id="path4"
-              :fill="calculateColor(4)"
+              :fill="calculateColor('4')"
               d="m 69.999999,860.99999 v -28 H 1330 v 27.997 z"
             />
             <path
               id="spike4"
-              :fill="calculateColor(4)"
+              :fill="calculateColor('4')"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-544.45264)"
             />
@@ -285,16 +285,16 @@
           <g
             id="arrow3"
             style="cursor: pointer"
-            @click="activateArrow(3)"
+            @click="activateArrow('3')"
           >
             <path
               id="path3"
-              :fill="calculateColor(3)"
+              :fill="calculateColor('3')"
               d="m 69.999999,804.99999 v -28 H 1330 v 27.997 z"
             />
             <path
               id="spike3"
-              :fill="calculateColor(3)"
+              :fill="calculateColor('3')"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,2182.4526)"
             />
@@ -302,16 +302,16 @@
           <g
             id="arrow2"
             style="cursor: pointer"
-            @click="activateArrow(2)"
+            @click="activateArrow('2')"
           >
             <path
               id="path2"
-              :fill="calculateColor(2)"
+              :fill="calculateColor('2')"
               d="M 69.999999,623 V 595 H 1330 v 27.997 z"
             />
             <path
               id="spike2"
-              :fill="calculateColor(2)"
+              :fill="calculateColor('2')"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-782.45264)"
             />
@@ -319,16 +319,16 @@
           <g
             id="arrow1"
             style="cursor: pointer"
-            @click="activateArrow(1)"
+            @click="activateArrow('1')"
           >
             <path
               id="path1"
-              :fill="calculateColor(1)"
+              :fill="calculateColor('1')"
               d="M 69.999999,567 V 539 H 1330 v 27.998 z"
             />
             <path
               id="spike1"
-              :fill="calculateColor(1)"
+              :fill="calculateColor('1')"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,1944.4526)"
             />
@@ -361,24 +361,26 @@ import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 import { first, isEmpty, last } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
+import { useEventbus } from "@/store/Eventbus";
 import KnotenarmComparator from "@/util/KnotenarmComparator";
 
 interface Props {
   height: string;
+  isKnotenLageFormValid: boolean;
 }
 defineProps<Props>();
 
 const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
   required: true,
 });
-const isValid = defineModel<boolean>("isValid", {
-  required: false,
-});
 
 const activeColor = "#D50000";
 const passiveColor = "#9E9E9E";
 
-const selectedArrows = ref<Array<number>>([]);
+const eventbus = useEventbus();
+const selectedKnotenarme = computed(() => {
+  return eventbus.getSelectedKnotenarme;
+});
 const firstStreetname = ref<Array<string>>([]);
 const secondStreetname = ref<Array<string>>([]);
 
@@ -414,17 +416,6 @@ const rotateSvg = computed(() => {
   }
   return rotation;
 });
-const areAvailableNodesValid = computed(() => {
-  let result = availableNodes.value.length === 2;
-  // Erlaubte Kombinationen: 1 & 3, 2 & 4, 5 & 7, 6 & 8
-  // => Absolute Subtraktion der Kontenarmnummern muss immer 2 sein
-  if (firstNode.value && secondNode.value) {
-    result =
-      result &&
-      Math.abs(firstNode.value.nummer - secondNode.value.nummer) === 2;
-  }
-  return result;
-});
 
 onMounted(() => {
   resetForm();
@@ -444,11 +435,13 @@ watch(
  * Wenn die Nummer des Pfeils im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
  * ansonsten in der passiveColor.
  */
-function calculateColor(arrow: number): string | undefined {
+function calculateColor(arrow: string): string | undefined {
   let color = passiveColor;
   if (
     !isEmpty(
-      selectedArrows.value.filter((selectedArrow) => selectedArrow === arrow)
+      selectedKnotenarme.value.filter(
+        (selectedArrow) => selectedArrow === arrow
+      )
     )
   ) {
     color = activeColor;
@@ -456,20 +449,14 @@ function calculateColor(arrow: number): string | undefined {
   return color;
 }
 
-function activateArrow(arrow: number): void {
-  if (!selectedArrows.value.includes(arrow)) {
-    selectedArrows.value.push(arrow);
-  } else {
-    selectedArrows.value.splice(selectedArrows.value.indexOf(arrow), 1);
-  }
-  validateSelection();
+function activateArrow(arrow: string): void {
+  eventbus.activateKnotenarm(arrow);
 }
 
 function resetForm(): void {
-  selectedArrows.value = [];
+  eventbus.resetSelectedKnotenarme();
   firstStreetname.value = [];
   secondStreetname.value = [];
-  validateSelection();
 }
 
 function prepareStreetnames(): void {
@@ -513,12 +500,5 @@ function getStreetname(knotenarm: KnotenarmDTO | undefined): Array<string> {
     }
   }
   return pieces;
-}
-
-// Validierung der Pfeile, ob auf mindestens einer Seite beide ausgewaehlt wurden
-function validateSelection(): void {
-  isValid.value =
-    (selectedArrows.value.includes(1) && selectedArrows.value.includes(2)) ||
-    (selectedArrows.value.includes(3) && selectedArrows.value.includes(4));
 }
 </script>

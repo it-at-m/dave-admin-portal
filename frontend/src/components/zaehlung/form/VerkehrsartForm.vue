@@ -9,6 +9,7 @@
       <v-row dense>
         <v-col>
           <v-checkbox
+            v-if="notOnlyRadAndFussIsAllowed"
             v-model="pkw"
             :label="pkwLabel"
             color="quaternary"
@@ -16,6 +17,7 @@
             @update:model-value="updateKategorieWithPkw"
           />
           <v-checkbox
+            v-if="notOnlyRadAndFussIsAllowed"
             v-model="lkw"
             :label="lkwLabel"
             color="quaternary"
@@ -23,6 +25,7 @@
             @update:model-value="updateKategorieWithLkw"
           />
           <v-checkbox
+            v-if="notOnlyRadAndFussIsAllowed"
             v-model="lz"
             :label="lzLabel"
             color="quaternary"
@@ -30,6 +33,7 @@
             @update:model-value="updateKategorieWithLz"
           />
           <v-checkbox
+            v-if="notOnlyRadAndFussIsAllowed"
             v-model="bus"
             :label="busLabel"
             color="quaternary"
@@ -37,6 +41,7 @@
             @update:model-value="updateKategorieWithBus"
           />
           <v-checkbox
+            v-if="notOnlyRadAndFussIsAllowed"
             v-model="krad"
             :label="kradLabel"
             color="quaternary"
@@ -78,6 +83,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useEventbus } from "@/store/Eventbus";
 import { usePkweinheitStore } from "@/store/PkweinheitStore";
 import Fahrzeug from "@/types/enum/Fahrzeug";
+import Zaehlart from "@/types/enum/Zaehlart";
 
 interface Props {
   height: string;
@@ -118,6 +124,11 @@ const pkwEinheitenOfStore = computed(() => {
 
 const labelSelectOrDeselectAll = computed(() => {
   return selectOrDeselectAllVmodel.value ? "Alles abwählen" : "Alles auswählen";
+});
+
+const notOnlyRadAndFussIsAllowed = computed(() => {
+  const zaehlarten = [Zaehlart.QJS, Zaehlart.QU, Zaehlart.FJS];
+  return !zaehlarten.includes(zaehlung.value.zaehlart);
 });
 
 const pkwLabel = computed(() => {
@@ -219,11 +230,13 @@ function selectOrDeselectAll() {
   fuss.value = selectOrDeselectAllVmodel.value;
   if (selectOrDeselectAllVmodel.value) {
     zaehlung.value.kategorien = [];
-    zaehlung.value.kategorien.push(Fahrzeug.PKW);
-    zaehlung.value.kategorien.push(Fahrzeug.LKW);
-    zaehlung.value.kategorien.push(Fahrzeug.LZ);
-    zaehlung.value.kategorien.push(Fahrzeug.BUS);
-    zaehlung.value.kategorien.push(Fahrzeug.KRAD);
+    if (notOnlyRadAndFussIsAllowed.value) {
+      zaehlung.value.kategorien.push(Fahrzeug.PKW);
+      zaehlung.value.kategorien.push(Fahrzeug.LKW);
+      zaehlung.value.kategorien.push(Fahrzeug.LZ);
+      zaehlung.value.kategorien.push(Fahrzeug.BUS);
+      zaehlung.value.kategorien.push(Fahrzeug.KRAD);
+    }
     zaehlung.value.kategorien.push(Fahrzeug.RAD);
     zaehlung.value.kategorien.push(Fahrzeug.FUSS);
   } else {

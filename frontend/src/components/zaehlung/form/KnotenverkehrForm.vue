@@ -34,7 +34,7 @@
             <path
               id="path117"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfNode('8')"
+              :fill="getColorOfKnotenarm('8')"
               stroke="none"
             />
             <text
@@ -53,13 +53,13 @@
               y="2053.7427"
               transform="matrix(0.68301124,0.68239646,-0.73271189,0.73205238,0,0)"
               :style="{ cursor: getCursorType('8') }"
-              @click="activateOrDeactivateTotalNode('8')"
+              @click="activateOrDeactivateTotalKnotenarm('8')"
             >
               8
             </text>
           </g>
           <g
-            v-if="isNodeAvailable('8')"
+            v-if="isKnotenarmAvailable('8')"
             id="node8_arrows"
           >
             <g
@@ -73,7 +73,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('8LU')"
-                @click="activateNode('8LU')"
+                @click="activateKnotenarm('8LU')"
               />
               <path
                 id="path119"
@@ -81,7 +81,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('8LD')"
-                @click="activateNode('8LD')"
+                @click="activateKnotenarm('8LD')"
               />
             </g>
             <g
@@ -95,7 +95,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('8RU')"
-                @click="activateNode('8RU')"
+                @click="activateKnotenarm('8RU')"
               />
               <path
                 id="path121"
@@ -103,7 +103,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('8RD')"
-                @click="activateNode('8RD')"
+                @click="activateKnotenarm('8RD')"
               />
             </g>
             <g
@@ -117,7 +117,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('8CL2R')"
-                @click="activateNode('8CL2R')"
+                @click="activateKnotenarm('8CL2R')"
               />
               <path
                 id="path125"
@@ -125,7 +125,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('8CR2L')"
-                @click="activateNode('8CR2L')"
+                @click="activateKnotenarm('8CR2L')"
               />
             </g>
           </g>
@@ -142,7 +142,7 @@
             <path
               id="path108"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfNode('7')"
+              :fill="getColorOfKnotenarm('7')"
               stroke="none"
             />
             <text
@@ -161,13 +161,13 @@
               y="-21628.908"
               transform="matrix(-0.68301123,0.68239646,-0.73271189,-0.73205239,0,0)"
               :style="{ cursor: getCursorType('7') }"
-              @click="activateOrDeactivateTotalNode('7')"
+              @click="activateOrDeactivateTotalKnotenarm('7')"
             >
               7
             </text>
           </g>
           <g
-            v-if="isNodeAvailable('7')"
+            v-if="isKnotenarmAvailable('7')"
             id="node7_arrows"
           >
             <g
@@ -181,7 +181,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('7LU')"
-                @click="activateNode('7LU')"
+                @click="activateKnotenarm('7LU')"
               />
               <path
                 id="path110"
@@ -189,7 +189,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('7LD')"
-                @click="activateNode('7LD')"
+                @click="activateKnotenarm('7LD')"
               />
             </g>
             <g
@@ -203,7 +203,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('7RU')"
-                @click="activateNode('7RU')"
+                @click="activateKnotenarm('7RU')"
               />
               <path
                 id="path112"
@@ -211,7 +211,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('7RD')"
-                @click="activateNode('7RD')"
+                @click="activateKnotenarm('7RD')"
               />
             </g>
             <g
@@ -225,7 +225,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('7CL2R')"
-                @click="activateNode('7CL2R')"
+                @click="activateKnotenarm('7CL2R')"
               />
               <path
                 id="path116"
@@ -233,7 +233,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('7CR2L')"
-                @click="activateNode('7CR2L')"
+                @click="activateKnotenarm('7CR2L')"
               />
             </g>
           </g>
@@ -250,7 +250,7 @@
             <path
               id="path99"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfNode('6')"
+              :fill="getColorOfKnotenarm('6')"
               stroke="none"
             />
             <text
@@ -269,13 +269,13 @@
               y="-2008.0264"
               transform="matrix(-0.68301123,-0.68239646,0.73271189,-0.73205239,0,0)"
               :style="{ cursor: getCursorType('6') }"
-              @click="activateOrDeactivateTotalNode('6')"
+              @click="activateOrDeactivateTotalKnotenarm('6')"
             >
               6
             </text>
           </g>
           <g
-            v-if="isNodeAvailable('6')"
+            v-if="isKnotenarmAvailable('6')"
             id="node6_arrows"
           >
             <g
@@ -289,7 +289,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('6LU')"
-                @click="activateNode('6LU')"
+                @click="activateKnotenarm('6LU')"
               />
               <path
                 id="path101"
@@ -297,7 +297,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('6LD')"
-                @click="activateNode('6LD')"
+                @click="activateKnotenarm('6LD')"
               />
             </g>
             <g
@@ -311,7 +311,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('6RU')"
-                @click="activateNode('6RU')"
+                @click="activateKnotenarm('6RU')"
               />
               <path
                 id="path103"
@@ -319,7 +319,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('6RD')"
-                @click="activateNode('6RD')"
+                @click="activateKnotenarm('6RD')"
               />
             </g>
             <g
@@ -333,7 +333,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('6CL2R')"
-                @click="activateNode('6CL2R')"
+                @click="activateKnotenarm('6CL2R')"
               />
               <path
                 id="path107"
@@ -341,7 +341,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('6CR2L')"
-                @click="activateNode('6CR2L')"
+                @click="activateKnotenarm('6CR2L')"
               />
             </g>
           </g>
@@ -357,7 +357,7 @@
             <path
               id="path90"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfNode('5')"
+              :fill="getColorOfKnotenarm('5')"
               stroke="none"
             />
             <text
@@ -376,13 +376,13 @@
               y="21674.625"
               transform="matrix(0.68301124,-0.68239646,0.73271189,0.73205238,0,0)"
               :style="{ cursor: getCursorType('5') }"
-              @click="activateOrDeactivateTotalNode('5')"
+              @click="activateOrDeactivateTotalKnotenarm('5')"
             >
               5
             </text>
           </g>
           <g
-            v-if="isNodeAvailable('5')"
+            v-if="isKnotenarmAvailable('5')"
             id="node5_arrows"
           >
             <g
@@ -396,7 +396,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('5LU')"
-                @click="activateNode('5LU')"
+                @click="activateKnotenarm('5LU')"
               />
               <path
                 id="path92"
@@ -404,7 +404,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('5LD')"
-                @click="activateNode('5LD')"
+                @click="activateKnotenarm('5LD')"
               />
             </g>
             <g
@@ -418,7 +418,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('5RU')"
-                @click="activateNode('5RU')"
+                @click="activateKnotenarm('5RU')"
               />
               <path
                 id="path94"
@@ -426,7 +426,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('5RD')"
-                @click="activateNode('5RD')"
+                @click="activateKnotenarm('5RD')"
               />
             </g>
             <g
@@ -440,7 +440,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('5CL2R')"
-                @click="activateNode('5CL2R')"
+                @click="activateKnotenarm('5CL2R')"
               />
               <path
                 id="path98"
@@ -448,7 +448,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('5CR2L')"
-                @click="activateNode('5CR2L')"
+                @click="activateKnotenarm('5CR2L')"
               />
             </g>
           </g>
@@ -472,7 +472,7 @@
             <path
               id="path81"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfNode('4')"
+              :fill="getColorOfKnotenarm('4')"
               stroke="none"
             />
             <text
@@ -491,14 +491,14 @@
               y="-13850.833"
               transform="matrix(0,0.96505434,-1.0362111,0,0,0)"
               :style="{ cursor: getCursorType('4') }"
-              @click="activateOrDeactivateTotalNode('4')"
+              @click="activateOrDeactivateTotalKnotenarm('4')"
             >
               4
             </text>
           </g>
 
           <g
-            v-if="isNodeAvailable('4')"
+            v-if="isKnotenarmAvailable('4')"
             id="node4_arrows"
           >
             <g
@@ -512,7 +512,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('4LU')"
-                @click="activateNode('4LU')"
+                @click="activateKnotenarm('4LU')"
               />
               <path
                 id="path83"
@@ -520,7 +520,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('4LD')"
-                @click="activateNode('4LD')"
+                @click="activateKnotenarm('4LD')"
               />
             </g>
             <g
@@ -534,7 +534,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('4RU')"
-                @click="activateNode('4RU')"
+                @click="activateKnotenarm('4RU')"
               />
               <path
                 id="path85"
@@ -542,7 +542,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('4RD')"
-                @click="activateNode('4RD')"
+                @click="activateKnotenarm('4RD')"
               />
             </g>
             <g
@@ -556,7 +556,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('4CL2R')"
-                @click="activateNode('4CL2R')"
+                @click="activateKnotenarm('4CL2R')"
               />
               <path
                 id="path89"
@@ -564,7 +564,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('4CR2L')"
-                @click="activateNode('4CR2L')"
+                @click="activateKnotenarm('4CR2L')"
               />
             </g>
           </g>
@@ -581,7 +581,7 @@
             <path
               id="path72"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfNode('3')"
+              :fill="getColorOfKnotenarm('3')"
               stroke="none"
             />
             <text
@@ -600,14 +600,14 @@
               y="-16723.537"
               transform="scale(-0.96592375,-1.0352784)"
               :style="{ cursor: getCursorType('3') }"
-              @click="activateOrDeactivateTotalNode('3')"
+              @click="activateOrDeactivateTotalKnotenarm('3')"
             >
               3
             </text>
           </g>
 
           <g
-            v-if="isNodeAvailable('3')"
+            v-if="isKnotenarmAvailable('3')"
             id="node3_arrows"
           >
             <g
@@ -621,7 +621,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('3LU')"
-                @click="activateNode('3LU')"
+                @click="activateKnotenarm('3LU')"
               />
               <path
                 id="path74"
@@ -629,7 +629,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('3LD')"
-                @click="activateNode('3LD')"
+                @click="activateKnotenarm('3LD')"
               />
             </g>
             <g
@@ -643,7 +643,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('3RU')"
-                @click="activateNode('3RU')"
+                @click="activateKnotenarm('3RU')"
               />
               <path
                 id="path76"
@@ -651,7 +651,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('3RD')"
-                @click="activateNode('3RD')"
+                @click="activateKnotenarm('3RD')"
               />
             </g>
             <g
@@ -665,7 +665,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('3CL2R')"
-                @click="activateNode('3CL2R')"
+                @click="activateKnotenarm('3CL2R')"
               />
               <path
                 id="path80"
@@ -673,7 +673,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('3CR2L')"
-                @click="activateNode('3CR2L')"
+                @click="activateKnotenarm('3CR2L')"
               />
             </g>
           </g>
@@ -690,7 +690,7 @@
             <path
               id="path54"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfNode('2')"
+              :fill="getColorOfKnotenarm('2')"
               stroke="none"
             />
             <text
@@ -709,14 +709,14 @@
               y="13896.666"
               transform="matrix(0,-0.96505434,1.0362111,0,0,0)"
               :style="{ cursor: getCursorType('2') }"
-              @click="activateOrDeactivateTotalNode('2')"
+              @click="activateOrDeactivateTotalKnotenarm('2')"
             >
               2
             </text>
           </g>
 
           <g
-            v-if="isNodeAvailable('2')"
+            v-if="isKnotenarmAvailable('2')"
             id="node2_arrows"
           >
             <g
@@ -730,7 +730,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('2LU')"
-                @click="activateNode('2LU')"
+                @click="activateKnotenarm('2LU')"
               />
               <path
                 id="path56"
@@ -738,7 +738,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('2LD')"
-                @click="activateNode('2LD')"
+                @click="activateKnotenarm('2LD')"
               />
             </g>
             <g
@@ -752,7 +752,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('2RU')"
-                @click="activateNode('2RU')"
+                @click="activateKnotenarm('2RU')"
               />
               <path
                 id="path58"
@@ -760,7 +760,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('2RD')"
-                @click="activateNode('2RD')"
+                @click="activateKnotenarm('2RD')"
               />
             </g>
             <g
@@ -774,7 +774,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('2CL2R')"
-                @click="activateNode('2CL2R')"
+                @click="activateKnotenarm('2CL2R')"
               />
               <path
                 id="path62"
@@ -782,7 +782,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('2CR2L')"
-                @click="activateNode('2CR2L')"
+                @click="activateKnotenarm('2CR2L')"
               />
             </g>
           </g>
@@ -798,7 +798,7 @@
             <path
               id="path1"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfNode('1')"
+              :fill="getColorOfKnotenarm('1')"
               stroke="none"
             />
             <text
@@ -817,14 +817,14 @@
               y="16769.467"
               transform="scale(0.96592375,1.0352784)"
               :style="{ cursor: getCursorType('1') }"
-              @click="activateOrDeactivateTotalNode('1')"
+              @click="activateOrDeactivateTotalKnotenarm('1')"
             >
               1
             </text>
           </g>
 
           <g
-            v-if="isNodeAvailable('1')"
+            v-if="isKnotenarmAvailable('1')"
             id="node1_arrows"
           >
             <g
@@ -838,7 +838,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('1LU')"
-                @click="activateNode('1LU')"
+                @click="activateKnotenarm('1LU')"
               />
               <path
                 id="path20"
@@ -846,7 +846,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('1LD')"
-                @click="activateNode('1LD')"
+                @click="activateKnotenarm('1LD')"
               />
             </g>
             <g
@@ -860,7 +860,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('1RU')"
-                @click="activateNode('1RU')"
+                @click="activateKnotenarm('1RU')"
               />
               <path
                 id="path40"
@@ -868,7 +868,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('1RD')"
-                @click="activateNode('1RD')"
+                @click="activateKnotenarm('1RD')"
               />
             </g>
             <g
@@ -882,7 +882,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('1CL2R')"
-                @click="activateNode('1CL2R')"
+                @click="activateKnotenarm('1CL2R')"
               />
               <path
                 id="path44"
@@ -890,7 +890,7 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('1CR2L')"
-                @click="activateNode('1CR2L')"
+                @click="activateKnotenarm('1CR2L')"
               />
             </g>
           </g>
@@ -898,7 +898,7 @@
       </g>
 
       <path
-        v-if="hasAvailableNodes"
+        v-if="hasAvailableKnotenarme"
         id="center"
         d="m 14253.004,17465.11 166.703,0 117.876,117.877 0,166.702 -117.876,117.877 -166.703,0 -117.876,-117.877 0,-166.702 z"
         transform="matrix(0.37991612,-0.37991612,0.37991612,0.37991612,2288.1609,16577.386)"
@@ -912,8 +912,9 @@
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { isEmpty } from "lodash";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 
+import { useEventbus } from "@/store/Eventbus";
 import Zaehlart from "@/types/enum/Zaehlart";
 
 interface Props {
@@ -924,20 +925,20 @@ defineProps<Props>();
 const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
   required: true,
 });
-const isValid = defineModel<boolean>("isValid", {
-  required: false,
-});
 
 const activeColor = "#D50000";
 const passiveColor = "#9E9E9E";
 
-const selectedKnotenarme = ref<Array<string>>([]);
-
-const availableNodes = computed(() => {
+const availableKnotenarme = computed(() => {
   return zaehlung.value.knotenarme.map((arm) => `${arm.nummer}`);
 });
-const hasAvailableNodes = computed(() => {
-  return availableNodes.value.length > 0;
+const hasAvailableKnotenarme = computed(() => {
+  return availableKnotenarme.value.length > 0;
+});
+
+const eventbus = useEventbus();
+const selectedKnotenarme = computed(() => {
+  return eventbus.getSelectedKnotenarme;
 });
 
 onMounted(() => {
@@ -952,8 +953,8 @@ watch(
   { deep: true, immediate: true }
 );
 
-function isNodeAvailable(node: string): boolean {
-  return availableNodes.value.includes(node);
+function isKnotenarmAvailable(knotenarm: string): boolean {
+  return availableKnotenarme.value.includes(knotenarm);
 }
 /**
  * Wenn die Knotenarmnummer im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
@@ -973,19 +974,12 @@ function calculateColor(knotenarm: string): string | undefined {
   return color;
 }
 
-function activateNode(knotenarm: string) {
-  if (!selectedKnotenarme.value.includes(knotenarm)) {
-    selectedKnotenarme.value.push(knotenarm);
-  } else {
-    const indexOfSelectedKnotenarmToDelete =
-      selectedKnotenarme.value.indexOf(knotenarm);
-    selectedKnotenarme.value.splice(indexOfSelectedKnotenarmToDelete, 1);
-  }
-  validateSelection();
+function activateKnotenarm(knotenarm: string) {
+  eventbus.activateKnotenarm(knotenarm);
 }
 
-function activateOrDeactivateTotalNode(knotenarm: string) {
-  if (!isNodeAvailable(knotenarm)) {
+function activateOrDeactivateTotalKnotenarm(knotenarm: string) {
+  if (!isKnotenarmAvailable(knotenarm)) {
     // remove all
     return;
   }
@@ -1003,38 +997,34 @@ function activateOrDeactivateTotalNode(knotenarm: string) {
     endings.push("RD");
   }
 
-  const nodeStrings = endings.map((value) => knotenarm + value);
+  const knotenarmStrings = endings.map((value) => knotenarm + value);
 
   let nothingRemoved = true;
 
-  nodeStrings.forEach((nodeString) => {
-    if (selectedKnotenarme.value.includes(nodeString)) {
+  knotenarmStrings.forEach((knotenarmString) => {
+    if (selectedKnotenarme.value.includes(knotenarmString)) {
       nothingRemoved = false;
-      selectedKnotenarme.value.splice(
-        selectedKnotenarme.value.indexOf(nodeString),
-        1
-      );
+      eventbus.deactivateKnotenarm(knotenarmString);
     }
   });
 
-  if (nothingRemoved && isNodeAvailable(knotenarm)) {
-    nodeStrings.forEach((value) => {
-      activateNode(value);
+  if (nothingRemoved && isKnotenarmAvailable(knotenarm)) {
+    knotenarmStrings.forEach((value) => {
+      activateKnotenarm(value);
     });
   }
-  validateSelection();
 }
 
 function getCursorType(knotenarm: string) {
-  if (isNodeAvailable(knotenarm)) {
+  if (isKnotenarmAvailable(knotenarm)) {
     return `pointer`;
   } else {
     return "default";
   }
 }
 
-function getColorOfNode(knotenarm: string) {
-  if (isNodeAvailable(knotenarm)) {
+function getColorOfKnotenarm(knotenarm: string) {
+  if (isKnotenarmAvailable(knotenarm)) {
     return `#1565C0`;
   } else {
     return `#EEEEEE`;
@@ -1042,18 +1032,6 @@ function getColorOfNode(knotenarm: string) {
 }
 
 function resetForm() {
-  selectedKnotenarme.value = [];
-  validateSelection();
-}
-
-// Validierung, ob für jeden Knotenarm mindestens ein Pfeil ausgewaehlt wurde
-function validateSelection() {
-  const selectedKnotenarmNummern = selectedKnotenarme.value.map(
-    (knotenarm: string) => knotenarm.charAt(0)
-  );
-  const notSelectedKnotenarme = availableNodes.value.filter(
-    (nodeNumber) => !selectedKnotenarmNummern.includes(nodeNumber)
-  );
-  isValid.value = isEmpty(notSelectedKnotenarme);
+  eventbus.resetSelectedKnotenarme();
 }
 </script>

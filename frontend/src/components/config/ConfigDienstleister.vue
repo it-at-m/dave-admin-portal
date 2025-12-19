@@ -340,7 +340,7 @@ import DienstleisterService from "@/api/service/DienstleisterService";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useDaveUtils } from "@/util/DaveUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import { useValidationUtils } from "@/util/validationUtils";
+import { useValidationUtils } from "@/util/ValidationUtils";
 
 interface Props {
   height: string;
