@@ -2,6 +2,7 @@ import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { difference, isEmpty, toNumber } from "lodash";
 
+import Fahrzeug from "@/types/enum/Fahrzeug";
 import Zaehlart from "@/types/enum/Zaehlart";
 
 export function useValidationUtils() {
@@ -85,11 +86,29 @@ export function useValidationUtils() {
     return isValid;
   }
 
+  function validateVerkehrsartForm(zaehlung: ZaehlungDTO): boolean {
+    let isValid = true;
+    if (
+      zaehlung.zaehlart === Zaehlart.QJS ||
+      zaehlung.zaehlart === Zaehlart.QU ||
+      zaehlung.zaehlart === Zaehlart.FJS
+    ) {
+      // Es darf nur Rad und/oder Fuss ausgewaehlt sein
+      isValid = isEmpty(
+        zaehlung.kategorien.filter(
+          (value) => value !== Fahrzeug.FUSS && value !== Fahrzeug.RAD
+        )
+      );
+    }
+    return isValid;
+  }
+
   return {
     pflichtfeld,
     isEmailValid,
     mustBePositivNumber,
     validateVerkehrForm,
     validateKnotenLageForm,
+    validateVerkehrsartForm,
   };
 }

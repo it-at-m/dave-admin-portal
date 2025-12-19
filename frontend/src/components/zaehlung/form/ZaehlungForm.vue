@@ -130,6 +130,15 @@ watch(
   },
   { immediate: true, deep: true }
 );
+
+watch(
+  () => zaehlung.value.zaehlart,
+  () => {
+    zaehlung.value.kategorien = [];
+  },
+  { immediate: true }
+);
+
 watch(
   () => eventbus.getSelectedKnotenarme,
   () => {
@@ -155,10 +164,14 @@ function validateZaehlung(): void {
     zaehlung.value,
     eventbus.getSelectedKnotenarme
   );
+  const isVerkehrsartFormValid = validationUtils.validateVerkehrsartForm(
+    zaehlung.value
+  );
   isZaehlungValid.value =
     isAllgemeineInfoFormValid.value !== null &&
     isAllgemeineInfoFormValid.value &&
     isKnotenLageFormValid.value &&
-    isVerkehrFormValid;
+    isVerkehrFormValid &&
+    isVerkehrsartFormValid;
 }
 </script>
