@@ -26,9 +26,9 @@
         <v-icon icon="mdi-routes" />
         Fahrbeziehungen
       </v-tab>
-      <v-tab :value="TAB_FAHRZEUGE">
+      <v-tab :value="TAB_VERKEHRSART">
         <v-icon icon="mdi-car-multiple" />
-        Fahrzeuge
+        Verkehrsarten
       </v-tab>
     </v-tabs>
     <v-tabs-window
@@ -58,7 +58,7 @@
           :is-knoten-lage-form-valid="isKnotenLageFormValid"
         />
       </v-tabs-window-item>
-      <v-tabs-window-item :value="TAB_FAHRZEUGE">
+      <v-tabs-window-item :value="TAB_VERKEHRSART">
         <verkehrsart-form
           v-model="zaehlung"
           :height="contentHeight"
@@ -106,7 +106,7 @@ const isKnotenLageFormValid = ref(false);
 const TAB_INFO = 0;
 const TAB_KNOTEN = 1;
 const TAB_FAHRBEZIEHUNG = 2;
-const TAB_FAHRZEUGE = 3;
+const TAB_VERKEHRSART = 3;
 
 onMounted(() => {
   validateZaehlung();
