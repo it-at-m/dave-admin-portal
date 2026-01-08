@@ -5,6 +5,9 @@ on:
     branches: [sprint,main]
   workflow_dispatch:
 
+permissions:
+    packages: read
+    contents: read
 
 jobs:
   compliance:
@@ -28,9 +31,6 @@ jobs:
   build-maven:
     needs: compliance
     runs-on: [self-hosted, linux, X64]
-    permissions:
-      packages: read
-      contents: read
     steps:
       - name: Set up JDK 25
         uses: actions/setup-java@v5
