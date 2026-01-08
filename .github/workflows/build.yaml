@@ -1,4 +1,4 @@
-name: compliance check and build test
+name: PR build - compliance check and build test
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   compliance:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, X64]
 
     steps:
       - name: Checkout code
