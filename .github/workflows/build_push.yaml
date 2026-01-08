@@ -31,6 +31,15 @@ jobs:
         with:
           maven-version: 3.9.12
 
+      - name: setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - run: npm --version
+      - run: node --version
+      - run: mvn --version
+
       - name: checkout
         uses: actions/checkout@v4
         with:
