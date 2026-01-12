@@ -3,7 +3,6 @@ name: build test
 on: [push]
 
 jobs:
-
   build-maven:
     runs-on: ubuntu-latest
     permissions:
