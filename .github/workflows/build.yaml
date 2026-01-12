@@ -1,4 +1,4 @@
-name: compliance check and build test
+name: build test
 
 on: [push]
 
