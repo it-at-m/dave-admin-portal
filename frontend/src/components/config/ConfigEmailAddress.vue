@@ -155,7 +155,7 @@ import EmailAddressService from "@/api/service/EmailAddressService";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { useDaveUtils } from "@/util/DaveUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-import { useValidationUtils } from "@/util/validationUtils";
+import { useValidationUtils } from "@/util/ValidationUtils";
 
 interface Props {
   height: string;

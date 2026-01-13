@@ -212,7 +212,7 @@ import LhmTextField from "@/components/common/LhmTextField.vue";
 import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
 import { messstelleStatusText } from "@/types/enum/MessstelleStatus";
 import { useDateUtils } from "@/util/DateUtils";
-import { useValidationUtils } from "@/util/validationUtils";
+import { useValidationUtils } from "@/util/ValidationUtils";
 
 const validationUtils = useValidationUtils();
 const dateUtils = useDateUtils();

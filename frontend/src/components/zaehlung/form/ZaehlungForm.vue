@@ -26,9 +26,9 @@
         <v-icon icon="mdi-routes" />
         Fahrbeziehungen
       </v-tab>
-      <v-tab :value="TAB_FAHRZEUGE">
+      <v-tab :value="TAB_VERKEHRSART">
         <v-icon icon="mdi-car-multiple" />
-        Fahrzeuge
+        Verkehrsarten
       </v-tab>
     </v-tabs>
     <v-tabs-window
@@ -38,32 +38,28 @@
       <!-- Inhalte -->
       <v-tabs-window-item :value="TAB_INFO">
         <allgemeine-info-form
-          v-model="zaehlung"
+          v-model:zaehlung="zaehlung"
+          v-model:is-valid="isAllgemeineInfoFormValid"
           :height="contentHeight"
-          @is-valid="setAllgemeineFormValid"
         />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_KNOTEN">
         <knoten-lage-form
-          v-model="zaehlung"
+          v-model:zaehlung="zaehlung"
           :height="contentHeight"
           :zaehlstelle="zaehlstelle"
+          :is-knoten-lage-form-valid="isKnotenLageFormValid"
         />
       </v-tabs-window-item>
       <v-tabs-window-item :value="TAB_FAHRBEZIEHUNG">
-        <fahrbeziehung-kreisverkehr-form
-          v-if="zaehlung.kreisverkehr"
-          v-model="zaehlung"
+        <verkehr-form
+          v-model:zaehlung="zaehlung"
           :height="contentHeight"
-        />
-        <fahrbeziehung-form
-          v-else
-          v-model="zaehlung"
-          :height="contentHeight"
+          :is-knoten-lage-form-valid="isKnotenLageFormValid"
         />
       </v-tabs-window-item>
-      <v-tabs-window-item :value="TAB_FAHRZEUGE">
-        <fahrzeuge-form
+      <v-tabs-window-item :value="TAB_VERKEHRSART">
+        <verkehrsart-form
           v-model="zaehlung"
           :height="contentHeight"
         />
@@ -76,44 +72,79 @@
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import AllgemeineInfoForm from "@/components/zaehlung/form/AllgemeineInfoForm.vue";
-import FahrbeziehungForm from "@/components/zaehlung/form/FahrbeziehungForm.vue";
-import FahrbeziehungKreisverkehrForm from "@/components/zaehlung/form/FahrbeziehungKreisverkehrForm.vue";
-import FahrzeugeForm from "@/components/zaehlung/form/FahrzeugeForm.vue";
 import KnotenLageForm from "@/components/zaehlung/form/KnotenLageForm.vue";
+import VerkehrForm from "@/components/zaehlung/form/VerkehrForm.vue";
+import VerkehrsartForm from "@/components/zaehlung/form/VerkehrsartForm.vue";
 import { useEventbus } from "@/store/Eventbus";
 import { useDaveUtils } from "@/util/DaveUtils";
+import { useValidationUtils } from "@/util/ValidationUtils";
 
 interface Props {
   zaehlstelle: ZaehlstelleDTO;
 }
 defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
   required: true,
 });
-
-const emits = defineEmits<{
-  (e: "isValid", payload: boolean): void;
-}>();
+const isZaehlungValid = defineModel<boolean>("isValid", {
+  required: false,
+});
 
 const daveUtils = useDaveUtils();
 const eventbus = useEventbus();
+const validationUtils = useValidationUtils();
 
 const activeTab = ref(0);
+// Kann auch null sein, da es in einer v-form als v-model genutzt wird.
+const isAllgemeineInfoFormValid = ref<boolean | null>(null);
+const isKnotenLageFormValid = ref(false);
 
 const TAB_INFO = 0;
 const TAB_KNOTEN = 1;
 const TAB_FAHRBEZIEHUNG = 2;
-const TAB_FAHRZEUGE = 3;
+const TAB_VERKEHRSART = 3;
+
+onMounted(() => {
+  validateZaehlung();
+});
 
 watch(
   () => eventbus.getReloadEvent,
   () => {
     activeTab.value = TAB_INFO;
   }
+);
+
+watch(isAllgemeineInfoFormValid, () => {
+  validateZaehlung();
+});
+
+watch(
+  () => zaehlung.value,
+  () => {
+    validateZaehlung();
+  },
+  { immediate: true, deep: true }
+);
+
+watch(
+  () => zaehlung.value.zaehlart,
+  () => {
+    zaehlung.value.kategorien = [];
+  },
+  { immediate: true }
+);
+
+watch(
+  () => eventbus.getSelectedKnotenarme,
+  () => {
+    validateZaehlung();
+  },
+  { immediate: true, deep: true }
 );
 
 const contentHeight = computed(() => {
@@ -125,7 +156,22 @@ const contentHeight = computed(() => {
   return `${height}vh`;
 });
 
-function setAllgemeineFormValid(isPartValid: boolean) {
-  emits("isValid", isPartValid);
+function validateZaehlung(): void {
+  isKnotenLageFormValid.value = validationUtils.validateKnotenLageForm(
+    zaehlung.value
+  );
+  const isVerkehrFormValid = validationUtils.validateVerkehrForm(
+    zaehlung.value,
+    eventbus.getSelectedKnotenarme
+  );
+  const isVerkehrsartFormValid = validationUtils.validateVerkehrsartForm(
+    zaehlung.value
+  );
+  isZaehlungValid.value =
+    isAllgemeineInfoFormValid.value !== null &&
+    isAllgemeineInfoFormValid.value &&
+    isKnotenLageFormValid.value &&
+    isVerkehrFormValid &&
+    isVerkehrsartFormValid;
 }
 </script>
