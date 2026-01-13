@@ -6,8 +6,6 @@ import "./plugins/leafletmaps";
 
 import { registerPlugins } from "@/plugins";
 
-console.log("App Version:", import.meta.env.VITE_APP_VERSION);
-
 const app = createApp(App);
 
 registerPlugins(app);

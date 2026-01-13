@@ -1,5 +1,5 @@
 <template>
-  <v-app v-if="isFachadmin">
+  <v-app>
     <the-snackbar />
 
     <!--  clipped-right: Gibt an, auf welcher Seite der Navigation-Drawer eingeblendet werden soll und dort soll die Toolbar bleiben  -->
@@ -72,24 +72,6 @@
       </v-fade-transition>
     </router-view>
   </v-app>
-  <v-overlay
-    v-else
-    color="white"
-  >
-    <p
-      style="
-        text-align: center;
-        color: black;
-        font-weight: bold;
-        font-size: xxx-large;
-      "
-    >
-      Sie verfügen nicht über die nötigen Rechte diese Anwendung zu benutzen
-    </p>
-    <p style="text-align: center; color: black; font-size: x-large">
-      Bitte wenden Sie sich an einen Administrator
-    </p>
-  </v-overlay>
 </template>
 
 <script setup lang="ts">
@@ -140,7 +122,7 @@ function created() {
       snackbarStore.showApiError(error);
       return false;
     });
-  console.log("Fetching version info...");
+
   VersionInfoService.getFrontendInfo()
     .then((frontendInfoResponse: VersionInfoResponse) => {
       frontendVersion.value = frontendInfoResponse.application.version;
@@ -148,7 +130,7 @@ function created() {
     .catch(() => {
       frontendVersion.value = "error";
     });
-  console.log("Fetching backend version info...");
+
   VersionInfoService.getBackendInfo()
     .then((backendInfoResponse: VersionInfoResponse) => {
       backendVersion.value = backendInfoResponse.application.version;
@@ -156,6 +138,7 @@ function created() {
     .catch(() => {
       backendVersion.value = "error";
     });
+
   ConfigurationService.getConfiguration().then(
     (configuration: ConfigurationDTO) => {
       configurationStore.setConfiguration(configuration);
@@ -166,14 +149,6 @@ function created() {
 function navigateToHandbuch() {
   window.open(URL_HANDBUCH_LINK);
 }
-
-const isFachadmin = computed(() => {
-  if (BaseUrlProvider.isDevelopment() && userStore.hasNoAuthorities) {
-    return true;
-  } else {
-    return userStore.isFachadmin;
-  }
-});
 
 function resetMapAndSearch() {
   mapOptionsStore.resetMapOptions();
