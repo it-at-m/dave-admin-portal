@@ -92,7 +92,7 @@
                                     <executable>npm</executable>
                                     <arguments>
                                         <argument>run</argument>
-                                        <argument>build</argument>
+                                        <argument>dev</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
