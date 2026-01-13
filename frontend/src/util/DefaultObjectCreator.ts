@@ -3,6 +3,7 @@ import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
 import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
 import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
 import type MapConfigurationDTO from "@/types/configuration/MapConfigurationDTO";
+import type TenantConfigurationDTO from "@/types/configuration/TenantConfigurationDTO";
 import type ZaehlstelleConfigurationDTO from "@/types/configuration/ZaehlstelleConfigurationDTO";
 import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
@@ -112,8 +113,8 @@ export default class DefaultObjectCreator {
 
   public static createDefaultConfigurationDTO(): ConfigurationDTO {
     return {
-      map: this.createDefaultMapConfigurationDTO(),
       zaehlstelle: this.createDefaultZaehlstelleConfigurationDTO(),
+      tenant: this.createDefaultTenantConfigurationDTO(),
     };
   }
 
@@ -129,6 +130,13 @@ export default class DefaultObjectCreator {
       lat: "48.137227",
       lng: "11.575517",
       zoom: 12,
+    };
+  }
+
+  public static createDefaultTenantConfigurationDTO(): TenantConfigurationDTO {
+    return {
+      department: "Mobilitätsreferat",
+      mapConfiguration: this.createDefaultMapConfigurationDTO(),
     };
   }
 }
