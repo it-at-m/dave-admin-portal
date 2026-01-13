@@ -9,8 +9,10 @@ export default class SsoUserInfoService {
   private static readonly ENDPOINT: string = "api/sso/userinfo";
 
   static getUserInfo(): Promise<SsoUserInfoResponse> {
+    console.log("Fetching SSO user info from:", `${this.BASE}/${this.ENDPOINT}`);
     return fetch(`${this.BASE}/${this.ENDPOINT}`, FetchUtils.getGETConfig())
       .then((response) => {
+        console.log("SSO user info response status:", response.status);
         if (!response.ok) {
           return new SsoUserInfoResponse("no_authority", "no_authority", []);
         }

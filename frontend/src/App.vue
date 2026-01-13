@@ -140,6 +140,7 @@ function created() {
       snackbarStore.showApiError(error);
       return false;
     });
+  console.log("Fetching version info...");
   VersionInfoService.getFrontendInfo()
     .then((frontendInfoResponse: VersionInfoResponse) => {
       frontendVersion.value = frontendInfoResponse.application.version;
@@ -147,6 +148,7 @@ function created() {
     .catch(() => {
       frontendVersion.value = "error";
     });
+  console.log("Fetching backend version info...");
   VersionInfoService.getBackendInfo()
     .then((backendInfoResponse: VersionInfoResponse) => {
       backendVersion.value = backendInfoResponse.application.version;
