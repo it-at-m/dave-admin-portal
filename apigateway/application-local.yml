@@ -1,4 +1,6 @@
 spring:
+  profile:
+    active: prod
   cloud:
     gateway:
       actuator:
