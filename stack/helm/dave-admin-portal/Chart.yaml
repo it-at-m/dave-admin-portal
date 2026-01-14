@@ -1,5 +1,5 @@
 apiVersion: v2
-name: admin-portal
+name: dave-admin-portal
 description: DAVe traffic counting plattform, admin-portal
 type: application
 version: ${project.version}
