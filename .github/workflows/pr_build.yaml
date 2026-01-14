@@ -64,7 +64,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   check_helm:
-    name: "Checks"
+    name: "Check if Helm chart is correct"
     needs: build-maven
     runs-on: [self-hosted, linux, X64]
 
@@ -73,9 +73,9 @@ jobs:
         uses: azure/setup-helm@v4
 
       - name: run helm dependency update
-        working-directory: apigateway/target/helm/urbalytix
+        working-directory: apigateway/target/helm/dave-admin-porta
         run: helm dep update
 
       - name: run helm template
         working-directory: apigatewayn/target/helm
-        run: helm template dave-adminportal
+        run: helm template dave-admin-portal
