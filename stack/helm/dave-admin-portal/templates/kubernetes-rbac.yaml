@@ -44,5 +44,5 @@ roleRef:
   name: hazelcast-cluster-role
 subjects:
   - kind: ServiceAccount
-    name: {{ include "daveFrontend.serviceAccountName" . }}
+    name: {{ include "daveAdminPortal.serviceAccountName" . }}
     namespace: {{ .Release.Namespace }}
