@@ -73,7 +73,7 @@ jobs:
         uses: azure/setup-helm@v4
 
       - name: run helm dependency update
-        working-directory: apigateway/target/helm/dave-admin-porta
+        working-directory: apigateway/target/helm/dave-admin-portal
         run: helm dep update
 
       - name: run helm template
