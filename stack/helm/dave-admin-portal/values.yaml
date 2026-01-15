@@ -47,6 +47,10 @@ app:
       SPRING_CLOUD_GATEWAY_DEFAULTFILTERS_1: RemoveRequestHeader=cookie
       SPRING_CLOUD_GATEWAY_DEFAULTFILTERS_2: RemoveRequestHeader=x-xsrf-token
       SPRING_CLOUD_GATEWAY_DEFAULTFILTERS_3: TokenRelay=
+    hazelcast:
+      HAZELCAST_GROUP_NAME: dave-frontend-apigateway-service-session_replication_group
+      HAZELCAST_INSTANCE: dave-frontend-apigateway-service-hazl_instance
+      HAZELCAST_OPENSHIFT_SERVICE_NAME: dave-frontend-apigateway-service
 
   log:
     level:

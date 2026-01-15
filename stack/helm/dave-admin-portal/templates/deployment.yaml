@@ -29,7 +29,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: dave-frontend
+      serviceAccountName: dave-hazelcast
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
@@ -66,6 +66,12 @@ spec:
             - name: SPRING_AUTOCONFIGURE_EXCLUDE 
               value: org.springframework.boot.autoconfigure.security.oauth2.client.reactive.ReactiveOAuth2ClientAutoConfiguration
             {{- with .Values.app.spring.routes }}
+            {{- range $name, $value := . }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.app.spring.hazelcast }}
             {{- range $name, $value := . }}
             - name: {{ $name }}
               value: {{ $value | quote }}
