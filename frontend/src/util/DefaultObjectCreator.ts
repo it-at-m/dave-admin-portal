@@ -135,7 +135,7 @@ export default class DefaultObjectCreator {
 
   public static createDefaultTenantConfigurationDTO(): TenantConfigurationDTO {
     return {
-      department: "Mobilitätsreferat",
+      datenportalHeader: "Datenportal",
       mapConfiguration: this.createDefaultMapConfigurationDTO(),
     };
   }
