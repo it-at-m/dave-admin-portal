@@ -1,7 +1,6 @@
 name: PR build - compliance check and build test
 
 on:
-  push:
   pull_request:
     branches: [sprint,main]
   workflow_dispatch:
@@ -63,3 +62,20 @@ jobs:
         env:
           CI: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  check_helm:
+    name: "Check if Helm chart is correct"
+    needs: build-maven
+    runs-on: [self-hosted, linux, X64]
+
+    steps:
+      - name: get helm
+        uses: azure/setup-helm@v4
+
+      - name: run helm dependency update
+        working-directory: apigateway/target/helm/dave-admin-portal
+        run: helm dep update
+
+      - name: run helm template
+        working-directory: apigateway/target/helm
+        run: helm template dave-admin-portal
