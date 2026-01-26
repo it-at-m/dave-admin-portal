@@ -346,7 +346,7 @@ function createLayersAndAddToMap(): void {
   const baseLayers = createBaseLayers();
   const overlayLayers = createOverlayLayers();
 
-  baseLayers.Stadtkarte.addTo(map);
+  baseLayers.OpenStreetMap.addTo(map);
   L.control.layers(baseLayers, overlayLayers).addTo(map);
 }
 
