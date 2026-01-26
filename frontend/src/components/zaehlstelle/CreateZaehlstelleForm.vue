@@ -123,6 +123,7 @@
       >
         <mini-map
           :coords="coords"
+          :activate-overlays="true"
           height="100%"
           width="100%"
           @update-zaehlstellen-coords="updateZaehlstellenCoords"
