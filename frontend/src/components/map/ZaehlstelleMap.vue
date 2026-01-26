@@ -332,8 +332,8 @@ const center = computed<LatLng>(() => {
     );
   } else {
     return createLatLngFromString(
-      configurationStore.getMapConfiguration.lat,
-      configurationStore.getMapConfiguration.lng
+      configurationStore.getTenantConfiguration.mapConfiguration.lat,
+      configurationStore.getTenantConfiguration.mapConfiguration.lng
     );
   }
 });
