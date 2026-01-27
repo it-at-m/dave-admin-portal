@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type FahrbeziehungDTO from "@/types/zaehlung/FahrbeziehungDTO";
+import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
@@ -85,7 +85,7 @@ const zaehlung = defineModel<ZaehlungDTO>({
 
 const hochrechnungsfaktorenStore = useHochrechnungsfaktorStore();
 
-const allPossibleFahrbeziehungen = ref<Array<FahrbeziehungDTO>>([]);
+const allPossibleFahrbeziehungen = ref<Array<VerkehrsbeziehungDTO>>([]);
 const selectAllModel = ref(false);
 const HEADERS = [
   {
@@ -160,8 +160,8 @@ function updatePossibleFahrbeziehungen(): void {
   allPossibleFahrbeziehungen.value = cloneDeep(
     calculatePossibleFahrbeziehungen()
   );
-  allPossibleFahrbeziehungen.value.forEach((pos: FahrbeziehungDTO) => {
-    zaehlung.value.fahrbeziehungen.forEach((fahr: FahrbeziehungDTO) => {
+  allPossibleFahrbeziehungen.value.forEach((pos: VerkehrsbeziehungDTO) => {
+    zaehlung.value.fahrbeziehungen.forEach((fahr: VerkehrsbeziehungDTO) => {
       if (pos.von === fahr.von && pos.nach === fahr.nach) {
         pos.hochrechnungsfaktor = cloneDeep(fahr.hochrechnungsfaktor);
         if (fahr.id) {
@@ -181,17 +181,17 @@ function calculateSelectAllModel(): void {
     allPossibleFahrbeziehungen.value.length / 2;
 }
 
-function calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
+function calculatePossibleFahrbeziehungen(): Array<VerkehrsbeziehungDTO> {
   const standardFaktor: HochrechnungsfaktorDTO =
     hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
-  const allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
+  const allPossibleFahrbeziehungen: Array<VerkehrsbeziehungDTO> = [];
   const possibleArms: Array<number> = [];
   zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
     possibleArms.push(arm.nummer);
   });
   possibleArms.forEach((vonNummer: number) => {
     possibleArms.forEach((nachNummer: number) => {
-      const newFzVon: FahrbeziehungDTO = {} as FahrbeziehungDTO;
+      const newFzVon: VerkehrsbeziehungDTO = {} as VerkehrsbeziehungDTO;
       newFzVon.von = vonNummer;
       newFzVon.nach = nachNummer;
       newFzVon.active = false;
@@ -204,8 +204,8 @@ function calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
   return allPossibleFahrbeziehungen;
 }
 
-function updateFahrbeziehung(toSave: FahrbeziehungDTO): void {
-  zaehlung.value.fahrbeziehungen.forEach((fahrbeziehung: FahrbeziehungDTO) => {
+function updateFahrbeziehung(toSave: VerkehrsbeziehungDTO): void {
+  zaehlung.value.fahrbeziehungen.forEach((fahrbeziehung: VerkehrsbeziehungDTO) => {
     if (
       fahrbeziehung.von === toSave.von &&
       fahrbeziehung.nach === toSave.nach
@@ -224,13 +224,13 @@ function selectAll(): void {
     zaehlung.value.fahrbeziehungen = [];
     zaehlung.value.fahrbeziehungen = [...allPossibleFahrbeziehungen.value];
     zaehlung.value.fahrbeziehungen.forEach(
-      (fahrbeziehung: FahrbeziehungDTO) => {
+      (fahrbeziehung: VerkehrsbeziehungDTO) => {
         fahrbeziehung.active = selectAllModel.value;
       }
     );
   } else {
     zaehlung.value.fahrbeziehungen.forEach(
-      (fahrbeziehung: FahrbeziehungDTO) => {
+      (fahrbeziehung: VerkehrsbeziehungDTO) => {
         fahrbeziehung.active = selectAllModel.value;
       }
     );
@@ -238,7 +238,7 @@ function selectAll(): void {
   }
 }
 
-function selectItem(fahrbeziehung: FahrbeziehungDTO): void {
+function selectItem(fahrbeziehung: VerkehrsbeziehungDTO): void {
   if (fahrbeziehung.active) {
     zaehlung.value.fahrbeziehungen.push(fahrbeziehung);
   } else {
@@ -247,10 +247,10 @@ function selectItem(fahrbeziehung: FahrbeziehungDTO): void {
   calculateSelectAllModel();
 }
 
-function removeFahrbeziehung(toDelete: FahrbeziehungDTO): void {
+function removeFahrbeziehung(toDelete: VerkehrsbeziehungDTO): void {
   let deleteIndex = -1;
   zaehlung.value.fahrbeziehungen.forEach(
-    (fahrbeziehung: FahrbeziehungDTO, index: number) => {
+    (fahrbeziehung: VerkehrsbeziehungDTO, index: number) => {
       if (
         fahrbeziehung.von === toDelete.von &&
         fahrbeziehung.nach === toDelete.nach

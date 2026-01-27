@@ -256,7 +256,7 @@
 import type BackendIdDTO from "@/types/common/BackendIdDTO";
 import type GeoPoint from "@/types/common/GeoPoint";
 import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
-import type FahrbeziehungDTO from "@/types/zaehlung/FahrbeziehungDTO";
+import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type UpdateStatusDTO from "@/types/zaehlung/UpdateStatusDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
@@ -501,9 +501,9 @@ function zaehlungKopieren() {
   zaehlungCopy.knotenarme.forEach((arm: KnotenarmDTO) => {
     arm.id = "";
   });
-  zaehlungCopy.fahrbeziehungen.forEach((fz: FahrbeziehungDTO) => {
-    fz.id = "";
-    fz.hochrechnungsfaktor.id = "";
+  zaehlungCopy.verkehrsbeziehungen.forEach((vz: VerkehrsbeziehungDTO) => {
+    vz.id = "";
+    vz.hochrechnungsfaktor.id = "";
   });
   ZaehlungService.saveZaehlung(zaehlungCopy, properties.zaehlstelleId)
     .then((backendIdDTO: BackendIdDTO) => {

@@ -1,7 +1,8 @@
 import type BaseEntity from "@/types/common/BaseEntity";
 import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type Himmelsrichtung from "@/types/enum/Himmelsrichtung";
 
-export default interface FahrbeziehungDTO extends BaseEntity {
+export default interface VerkehrsbeziehungDTO extends BaseEntity {
   // Kreuzung
   von: number;
   nach: number;
@@ -11,6 +12,8 @@ export default interface FahrbeziehungDTO extends BaseEntity {
   hinein: boolean;
   heraus: boolean;
   vorbei: boolean;
+
+  strassenseite: Himmelsrichtung;
 
   hochrechnungsfaktor: HochrechnungsfaktorDTO;
 

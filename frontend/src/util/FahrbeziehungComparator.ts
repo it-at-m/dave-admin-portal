@@ -1,4 +1,4 @@
-import type FahrbeziehungDTO from "@/types/zaehlung/FahrbeziehungDTO";
+import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 
 export default class FahrbeziehungComparator {
   /**
@@ -8,8 +8,8 @@ export default class FahrbeziehungComparator {
    * @param b
    */
   public static sortByActiveVonAndNach(
-    a: FahrbeziehungDTO,
-    b: FahrbeziehungDTO
+    a: VerkehrsbeziehungDTO,
+    b: VerkehrsbeziehungDTO
   ): number {
     // beide sind aktiv, dann nach von und dann nach nach
     if (a.active && b.active) {
@@ -61,8 +61,8 @@ export default class FahrbeziehungComparator {
   }
 
   public static sortKreisverkehr(
-    a: FahrbeziehungDTO,
-    b: FahrbeziehungDTO
+    a: VerkehrsbeziehungDTO,
+    b: VerkehrsbeziehungDTO
   ): number {
     // beide sind aktiv, dann nach von und dann nach nach
     if (a.active && b.active) {
@@ -102,8 +102,8 @@ export default class FahrbeziehungComparator {
   }
 
   public static sortByVonAndNach(
-    a: FahrbeziehungDTO,
-    b: FahrbeziehungDTO
+    a: VerkehrsbeziehungDTO,
+    b: VerkehrsbeziehungDTO
   ): number {
     // beide sind aktiv, dann nach von und dann nach nach
     if (a.von === b.von) {
@@ -125,8 +125,8 @@ export default class FahrbeziehungComparator {
   }
 
   public static sortKreisverkehrByVonAndNach(
-    a: FahrbeziehungDTO,
-    b: FahrbeziehungDTO
+    a: VerkehrsbeziehungDTO,
+    b: VerkehrsbeziehungDTO
   ): number {
     // beide sind aktiv, dann nach von und dann nach nach
     if (a.knotenarm === b.knotenarm) {

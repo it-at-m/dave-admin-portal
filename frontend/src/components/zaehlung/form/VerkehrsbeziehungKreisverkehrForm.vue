@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type FahrbeziehungDTO from "@/types/zaehlung/FahrbeziehungDTO";
+import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
@@ -85,7 +85,7 @@ const zaehlung = defineModel<ZaehlungDTO>({
 
 const hochrechnungsfaktorenStore = useHochrechnungsfaktorStore();
 
-const allPossibleFahrbeziehungen = ref<Array<FahrbeziehungDTO>>([]);
+const allPossibleFahrbeziehungen = ref<Array<VerkehrsbeziehungDTO>>([]);
 const selectAllModel = ref(false);
 const HEADERS = [
   {
@@ -161,8 +161,8 @@ function updatePossibleFahrbeziehungen(): void {
   allPossibleFahrbeziehungen.value = cloneDeep(
     calculatePossibleFahrbeziehungen()
   );
-  allPossibleFahrbeziehungen.value.forEach((pos: FahrbeziehungDTO) => {
-    zaehlung.value.fahrbeziehungen.forEach((fahr: FahrbeziehungDTO) => {
+  allPossibleFahrbeziehungen.value.forEach((pos: VerkehrsbeziehungDTO) => {
+    zaehlung.value.fahrbeziehungen.forEach((fahr: VerkehrsbeziehungDTO) => {
       if (
         pos.knotenarm === fahr.knotenarm &&
         pos.heraus === fahr.heraus &&
@@ -187,8 +187,8 @@ function calculateSelectAllModel(): void {
     allPossibleFahrbeziehungen.value.length / 2;
 }
 
-function updateFahrbeziehung(toSave: FahrbeziehungDTO): void {
-  zaehlung.value.fahrbeziehungen.forEach((fahrbeziehung: FahrbeziehungDTO) => {
+function updateFahrbeziehung(toSave: VerkehrsbeziehungDTO): void {
+  zaehlung.value.fahrbeziehungen.forEach((fahrbeziehung: VerkehrsbeziehungDTO) => {
     if (
       fahrbeziehung.knotenarm === toSave.knotenarm &&
       fahrbeziehung.heraus === toSave.heraus &&
@@ -200,7 +200,7 @@ function updateFahrbeziehung(toSave: FahrbeziehungDTO): void {
   });
 }
 
-function getType(fz: FahrbeziehungDTO): string {
+function getType(fz: VerkehrsbeziehungDTO): string {
   if (fz.hinein) {
     return "in den Kreis";
   } else if (fz.vorbei) {
@@ -216,12 +216,12 @@ function getType(fz: FahrbeziehungDTO): string {
  * Erzeugt aus den vorhandenen Knotenarmen alle möglichen Fahrbeziehungen.
  * @private
  */
-function calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
+function calculatePossibleFahrbeziehungen(): Array<VerkehrsbeziehungDTO> {
   const standardFaktor: HochrechnungsfaktorDTO =
     hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
-  const allPossibleFahrbeziehungen: Array<FahrbeziehungDTO> = [];
+  const allPossibleFahrbeziehungen: Array<VerkehrsbeziehungDTO> = [];
   zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
-    const newFzHeraus: FahrbeziehungDTO = {} as FahrbeziehungDTO;
+    const newFzHeraus: VerkehrsbeziehungDTO = {} as VerkehrsbeziehungDTO;
     newFzHeraus.knotenarm = arm.nummer;
     newFzHeraus.hinein = false;
     newFzHeraus.vorbei = false;
@@ -231,7 +231,7 @@ function calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
     newFzHeraus.kreisverkehrTyp = getType(newFzHeraus);
     newFzHeraus.indexKey = `${newFzHeraus.knotenarm}${newFzHeraus.kreisverkehrTyp}`;
     allPossibleFahrbeziehungen.push(newFzHeraus);
-    const newFzVorbei: FahrbeziehungDTO = {} as FahrbeziehungDTO;
+    const newFzVorbei: VerkehrsbeziehungDTO = {} as VerkehrsbeziehungDTO;
     newFzVorbei.knotenarm = arm.nummer;
     newFzVorbei.hinein = false;
     newFzVorbei.vorbei = true;
@@ -241,7 +241,7 @@ function calculatePossibleFahrbeziehungen(): Array<FahrbeziehungDTO> {
     newFzVorbei.hochrechnungsfaktor = cloneDeep(standardFaktor);
     newFzVorbei.indexKey = `${newFzVorbei.knotenarm}${newFzVorbei.kreisverkehrTyp}`;
     allPossibleFahrbeziehungen.push(newFzVorbei);
-    const newFzHinein: FahrbeziehungDTO = {} as FahrbeziehungDTO;
+    const newFzHinein: VerkehrsbeziehungDTO = {} as VerkehrsbeziehungDTO;
     newFzHinein.knotenarm = arm.nummer;
     newFzHinein.hinein = true;
     newFzHinein.vorbei = false;
@@ -267,13 +267,13 @@ function selectAll(): void {
     zaehlung.value.fahrbeziehungen = [];
     zaehlung.value.fahrbeziehungen = [...allPossibleFahrbeziehungen.value];
     zaehlung.value.fahrbeziehungen.forEach(
-      (fahrbeziehung: FahrbeziehungDTO) => {
+      (fahrbeziehung: VerkehrsbeziehungDTO) => {
         fahrbeziehung.active = selectAllModel.value;
       }
     );
   } else {
     zaehlung.value.fahrbeziehungen.forEach(
-      (fahrbeziehung: FahrbeziehungDTO) => {
+      (fahrbeziehung: VerkehrsbeziehungDTO) => {
         fahrbeziehung.active = selectAllModel.value;
       }
     );
@@ -281,7 +281,7 @@ function selectAll(): void {
   }
 }
 
-function selectItem(fahrbeziehung: FahrbeziehungDTO): void {
+function selectItem(fahrbeziehung: VerkehrsbeziehungDTO): void {
   if (fahrbeziehung.active) {
     zaehlung.value.fahrbeziehungen.push(fahrbeziehung);
   } else {
@@ -290,10 +290,10 @@ function selectItem(fahrbeziehung: FahrbeziehungDTO): void {
   calculateSelectAllModel();
 }
 
-function removeFahrbeziehung(toDelete: FahrbeziehungDTO): void {
+function removeFahrbeziehung(toDelete: VerkehrsbeziehungDTO): void {
   let deleteIndex = -1;
   zaehlung.value.fahrbeziehungen.forEach(
-    (fahrbeziehung: FahrbeziehungDTO, index: number) => {
+    (fahrbeziehung: VerkehrsbeziehungDTO, index: number) => {
       if (
         fahrbeziehung.knotenarm === toDelete.knotenarm &&
         fahrbeziehung.heraus === toDelete.heraus &&
