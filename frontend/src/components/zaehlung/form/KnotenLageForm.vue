@@ -289,19 +289,19 @@ function deleteKnotenarm(nummer: number) {
   if (toDelete > -1) {
     zaehlung.value.knotenarme.splice(toDelete, 1);
   }
-  deleteAllFahrbeziehungByKnotenarmnummer(nummer);
+  deleteAllVerkehrsbeziehungenByKnotenarmnummer(nummer);
 }
 
-function deleteAllFahrbeziehungByKnotenarmnummer(nummer: number) {
-  const filtered = zaehlung.value.fahrbeziehungen.filter((fahrbeziehung) => {
-    if (fahrbeziehung.knotenarm === nummer) {
-      fahrbeziehung.active = false;
+function deleteAllVerkehrsbeziehungenByKnotenarmnummer(nummer: number) {
+  const filtered = zaehlung.value.verkehrsbeziehungen.filter((verkehrsbeziehung) => {
+    if (verkehrsbeziehung.knotenarm === nummer) {
+      verkehrsbeziehung.active = false;
     }
-    return fahrbeziehung.knotenarm !== nummer;
+    return verkehrsbeziehung.knotenarm !== nummer;
   });
 
-  zaehlung.value.fahrbeziehungen = [];
-  zaehlung.value.fahrbeziehungen = [...filtered];
+  zaehlung.value.verkehrsbeziehungen = [];
+  zaehlung.value.verkehrsbeziehungen = [...filtered];
 }
 
 const coordsZaehlstelle = computed(() => {
