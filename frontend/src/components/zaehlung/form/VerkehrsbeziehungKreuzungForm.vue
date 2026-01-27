@@ -1,8 +1,8 @@
 <template>
   <v-data-table
-    v-model="zaehlung.fahrbeziehungen"
+    v-model="zaehlung.verkehrsbeziehungen"
     :headers="HEADERS as Array<any>"
-    :items="allPossibleFahrbeziehungen"
+    :items="allPossibleVerkehrsbeziehungen"
     show-select
     return-object
     hide-default-footer
@@ -42,7 +42,7 @@
         :disabled="!item.active"
         hide-details
         class="my-1"
-        @update:model-value="updateFahrbeziehung(item)"
+        @update:model-value="updateVerkehrsbeziehung(item)"
       />
       <v-autocomplete
         v-else
@@ -54,7 +54,7 @@
         readonly
         hide-details
         class="my-1"
-        @update:model-value="updateFahrbeziehung(item)"
+        @update:model-value="updateVerkehrsbeziehung(item)"
       />
     </template>
   </v-data-table>
@@ -85,7 +85,7 @@ const zaehlung = defineModel<ZaehlungDTO>({
 
 const hochrechnungsfaktorenStore = useHochrechnungsfaktorStore();
 
-const allPossibleFahrbeziehungen = ref<Array<VerkehrsbeziehungDTO>>([]);
+const allPossibleVerkehrsbeziehungen = ref<Array<VerkehrsbeziehungDTO>>([]);
 const selectAllModel = ref(false);
 const HEADERS = [
   {
@@ -99,13 +99,13 @@ const HEADERS = [
 ];
 
 onMounted(() => {
-  updatePossibleFahrbeziehungen();
+  updatePossibleVerkehrsbeziehungen();
 });
 
 watch(
   () => zaehlung.value.knotenarme,
   () => {
-    updatePossibleFahrbeziehungen();
+    updatePossibleVerkehrsbeziehungen();
   },
   { deep: true, immediate: true }
 );
@@ -117,7 +117,7 @@ const isHochrechnungsfaktorEditable = computed(() => {
  * Gibt die im Dropdown anzuzeigenden Hochrechnungsfaktoren zurück.
  * Diese umfassen alle Hochrechnungsfaktoren welche "aktiv" sind.
  *
- * Des Weiteren werden die der Fahrbeziehung zugeordneten Hochrechnungsfaktoren
+ * Des Weiteren werden die der Verkehrsbeziehung zugeordneten Hochrechnungsfaktoren
  * hinzugefügt, falls die den Status "inaktiv" haben.
  * Ansonsten würde dieser inaktive Hochrechnungsfaktoren nicht Eingabefeld angezeigt werden.
  */
@@ -130,14 +130,14 @@ const hochrechnungsfaktoreDropDown = computed(() => {
       });
   const dropDown: Array<HochrechnungsfaktorDTO> = [...activeFactors];
 
-  // Falls in Fahrbeziehung gespeicherter HOFA nachträglich inaktiv gesetzt wurde,
+  // Falls in Verkehrsbeziehung gespeicherter HOFA nachträglich inaktiv gesetzt wurde,
   // wird dieser trotzdem dem Dropdown hinzugefügt.
-  allPossibleFahrbeziehungen.value.forEach((fahrbeziehung) => {
+  allPossibleVerkehrsbeziehungen.value.forEach((verkehrsbeziehung) => {
     if (
-      !isNil(fahrbeziehung.hochrechnungsfaktor) &&
-      !containsHochrechnungsfaktor(dropDown, fahrbeziehung.hochrechnungsfaktor)
+      !isNil(verkehrsbeziehung.hochrechnungsfaktor) &&
+      !containsHochrechnungsfaktor(dropDown, verkehrsbeziehung.hochrechnungsfaktor)
     ) {
-      dropDown.push(cloneDeep(fahrbeziehung.hochrechnungsfaktor));
+      dropDown.push(cloneDeep(verkehrsbeziehung.hochrechnungsfaktor));
     }
   });
   return dropDown;
@@ -156,12 +156,12 @@ function containsHochrechnungsfaktor(
   return contains;
 }
 
-function updatePossibleFahrbeziehungen(): void {
-  allPossibleFahrbeziehungen.value = cloneDeep(
-    calculatePossibleFahrbeziehungen()
+function updatePossibleVerkehrsbeziehungen(): void {
+  allPossibleVerkehrsbeziehungen.value = cloneDeep(
+    calculatePossibleVerkehrsbeziehung()
   );
-  allPossibleFahrbeziehungen.value.forEach((pos: VerkehrsbeziehungDTO) => {
-    zaehlung.value.fahrbeziehungen.forEach((fahr: VerkehrsbeziehungDTO) => {
+  allPossibleVerkehrsbeziehungen.value.forEach((pos: VerkehrsbeziehungDTO) => {
+    zaehlung.value.verkehrsbeziehungen.forEach((fahr: VerkehrsbeziehungDTO) => {
       if (pos.von === fahr.von && pos.nach === fahr.nach) {
         pos.hochrechnungsfaktor = cloneDeep(fahr.hochrechnungsfaktor);
         if (fahr.id) {
@@ -177,40 +177,40 @@ function updatePossibleFahrbeziehungen(): void {
 
 function calculateSelectAllModel(): void {
   selectAllModel.value =
-    zaehlung.value.fahrbeziehungen.length >=
-    allPossibleFahrbeziehungen.value.length / 2;
+    zaehlung.value.verkehrsbeziehungen.length >=
+    allPossibleVerkehrsbeziehungen.value.length / 2;
 }
 
-function calculatePossibleFahrbeziehungen(): Array<VerkehrsbeziehungDTO> {
+function calculatePossibleVerkehrsbeziehung(): Array<VerkehrsbeziehungDTO> {
   const standardFaktor: HochrechnungsfaktorDTO =
     hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
-  const allPossibleFahrbeziehungen: Array<VerkehrsbeziehungDTO> = [];
+  const allPossibleVerkehrsbeziehungen: Array<VerkehrsbeziehungDTO> = [];
   const possibleArms: Array<number> = [];
   zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
     possibleArms.push(arm.nummer);
   });
   possibleArms.forEach((vonNummer: number) => {
     possibleArms.forEach((nachNummer: number) => {
-      const newFzVon: VerkehrsbeziehungDTO = {} as VerkehrsbeziehungDTO;
-      newFzVon.von = vonNummer;
-      newFzVon.nach = nachNummer;
-      newFzVon.active = false;
-      newFzVon.hochrechnungsfaktor = cloneDeep(standardFaktor);
-      newFzVon.indexKey = `${vonNummer}${nachNummer}`;
-      allPossibleFahrbeziehungen.push(newFzVon);
+      const newVzVon: VerkehrsbeziehungDTO = {} as VerkehrsbeziehungDTO;
+      newVzVon.von = vonNummer;
+      newVzVon.nach = nachNummer;
+      newVzVon.active = false;
+      newVzVon.hochrechnungsfaktor = cloneDeep(standardFaktor);
+      newVzVon.indexKey = `${vonNummer}${nachNummer}`;
+      allPossibleVerkehrsbeziehungen.push(newVzVon);
     });
   });
-  allPossibleFahrbeziehungen.sort(FahrbeziehungComparator.sortByVonAndNach);
-  return allPossibleFahrbeziehungen;
+  allPossibleVerkehrsbeziehungen.sort(FahrbeziehungComparator.sortByVonAndNach);
+  return allPossibleVerkehrsbeziehungen;
 }
 
-function updateFahrbeziehung(toSave: VerkehrsbeziehungDTO): void {
-  zaehlung.value.fahrbeziehungen.forEach((fahrbeziehung: VerkehrsbeziehungDTO) => {
+function updateVerkehrsbeziehung(toSave: VerkehrsbeziehungDTO): void {
+  zaehlung.value.verkehrsbeziehungen.forEach((verkehrsbeziehung: VerkehrsbeziehungDTO) => {
     if (
-      fahrbeziehung.von === toSave.von &&
-      fahrbeziehung.nach === toSave.nach
+      verkehrsbeziehung.von === toSave.von &&
+      verkehrsbeziehung.nach === toSave.nach
     ) {
-      fahrbeziehung.hochrechnungsfaktor = toSave.hochrechnungsfaktor;
+      verkehrsbeziehung.hochrechnungsfaktor = toSave.hochrechnungsfaktor;
     }
   });
 }
@@ -221,47 +221,47 @@ function getHochrechnungsfaktorAsText(hf: HochrechnungsfaktorDTO): string {
 
 function selectAll(): void {
   if (selectAllModel.value) {
-    zaehlung.value.fahrbeziehungen = [];
-    zaehlung.value.fahrbeziehungen = [...allPossibleFahrbeziehungen.value];
-    zaehlung.value.fahrbeziehungen.forEach(
-      (fahrbeziehung: VerkehrsbeziehungDTO) => {
-        fahrbeziehung.active = selectAllModel.value;
+    zaehlung.value.verkehrsbeziehungen = [];
+    zaehlung.value.verkehrsbeziehungen = [...allPossibleVerkehrsbeziehungen.value];
+    zaehlung.value.verkehrsbeziehungen.forEach(
+      (verkehrsbeziehung: VerkehrsbeziehungDTO) => {
+        verkehrsbeziehung.active = selectAllModel.value;
       }
     );
   } else {
-    zaehlung.value.fahrbeziehungen.forEach(
-      (fahrbeziehung: VerkehrsbeziehungDTO) => {
-        fahrbeziehung.active = selectAllModel.value;
+    zaehlung.value.verkehrsbeziehungen.forEach(
+      (verkehrsbeziehung: VerkehrsbeziehungDTO) => {
+        verkehrsbeziehung.active = selectAllModel.value;
       }
     );
-    zaehlung.value.fahrbeziehungen = [];
+    zaehlung.value.verkehrsbeziehungen = [];
   }
 }
 
-function selectItem(fahrbeziehung: VerkehrsbeziehungDTO): void {
-  if (fahrbeziehung.active) {
-    zaehlung.value.fahrbeziehungen.push(fahrbeziehung);
+function selectItem(verkehrsbeziehung: VerkehrsbeziehungDTO): void {
+  if (verkehrsbeziehung.active) {
+    zaehlung.value.verkehrsbeziehungen.push(verkehrsbeziehung);
   } else {
-    removeFahrbeziehung(fahrbeziehung);
+    removeVerkehrsbeziehung(verkehrsbeziehung);
   }
   calculateSelectAllModel();
 }
 
-function removeFahrbeziehung(toDelete: VerkehrsbeziehungDTO): void {
+function removeVerkehrsbeziehung(toDelete: VerkehrsbeziehungDTO): void {
   let deleteIndex = -1;
-  zaehlung.value.fahrbeziehungen.forEach(
-    (fahrbeziehung: VerkehrsbeziehungDTO, index: number) => {
+  zaehlung.value.verkehrsbeziehungen.forEach(
+    (verkehrsbeziehung: VerkehrsbeziehungDTO, index: number) => {
       if (
-        fahrbeziehung.von === toDelete.von &&
-        fahrbeziehung.nach === toDelete.nach
+        verkehrsbeziehung.von === toDelete.von &&
+        verkehrsbeziehung.nach === toDelete.nach
       ) {
         deleteIndex = index;
-        fahrbeziehung.active = false;
+        verkehrsbeziehung.active = false;
       }
     }
   );
   if (deleteIndex > -1) {
-    zaehlung.value.fahrbeziehungen.splice(deleteIndex, 1);
+    zaehlung.value.verkehrsbeziehungen.splice(deleteIndex, 1);
   }
 }
 </script>
