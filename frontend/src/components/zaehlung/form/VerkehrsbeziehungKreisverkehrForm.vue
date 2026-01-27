@@ -71,7 +71,7 @@ import { computed, onMounted, ref, watch } from "vue";
 
 import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
 import Status from "@/types/enum/Status";
-import FahrbeziehungComparator from "@/util/FahrbeziehungComparator";
+import VerkehrsbeziehungComparator from "@/util/VerkehrsbeziehungComparator";
 import ObjectToTextTranslator from "@/util/ObjectToTextTranslator";
 
 interface Props {
@@ -253,7 +253,7 @@ function calculatePossibleVerkehrsbeziehungen(): Array<VerkehrsbeziehungDTO> {
     allPossibleVerkehrsbeziehungen.push(newVzHinein);
   });
   allPossibleVerkehrsbeziehungen.sort(
-    FahrbeziehungComparator.sortKreisverkehrByVonAndNach
+    VerkehrsbeziehungComparator.sortKreisverkehrByVonAndNach
   );
   return allPossibleVerkehrsbeziehungen;
 }

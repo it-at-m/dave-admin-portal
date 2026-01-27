@@ -1,6 +1,6 @@
 import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 
-export default class FahrbeziehungComparator {
+export default class VerkehrsbeziehungComparator {
   /**
    * Sortiert eine Liste von Knotenarmen nach der Nummer
    *
