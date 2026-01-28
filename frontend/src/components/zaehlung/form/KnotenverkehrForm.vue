@@ -1423,7 +1423,7 @@ function handleClickOnLaengsverkehr(
     strassenseite
   );
 
-  const laengsverkehr = toArray(cloneDeep(selectedLaengsverkehre.value));
+  const laengsverkehre = toArray(cloneDeep(selectedLaengsverkehre.value));
 
   const index =
     findIndexInSelectedLaengsverkehreForClickedLaengsverkehr(
@@ -1431,12 +1431,12 @@ function handleClickOnLaengsverkehr(
     );
 
   if (index > 0) {
-    laengsverkehr.splice(index, 1);
+    laengsverkehre.splice(index, 1);
   } else {
-    laengsverkehr.push(clickedLaengsverkehr);
+    laengsverkehre.push(clickedLaengsverkehr);
   }
 
-  zaehlung.value.laengsverkehr = laengsverkehr;
+  zaehlung.value.laengsverkehr = laengsverkehre;
 }
 
 function handleClickOnQuerungsverkehr(
@@ -1448,19 +1448,19 @@ function handleClickOnQuerungsverkehr(
     richtung
   );
 
-  const querungsverkehr = toArray(cloneDeep(selectedQuerungsverkehre.value));
+  const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
 
   const index = findIndexInSelectedQuerungsverkehreForClickedQuerungsverkehr(
     clickedQuerungsverkehr
   );
 
   if (index > 0) {
-    querungsverkehr.splice(index, 1);
+    querungsverkehre.splice(index, 1);
   } else {
-    querungsverkehr.push(clickedQuerungsverkehr);
+    querungsverkehre.push(clickedQuerungsverkehr);
   }
 
-  zaehlung.value.querungsverkehr = querungsverkehr;
+  zaehlung.value.querungsverkehr = querungsverkehre;
 }
 
 function findIndexInSelectedLaengsverkehreForClickedLaengsverkehr(
