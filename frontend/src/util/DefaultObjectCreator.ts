@@ -45,6 +45,8 @@ export default class DefaultObjectCreator {
     const zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
     zaehlung.customSuchwoerter = [];
     zaehlung.knotenarme = [];
+    zaehlung.querungsverkehr = [];
+    zaehlung.laengsverkehr = [];
     zaehlung.verkehrsbeziehungen = [];
     zaehlung.kategorien = [];
     zaehlung.quelle = Quelle.MANUALLY;

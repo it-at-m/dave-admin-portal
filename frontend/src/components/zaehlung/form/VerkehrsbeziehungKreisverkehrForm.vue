@@ -62,8 +62,8 @@
 
 <script setup lang="ts">
 import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { cloneDeep, isNil } from "lodash";
@@ -71,8 +71,8 @@ import { computed, onMounted, ref, watch } from "vue";
 
 import { useHochrechnungsfaktorStore } from "@/store/HochrechnungsfaktorStore";
 import Status from "@/types/enum/Status";
-import VerkehrsbeziehungComparator from "@/util/VerkehrsbeziehungComparator";
 import ObjectToTextTranslator from "@/util/ObjectToTextTranslator";
+import VerkehrsbeziehungComparator from "@/util/VerkehrsbeziehungComparator";
 
 interface Props {
   height: string;
@@ -136,7 +136,10 @@ const hochrechnungsfaktoreDropDown = computed(() => {
   allPossibleVerkehrsbeziehungen.value.forEach((verkehrsbeziehung) => {
     if (
       !isNil(verkehrsbeziehung.hochrechnungsfaktor) &&
-      !containsHochrechnungsfaktor(dropDown, verkehrsbeziehung.hochrechnungsfaktor)
+      !containsHochrechnungsfaktor(
+        dropDown,
+        verkehrsbeziehung.hochrechnungsfaktor
+      )
     ) {
       dropDown.push(cloneDeep(verkehrsbeziehung.hochrechnungsfaktor));
     }
@@ -188,16 +191,18 @@ function calculateSelectAllModel(): void {
 }
 
 function updateVerkehrsbeziehung(toSave: VerkehrsbeziehungDTO): void {
-  zaehlung.value.verkehrsbeziehungen.forEach((verkehrsbeziehung: VerkehrsbeziehungDTO) => {
-    if (
-      verkehrsbeziehung.knotenarm === toSave.knotenarm &&
-      verkehrsbeziehung.heraus === toSave.heraus &&
-      verkehrsbeziehung.hinein === toSave.hinein &&
-      verkehrsbeziehung.vorbei === toSave.vorbei
-    ) {
-      verkehrsbeziehung.hochrechnungsfaktor = toSave.hochrechnungsfaktor;
+  zaehlung.value.verkehrsbeziehungen.forEach(
+    (verkehrsbeziehung: VerkehrsbeziehungDTO) => {
+      if (
+        verkehrsbeziehung.knotenarm === toSave.knotenarm &&
+        verkehrsbeziehung.heraus === toSave.heraus &&
+        verkehrsbeziehung.hinein === toSave.hinein &&
+        verkehrsbeziehung.vorbei === toSave.vorbei
+      ) {
+        verkehrsbeziehung.hochrechnungsfaktor = toSave.hochrechnungsfaktor;
+      }
     }
-  });
+  );
 }
 
 function getType(vz: VerkehrsbeziehungDTO): string {
@@ -265,7 +270,9 @@ function getHochrechnungsfaktorAsText(hf: HochrechnungsfaktorDTO): string {
 function selectAll(): void {
   if (selectAllModel.value) {
     zaehlung.value.verkehrsbeziehungen = [];
-    zaehlung.value.verkehrsbeziehungen = [...allPossibleVerkehrsbeziehungen.value];
+    zaehlung.value.verkehrsbeziehungen = [
+      ...allPossibleVerkehrsbeziehungen.value,
+    ];
     zaehlung.value.verkehrsbeziehungen.forEach(
       (verkehrsbeziehung: VerkehrsbeziehungDTO) => {
         verkehrsbeziehung.active = selectAllModel.value;

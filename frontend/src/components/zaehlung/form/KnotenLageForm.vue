@@ -293,12 +293,14 @@ function deleteKnotenarm(nummer: number) {
 }
 
 function deleteAllVerkehrsbeziehungenByKnotenarmnummer(nummer: number) {
-  const filtered = zaehlung.value.verkehrsbeziehungen.filter((verkehrsbeziehung) => {
-    if (verkehrsbeziehung.knotenarm === nummer) {
-      verkehrsbeziehung.active = false;
+  const filtered = zaehlung.value.verkehrsbeziehungen.filter(
+    (verkehrsbeziehung) => {
+      if (verkehrsbeziehung.knotenarm === nummer) {
+        verkehrsbeziehung.active = false;
+      }
+      return verkehrsbeziehung.knotenarm !== nummer;
     }
-    return verkehrsbeziehung.knotenarm !== nummer;
-  });
+  );
 
   zaehlung.value.verkehrsbeziehungen = [];
   zaehlung.value.verkehrsbeziehungen = [...filtered];

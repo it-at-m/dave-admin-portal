@@ -73,7 +73,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('8LU')"
-                @click="activateKnotenarm('8LU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    8,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.SW
+                  )
+                "
               />
               <path
                 id="path119"
@@ -81,7 +87,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('8LD')"
-                @click="activateKnotenarm('8LD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    8,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.SW
+                  )
+                "
               />
             </g>
             <g
@@ -95,7 +107,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('8RU')"
-                @click="activateKnotenarm('8RU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    8,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.NO
+                  )
+                "
               />
               <path
                 id="path121"
@@ -103,7 +121,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('8RD')"
-                @click="activateKnotenarm('8RD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    8,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.NO
+                  )
+                "
               />
             </g>
             <g
@@ -181,7 +205,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('7LU')"
-                @click="activateKnotenarm('7LU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    7,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.SO
+                  )
+                "
               />
               <path
                 id="path110"
@@ -189,7 +219,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('7LD')"
-                @click="activateKnotenarm('7LD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    7,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.SO
+                  )
+                "
               />
             </g>
             <g
@@ -203,7 +239,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('7RU')"
-                @click="activateKnotenarm('7RU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    7,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.NW
+                  )
+                "
               />
               <path
                 id="path112"
@@ -211,7 +253,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('7RD')"
-                @click="activateKnotenarm('7RD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    7,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.NW
+                  )
+                "
               />
             </g>
             <g
@@ -289,7 +337,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('6LU')"
-                @click="activateKnotenarm('6LU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    6,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.NO
+                  )
+                "
               />
               <path
                 id="path101"
@@ -297,7 +351,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('6LD')"
-                @click="activateKnotenarm('6LD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    6,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.NO
+                  )
+                "
               />
             </g>
             <g
@@ -311,7 +371,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('6RU')"
-                @click="activateKnotenarm('6RU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    6,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.SW
+                  )
+                "
               />
               <path
                 id="path103"
@@ -319,7 +385,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('6RD')"
-                @click="activateKnotenarm('6RD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    6,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.SW
+                  )
+                "
               />
             </g>
             <g
@@ -396,7 +468,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('5LU')"
-                @click="activateKnotenarm('5LU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    5,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.NW
+                  )
+                "
               />
               <path
                 id="path92"
@@ -404,7 +482,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('5LD')"
-                @click="activateKnotenarm('5LD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    5,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.NW
+                  )
+                "
               />
             </g>
             <g
@@ -418,7 +502,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('5RU')"
-                @click="activateKnotenarm('5RU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    5,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.SO
+                  )
+                "
               />
               <path
                 id="path94"
@@ -426,7 +516,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('5RD')"
-                @click="activateKnotenarm('5RD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    5,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.SO
+                  )
+                "
               />
             </g>
             <g
@@ -512,7 +608,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('4LU')"
-                @click="activateKnotenarm('4LU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    4,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.S
+                  )
+                "
               />
               <path
                 id="path83"
@@ -520,7 +622,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('4LD')"
-                @click="activateKnotenarm('4LD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    4,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.S
+                  )
+                "
               />
             </g>
             <g
@@ -534,7 +642,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('4RU')"
-                @click="activateKnotenarm('4RU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    4,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.N
+                  )
+                "
               />
               <path
                 id="path85"
@@ -542,7 +656,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('4RD')"
-                @click="activateKnotenarm('4RD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    4,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.N
+                  )
+                "
               />
             </g>
             <g
@@ -621,7 +741,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('3LU')"
-                @click="activateKnotenarm('3LU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    3,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.O
+                  )
+                "
               />
               <path
                 id="path74"
@@ -629,7 +755,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('3LD')"
-                @click="activateKnotenarm('3LD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    3,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.O
+                  )
+                "
               />
             </g>
             <g
@@ -643,7 +775,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('3RU')"
-                @click="activateKnotenarm('3RU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    3,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.W
+                  )
+                "
               />
               <path
                 id="path76"
@@ -651,7 +789,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('3RD')"
-                @click="activateKnotenarm('3RD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    3,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.W
+                  )
+                "
               />
             </g>
             <g
@@ -730,7 +874,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('2LU')"
-                @click="activateKnotenarm('2LU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    2,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.N
+                  )
+                "
               />
               <path
                 id="path56"
@@ -738,7 +888,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('2LD')"
-                @click="activateKnotenarm('2LD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    2,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.N
+                  )
+                "
               />
             </g>
             <g
@@ -752,7 +908,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('2RU')"
-                @click="activateKnotenarm('2RU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    2,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.S
+                  )
+                "
               />
               <path
                 id="path58"
@@ -760,7 +922,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('2RD')"
-                @click="activateKnotenarm('2RD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    2,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.S
+                  )
+                "
               />
             </g>
             <g
@@ -838,7 +1006,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('1LU')"
-                @click="activateKnotenarm('1LU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    1,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.W
+                  )
+                "
               />
               <path
                 id="path20"
@@ -846,7 +1020,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('1LD')"
-                @click="activateKnotenarm('1LD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    1,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.W
+                  )
+                "
               />
             </g>
             <g
@@ -860,7 +1040,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('1RU')"
-                @click="activateKnotenarm('1RU')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    1,
+                    Bewegungsrichtung.AUS,
+                    Himmelsrichtung.O
+                  )
+                "
               />
               <path
                 id="path40"
@@ -868,7 +1054,13 @@
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColor('1RD')"
-                @click="activateKnotenarm('1RD')"
+                @click="
+                  handleClickOnLaengsverkehr(
+                    1,
+                    Bewegungsrichtung.EIN,
+                    Himmelsrichtung.O
+                  )
+                "
               />
             </g>
             <g
@@ -909,12 +1101,15 @@
 </template>
 
 <script setup lang="ts">
+import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { isEmpty } from "lodash";
+import { cloneDeep, isEmpty, toArray } from "lodash";
 import { computed, onMounted, watch } from "vue";
 
 import { useEventbus } from "@/store/Eventbus";
+import Bewegungsrichtung from "@/types/enum/Bewegungsrichtung";
+import Himmelsrichtung from "@/types/enum/Himmelsrichtung";
 import Zaehlart from "@/types/enum/Zaehlart";
 
 interface Props {
@@ -1033,5 +1228,35 @@ function getColorOfKnotenarm(knotenarm: string) {
 
 function resetForm() {
   eventbus.resetSelectedKnotenarme();
+}
+
+function handleClickOnLaengsverkehr(
+  knotenarm: number,
+  richtung: Bewegungsrichtung,
+  strassenseite: Himmelsrichtung
+): LaengsverkehrDTO {
+  const clickedLaengsverkehr: LaengsverkehrDTO = {} as LaengsverkehrDTO;
+  clickedLaengsverkehr.knotenarm = knotenarm;
+  clickedLaengsverkehr.richtung = richtung;
+  clickedLaengsverkehr.strassenseite = strassenseite;
+
+  const laengsverkehr = toArray(cloneDeep(zaehlung.value.laengsverkehr));
+
+  const index = laengsverkehr.findIndex((laengsverkehr: LaengsverkehrDTO) => {
+    return (
+      laengsverkehr.knotenarm === clickedLaengsverkehr.knotenarm &&
+      laengsverkehr.richtung === clickedLaengsverkehr.richtung &&
+      laengsverkehr.strassenseite === clickedLaengsverkehr.strassenseite
+    );
+  });
+
+  if (index > 0) {
+    laengsverkehr.splice(index, 1);
+  } else {
+    laengsverkehr.push(clickedLaengsverkehr);
+  }
+
+  zaehlung.value.laengsverkehr = laengsverkehr;
+  return clickedLaengsverkehr;
 }
 </script>
