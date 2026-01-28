@@ -164,16 +164,16 @@
                 d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('8CL2R')"
-                @click="activateKnotenarm('8CL2R')"
+                :fill="calculateColorOfQuerungsverkehr(8, Himmelsrichtung.NO)"
+                @click="handleClickOnQuerungsverkehr(8, Himmelsrichtung.NO)"
               />
               <path
                 id="path125"
                 d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('8CR2L')"
-                @click="activateKnotenarm('8CR2L')"
+                :fill="calculateColorOfQuerungsverkehr(8, Himmelsrichtung.SW)"
+                @click="handleClickOnQuerungsverkehr(8, Himmelsrichtung.SW)"
               />
             </g>
           </g>
@@ -320,16 +320,16 @@
                 d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('7CL2R')"
-                @click="activateKnotenarm('7CL2R')"
+                :fill="calculateColorOfQuerungsverkehr(7, Himmelsrichtung.NW)"
+                @click="handleClickOnQuerungsverkehr(7, Himmelsrichtung.NW)"
               />
               <path
                 id="path116"
                 d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('7CR2L')"
-                @click="activateKnotenarm('7CR2L')"
+                :fill="calculateColorOfQuerungsverkehr(7, Himmelsrichtung.SO)"
+                @click="handleClickOnQuerungsverkehr(7, Himmelsrichtung.SO)"
               />
             </g>
           </g>
@@ -476,16 +476,16 @@
                 d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('6CL2R')"
-                @click="activateKnotenarm('6CL2R')"
+                :fill="calculateColorOfQuerungsverkehr(6, Himmelsrichtung.SW)"
+                @click="handleClickOnQuerungsverkehr(6, Himmelsrichtung.SW)"
               />
               <path
                 id="path107"
                 d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('6CR2L')"
-                @click="activateKnotenarm('6CR2L')"
+                :fill="calculateColorOfQuerungsverkehr(6, Himmelsrichtung.NO)"
+                @click="handleClickOnQuerungsverkehr(6, Himmelsrichtung.NO)"
               />
             </g>
           </g>
@@ -631,16 +631,16 @@
                 d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('5CL2R')"
-                @click="activateKnotenarm('5CL2R')"
+                :fill="calculateColorOfQuerungsverkehr(5, Himmelsrichtung.SO)"
+                @click="handleClickOnQuerungsverkehr(5, Himmelsrichtung.SO)"
               />
               <path
                 id="path98"
                 d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('5CR2L')"
-                @click="activateKnotenarm('5CR2L')"
+                :fill="calculateColorOfQuerungsverkehr(5, Himmelsrichtung.NW)"
+                @click="handleClickOnQuerungsverkehr(5, Himmelsrichtung.NW)"
               />
             </g>
           </g>
@@ -795,16 +795,16 @@
                 d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('4CL2R')"
-                @click="activateKnotenarm('4CL2R')"
+                :fill="calculateColorOfQuerungsverkehr(4, Himmelsrichtung.N)"
+                @click="handleClickOnQuerungsverkehr(4, Himmelsrichtung.N)"
               />
               <path
                 id="path89"
                 d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('4CR2L')"
-                @click="activateKnotenarm('4CR2L')"
+                :fill="calculateColorOfQuerungsverkehr(4, Himmelsrichtung.S)"
+                @click="handleClickOnQuerungsverkehr(4, Himmelsrichtung.S)"
               />
             </g>
           </g>
@@ -952,16 +952,16 @@
                 d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('3CL2R')"
-                @click="activateKnotenarm('3CL2R')"
+                :fill="calculateColorOfQuerungsverkehr(3, Himmelsrichtung.W)"
+                @click="handleClickOnQuerungsverkehr(3, Himmelsrichtung.W)"
               />
               <path
                 id="path80"
                 d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('3CR2L')"
-                @click="activateKnotenarm('3CR2L')"
+                :fill="calculateColorOfQuerungsverkehr(3, Himmelsrichtung.O)"
+                @click="handleClickOnQuerungsverkehr(3, Himmelsrichtung.O)"
               />
             </g>
           </g>
@@ -1109,16 +1109,16 @@
                 d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('2CL2R')"
-                @click="activateKnotenarm('2CL2R')"
+                :fill="calculateColorOfQuerungsverkehr(2, Himmelsrichtung.S)"
+                @click="handleClickOnQuerungsverkehr(2, Himmelsrichtung.S)"
               />
               <path
                 id="path62"
                 d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('2CR2L')"
-                @click="activateKnotenarm('2CR2L')"
+                :fill="calculateColorOfQuerungsverkehr(2, Himmelsrichtung.N)"
+                @click="handleClickOnQuerungsverkehr(2, Himmelsrichtung.N)"
               />
             </g>
           </g>
@@ -1265,16 +1265,16 @@
                 d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('1CL2R')"
-                @click="activateKnotenarm('1CL2R')"
+                :fill="calculateColorOfQuerungsverkehr(1, Himmelsrichtung.O)"
+                @click="handleClickOnQuerungsverkehr(1, Himmelsrichtung.O)"
               />
               <path
                 id="path44"
                 d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
-                :fill="calculateColor('1CR2L')"
-                @click="activateKnotenarm('1CR2L')"
+                :fill="calculateColorOfQuerungsverkehr(1, Himmelsrichtung.W)"
+                @click="handleClickOnQuerungsverkehr(1, Himmelsrichtung.W)"
               />
             </g>
           </g>
@@ -1350,23 +1350,6 @@ watch(
 
 function isKnotenarmAvailable(knotenarm: string): boolean {
   return availableKnotenarme.value.includes(knotenarm);
-}
-/**
- * Wenn die Knotenarmnummer im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
- * ansonsten in der "passiveColor".
- */
-function calculateColor(knotenarm: string): string | undefined {
-  let color = passiveColor;
-  if (
-    !isEmpty(
-      selectedKnotenarme.value.filter(
-        (selectedKnotenarm) => selectedKnotenarm === knotenarm
-      )
-    )
-  ) {
-    color = activeColor;
-  }
-  return color;
 }
 
 /**
