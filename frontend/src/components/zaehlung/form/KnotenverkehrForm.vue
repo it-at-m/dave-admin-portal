@@ -1298,7 +1298,7 @@ import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
 import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { cloneDeep, toArray } from "lodash";
+import { cloneDeep, isEmpty, remove, toArray } from "lodash";
 import { computed } from "vue";
 
 import Bewegungsrichtung from "@/types/enum/Bewegungsrichtung";
@@ -1395,7 +1395,66 @@ function activateOrDeactivateTotalKnotenarm(knotenarm: number) {
     return;
   }
 
+  let indexFound: number;
+  if (zaehlung.value.zaehlart === Zaehlart.QU) {
+    const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
+    const querungsverkehreForKnotenarmStillSelected = !isEmpty(
+      querungsverkehre.filter(
+        (querungsverkehr: QuerungsverkehrDTO) =>
+          querungsverkehr.knotenarm === knotenarm
+      )
+    );
 
+    if (querungsverkehreForKnotenarmStillSelected) {
+      remove(querungsverkehre, function (querungsverkehr: QuerungsverkehrDTO) {
+        return querungsverkehr.knotenarm === knotenarm;
+      });
+    } else {
+      let querungsverkehrToAdd: QuerungsverkehrDTO;
+
+      if (knotenarm === 8) {
+        querungsverkehrToAdd = createQuerungsverkehr(
+          knotenarm,
+          Himmelsrichtung.SW
+        );
+        indexFound =
+          findIndexInSelectedQuerungsverkehreForClickedQuerungsverkehr(
+            querungsverkehrToAdd
+          );
+        if (indexFound < 0) {
+          querungsverkehre.push(querungsverkehrToAdd);
+        }
+        querungsverkehrToAdd = createQuerungsverkehr(
+          knotenarm,
+          Himmelsrichtung.NO
+        );
+        indexFound =
+          findIndexInSelectedQuerungsverkehreForClickedQuerungsverkehr(
+            querungsverkehrToAdd
+          );
+        if (indexFound < 0) {
+          querungsverkehre.push(querungsverkehrToAdd);
+        }
+      }
+    }
+    zaehlung.value.querungsverkehr = querungsverkehre;
+  }
+  if (zaehlung.value.zaehlart === Zaehlart.FJS) {
+    // TODO
+  }
+}
+
+function deselectQuerungsverkehreOfKnotenarm(knotenarm: number) {
+  const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
+  const querungsverkehreStillSelected = !isEmpty(
+    querungsverkehre.filter(
+      (querungsverkehr: QuerungsverkehrDTO) =>
+        querungsverkehr.knotenarm === knotenarm
+    )
+  );
+  remove(querungsverkehre, function (querungsverkehr: QuerungsverkehrDTO) {
+    return querungsverkehr.knotenarm === knotenarm;
+  });
 }
 
 function getCursorType(knotenarm: number) {
