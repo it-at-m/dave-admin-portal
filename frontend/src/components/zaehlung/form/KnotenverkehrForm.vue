@@ -1394,6 +1394,8 @@ function activateOrDeactivateTotalKnotenarm(knotenarm: number) {
     // remove all
     return;
   }
+
+
 }
 
 function getCursorType(knotenarm: number) {
