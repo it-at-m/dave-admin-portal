@@ -34,7 +34,7 @@
             <path
               id="path117"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfKnotenarm('8')"
+              :fill="getColorOfKnotenarm(8)"
               stroke="none"
             />
             <text
@@ -52,14 +52,14 @@
               x="23207.291"
               y="2053.7427"
               transform="matrix(0.68301124,0.68239646,-0.73271189,0.73205238,0,0)"
-              :style="{ cursor: getCursorType('8') }"
-              @click="activateOrDeactivateTotalKnotenarm('8')"
+              :style="{ cursor: getCursorType(8) }"
+              @click="activateOrDeactivateTotalKnotenarm(8)"
             >
               8
             </text>
           </g>
           <g
-            v-if="isKnotenarmAvailable('8')"
+            v-if="isKnotenarmAvailable(8)"
             id="node8_arrows"
           >
             <g
@@ -190,7 +190,7 @@
             <path
               id="path108"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfKnotenarm('7')"
+              :fill="getColorOfKnotenarm(7)"
               stroke="none"
             />
             <text
@@ -208,14 +208,14 @@
               x="2159.0249"
               y="-21628.908"
               transform="matrix(-0.68301123,0.68239646,-0.73271189,-0.73205239,0,0)"
-              :style="{ cursor: getCursorType('7') }"
-              @click="activateOrDeactivateTotalKnotenarm('7')"
+              :style="{ cursor: getCursorType(7) }"
+              @click="activateOrDeactivateTotalKnotenarm(7)"
             >
               7
             </text>
           </g>
           <g
-            v-if="isKnotenarmAvailable('7')"
+            v-if="isKnotenarmAvailable(7)"
             id="node7_arrows"
           >
             <g
@@ -346,7 +346,7 @@
             <path
               id="path99"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfKnotenarm('6')"
+              :fill="getColorOfKnotenarm(6)"
               stroke="none"
             />
             <text
@@ -364,14 +364,14 @@
               x="-23247.984"
               y="-2008.0264"
               transform="matrix(-0.68301123,-0.68239646,0.73271189,-0.73205239,0,0)"
-              :style="{ cursor: getCursorType('6') }"
-              @click="activateOrDeactivateTotalKnotenarm('6')"
+              :style="{ cursor: getCursorType(6) }"
+              @click="activateOrDeactivateTotalKnotenarm(6)"
             >
               6
             </text>
           </g>
           <g
-            v-if="isKnotenarmAvailable('6')"
+            v-if="isKnotenarmAvailable(6)"
             id="node6_arrows"
           >
             <g
@@ -501,7 +501,7 @@
             <path
               id="path90"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfKnotenarm('5')"
+              :fill="getColorOfKnotenarm(5)"
               stroke="none"
             />
             <text
@@ -519,14 +519,14 @@
               x="-2199.2236"
               y="21674.625"
               transform="matrix(0.68301124,-0.68239646,0.73271189,0.73205238,0,0)"
-              :style="{ cursor: getCursorType('5') }"
-              @click="activateOrDeactivateTotalKnotenarm('5')"
+              :style="{ cursor: getCursorType(5) }"
+              @click="activateOrDeactivateTotalKnotenarm(5)"
             >
               5
             </text>
           </g>
           <g
-            v-if="isKnotenarmAvailable('5')"
+            v-if="isKnotenarmAvailable(5)"
             id="node5_arrows"
           >
             <g
@@ -664,7 +664,7 @@
             <path
               id="path81"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfKnotenarm('4')"
+              :fill="getColorOfKnotenarm(4)"
               stroke="none"
             />
             <text
@@ -682,15 +682,15 @@
               x="17945.223"
               y="-13850.833"
               transform="matrix(0,0.96505434,-1.0362111,0,0,0)"
-              :style="{ cursor: getCursorType('4') }"
-              @click="activateOrDeactivateTotalKnotenarm('4')"
+              :style="{ cursor: getCursorType(4) }"
+              @click="activateOrDeactivateTotalKnotenarm(4)"
             >
               4
             </text>
           </g>
 
           <g
-            v-if="isKnotenarmAvailable('4')"
+            v-if="isKnotenarmAvailable(4)"
             id="node4_arrows"
           >
             <g
@@ -821,7 +821,7 @@
             <path
               id="path72"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfKnotenarm('3')"
+              :fill="getColorOfKnotenarm(3)"
               stroke="none"
             />
             <text
@@ -839,15 +839,15 @@
               x="-14903.439"
               y="-16723.537"
               transform="scale(-0.96592375,-1.0352784)"
-              :style="{ cursor: getCursorType('3') }"
-              @click="activateOrDeactivateTotalKnotenarm('3')"
+              :style="{ cursor: getCursorType(3) }"
+              @click="activateOrDeactivateTotalKnotenarm(3)"
             >
               3
             </text>
           </g>
 
           <g
-            v-if="isKnotenarmAvailable('3')"
+            v-if="isKnotenarmAvailable(3)"
             id="node3_arrows"
           >
             <g
@@ -978,7 +978,7 @@
             <path
               id="path54"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfKnotenarm('2')"
+              :fill="getColorOfKnotenarm(2)"
               stroke="none"
             />
             <text
@@ -996,15 +996,15 @@
               x="-17983.836"
               y="13896.666"
               transform="matrix(0,-0.96505434,1.0362111,0,0,0)"
-              :style="{ cursor: getCursorType('2') }"
-              @click="activateOrDeactivateTotalKnotenarm('2')"
+              :style="{ cursor: getCursorType(2) }"
+              @click="activateOrDeactivateTotalKnotenarm(2)"
             >
               2
             </text>
           </g>
 
           <g
-            v-if="isKnotenarmAvailable('2')"
+            v-if="isKnotenarmAvailable(2)"
             id="node2_arrows"
           >
             <g
@@ -1134,7 +1134,7 @@
             <path
               id="path1"
               d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
-              :fill="getColorOfKnotenarm('1')"
+              :fill="getColorOfKnotenarm(1)"
               stroke="none"
             />
             <text
@@ -1152,15 +1152,15 @@
               x="14863.547"
               y="16769.467"
               transform="scale(0.96592375,1.0352784)"
-              :style="{ cursor: getCursorType('1') }"
-              @click="activateOrDeactivateTotalKnotenarm('1')"
+              :style="{ cursor: getCursorType(1) }"
+              @click="activateOrDeactivateTotalKnotenarm(1)"
             >
               1
             </text>
           </g>
 
           <g
-            v-if="isKnotenarmAvailable('1')"
+            v-if="isKnotenarmAvailable(1)"
             id="node1_arrows"
           >
             <g
@@ -1293,14 +1293,14 @@
 </template>
 
 <script setup lang="ts">
+import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
 import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { cloneDeep, isEmpty, toArray } from "lodash";
-import { computed, onMounted, watch } from "vue";
+import { cloneDeep, toArray } from "lodash";
+import { computed } from "vue";
 
-import { useEventbus } from "@/store/Eventbus";
 import Bewegungsrichtung from "@/types/enum/Bewegungsrichtung";
 import Himmelsrichtung from "@/types/enum/Himmelsrichtung";
 import Zaehlart from "@/types/enum/Zaehlart";
@@ -1318,15 +1318,10 @@ const activeColor = "#D50000";
 const passiveColor = "#9E9E9E";
 
 const availableKnotenarme = computed(() => {
-  return zaehlung.value.knotenarme.map((arm) => `${arm.nummer}`);
+  return zaehlung.value.knotenarme.map((arm: KnotenarmDTO) => arm.nummer);
 });
 const hasAvailableKnotenarme = computed(() => {
   return availableKnotenarme.value.length > 0;
-});
-
-const eventbus = useEventbus();
-const selectedKnotenarme = computed(() => {
-  return eventbus.getSelectedKnotenarme;
 });
 
 const selectedLaengsverkehre = computed(() => {
@@ -1336,19 +1331,7 @@ const selectedQuerungsverkehre = computed(() => {
   return zaehlung.value.querungsverkehr;
 });
 
-onMounted(() => {
-  resetForm();
-});
-
-watch(
-  () => zaehlung.value.knotenarme,
-  () => {
-    resetForm();
-  },
-  { deep: true, immediate: true }
-);
-
-function isKnotenarmAvailable(knotenarm: string): boolean {
+function isKnotenarmAvailable(knotenarm: number): boolean {
   return availableKnotenarme.value.includes(knotenarm);
 }
 
@@ -1406,48 +1389,14 @@ function calculateColorOfQuerungsverkehr(
   return color;
 }
 
-function activateKnotenarm(knotenarm: string) {
-  eventbus.activateKnotenarm(knotenarm);
-}
-
-function activateOrDeactivateTotalKnotenarm(knotenarm: string) {
+function activateOrDeactivateTotalKnotenarm(knotenarm: number) {
   if (!isKnotenarmAvailable(knotenarm)) {
     // remove all
     return;
   }
-
-  const endings = [];
-
-  if (zaehlung.value.zaehlart === Zaehlart.QU) {
-    endings.push("CL2R");
-    endings.push("CR2L");
-  }
-  if (zaehlung.value.zaehlart === Zaehlart.FJS) {
-    endings.push("LU");
-    endings.push("LD");
-    endings.push("RU");
-    endings.push("RD");
-  }
-
-  const knotenarmStrings = endings.map((value) => knotenarm + value);
-
-  let nothingRemoved = true;
-
-  knotenarmStrings.forEach((knotenarmString) => {
-    if (selectedKnotenarme.value.includes(knotenarmString)) {
-      nothingRemoved = false;
-      eventbus.deactivateKnotenarm(knotenarmString);
-    }
-  });
-
-  if (nothingRemoved && isKnotenarmAvailable(knotenarm)) {
-    knotenarmStrings.forEach((value) => {
-      activateKnotenarm(value);
-    });
-  }
 }
 
-function getCursorType(knotenarm: string) {
+function getCursorType(knotenarm: number) {
   if (isKnotenarmAvailable(knotenarm)) {
     return `pointer`;
   } else {
@@ -1455,16 +1404,12 @@ function getCursorType(knotenarm: string) {
   }
 }
 
-function getColorOfKnotenarm(knotenarm: string) {
+function getColorOfKnotenarm(knotenarm: number) {
   if (isKnotenarmAvailable(knotenarm)) {
     return `#1565C0`;
   } else {
     return `#EEEEEE`;
   }
-}
-
-function resetForm() {
-  eventbus.resetSelectedKnotenarme();
 }
 
 function handleClickOnLaengsverkehr(
