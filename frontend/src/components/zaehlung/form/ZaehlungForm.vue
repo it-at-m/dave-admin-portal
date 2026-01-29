@@ -160,10 +160,6 @@ function validateZaehlung(): void {
   isKnotenLageFormValid.value = validationUtils.validateKnotenLageForm(
     zaehlung.value
   );
-  const isVerkehrFormValid = validationUtils.validateVerkehrForm(
-    zaehlung.value,
-    eventbus.getSelectedKnotenarme
-  );
   const isVerkehrsartFormValid = validationUtils.validateVerkehrsartForm(
     zaehlung.value
   );
@@ -171,7 +167,6 @@ function validateZaehlung(): void {
     isAllgemeineInfoFormValid.value !== null &&
     isAllgemeineInfoFormValid.value &&
     isKnotenLageFormValid.value &&
-    isVerkehrFormValid &&
     isVerkehrsartFormValid;
 }
 </script>

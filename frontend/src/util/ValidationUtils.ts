@@ -1,6 +1,6 @@
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { difference, isEmpty, toNumber } from "lodash";
+import { isEmpty, toNumber } from "lodash";
 
 import Fahrzeug from "@/types/enum/Fahrzeug";
 import Zaehlart from "@/types/enum/Zaehlart";
@@ -29,47 +29,6 @@ export function useValidationUtils() {
       return "Bitte eine Zählstellennummer >= 0 eingeben";
     }
     return true;
-  }
-
-  /**
-   * Validiert die VerkehrForm abhaengig von der Zaehlart
-   * @param zaehlung zu validierende Zaehlung
-   * @param selectedKnotenarme aktuell ausgewaehlte Knotenarme
-   */
-  function validateVerkehrForm(
-    zaehlung: ZaehlungDTO,
-    selectedKnotenarme: Array<string>
-  ): boolean {
-    let validation = true;
-    if (zaehlung.zaehlart === Zaehlart.QJS) {
-      // Bei QJS muessen auf mind. einer Straßenseite beide Pfeile aktiv sein
-      validation =
-        (selectedKnotenarme.includes("1") &&
-          selectedKnotenarme.includes("2")) ||
-        (selectedKnotenarme.includes("3") && selectedKnotenarme.includes("4"));
-    } else if (
-      zaehlung.zaehlart === Zaehlart.FJS ||
-      zaehlung.zaehlart === Zaehlart.QU
-    ) {
-      // Bei FJS und QU muss mind. 1 Pfeil pro Knotenarm aktiv sein
-      const selectedKnotenarmNummernUnique = selectedKnotenarme
-        .map((knotenarm: string) => knotenarm.charAt(0))
-        .filter((value, index, array) => array.indexOf(value) === index);
-
-      const availableKnotenarme = zaehlung.knotenarme.map(
-        (arm) => `${arm.nummer}`
-      );
-      validation =
-        // Alles ausgewaehlten KnotenarmNummern muessen in den verfuegbaren Knotenarmen enthalten sein
-        isEmpty(
-          difference(availableKnotenarme, selectedKnotenarmNummernUnique)
-        ) &&
-        // Alles verfuegbaren Knotenarmen muessen in den ausgewaehlten KnotenarmNummern enthalten sein
-        isEmpty(
-          difference(selectedKnotenarmNummernUnique, availableKnotenarme)
-        );
-    }
-    return validation;
   }
 
   function validateKnotenLageForm(zaehlung: ZaehlungDTO): boolean {
@@ -107,7 +66,6 @@ export function useValidationUtils() {
     pflichtfeld,
     isEmailValid,
     mustBePositivNumber,
-    validateVerkehrForm,
     validateKnotenLageForm,
     validateVerkehrsartForm,
   };
