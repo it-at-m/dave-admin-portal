@@ -1395,60 +1395,30 @@ function activateOrDeactivateTotalKnotenarm(knotenarm: number) {
     return;
   }
 
-  let indexFound: number;
-  if (zaehlung.value.zaehlart === Zaehlart.QU) {
-    const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
-    const querungsverkehreForKnotenarmStillSelected = !isEmpty(
-      querungsverkehre.filter(
-        (querungsverkehr: QuerungsverkehrDTO) =>
-          querungsverkehr.knotenarm === knotenarm
-      )
-    );
-
-    if (querungsverkehreForKnotenarmStillSelected) {
-      remove(querungsverkehre, function (querungsverkehr: QuerungsverkehrDTO) {
-        return querungsverkehr.knotenarm === knotenarm;
-      });
-    } else {
-      let querungsverkehrToAdd: QuerungsverkehrDTO;
-
-      if (knotenarm === 8) {
-        querungsverkehrToAdd = createQuerungsverkehr(
-          knotenarm,
-          Himmelsrichtung.SW
-        );
-        indexFound =
-          findIndexInSelectedQuerungsverkehreForClickedQuerungsverkehr(
-            querungsverkehrToAdd
-          );
-        if (indexFound < 0) {
-          querungsverkehre.push(querungsverkehrToAdd);
-        }
-        querungsverkehrToAdd = createQuerungsverkehr(
-          knotenarm,
-          Himmelsrichtung.NO
-        );
-        indexFound =
-          findIndexInSelectedQuerungsverkehreForClickedQuerungsverkehr(
-            querungsverkehrToAdd
-          );
-        if (indexFound < 0) {
-          querungsverkehre.push(querungsverkehrToAdd);
-        }
-      }
-    }
-    zaehlung.value.querungsverkehr = querungsverkehre;
-  }
-  if (zaehlung.value.zaehlart === Zaehlart.FJS) {
-    // TODO
-  }
-
   if (zaehlung.value.zaehlart === Zaehlart.QU) {
     if (querungsverkehreForKnotenarmStillSelected(knotenarm)) {
       // Deselect
       deselectQuerungsverkehreOfKnotenarm(knotenarm);
     } else {
       // Select All
+      if (knotenarm === 8) {
+        selectAllQuerungenForKnotenarmEight();
+      } else if (knotenarm === 7) {
+        selectAllQuerungenForKnotenarmSeven();
+      } else if (knotenarm === 6) {
+        selectAllQuerungenForKnotenarmSix();
+      } else if (knotenarm === 5) {
+        selectAllQuerungenForKnotenarmFive();
+      } else if (knotenarm === 4) {
+        selectAllQuerungenForKnotenarmFour();
+      } else if (knotenarm === 3) {
+        selectAllQuerungenForKnotenarmThree();
+      } else if (knotenarm === 2) {
+        selectAllQuerungenForKnotenarmTwo();
+      } else {
+        // knotenarm === 1
+        selectAllQuerungenForKnotenarmOne();
+      }
     }
   }
   if (zaehlung.value.zaehlart === Zaehlart.FJS) {
@@ -1457,6 +1427,24 @@ function activateOrDeactivateTotalKnotenarm(knotenarm: number) {
       deselectLaengsverkehreOfKnotenarm(knotenarm);
     } else {
       // Select All
+      if (knotenarm === 8) {
+        selectAllLaengsverkehreForKnotenarmEight();
+      } else if (knotenarm === 7) {
+        selectAllLaengsverkehreForKnotenarmSeven();
+      } else if (knotenarm === 6) {
+        selectAllLaengsverkehreForKnotenarmSix();
+      } else if (knotenarm === 5) {
+        selectAllLaengsverkehreForKnotenarmFive();
+      } else if (knotenarm === 4) {
+        selectAllLaengsverkehreForKnotenarmFour();
+      } else if (knotenarm === 3) {
+        selectAllLaengsverkehreForKnotenarmThree();
+      } else if (knotenarm === 2) {
+        selectAllLaengsverkehreForKnotenarmTwo();
+      } else {
+        // knotenarm === 1
+        selectAllLaengsverkehreForKnotenarmOne();
+      }
     }
   }
 }
@@ -1477,6 +1465,254 @@ function laengsverkehrForKnotenarmStillSelected(knotenarm: number): boolean {
   );
 }
 
+function selectAllLaengsverkehreForKnotenarmEight() {
+  const laengsverkehre = toArray(cloneDeep(selectedLaengsverkehre.value));
+
+  let laengsverkehr = createLaengsverkehr(
+    8,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.NO
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    8,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.NO
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    8,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.SW
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    8,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.SW
+  );
+  laengsverkehre.push(laengsverkehr);
+
+  zaehlung.value.laengsverkehr = laengsverkehre;
+}
+
+function selectAllLaengsverkehreForKnotenarmSeven() {
+  const laengsverkehre = toArray(cloneDeep(selectedLaengsverkehre.value));
+
+  let laengsverkehr = createLaengsverkehr(
+    7,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.NW
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    7,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.NW
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    7,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.SO
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    7,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.SO
+  );
+  laengsverkehre.push(laengsverkehr);
+
+  zaehlung.value.laengsverkehr = laengsverkehre;
+}
+
+function selectAllLaengsverkehreForKnotenarmSix() {
+  const laengsverkehre = toArray(cloneDeep(selectedLaengsverkehre.value));
+
+  let laengsverkehr = createLaengsverkehr(
+    6,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.NO
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    6,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.NO
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    6,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.SW
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    6,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.SW
+  );
+  laengsverkehre.push(laengsverkehr);
+
+  zaehlung.value.laengsverkehr = laengsverkehre;
+}
+
+function selectAllLaengsverkehreForKnotenarmFive() {
+  const laengsverkehre = toArray(cloneDeep(selectedLaengsverkehre.value));
+
+  let laengsverkehr = createLaengsverkehr(
+    5,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.NW
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    5,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.NW
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    5,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.SO
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    5,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.SO
+  );
+  laengsverkehre.push(laengsverkehr);
+
+  zaehlung.value.laengsverkehr = laengsverkehre;
+}
+
+function selectAllLaengsverkehreForKnotenarmFour() {
+  const laengsverkehre = toArray(cloneDeep(selectedLaengsverkehre.value));
+
+  let laengsverkehr = createLaengsverkehr(
+    4,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.N
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    4,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.N
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    4,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.S
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    4,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.S
+  );
+  laengsverkehre.push(laengsverkehr);
+
+  zaehlung.value.laengsverkehr = laengsverkehre;
+}
+
+function selectAllLaengsverkehreForKnotenarmThree() {
+  const laengsverkehre = toArray(cloneDeep(selectedLaengsverkehre.value));
+
+  let laengsverkehr = createLaengsverkehr(
+    3,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.W
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    3,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.W
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    3,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.O
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    3,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.O
+  );
+  laengsverkehre.push(laengsverkehr);
+
+  zaehlung.value.laengsverkehr = laengsverkehre;
+}
+
+function selectAllLaengsverkehreForKnotenarmTwo() {
+  const laengsverkehre = toArray(cloneDeep(selectedLaengsverkehre.value));
+
+  let laengsverkehr = createLaengsverkehr(
+    2,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.N
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    2,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.N
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    2,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.S
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    2,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.S
+  );
+  laengsverkehre.push(laengsverkehr);
+
+  zaehlung.value.laengsverkehr = laengsverkehre;
+}
+
+function selectAllLaengsverkehreForKnotenarmOne() {
+  const laengsverkehre = toArray(cloneDeep(selectedLaengsverkehre.value));
+
+  let laengsverkehr = createLaengsverkehr(
+    1,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.W
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    1,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.W
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    1,
+    Bewegungsrichtung.EIN,
+    Himmelsrichtung.O
+  );
+  laengsverkehre.push(laengsverkehr);
+  laengsverkehr = createLaengsverkehr(
+    1,
+    Bewegungsrichtung.AUS,
+    Himmelsrichtung.O
+  );
+  laengsverkehre.push(laengsverkehr);
+
+  zaehlung.value.laengsverkehr = laengsverkehre;
+}
+
 function deselectQuerungsverkehreOfKnotenarm(knotenarm: number) {
   const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
   remove(querungsverkehre, function (querungsverkehr: QuerungsverkehrDTO) {
@@ -1492,6 +1728,94 @@ function querungsverkehreForKnotenarmStillSelected(knotenarm: number): boolean {
         querungsverkehr.knotenarm === knotenarm
     )
   );
+}
+
+function selectAllQuerungenForKnotenarmEight() {
+  const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
+
+  let querungsverkehr = createQuerungsverkehr(8, Himmelsrichtung.NO);
+  querungsverkehre.push(querungsverkehr);
+  querungsverkehr = createQuerungsverkehr(8, Himmelsrichtung.SW);
+  querungsverkehre.push(querungsverkehr);
+
+  zaehlung.value.querungsverkehr = querungsverkehre;
+}
+
+function selectAllQuerungenForKnotenarmSeven() {
+  const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
+
+  let querungsverkehr = createQuerungsverkehr(7, Himmelsrichtung.NW);
+  querungsverkehre.push(querungsverkehr);
+  querungsverkehr = createQuerungsverkehr(7, Himmelsrichtung.SO);
+  querungsverkehre.push(querungsverkehr);
+
+  zaehlung.value.querungsverkehr = querungsverkehre;
+}
+
+function selectAllQuerungenForKnotenarmSix() {
+  const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
+
+  let querungsverkehr = createQuerungsverkehr(6, Himmelsrichtung.NO);
+  querungsverkehre.push(querungsverkehr);
+  querungsverkehr = createQuerungsverkehr(6, Himmelsrichtung.SW);
+  querungsverkehre.push(querungsverkehr);
+
+  zaehlung.value.querungsverkehr = querungsverkehre;
+}
+
+function selectAllQuerungenForKnotenarmFive() {
+  const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
+
+  let querungsverkehr = createQuerungsverkehr(5, Himmelsrichtung.NW);
+  querungsverkehre.push(querungsverkehr);
+  querungsverkehr = createQuerungsverkehr(5, Himmelsrichtung.SO);
+  querungsverkehre.push(querungsverkehr);
+
+  zaehlung.value.querungsverkehr = querungsverkehre;
+}
+
+function selectAllQuerungenForKnotenarmFour() {
+  const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
+
+  let querungsverkehr = createQuerungsverkehr(4, Himmelsrichtung.N);
+  querungsverkehre.push(querungsverkehr);
+  querungsverkehr = createQuerungsverkehr(4, Himmelsrichtung.S);
+  querungsverkehre.push(querungsverkehr);
+
+  zaehlung.value.querungsverkehr = querungsverkehre;
+}
+
+function selectAllQuerungenForKnotenarmThree() {
+  const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
+
+  let querungsverkehr = createQuerungsverkehr(3, Himmelsrichtung.W);
+  querungsverkehre.push(querungsverkehr);
+  querungsverkehr = createQuerungsverkehr(3, Himmelsrichtung.O);
+  querungsverkehre.push(querungsverkehr);
+
+  zaehlung.value.querungsverkehr = querungsverkehre;
+}
+
+function selectAllQuerungenForKnotenarmTwo() {
+  const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
+
+  let querungsverkehr = createQuerungsverkehr(2, Himmelsrichtung.N);
+  querungsverkehre.push(querungsverkehr);
+  querungsverkehr = createQuerungsverkehr(2, Himmelsrichtung.S);
+  querungsverkehre.push(querungsverkehr);
+
+  zaehlung.value.querungsverkehr = querungsverkehre;
+}
+
+function selectAllQuerungenForKnotenarmOne() {
+  const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
+
+  let querungsverkehr = createQuerungsverkehr(1, Himmelsrichtung.W);
+  querungsverkehre.push(querungsverkehr);
+  querungsverkehr = createQuerungsverkehr(1, Himmelsrichtung.O);
+  querungsverkehre.push(querungsverkehr);
+
+  zaehlung.value.querungsverkehr = querungsverkehre;
 }
 
 function getCursorType(knotenarm: number) {
