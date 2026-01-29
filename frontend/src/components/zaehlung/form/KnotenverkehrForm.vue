@@ -1442,19 +1442,56 @@ function activateOrDeactivateTotalKnotenarm(knotenarm: number) {
   if (zaehlung.value.zaehlart === Zaehlart.FJS) {
     // TODO
   }
+
+  if (zaehlung.value.zaehlart === Zaehlart.QU) {
+    if (querungsverkehreForKnotenarmStillSelected(knotenarm)) {
+      // Deselect
+      deselectQuerungsverkehreOfKnotenarm(knotenarm);
+    } else {
+      // Select All
+    }
+  }
+  if (zaehlung.value.zaehlart === Zaehlart.FJS) {
+    if (laengsverkehrForKnotenarmStillSelected(knotenarm)) {
+      // Deselect
+      deselectLaengsverkehreOfKnotenarm(knotenarm);
+    } else {
+      // Select All
+    }
+  }
+}
+
+function deselectLaengsverkehreOfKnotenarm(knotenarm: number) {
+  const laengsverkehre = toArray(cloneDeep(selectedLaengsverkehre.value));
+  remove(laengsverkehre, function (laengsverkehr: LaengsverkehrDTO) {
+    return laengsverkehr.knotenarm === knotenarm;
+  });
+  zaehlung.value.laengsverkehr = laengsverkehre;
+}
+
+function laengsverkehrForKnotenarmStillSelected(knotenarm: number): boolean {
+  return !isEmpty(
+    selectedLaengsverkehre.value.filter(
+      (laengsverkehr: LaengsverkehrDTO) => laengsverkehr.knotenarm === knotenarm
+    )
+  );
 }
 
 function deselectQuerungsverkehreOfKnotenarm(knotenarm: number) {
   const querungsverkehre = toArray(cloneDeep(selectedQuerungsverkehre.value));
-  const querungsverkehreStillSelected = !isEmpty(
-    querungsverkehre.filter(
+  remove(querungsverkehre, function (querungsverkehr: QuerungsverkehrDTO) {
+    return querungsverkehr.knotenarm === knotenarm;
+  });
+  zaehlung.value.querungsverkehr = querungsverkehre;
+}
+
+function querungsverkehreForKnotenarmStillSelected(knotenarm: number): boolean {
+  return !isEmpty(
+    selectedQuerungsverkehre.value.filter(
       (querungsverkehr: QuerungsverkehrDTO) =>
         querungsverkehr.knotenarm === knotenarm
     )
   );
-  remove(querungsverkehre, function (querungsverkehr: QuerungsverkehrDTO) {
-    return querungsverkehr.knotenarm === knotenarm;
-  });
 }
 
 function getCursorType(knotenarm: number) {
