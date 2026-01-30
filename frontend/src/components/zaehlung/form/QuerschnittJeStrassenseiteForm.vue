@@ -272,12 +272,12 @@
           >
             <path
               id="path4"
-              :fill="calculateColor('4')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowFour"
               d="m 69.999999,860.99999 v -28 H 1330 v 27.997 z"
             />
             <path
               id="spike4"
-              :fill="calculateColor('4')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowFour"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-544.45264)"
             />
@@ -289,12 +289,12 @@
           >
             <path
               id="path3"
-              :fill="calculateColor('3')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowThree"
               d="m 69.999999,804.99999 v -28 H 1330 v 27.997 z"
             />
             <path
               id="spike3"
-              :fill="calculateColor('3')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowThree"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,2182.4526)"
             />
@@ -306,12 +306,12 @@
           >
             <path
               id="path2"
-              :fill="calculateColor('2')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowTwo"
               d="M 69.999999,623 V 595 H 1330 v 27.997 z"
             />
             <path
               id="spike2"
-              :fill="calculateColor('2')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowTwo"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-782.45264)"
             />
@@ -323,12 +323,12 @@
           >
             <path
               id="path1"
-              :fill="calculateColor('1')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowOne"
               d="M 69.999999,567 V 539 H 1330 v 27.998 z"
             />
             <path
               id="spike1"
-              :fill="calculateColor('1')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowOne"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,1944.4526)"
             />
@@ -418,7 +418,7 @@ const rotateSvg = computed(() => {
   return rotation;
 });
 
-function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowOne() {
+function createVerkehrsbeziehungArrowOne(): VerkehrsbeziehungDTO {
   const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
   if (availableNodeNumbers.value.includes(1)) {
     verkehrsbeziehung.von = 1;
@@ -440,26 +440,10 @@ function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowOne() {
     verkehrsbeziehung.nach = 8;
     verkehrsbeziehung.strassenseite = Himmelsrichtung.NO;
   }
-
-  const index =
-    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
-      verkehrsbeziehung
-    );
-
-  const verkehrsbeziehungen = toArray(
-    cloneDeep(selectedVerkehrsbeziehungen.value)
-  );
-
-  if (index > 0) {
-    verkehrsbeziehungen.splice(index, 1);
-  } else {
-    verkehrsbeziehungen.push(verkehrsbeziehung);
-  }
-
-  zaehlung.value.verkehrsbeziehungen = verkehrsbeziehungen;
+  return verkehrsbeziehung;
 }
 
-function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowTwo() {
+function createVerkehrsbeziehungArrowTwo(): VerkehrsbeziehungDTO {
   const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
   if (availableNodeNumbers.value.includes(1)) {
     verkehrsbeziehung.von = 3;
@@ -481,26 +465,10 @@ function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowTwo() {
     verkehrsbeziehung.nach = 6;
     verkehrsbeziehung.strassenseite = Himmelsrichtung.NO;
   }
-
-  const index =
-    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
-      verkehrsbeziehung
-    );
-
-  const verkehrsbeziehungen = toArray(
-    cloneDeep(selectedVerkehrsbeziehungen.value)
-  );
-
-  if (index > 0) {
-    verkehrsbeziehungen.splice(index, 1);
-  } else {
-    verkehrsbeziehungen.push(verkehrsbeziehung);
-  }
-
-  zaehlung.value.verkehrsbeziehungen = verkehrsbeziehungen;
+  return verkehrsbeziehung;
 }
 
-function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowThree() {
+function createVerkehrsbeziehungArrowThree(): VerkehrsbeziehungDTO {
   const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
   if (availableNodeNumbers.value.includes(1)) {
     verkehrsbeziehung.von = 1;
@@ -522,6 +490,53 @@ function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowThree() {
     verkehrsbeziehung.nach = 8;
     verkehrsbeziehung.strassenseite = Himmelsrichtung.SW;
   }
+  return verkehrsbeziehung;
+}
+
+function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowOne() {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowOne();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  const verkehrsbeziehungen = toArray(
+    cloneDeep(selectedVerkehrsbeziehungen.value)
+  );
+
+  if (index > 0) {
+    verkehrsbeziehungen.splice(index, 1);
+  } else {
+    verkehrsbeziehungen.push(verkehrsbeziehung);
+  }
+
+  zaehlung.value.verkehrsbeziehungen = verkehrsbeziehungen;
+}
+
+function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowTwo() {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowTwo();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  const verkehrsbeziehungen = toArray(
+    cloneDeep(selectedVerkehrsbeziehungen.value)
+  );
+
+  if (index > 0) {
+    verkehrsbeziehungen.splice(index, 1);
+  } else {
+    verkehrsbeziehungen.push(verkehrsbeziehung);
+  }
+
+  zaehlung.value.verkehrsbeziehungen = verkehrsbeziehungen;
+}
+
+function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowThree() {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowThree();
 
   const index =
     findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
@@ -611,6 +626,94 @@ watch(
   { deep: true, immediate: true }
 );
 
+function calculateColorOfVerkehrsbeziehungArrowOne() {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowOne();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  let color = passiveColor;
+
+  if (index > 0) {
+    color = activeColor;
+  }
+
+  return color;
+}
+
+function calculateColorOfVerkehrsbeziehungArrowTwo() {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowTwo();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  let color = passiveColor;
+
+  if (index > 0) {
+    color = activeColor;
+  }
+
+  return color;
+}
+
+function calculateColorOfVerkehrsbeziehungArrowThree() {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowThree();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  let color = passiveColor;
+
+  if (index > 0) {
+    color = activeColor;
+  }
+
+  return color;
+}
+
+function calculateColorOfVerkehrsbeziehungArrowFour() {
+  const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+  if (availableNodeNumbers.value.includes(1)) {
+    verkehrsbeziehung.von = 3;
+    verkehrsbeziehung.nach = 1;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.O;
+  }
+  if (availableNodeNumbers.value.includes(2)) {
+    verkehrsbeziehung.von = 4;
+    verkehrsbeziehung.nach = 2;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.S;
+  }
+  if (availableNodeNumbers.value.includes(5)) {
+    verkehrsbeziehung.von = 7;
+    verkehrsbeziehung.nach = 5;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.SO;
+  }
+  if (availableNodeNumbers.value.includes(6)) {
+    verkehrsbeziehung.von = 8;
+    verkehrsbeziehung.nach = 6;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.SW;
+  }
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  let color = passiveColor;
+
+  if (index > 0) {
+    color = activeColor;
+  }
+
+  return color;
+}
+
 /**
  * Wenn die Nummer des Pfeils im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
  * ansonsten in der passiveColor.
@@ -629,12 +732,7 @@ function calculateColor(arrow: string): string | undefined {
   return color;
 }
 
-function activateArrow(arrow: string): void {
-  eventbus.activateKnotenarm(arrow);
-}
-
 function resetForm(): void {
-  eventbus.resetSelectedKnotenarme();
   firstStreetname.value = [];
   secondStreetname.value = [];
 }
