@@ -17,9 +17,8 @@ export default interface VerkehrsbeziehungDTO extends BaseEntity {
 
   hochrechnungsfaktor: HochrechnungsfaktorDTO;
 
-  active: boolean;
-
   // nur im Frontend
+  active: boolean;
   indexKey: string;
   kreisverkehrTyp: string;
 }
