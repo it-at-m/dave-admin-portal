@@ -79,21 +79,22 @@ export function useValidationUtils() {
       // in selbiger Fahrtrichtung entgegengesetzte Verkehrsbeziehung existiert.
       isValid = false;
       for (const verkehrsbeziehung of verkehrsbeziehungen) {
-        const verkehrsbeziehungOppositeDirection = {} as VerkehrsbeziehungDTO;
-        verkehrsbeziehungOppositeDirection.strassenseite =
+        const verkehrsbeziehungOppositeDirectionToFind =
+          {} as VerkehrsbeziehungDTO;
+        verkehrsbeziehungOppositeDirectionToFind.strassenseite =
           verkehrsbeziehung.strassenseite;
-        verkehrsbeziehungOppositeDirection.von = verkehrsbeziehung.nach;
-        verkehrsbeziehungOppositeDirection.nach = verkehrsbeziehung.von;
+        verkehrsbeziehungOppositeDirectionToFind.von = verkehrsbeziehung.nach;
+        verkehrsbeziehungOppositeDirectionToFind.nach = verkehrsbeziehung.von;
 
         if (!isValid) {
           const indexOfVerkehrsbeziehungInOppositeDirection = findIndex(
             verkehrsbeziehungen,
             function (vb: VerkehrsbeziehungDTO) {
               return (
-                vb.von === verkehrsbeziehungOppositeDirection.von &&
-                vb.nach === verkehrsbeziehungOppositeDirection.nach &&
+                vb.von === verkehrsbeziehungOppositeDirectionToFind.von &&
+                vb.nach === verkehrsbeziehungOppositeDirectionToFind.nach &&
                 vb.strassenseite ===
-                  verkehrsbeziehungOppositeDirection.strassenseite
+                  verkehrsbeziehungOppositeDirectionToFind.strassenseite
               );
             }
           );
