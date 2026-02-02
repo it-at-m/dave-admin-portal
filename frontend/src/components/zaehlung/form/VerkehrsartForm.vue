@@ -118,6 +118,14 @@ watch(
   }
 );
 
+watch(
+  () => zaehlung.value,
+  () => {
+    resetForm();
+  },
+  { immediate: true, deep: true }
+);
+
 const pkwEinheitenOfStore = computed(() => {
   return pkweinheitStore.getPkwEinheit;
 });
