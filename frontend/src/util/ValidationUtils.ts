@@ -75,10 +75,9 @@ export function useValidationUtils() {
       const verkehrsbeziehungen = toArray(
         cloneDeep(zaehlung.verkehrsbeziehungen)
       );
-      isValid = false;
-
       // Prüfen ob für die gewählten Verkehrsbeziehungen mindestens eine
       // in selbiger Fahrtrichtung entgegengesetzte Verkehrsbeziehung existiert.
+      isValid = false;
       for (const verkehrsbeziehung of verkehrsbeziehungen) {
         const verkehrsbeziehungOppositeDirection = {} as VerkehrsbeziehungDTO;
         verkehrsbeziehungOppositeDirection.strassenseite =
