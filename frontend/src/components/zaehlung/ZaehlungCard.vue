@@ -280,6 +280,8 @@ import Status, { statusIcon } from "@/types/enum/Status";
 import Wetter from "@/types/enum/Wetter";
 import { useDateUtils } from "@/util/DateUtils";
 import KnotenarmComparator from "@/util/KnotenarmComparator";
+import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
+import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
 
 const ICON_COLOR = "black";
 const deleteDialogText = ref("Wollen Sie die Zählung wirklich löschen?");
@@ -504,6 +506,12 @@ function zaehlungKopieren() {
   zaehlungCopy.verkehrsbeziehungen.forEach((vz: VerkehrsbeziehungDTO) => {
     vz.id = "";
     vz.hochrechnungsfaktor.id = "";
+  });
+  zaehlungCopy.querungsverkehr.forEach((qv: QuerungsverkehrDTO) => {
+    qv.id = "";
+  });
+  zaehlungCopy.laengsverkehr.forEach((lv: LaengsverkehrDTO) => {
+    lv.id = "";
   });
   ZaehlungService.saveZaehlung(zaehlungCopy, properties.zaehlstelleId)
     .then((backendIdDTO: BackendIdDTO) => {
