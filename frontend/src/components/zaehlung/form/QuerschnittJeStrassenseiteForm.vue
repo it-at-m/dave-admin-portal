@@ -359,7 +359,7 @@ import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { cloneDeep, first, isEmpty, last, toArray } from "lodash";
+import { cloneDeep, first, last, toArray } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import Himmelsrichtung from "@/types/enum/Himmelsrichtung";
