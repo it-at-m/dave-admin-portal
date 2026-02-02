@@ -157,5 +157,6 @@ export function useValidationUtils() {
     mustBePositivNumber,
     validateKnotenLageForm,
     validateVerkehrsartForm,
+    validateVerkehrForm,
   };
 }

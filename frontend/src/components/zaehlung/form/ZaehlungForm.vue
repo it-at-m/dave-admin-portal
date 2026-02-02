@@ -160,10 +160,14 @@ function validateZaehlung(): void {
   const isVerkehrsartFormValid = validationUtils.validateVerkehrsartForm(
     zaehlung.value
   );
+  const isVerkehrFormValid = validationUtils.validateVerkehrForm(
+    zaehlung.value
+  );
   isZaehlungValid.value =
     isAllgemeineInfoFormValid.value !== null &&
     isAllgemeineInfoFormValid.value &&
     isKnotenLageFormValid.value &&
-    isVerkehrsartFormValid;
+    isVerkehrsartFormValid &&
+    isVerkehrFormValid;
 }
 </script>
