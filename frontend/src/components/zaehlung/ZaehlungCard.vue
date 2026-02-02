@@ -257,6 +257,8 @@ import type BackendIdDTO from "@/types/common/BackendIdDTO";
 import type GeoPoint from "@/types/common/GeoPoint";
 import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
+import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
 import type UpdateStatusDTO from "@/types/zaehlung/UpdateStatusDTO";
 import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
@@ -280,8 +282,6 @@ import Status, { statusIcon } from "@/types/enum/Status";
 import Wetter from "@/types/enum/Wetter";
 import { useDateUtils } from "@/util/DateUtils";
 import KnotenarmComparator from "@/util/KnotenarmComparator";
-import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
-import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
 
 const ICON_COLOR = "black";
 const deleteDialogText = ref("Wollen Sie die Zählung wirklich löschen?");

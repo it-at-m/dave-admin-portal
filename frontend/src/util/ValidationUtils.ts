@@ -1,6 +1,9 @@
+import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
+import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
+import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { isEmpty, toNumber } from "lodash";
+import { cloneDeep, findIndex, isEmpty, toArray, toNumber } from "lodash";
 
 import Fahrzeug from "@/types/enum/Fahrzeug";
 import Zaehlart from "@/types/enum/Zaehlart";
@@ -59,6 +62,92 @@ export function useValidationUtils() {
         )
       );
     }
+    return isValid;
+  }
+
+  function validateVerkehrForm(zaehlung: ZaehlungDTO): boolean {
+    let isValid = true;
+
+    if (zaehlung.zaehlart === Zaehlart.QJS) {
+      /**
+       * Bei QJS muessen auf mind. einer Straßenseite beide Pfeile aktiv sein.
+       */
+      const verkehrsbeziehungen = toArray(
+        cloneDeep(zaehlung.verkehrsbeziehungen)
+      );
+      isValid = false;
+
+      // Prüfen ob für die gewählten Verkehrsbeziehungen mindestens eine
+      // in selbiger Fahrtrichtung entgegengesetzte Verkehrsbeziehung existiert.
+      for (const verkehrsbeziehung of verkehrsbeziehungen) {
+        const verkehrsbeziehungOppositeDirection = {} as VerkehrsbeziehungDTO;
+        verkehrsbeziehungOppositeDirection.strassenseite =
+          verkehrsbeziehung.strassenseite;
+        verkehrsbeziehungOppositeDirection.von = verkehrsbeziehung.nach;
+        verkehrsbeziehungOppositeDirection.nach = verkehrsbeziehung.von;
+
+        if (!isValid) {
+          const indexOfVerkehrsbeziehungInOppositeDirection = findIndex(
+            verkehrsbeziehungen,
+            function (vb: VerkehrsbeziehungDTO) {
+              return (
+                vb.von === verkehrsbeziehungOppositeDirection.von &&
+                vb.nach === verkehrsbeziehungOppositeDirection.nach &&
+                vb.strassenseite ===
+                  verkehrsbeziehungOppositeDirection.strassenseite
+              );
+            }
+          );
+          // Prüfung ob eine entgegengesetzte Verkehrsbeziehung gefunden wurde.
+          isValid = indexOfVerkehrsbeziehungInOppositeDirection >= 0;
+        }
+      }
+    } else if (zaehlung.zaehlart === Zaehlart.FJS) {
+      /**
+       * Es muss mind. 1 Pfeil pro Knotenarm aktiv sein.
+       */
+      const laengsverkehre = toArray(cloneDeep(zaehlung.laengsverkehr));
+      const laengsverkehreByKnotenarm = new Map<
+        number,
+        Array<LaengsverkehrDTO>
+      >(laengsverkehre.map((laengsverkehr) => [laengsverkehr.knotenarm, []]));
+
+      laengsverkehre.forEach((laengsverkehr) => {
+        laengsverkehreByKnotenarm
+          .get(laengsverkehr.knotenarm)
+          ?.push(laengsverkehr);
+      });
+
+      // Prüfung ob je Knotenarm mindestens ein Laengsverkehr gewählt ist.
+      laengsverkehreByKnotenarm.forEach((laengsverkehreForKnotenarm) => {
+        if (isValid) {
+          isValid = laengsverkehreForKnotenarm.length > 0;
+        }
+      });
+    } else if (zaehlung.zaehlart === Zaehlart.QU) {
+      /**
+       * Es muss mind. 1 Pfeil pro Knotenarm aktiv sein.
+       */
+      const querungsverkehre = toArray(cloneDeep(zaehlung.querungsverkehr));
+      const querungsverkehreByKnotenarm = new Map<
+        number,
+        Array<QuerungsverkehrDTO>
+      >(querungsverkehre.map((laengsverkehr) => [laengsverkehr.knotenarm, []]));
+
+      querungsverkehre.forEach((querungsverkehr) => {
+        querungsverkehreByKnotenarm
+          .get(querungsverkehr.knotenarm)
+          ?.push(querungsverkehr);
+      });
+
+      // Prüfung ob je Knotenarm mindestens ein Querungsverkehr gewählt ist.
+      querungsverkehreByKnotenarm.forEach((querungsverkehreForKnotenarm) => {
+        if (isValid) {
+          isValid = querungsverkehreForKnotenarm.length > 0;
+        }
+      });
+    }
+
     return isValid;
   }
 
