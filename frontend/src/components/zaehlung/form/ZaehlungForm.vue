@@ -136,17 +136,12 @@ watch(
   (newValue, oldValue) => {
     if (oldValue !== undefined && newValue !== oldValue) {
       zaehlung.value.kategorien = [];
+      zaehlung.value.verkehrsbeziehungen = [];
+      zaehlung.value.laengsverkehr = [];
+      zaehlung.value.querungsverkehr = [];
     }
   },
   { immediate: true }
-);
-
-watch(
-  () => eventbus.getSelectedKnotenarme,
-  () => {
-    validateZaehlung();
-  },
-  { immediate: true, deep: true }
 );
 
 const contentHeight = computed(() => {
