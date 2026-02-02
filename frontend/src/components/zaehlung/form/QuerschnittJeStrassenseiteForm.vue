@@ -530,7 +530,7 @@ function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowOne() {
     cloneDeep(selectedVerkehrsbeziehungen.value)
   );
 
-  if (index > 0) {
+  if (index >= 0) {
     verkehrsbeziehungen.splice(index, 1);
   } else {
     verkehrsbeziehungen.push(verkehrsbeziehung);
@@ -551,7 +551,7 @@ function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowTwo() {
     cloneDeep(selectedVerkehrsbeziehungen.value)
   );
 
-  if (index > 0) {
+  if (index >= 0) {
     verkehrsbeziehungen.splice(index, 1);
   } else {
     verkehrsbeziehungen.push(verkehrsbeziehung);
@@ -572,7 +572,7 @@ function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowThree() {
     cloneDeep(selectedVerkehrsbeziehungen.value)
   );
 
-  if (index > 0) {
+  if (index >= 0) {
     verkehrsbeziehungen.splice(index, 1);
   } else {
     verkehrsbeziehungen.push(verkehrsbeziehung);
@@ -593,7 +593,7 @@ function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowFour() {
     cloneDeep(selectedVerkehrsbeziehungen.value)
   );
 
-  if (index > 0) {
+  if (index >= 0) {
     verkehrsbeziehungen.splice(index, 1);
   } else {
     verkehrsbeziehungen.push(verkehrsbeziehung);
@@ -641,7 +641,7 @@ function calculateColorOfVerkehrsbeziehungArrowOne() {
 
   let color = passiveColor;
 
-  if (index > 0) {
+  if (index >= 0) {
     color = activeColor;
   }
 
@@ -658,7 +658,7 @@ function calculateColorOfVerkehrsbeziehungArrowTwo() {
 
   let color = passiveColor;
 
-  if (index > 0) {
+  if (index >= 0) {
     color = activeColor;
   }
 
@@ -675,7 +675,7 @@ function calculateColorOfVerkehrsbeziehungArrowThree() {
 
   let color = passiveColor;
 
-  if (index > 0) {
+  if (index >= 0) {
     color = activeColor;
   }
 
@@ -692,7 +692,7 @@ function calculateColorOfVerkehrsbeziehungArrowFour() {
 
   let color = passiveColor;
 
-  if (index > 0) {
+  if (index >= 0) {
     color = activeColor;
   }
 

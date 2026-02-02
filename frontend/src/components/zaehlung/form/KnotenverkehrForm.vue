@@ -1357,7 +1357,7 @@ function calculateColorOfLaengsverkehr(
     findIndexInSelectedLaengsverkehreForClickedLaengsverkehr(
       clickedLaengsverkehr
     );
-  if (index > 0) {
+  if (index >= 0) {
     color = activeColor;
   }
 
@@ -1382,7 +1382,7 @@ function calculateColorOfQuerungsverkehr(
   const index = findIndexInSelectedQuerungsverkehreForClickedQuerungsverkehr(
     clickedQuerungsverkehr
   );
-  if (index > 0) {
+  if (index >= 0) {
     color = activeColor;
   }
 
@@ -1852,7 +1852,7 @@ function handleClickOnLaengsverkehr(
       clickedLaengsverkehr
     );
 
-  if (index > 0) {
+  if (index >= 0) {
     laengsverkehre.splice(index, 1);
   } else {
     laengsverkehre.push(clickedLaengsverkehr);
@@ -1876,7 +1876,7 @@ function handleClickOnQuerungsverkehr(
     clickedQuerungsverkehr
   );
 
-  if (index > 0) {
+  if (index >= 0) {
     querungsverkehre.splice(index, 1);
   } else {
     querungsverkehre.push(clickedQuerungsverkehr);
