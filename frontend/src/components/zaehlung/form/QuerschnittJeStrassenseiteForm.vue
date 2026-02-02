@@ -268,16 +268,16 @@
           <g
             id="arrow4"
             style="cursor: pointer"
-            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowFour"
+            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowFour()"
           >
             <path
               id="path4"
-              :fill="calculateColorOfVerkehrsbeziehungArrowFour"
+              :fill="calculateColorOfVerkehrsbeziehungArrowFour()"
               d="m 69.999999,860.99999 v -28 H 1330 v 27.997 z"
             />
             <path
               id="spike4"
-              :fill="calculateColorOfVerkehrsbeziehungArrowFour"
+              :fill="calculateColorOfVerkehrsbeziehungArrowFour()"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-544.45264)"
             />
@@ -285,16 +285,16 @@
           <g
             id="arrow3"
             style="cursor: pointer"
-            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowThree"
+            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowThree()"
           >
             <path
               id="path3"
-              :fill="calculateColorOfVerkehrsbeziehungArrowThree"
+              :fill="calculateColorOfVerkehrsbeziehungArrowThree()"
               d="m 69.999999,804.99999 v -28 H 1330 v 27.997 z"
             />
             <path
               id="spike3"
-              :fill="calculateColorOfVerkehrsbeziehungArrowThree"
+              :fill="calculateColorOfVerkehrsbeziehungArrowThree()"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,2182.4526)"
             />
@@ -302,16 +302,16 @@
           <g
             id="arrow2"
             style="cursor: pointer"
-            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowTwo"
+            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowTwo()"
           >
             <path
               id="path2"
-              :fill="calculateColorOfVerkehrsbeziehungArrowTwo"
+              :fill="calculateColorOfVerkehrsbeziehungArrowTwo()"
               d="M 69.999999,623 V 595 H 1330 v 27.997 z"
             />
             <path
               id="spike2"
-              :fill="calculateColorOfVerkehrsbeziehungArrowTwo"
+              :fill="calculateColorOfVerkehrsbeziehungArrowTwo()"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-782.45264)"
             />
@@ -319,16 +319,16 @@
           <g
             id="arrow1"
             style="cursor: pointer"
-            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowOne"
+            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowOne()"
           >
             <path
               id="path1"
-              :fill="calculateColorOfVerkehrsbeziehungArrowOne"
+              :fill="calculateColorOfVerkehrsbeziehungArrowOne()"
               d="M 69.999999,567 V 539 H 1330 v 27.998 z"
             />
             <path
               id="spike1"
-              :fill="calculateColorOfVerkehrsbeziehungArrowOne"
+              :fill="calculateColorOfVerkehrsbeziehungArrowOne()"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,1944.4526)"
             />
@@ -631,7 +631,7 @@ watch(
   { deep: true, immediate: true }
 );
 
-function calculateColorOfVerkehrsbeziehungArrowOne() {
+function calculateColorOfVerkehrsbeziehungArrowOne(): string | undefined {
   const verkehrsbeziehung = createVerkehrsbeziehungArrowOne();
 
   const index =
@@ -648,7 +648,7 @@ function calculateColorOfVerkehrsbeziehungArrowOne() {
   return color;
 }
 
-function calculateColorOfVerkehrsbeziehungArrowTwo() {
+function calculateColorOfVerkehrsbeziehungArrowTwo(): string | undefined {
   const verkehrsbeziehung = createVerkehrsbeziehungArrowTwo();
 
   const index =
@@ -665,7 +665,7 @@ function calculateColorOfVerkehrsbeziehungArrowTwo() {
   return color;
 }
 
-function calculateColorOfVerkehrsbeziehungArrowThree() {
+function calculateColorOfVerkehrsbeziehungArrowThree(): string | undefined {
   const verkehrsbeziehung = createVerkehrsbeziehungArrowThree();
 
   const index =
@@ -682,7 +682,7 @@ function calculateColorOfVerkehrsbeziehungArrowThree() {
   return color;
 }
 
-function calculateColorOfVerkehrsbeziehungArrowFour() {
+function calculateColorOfVerkehrsbeziehungArrowFour(): string | undefined {
   const verkehrsbeziehung = createVerkehrsbeziehungArrowFour();
 
   const index =
