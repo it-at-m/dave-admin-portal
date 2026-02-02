@@ -493,6 +493,31 @@ function createVerkehrsbeziehungArrowThree(): VerkehrsbeziehungDTO {
   return verkehrsbeziehung;
 }
 
+function createVerkehrsbeziehungArrowFour(): VerkehrsbeziehungDTO {
+  const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+  if (availableNodeNumbers.value.includes(1)) {
+    verkehrsbeziehung.von = 3;
+    verkehrsbeziehung.nach = 1;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.O;
+  }
+  if (availableNodeNumbers.value.includes(2)) {
+    verkehrsbeziehung.von = 4;
+    verkehrsbeziehung.nach = 2;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.S;
+  }
+  if (availableNodeNumbers.value.includes(5)) {
+    verkehrsbeziehung.von = 7;
+    verkehrsbeziehung.nach = 5;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.SO;
+  }
+  if (availableNodeNumbers.value.includes(6)) {
+    verkehrsbeziehung.von = 8;
+    verkehrsbeziehung.nach = 6;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.SW;
+  }
+  return verkehrsbeziehung;
+}
+
 function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowOne() {
   const verkehrsbeziehung = createVerkehrsbeziehungArrowOne();
 
@@ -557,27 +582,7 @@ function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowThree() {
 }
 
 function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowFour() {
-  const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
-  if (availableNodeNumbers.value.includes(1)) {
-    verkehrsbeziehung.von = 3;
-    verkehrsbeziehung.nach = 1;
-    verkehrsbeziehung.strassenseite = Himmelsrichtung.O;
-  }
-  if (availableNodeNumbers.value.includes(2)) {
-    verkehrsbeziehung.von = 4;
-    verkehrsbeziehung.nach = 2;
-    verkehrsbeziehung.strassenseite = Himmelsrichtung.S;
-  }
-  if (availableNodeNumbers.value.includes(5)) {
-    verkehrsbeziehung.von = 7;
-    verkehrsbeziehung.nach = 5;
-    verkehrsbeziehung.strassenseite = Himmelsrichtung.SO;
-  }
-  if (availableNodeNumbers.value.includes(6)) {
-    verkehrsbeziehung.von = 8;
-    verkehrsbeziehung.nach = 6;
-    verkehrsbeziehung.strassenseite = Himmelsrichtung.SW;
-  }
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowFour();
 
   const index =
     findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
@@ -678,27 +683,7 @@ function calculateColorOfVerkehrsbeziehungArrowThree() {
 }
 
 function calculateColorOfVerkehrsbeziehungArrowFour() {
-  const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
-  if (availableNodeNumbers.value.includes(1)) {
-    verkehrsbeziehung.von = 3;
-    verkehrsbeziehung.nach = 1;
-    verkehrsbeziehung.strassenseite = Himmelsrichtung.O;
-  }
-  if (availableNodeNumbers.value.includes(2)) {
-    verkehrsbeziehung.von = 4;
-    verkehrsbeziehung.nach = 2;
-    verkehrsbeziehung.strassenseite = Himmelsrichtung.S;
-  }
-  if (availableNodeNumbers.value.includes(5)) {
-    verkehrsbeziehung.von = 7;
-    verkehrsbeziehung.nach = 5;
-    verkehrsbeziehung.strassenseite = Himmelsrichtung.SO;
-  }
-  if (availableNodeNumbers.value.includes(6)) {
-    verkehrsbeziehung.von = 8;
-    verkehrsbeziehung.nach = 6;
-    verkehrsbeziehung.strassenseite = Himmelsrichtung.SW;
-  }
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowFour();
 
   const index =
     findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
@@ -711,24 +696,6 @@ function calculateColorOfVerkehrsbeziehungArrowFour() {
     color = activeColor;
   }
 
-  return color;
-}
-
-/**
- * Wenn die Nummer des Pfeils im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
- * ansonsten in der passiveColor.
- */
-function calculateColor(arrow: string): string | undefined {
-  let color = passiveColor;
-  if (
-    !isEmpty(
-      selectedKnotenarme.value.filter(
-        (selectedArrow) => selectedArrow === arrow
-      )
-    )
-  ) {
-    color = activeColor;
-  }
   return color;
 }
 
