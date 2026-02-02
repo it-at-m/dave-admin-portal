@@ -110,7 +110,7 @@ export function useValidationUtils() {
       const laengsverkehreByKnotenarm = new Map<
         number,
         Array<LaengsverkehrDTO>
-      >(laengsverkehre.map((laengsverkehr) => [laengsverkehr.knotenarm, []]));
+      >(zaehlung.knotenarme.map((knotenarm) => [knotenarm.nummer, []]));
 
       laengsverkehre.forEach((laengsverkehr) => {
         laengsverkehreByKnotenarm
@@ -132,7 +132,7 @@ export function useValidationUtils() {
       const querungsverkehreByKnotenarm = new Map<
         number,
         Array<QuerungsverkehrDTO>
-      >(querungsverkehre.map((laengsverkehr) => [laengsverkehr.knotenarm, []]));
+      >(zaehlung.knotenarme.map((knotenarm) => [knotenarm.nummer, []]));
 
       querungsverkehre.forEach((querungsverkehr) => {
         querungsverkehreByKnotenarm
