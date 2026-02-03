@@ -1,8 +1,10 @@
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
 import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
 
 import { describe, expect, it } from "vitest";
 
+import Bewegungsrichtung from "@/types/enum/Bewegungsrichtung";
 import Fahrzeug from "@/types/enum/Fahrzeug";
 import Himmelsrichtung from "@/types/enum/Himmelsrichtung";
 import Zaehlart from "@/types/enum/Zaehlart";
@@ -226,6 +228,121 @@ describe("ValidationUtils.ts", () => {
     zaehlung.knotenarme.push(knotenarm);
 
     zaehlung.querungsverkehr = [];
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = false;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartFjsKnotenarmOneAndThreeAndEachLaengsverkehrForEachKnotenarmSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.FJS;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    let laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 1;
+    laengsverkehr.richtung = Bewegungsrichtung.EIN;
+    laengsverkehr.strassenseite = Himmelsrichtung.W;
+    zaehlung.laengsverkehr.push(laengsverkehr);
+    laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 1;
+    laengsverkehr.richtung = Bewegungsrichtung.AUS;
+    laengsverkehr.strassenseite = Himmelsrichtung.W;
+    zaehlung.laengsverkehr.push(laengsverkehr);
+    laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 1;
+    laengsverkehr.richtung = Bewegungsrichtung.EIN;
+    laengsverkehr.strassenseite = Himmelsrichtung.O;
+    zaehlung.laengsverkehr.push(laengsverkehr);
+    laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 1;
+    laengsverkehr.richtung = Bewegungsrichtung.AUS;
+    laengsverkehr.strassenseite = Himmelsrichtung.O;
+    zaehlung.laengsverkehr.push(laengsverkehr);
+    laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 3;
+    laengsverkehr.richtung = Bewegungsrichtung.EIN;
+    laengsverkehr.strassenseite = Himmelsrichtung.W;
+    zaehlung.laengsverkehr.push(laengsverkehr);
+    laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 3;
+    laengsverkehr.richtung = Bewegungsrichtung.AUS;
+    laengsverkehr.strassenseite = Himmelsrichtung.W;
+    zaehlung.laengsverkehr.push(laengsverkehr);
+    laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 3;
+    laengsverkehr.richtung = Bewegungsrichtung.EIN;
+    laengsverkehr.strassenseite = Himmelsrichtung.O;
+    zaehlung.laengsverkehr.push(laengsverkehr);
+    laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 3;
+    laengsverkehr.richtung = Bewegungsrichtung.AUS;
+    laengsverkehr.strassenseite = Himmelsrichtung.O;
+    zaehlung.laengsverkehr.push(laengsverkehr);
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = true;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartFjsKnotenarmOneAndThreeAndOneLaengsverkehrForEachKnotenarmSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.FJS;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    let laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 1;
+    laengsverkehr.richtung = Bewegungsrichtung.EIN;
+    laengsverkehr.strassenseite = Himmelsrichtung.W;
+    zaehlung.laengsverkehr.push(laengsverkehr);
+    laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 3;
+    laengsverkehr.richtung = Bewegungsrichtung.EIN;
+    laengsverkehr.strassenseite = Himmelsrichtung.W;
+    zaehlung.laengsverkehr.push(laengsverkehr);
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = true;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartFjsKnotenarmOneAndThreeAndOneLaengsverkehrForOneKnotenarmSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.FJS;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    const laengsverkehr = {} as LaengsverkehrDTO;
+    laengsverkehr.knotenarm = 1;
+    laengsverkehr.richtung = Bewegungsrichtung.EIN;
+    laengsverkehr.strassenseite = Himmelsrichtung.W;
+    zaehlung.laengsverkehr.push(laengsverkehr);
 
     const result = validationUtils.validateVerkehrForm(zaehlung);
     const expected = false;
