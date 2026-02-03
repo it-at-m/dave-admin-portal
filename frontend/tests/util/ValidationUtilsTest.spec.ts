@@ -1,6 +1,7 @@
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
 import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
+import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 
 import { describe, expect, it } from "vitest";
 
@@ -343,6 +344,131 @@ describe("ValidationUtils.ts", () => {
     laengsverkehr.richtung = Bewegungsrichtung.EIN;
     laengsverkehr.strassenseite = Himmelsrichtung.W;
     zaehlung.laengsverkehr.push(laengsverkehr);
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = false;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartQjsKnotenarmOneAndThreeAndEachVerkehrsbeziehungForEachKnotenarmSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.QJS;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    let verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+    verkehrsbeziehung.von = 1;
+    verkehrsbeziehung.nach = 3;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.W;
+    zaehlung.verkehrsbeziehungen.push(verkehrsbeziehung);
+    verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+    verkehrsbeziehung.von = 3;
+    verkehrsbeziehung.nach = 1;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.W;
+    zaehlung.verkehrsbeziehungen.push(verkehrsbeziehung);
+    verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+    verkehrsbeziehung.von = 1;
+    verkehrsbeziehung.nach = 3;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.O;
+    zaehlung.verkehrsbeziehungen.push(verkehrsbeziehung);
+    verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+    verkehrsbeziehung.von = 3;
+    verkehrsbeziehung.nach = 1;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.O;
+    zaehlung.verkehrsbeziehungen.push(verkehrsbeziehung);
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = true;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartQjsKnotenarmOneAndThreeAndEachVerkehrsbeziehungForOneKnotenarmSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.QJS;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    let verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+    verkehrsbeziehung.von = 1;
+    verkehrsbeziehung.nach = 3;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.W;
+    zaehlung.verkehrsbeziehungen.push(verkehrsbeziehung);
+    verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+    verkehrsbeziehung.von = 3;
+    verkehrsbeziehung.nach = 1;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.W;
+    zaehlung.verkehrsbeziehungen.push(verkehrsbeziehung);
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = true;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartQjsKnotenarmOneAndThreeAndOneVerkehrsbeziehungForEachKnotenarmSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.QJS;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    let verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+    verkehrsbeziehung.von = 1;
+    verkehrsbeziehung.nach = 3;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.W;
+    zaehlung.verkehrsbeziehungen.push(verkehrsbeziehung);
+    verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+    verkehrsbeziehung.von = 1;
+    verkehrsbeziehung.nach = 3;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.O;
+    zaehlung.verkehrsbeziehungen.push(verkehrsbeziehung);
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = false;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartQjsKnotenarmOneAndThreeAndOneVerkehrsbeziehungForOneKnotenarmSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.QJS;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+    verkehrsbeziehung.von = 1;
+    verkehrsbeziehung.nach = 3;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.W;
+    zaehlung.verkehrsbeziehungen.push(verkehrsbeziehung);
 
     const result = validationUtils.validateVerkehrForm(zaehlung);
     const expected = false;
