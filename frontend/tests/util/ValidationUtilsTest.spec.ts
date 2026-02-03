@@ -1,8 +1,10 @@
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
 
 import { describe, expect, it } from "vitest";
 
 import Fahrzeug from "@/types/enum/Fahrzeug";
+import Himmelsrichtung from "@/types/enum/Himmelsrichtung";
 import Zaehlart from "@/types/enum/Zaehlart";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { useValidationUtils } from "@/util/ValidationUtils";
@@ -107,6 +109,126 @@ describe("ValidationUtils.ts", () => {
     zaehlung.kategorien = [];
     result = validationUtils.validateVerkehrsartForm(zaehlung);
     expected = true;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormNotZaehlartQjsFjsQu", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.N;
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = true;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartQuKnotenarmOneAndThreeAndAllQuerungenSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.QU;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    let querungsverkehr = {} as QuerungsverkehrDTO;
+    querungsverkehr.knotenarm = 1;
+    querungsverkehr.richtung = Himmelsrichtung.W;
+    zaehlung.querungsverkehr.push(querungsverkehr);
+    querungsverkehr = {} as QuerungsverkehrDTO;
+    querungsverkehr.knotenarm = 1;
+    querungsverkehr.richtung = Himmelsrichtung.O;
+    zaehlung.querungsverkehr.push(querungsverkehr);
+    querungsverkehr = {} as QuerungsverkehrDTO;
+    querungsverkehr.knotenarm = 3;
+    querungsverkehr.richtung = Himmelsrichtung.W;
+    zaehlung.querungsverkehr.push(querungsverkehr);
+    querungsverkehr = {} as QuerungsverkehrDTO;
+    querungsverkehr.knotenarm = 3;
+    querungsverkehr.richtung = Himmelsrichtung.O;
+    zaehlung.querungsverkehr.push(querungsverkehr);
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = true;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartQuKnotenarmOneAndThreeAndOneQuerungForEachKnotenarmSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.QU;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    let querungsverkehr = {} as QuerungsverkehrDTO;
+    querungsverkehr.knotenarm = 1;
+    querungsverkehr.richtung = Himmelsrichtung.W;
+    zaehlung.querungsverkehr.push(querungsverkehr);
+    querungsverkehr = {} as QuerungsverkehrDTO;
+    querungsverkehr.knotenarm = 3;
+    querungsverkehr.richtung = Himmelsrichtung.O;
+    zaehlung.querungsverkehr.push(querungsverkehr);
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = true;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartQuKnotenarmOneAndThreeAndOneQuerungAtOneKnotenarmSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.QU;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    const querungsverkehr = {} as QuerungsverkehrDTO;
+    querungsverkehr.knotenarm = 1;
+    querungsverkehr.richtung = Himmelsrichtung.W;
+    zaehlung.querungsverkehr.push(querungsverkehr);
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = false;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartQuKnotenarmOneAndThreeAndNoQuerungSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.QU;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    zaehlung.querungsverkehr = [];
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = false;
     expect(result).toStrictEqual(expected);
   });
 });
