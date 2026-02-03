@@ -350,6 +350,27 @@ describe("ValidationUtils.ts", () => {
     expect(result).toStrictEqual(expected);
   });
 
+  it("validateVerkehrFormZaehlartFjsKnotenarmOneAndThreeAndNoLaengsverkehrSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.FJS;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    zaehlung.laengsverkehr = [];
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = false;
+    expect(result).toStrictEqual(expected);
+  });
+
   it("validateVerkehrFormZaehlartQjsKnotenarmOneAndThreeAndEachVerkehrsbeziehungForEachKnotenarmSelected", () => {
     const validationUtils = useValidationUtils();
 
@@ -469,6 +490,27 @@ describe("ValidationUtils.ts", () => {
     verkehrsbeziehung.nach = 3;
     verkehrsbeziehung.strassenseite = Himmelsrichtung.W;
     zaehlung.verkehrsbeziehungen.push(verkehrsbeziehung);
+
+    const result = validationUtils.validateVerkehrForm(zaehlung);
+    const expected = false;
+    expect(result).toStrictEqual(expected);
+  });
+
+  it("validateVerkehrFormZaehlartQjsKnotenarmOneAndThreeAndNoVerkehrsbeziehungSelected", () => {
+    const validationUtils = useValidationUtils();
+
+    const zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
+
+    zaehlung.zaehlart = Zaehlart.QJS;
+    zaehlung.knotenarme = [];
+    let knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 1;
+    zaehlung.knotenarme.push(knotenarm);
+    knotenarm = {} as KnotenarmDTO;
+    knotenarm.nummer = 3;
+    zaehlung.knotenarme.push(knotenarm);
+
+    zaehlung.verkehrsbeziehungen = [];
 
     const result = validationUtils.validateVerkehrForm(zaehlung);
     const expected = false;
