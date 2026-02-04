@@ -40,7 +40,7 @@
       </v-tab>
       <v-tab :value="TAB_KONFIGURATION">
         <v-icon>mdi-cog-outline</v-icon>
-        Konfiguration
+        Anwendungskonfiguration
       </v-tab>
     </v-tabs>
     <v-tabs-window
