@@ -39,7 +39,7 @@
         Administration
       </v-tab>
       <v-tab :value="TAB_KONFIGURATION">
-        <v-icon>mdi-shield-crown-outline</v-icon>
+        <v-icon>mdi-cog-outline</v-icon>
         Konfiguration
       </v-tab>
     </v-tabs>
