@@ -1912,8 +1912,6 @@ function findIndexInSelectedQuerungsverkehreForClickedQuerungsverkehr(
   );
 }
 
-selectedQuerungsverkehre;
-
 function createLaengsverkehr(
   knotenarm: number,
   richtung: Bewegungsrichtung,
