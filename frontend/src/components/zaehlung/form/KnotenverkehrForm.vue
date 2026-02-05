@@ -9,7 +9,7 @@
     <svg
       :height="height"
       :width="height"
-      viewBox="13891 17287 1111 1111"
+      viewBox="0 0 1400 1400"
       preserveAspectRatio="xMidYMid"
       fill-rule="evenodd"
       stroke-width="28.222"
@@ -20,38 +20,36 @@
       <g
         id="nodes5To8"
         class="Page"
-        transform="rotate(45,14344.644,17924.82)"
+        transform="rotate(45,700,700)"
       >
         <g
           id="node8_group"
           class="com.sun.star.drawing.ClosedBezierShape"
-          transform="rotate(-90,14358.457,17794.588)"
+          transform="rotate(-90,700,700)"
         >
-          <g
-            id="node8"
-            transform="matrix(1,0,0,1.0009009,-18.516399,-18.516303)"
-          >
+          <g id="node8">
             <path
-              id="path117"
-              d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
+              id="node8_spike"
+              d="m 661.11087,699.99998 v -568.4076 l 38.889,-53.8146 38.889,53.8135 v 568.4087 z"
               :fill="getColorOfKnotenarm(8)"
               stroke="none"
             />
             <text
-              id="text117"
+              id="node8_spike_text"
+              class="prevent-select"
               xml:space="preserve"
               style="
-                font-size: 63.0885px;
+                font-size: 63.0899px;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #ffffff;
-                stroke-width: 38.9418;
+                stroke-width: 38.9426;
               "
-              x="23207.291"
-              y="2053.7427"
-              transform="matrix(0.68301124,0.68239646,-0.73271189,0.73205238,0,0)"
+              x="603.00354"
+              y="-354.56787"
+              transform="matrix(0.68244987,0.68244987,-0.73265455,0.73265455,0,0)"
               :style="{ cursor: getCursorType(8) }"
               @click="activateOrDeactivateTotalKnotenarm(8)"
             >
@@ -64,12 +62,11 @@
           >
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node8_left"
-              transform="matrix(0.94605826,0,0,0.98386895,758.7668,274.96713)"
+              id="node8_south_west"
             >
               <path
-                id="path118"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node8_south_west_north_west"
+                d="m 621.66642,364.92523 v -194.445 h -11.111 l 19.443,-38.888 19.446,38.888 h -11.111 v 194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -88,8 +85,8 @@
                 "
               />
               <path
-                id="path119"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node8_south_west_south_east"
+                d="m 599.44453,131.59223 v 194.445 h 11.111 l -19.444,38.888 -19.445,-38.888 h 11.111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -110,12 +107,11 @@
             </g>
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node8_right"
-              transform="matrix(0.94605826,0,0,0.98386895,906.90013,274.96713)"
+              id="node8_north_east"
             >
               <path
-                id="path120"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node8_north_east_north_west"
+                d="m 800.55532,364.92563 v -194.4453 h -11.111 l 19.444,-38.8881 19.445,38.8881 h -11.111 v 194.4453 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -134,8 +130,8 @@
                 "
               />
               <path
-                id="path121"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node8_north_east_south_east"
+                d="m 778.33343,131.59223 v 194.445 h 11.111 l -19.443,38.888 -19.446,-38.888 h 11.111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -157,19 +153,18 @@
             <g
               v-if="zaehlung.zaehlart === Zaehlart.QU"
               id="node8_crossing"
-              transform="matrix(0,0.94605826,-0.79773158,0,28267.575,4038.8282)"
             >
               <path
-                id="path124"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node8_crossing_north_east"
+                d="m 583.33335,322.22223 h 194.44503 v -11.11111 l 38.88831,19.44345 -38.88831,19.44544 V 338.88889 H 583.33335 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(8, Himmelsrichtung.NO)"
                 @click="handleClickOnQuerungsverkehr(8, Himmelsrichtung.NO)"
               />
               <path
-                id="path125"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node8_crossing_south_west"
+                d="M 816.66669,299.99959 H 622.22175 v 11.11153 l -38.8884,-19.4435 38.8884,-19.44539 v 11.11057 h 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(8, Himmelsrichtung.SW)"
@@ -181,33 +176,30 @@
         <g
           id="node7_group"
           class="com.sun.star.drawing.ClosedBezierShape"
-          transform="rotate(180,14358.458,17794.588)"
         >
-          <g
-            id="node7"
-            transform="matrix(1,0,0,1.0009009,-18.516399,-18.516303)"
-          >
+          <g id="node7">
             <path
-              id="path108"
-              d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
+              id="node7_spike"
+              d="m 738.88891,700.00002 v 568.40778 l -38.88831,53.8145 -38.88947,-53.8143 V 700.00002 Z"
               :fill="getColorOfKnotenarm(7)"
               stroke="none"
             />
             <text
-              id="text108"
+              id="node7_text"
+              class="prevent-select"
               xml:space="preserve"
               style="
-                font-size: 63.0885px;
+                font-size: 63.0799px;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #ffffff;
-                stroke-width: 38.9418;
+                stroke-width: 38.9365;
               "
-              x="2159.0249"
-              y="-21628.908"
-              transform="matrix(-0.68301123,0.68239646,-0.73271189,-0.73205239,0,0)"
+              x="-424.5455"
+              y="1352.3147"
+              transform="matrix(0.68289963,-0.68289963,0.73217202,0.73217202,0,0)"
               :style="{ cursor: getCursorType(7) }"
               @click="activateOrDeactivateTotalKnotenarm(7)"
             >
@@ -220,12 +212,11 @@
           >
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node7_left"
-              transform="matrix(0.94605826,0,0,0.98386895,758.7668,274.96713)"
+              id="node7_south_east"
             >
               <path
-                id="path109"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node7_south_east_south_west"
+                d="m 778.33336,1035.0745 v 194.445 h 11.11111 l -19.44345,38.8883 -19.44544,-38.8883 h 11.11111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -244,8 +235,8 @@
                 "
               />
               <path
-                id="path110"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node7_south_east_north_east"
+                d="m 800.55599,1268.4078 v -194.4449 h -11.11152 l 19.4435,-38.8884 19.44539,38.8884 h -11.11057 v 194.4449 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -266,12 +257,11 @@
             </g>
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node7_right"
-              transform="matrix(0.94605826,0,0,0.98386895,906.90013,274.96713)"
+              id="node7_north_west"
             >
               <path
-                id="path111"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node7_north_west_south_west"
+                d="m 599.44446,1035.0745 v 194.445 h 11.11111 l -19.44345,38.8883 -19.44544,-38.8883 h 11.11111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -290,8 +280,8 @@
                 "
               />
               <path
-                id="path112"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node7_north_west_north_east"
+                d="m 621.66709,1268.4078 v -194.4449 h -11.11152 l 19.4435,-38.8884 19.44539,38.8884 h -11.11057 v 194.4449 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -313,19 +303,18 @@
             <g
               v-if="zaehlung.zaehlart === Zaehlart.QU"
               id="node7_crossing"
-              transform="matrix(0,0.94605826,-0.79773158,0,28267.575,4038.8282)"
             >
               <path
-                id="path115"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node7_crossing_north_west"
+                d="M 808.33025,1077.7756 H 613.88531 v 11.1116 l -38.8884,-19.4435 38.8884,-19.4454 v 11.1105 h 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(7, Himmelsrichtung.NW)"
                 @click="handleClickOnQuerungsverkehr(7, Himmelsrichtung.NW)"
               />
               <path
-                id="path116"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node7_crossing_south_east"
+                d="m 591.66231,1099.9989 h 194.44506 v -11.1112 l 38.8883,19.4435 -38.8883,19.4454 v -11.1111 H 591.66231 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(7, Himmelsrichtung.SO)"
@@ -337,33 +326,31 @@
         <g
           id="node6_group"
           class="com.sun.star.drawing.ClosedBezierShape"
-          transform="rotate(90,14358.458,17794.588)"
+          transform="rotate(90,700,700)"
         >
-          <g
-            id="node6"
-            transform="matrix(1,0,0,1.0009009,-18.516399,-18.516303)"
-          >
+          <g id="node6">
             <path
-              id="path99"
-              d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
+              id="node6_spike"
+              d="m 661.11113,699.99998 v -568.408 l 38.889,-53.814 38.889,53.813 v 568.409 z"
               :fill="getColorOfKnotenarm(6)"
               stroke="none"
             />
             <text
-              id="text99"
+              id="node6_spike_text"
+              class="prevent-select"
               xml:space="preserve"
               style="
-                font-size: 63.0885px;
+                font-size: 63.0799px;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #ffffff;
-                stroke-width: 38.9418;
+                stroke-width: 38.9365;
               "
-              x="-23247.984"
-              y="-2008.0264"
-              transform="matrix(-0.68301123,-0.68239646,0.73271189,-0.73205239,0,0)"
+              x="-640.21271"
+              y="397.35382"
+              transform="matrix(-0.68289963,-0.68289963,0.73217202,-0.73217202,0,0)"
               :style="{ cursor: getCursorType(6) }"
               @click="activateOrDeactivateTotalKnotenarm(6)"
             >
@@ -376,12 +363,11 @@
           >
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node6_left"
-              transform="matrix(0.94605826,0,0,0.98386895,758.7668,274.96713)"
+              id="node6_north_east"
             >
               <path
-                id="path100"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node6_north_east_south_east"
+                d="m 621.66667,364.92553 v -194.445 h -11.1111 l 19.4435,-38.888 19.4454,38.888 h -11.1111 v 194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -400,8 +386,8 @@
                 "
               />
               <path
-                id="path101"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node6_north_east_north_west"
+                d="m 599.44448,131.59253 v 194.445 h 11.1111 l -19.4434,38.888 -19.4455,-38.888 h 11.1111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -422,12 +408,11 @@
             </g>
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node6_right"
-              transform="matrix(0.94605826,0,0,0.98386895,906.90013,274.96713)"
+              id="node6_south_west"
             >
               <path
-                id="path102"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node6_south_west_south_east"
+                d="m 800.55557,364.92553 v -194.445 h -11.1111 l 19.4434,-38.888 19.4455,38.888 h -11.1111 v 194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -446,8 +431,8 @@
                 "
               />
               <path
-                id="path103"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node6_south_west_north_west"
+                d="m 778.33338,131.59253 v 194.445 h 11.1111 l -19.4435,38.888 -19.4454,-38.888 h 11.1111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -469,19 +454,18 @@
             <g
               v-if="zaehlung.zaehlart === Zaehlart.QU"
               id="node6_crossing"
-              transform="matrix(0,0.94605826,-0.79773158,0,28267.575,4038.8282)"
             >
               <path
-                id="path106"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node6_crossing_south_west"
+                d="m 583.33335,322.22223 h 194.44503 v -11.11111 l 38.88831,19.44345 -38.88831,19.44544 V 338.88889 H 583.33335 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(6, Himmelsrichtung.SW)"
                 @click="handleClickOnQuerungsverkehr(6, Himmelsrichtung.SW)"
               />
               <path
-                id="path107"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node6_crossing_north_east"
+                d="M 816.66669,299.99959 H 622.22175 v 11.11153 l -38.8884,-19.4435 38.8884,-19.44539 v 11.11057 h 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(6, Himmelsrichtung.NO)"
@@ -494,31 +478,29 @@
           id="node5_group"
           class="com.sun.star.drawing.ClosedBezierShape"
         >
-          <g
-            id="node5_arrow"
-            transform="matrix(1,0,0,1.0009009,-18.516399,-18.516303)"
-          >
+          <g id="node5_arrow">
             <path
-              id="path90"
-              d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
+              id="node5_spike"
+              d="M 661.11113,700.00002 V 131.59223 l 38.88831,-53.81445 38.88947,53.8143 v 568.40794 z"
               :fill="getColorOfKnotenarm(5)"
               stroke="none"
             />
             <text
-              id="text90"
+              id="node5_spike_text"
+              class="prevent-select"
               xml:space="preserve"
               style="
-                font-size: 63.0885px;
+                font-size: 63.0799px;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #ffffff;
-                stroke-width: 38.9418;
+                stroke-width: 38.9365;
               "
-              x="-2199.2236"
-              y="21674.625"
-              transform="matrix(0.68301124,-0.68239646,0.73271189,0.73205238,0,0)"
+              x="371.39447"
+              y="610.23108"
+              transform="matrix(0.68289962,-0.68289962,0.73217203,0.73217203,0,0)"
               :style="{ cursor: getCursorType(5) }"
               @click="activateOrDeactivateTotalKnotenarm(5)"
             >
@@ -531,12 +513,11 @@
           >
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node5_left"
-              transform="matrix(0.94605826,0,0,0.98386895,758.7668,274.96713)"
+              id="node5_north_west"
             >
               <path
-                id="path91"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node5_north_west_north_east"
+                d="M 621.66709,364.92557 V 170.48063 h -11.11152 l 19.4435,-38.8884 19.44539,38.8884 h -11.11057 v 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -555,8 +536,8 @@
                 "
               />
               <path
-                id="path92"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node5_north_west_south_west"
+                d="m 599.44446,131.59223 v 194.44503 h 11.11111 l -19.44345,38.88831 -19.44544,-38.88831 h 11.11111 V 131.59223 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -577,12 +558,11 @@
             </g>
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node5_right"
-              transform="matrix(0.94605826,0,0,0.98386895,906.90013,274.96713)"
+              id="node5_south_east"
             >
               <path
-                id="path93"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node5_south_east_north_east"
+                d="M 800.55599,364.92557 V 170.48063 h -11.11152 l 19.4435,-38.8884 19.44539,38.8884 h -11.11057 v 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -601,8 +581,8 @@
                 "
               />
               <path
-                id="path94"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node5_south_east_south_west"
+                d="m 778.33336,131.59223 v 194.44503 h 11.11111 l -19.44345,38.88831 -19.44544,-38.88831 h 11.11111 V 131.59223 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -624,19 +604,18 @@
             <g
               v-if="zaehlung.zaehlart === Zaehlart.QU"
               id="node5_crossing"
-              transform="matrix(0,0.94605826,-0.79773158,0,28267.575,4038.8282)"
             >
               <path
-                id="path97"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node5_crossing_south_east"
+                d="m 583.33335,322.22223 h 194.44503 v -11.11111 l 38.88831,19.44345 -38.88831,19.44544 V 338.88889 H 583.33335 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(5, Himmelsrichtung.SO)"
                 @click="handleClickOnQuerungsverkehr(5, Himmelsrichtung.SO)"
               />
               <path
-                id="path98"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node5_crossing_north_west"
+                d="M 816.66669,299.99959 H 622.22175 v 11.11153 l -38.8884,-19.4435 38.8884,-19.44539 v 11.11057 h 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(5, Himmelsrichtung.NW)"
@@ -650,38 +629,35 @@
       <g
         id="nodes1To4"
         class="Page"
-        transform="translate(88.042487,47.911987)"
       >
         <g
           id="node4_group"
           class="com.sun.star.drawing.ClosedBezierShape"
-          transform="rotate(-90,14358.457,17794.588)"
+          transform="rotate(-90,700,700)"
         >
-          <g
-            id="node4"
-            transform="matrix(1,0,0,1.0009009,-18.516399,-18.516303)"
-          >
+          <g id="node4">
             <path
-              id="path81"
-              d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
+              id="node4_spike"
+              d="m 661.11087,699.99998 v -568.4076 l 38.889,-53.8146 38.889,53.8135 v 568.4087 z"
               :fill="getColorOfKnotenarm(4)"
               stroke="none"
             />
             <text
-              id="text81"
+              id="node4_spike_text"
+              class="prevent-select"
               xml:space="preserve"
               style="
-                font-size: 63.0885px;
+                font-size: 63.0899px;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #ffffff;
-                stroke-width: 38.9418;
+                stroke-width: 38.9426;
               "
-              x="17945.223"
-              y="-13850.833"
-              transform="matrix(0,0.96505434,-1.0362111,0,0,0)"
+              x="133.91887"
+              y="-654.36975"
+              transform="matrix(0,0.96512986,-1.03613,0,0,0)"
               :style="{ cursor: getCursorType(4) }"
               @click="activateOrDeactivateTotalKnotenarm(4)"
             >
@@ -695,12 +671,11 @@
           >
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node4_left"
-              transform="matrix(0.94605826,0,0,0.98386895,758.7668,274.96713)"
+              id="node4_south"
             >
               <path
-                id="path82"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node4_south_west"
+                d="m 621.66642,364.92523 v -194.445 h -11.111 l 19.443,-38.888 19.446,38.888 h -11.111 v 194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -719,8 +694,8 @@
                 "
               />
               <path
-                id="path83"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node4_south_east"
+                d="m 599.44453,131.59223 v 194.445 h 11.111 l -19.444,38.888 -19.445,-38.888 h 11.111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -741,12 +716,11 @@
             </g>
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node4_right"
-              transform="matrix(0.94605826,0,0,0.98386895,906.90013,274.96713)"
+              id="node4_north"
             >
               <path
-                id="path84"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node4_north_west"
+                d="m 800.55532,364.92563 v -194.4453 h -11.111 l 19.444,-38.8881 19.445,38.8881 h -11.111 v 194.4453 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -765,8 +739,8 @@
                 "
               />
               <path
-                id="path85"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node4_north_east"
+                d="m 778.33343,131.59223 v 194.445 h 11.111 l -19.443,38.888 -19.446,-38.888 h 11.111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -788,19 +762,18 @@
             <g
               v-if="zaehlung.zaehlart === Zaehlart.QU"
               id="node4_crossing"
-              transform="matrix(0,0.94605826,-0.79773158,0,28267.575,4038.8282)"
             >
               <path
-                id="path88"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node4_crossing_north"
+                d="m 583.33335,322.22223 h 194.44503 v -11.11111 l 38.88831,19.44345 -38.88831,19.44544 V 338.88889 H 583.33335 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(4, Himmelsrichtung.N)"
                 @click="handleClickOnQuerungsverkehr(4, Himmelsrichtung.N)"
               />
               <path
-                id="path89"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node4_crossing_south"
+                d="M 816.66669,299.99959 H 622.22175 v 11.11153 l -38.8884,-19.4435 38.8884,-19.44539 v 11.11057 h 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(4, Himmelsrichtung.S)"
@@ -812,33 +785,30 @@
         <g
           id="node3_group"
           class="com.sun.star.drawing.ClosedBezierShape"
-          transform="rotate(180,14358.458,17794.588)"
         >
-          <g
-            id="node3"
-            transform="matrix(1,0,0,1.0009009,-18.516399,-18.516303)"
-          >
+          <g id="node3">
             <path
-              id="path72"
-              d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
+              id="node3_spike"
+              d="m 738.88891,700.00002 v 568.40778 l -38.88831,53.8145 -38.88947,-53.8143 V 700.00002 Z"
               :fill="getColorOfKnotenarm(3)"
               stroke="none"
             />
             <text
-              id="text72"
+              id="node3_spike_text"
+              class="prevent-select"
               xml:space="preserve"
               style="
-                font-size: 63.0885px;
+                font-size: 63.0799px;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #ffffff;
-                stroke-width: 38.9418;
+                stroke-width: 38.9365;
               "
-              x="-14903.439"
-              y="-16723.537"
-              transform="scale(-0.96592375,-1.0352784)"
+              x="701.77631"
+              y="1229.7999"
+              transform="scale(0.96576591,1.0354476)"
               :style="{ cursor: getCursorType(3) }"
               @click="activateOrDeactivateTotalKnotenarm(3)"
             >
@@ -852,12 +822,11 @@
           >
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node3_left"
-              transform="matrix(0.94605826,0,0,0.98386895,758.7668,274.96713)"
+              id="node3_east"
             >
               <path
-                id="path73"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node3_east_south"
+                d="m 778.33336,1035.0745 v 194.445 h 11.11111 l -19.44345,38.8883 -19.44544,-38.8883 h 11.11111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -876,8 +845,8 @@
                 "
               />
               <path
-                id="path74"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node3_east_north"
+                d="m 800.55599,1268.4078 v -194.4449 h -11.11152 l 19.4435,-38.8884 19.44539,38.8884 h -11.11057 v 194.4449 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -898,12 +867,11 @@
             </g>
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node3_right"
-              transform="matrix(0.94605826,0,0,0.98386895,906.90013,274.96713)"
+              id="node3_west"
             >
               <path
-                id="path75"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node3_west_south"
+                d="m 599.44446,1035.0745 v 194.445 h 11.11111 l -19.44345,38.8883 -19.44544,-38.8883 h 11.11111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -922,8 +890,8 @@
                 "
               />
               <path
-                id="path76"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node3_west_north"
+                d="m 621.66709,1268.4078 v -194.4449 h -11.11152 l 19.4435,-38.8884 19.44539,38.8884 h -11.11057 v 194.4449 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -945,19 +913,18 @@
             <g
               v-if="zaehlung.zaehlart === Zaehlart.QU"
               id="node3_crossing"
-              transform="matrix(0,0.94605826,-0.79773158,0,28267.575,4038.8282)"
             >
               <path
-                id="path79"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node3_crossing_west"
+                d="M 816.66669,1077.7774 H 622.22175 v 11.1115 l -38.8884,-19.4435 38.8884,-19.4454 v 11.1106 h 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(3, Himmelsrichtung.W)"
                 @click="handleClickOnQuerungsverkehr(3, Himmelsrichtung.W)"
               />
               <path
-                id="path80"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node3_crossing_east"
+                d="m 583.33335,1100 h 194.44503 v -11.1111 l 38.88831,19.4435 -38.88831,19.4454 v -11.1111 H 583.33335 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(3, Himmelsrichtung.O)"
@@ -969,33 +936,31 @@
         <g
           id="node2_group"
           class="com.sun.star.drawing.ClosedBezierShape"
-          transform="rotate(90,14358.458,17794.588)"
+          transform="rotate(90, 700, 700)"
         >
-          <g
-            id="node2"
-            transform="matrix(1,0,0,1.0009009,-18.516399,-18.516303)"
-          >
+          <g id="node2">
             <path
-              id="path54"
-              d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
+              id="node2_spike"
+              d="m 661.11113,699.99998 v -568.408 l 38.889,-53.814 38.889,53.813 v 568.409 z"
               :fill="getColorOfKnotenarm(2)"
               stroke="none"
             />
             <text
-              id="text54"
+              id="node2_spike_text"
+              class="prevent-select"
               xml:space="preserve"
               style="
-                font-size: 63.0885px;
+                font-size: 63.0799px;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #ffffff;
-                stroke-width: 38.9418;
+                stroke-width: 38.9365;
               "
-              x="-17983.836"
-              y="13896.666"
-              transform="matrix(0,-0.96505434,1.0362111,0,0,0)"
+              x="-174.92575"
+              y="696.33978"
+              transform="matrix(0,-0.96576591,1.0354476,0,0,0)"
               :style="{ cursor: getCursorType(2) }"
               @click="activateOrDeactivateTotalKnotenarm(2)"
             >
@@ -1009,12 +974,11 @@
           >
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node2_left"
-              transform="matrix(0.94605826,0,0,0.98386895,758.7668,274.96713)"
+              id="node2_north"
             >
               <path
-                id="path55"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node2_north_east"
+                d="m 621.66667,364.92553 v -194.445 h -11.1111 l 19.4435,-38.888 19.4454,38.888 h -11.1111 v 194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -1033,8 +997,8 @@
                 "
               />
               <path
-                id="path56"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node2_north_west"
+                d="m 599.44448,131.59253 v 194.445 h 11.1111 l -19.4434,38.888 -19.4455,-38.888 h 11.1111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -1055,12 +1019,11 @@
             </g>
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node2_right"
-              transform="matrix(0.94605826,0,0,0.98386895,906.90013,274.96713)"
+              id="node2_south"
             >
               <path
-                id="path57"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node2_south_east"
+                d="m 800.55557,364.92553 v -194.445 h -11.1111 l 19.4434,-38.888 19.4455,38.888 h -11.1111 v 194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -1079,8 +1042,8 @@
                 "
               />
               <path
-                id="path58"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node2_south_west"
+                d="m 778.33338,131.59253 v 194.445 h 11.1111 l -19.4435,38.888 -19.4454,-38.888 h 11.1111 v -194.445 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -1102,19 +1065,18 @@
             <g
               v-if="zaehlung.zaehlart === Zaehlart.QU"
               id="node2_crossing"
-              transform="matrix(0,0.94605826,-0.79773158,0,28267.575,4038.8282)"
             >
               <path
-                id="path61"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node2_crossing_south"
+                d="m 583.33335,322.22223 h 194.44503 v -11.11111 l 38.88831,19.44345 -38.88831,19.44544 V 338.88889 H 583.33335 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(2, Himmelsrichtung.S)"
                 @click="handleClickOnQuerungsverkehr(2, Himmelsrichtung.S)"
               />
               <path
-                id="path62"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node2_crossing_north"
+                d="M 816.66669,299.99959 H 622.22175 v 11.11153 l -38.8884,-19.4435 38.8884,-19.44539 v 11.11057 h 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(2, Himmelsrichtung.N)"
@@ -1127,31 +1089,29 @@
           id="node1_group"
           class="com.sun.star.drawing.ClosedBezierShape"
         >
-          <g
-            id="node1"
-            transform="matrix(1,0,0,1.0009009,-18.516399,-18.516303)"
-          >
+          <g id="node1">
             <path
-              id="path1"
-              d="m 14332.005,17842 v -507 l 44.969,-48 44.969,48 v 507 z"
+              id="node1_spike"
+              d="M 661.11113,700.00002 V 131.59223 l 38.88831,-53.81445 38.88947,53.8143 v 568.40794 z"
               :fill="getColorOfKnotenarm(1)"
               stroke="none"
             />
             <text
-              id="text1"
+              id="node1_spike_text"
+              class="prevent-select"
               xml:space="preserve"
               style="
-                font-size: 63.0885px;
+                font-size: 63.0799px;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #ffffff;
-                stroke-width: 38.9418;
+                stroke-width: 38.9365;
               "
-              x="14863.547"
-              y="16769.467"
-              transform="scale(0.96592375,1.0352784)"
+              x="701.77631"
+              y="179.69041"
+              transform="scale(0.96576588,1.0354476)"
               :style="{ cursor: getCursorType(1) }"
               @click="activateOrDeactivateTotalKnotenarm(1)"
             >
@@ -1165,12 +1125,11 @@
           >
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node1_left"
-              transform="matrix(0.94605826,0,0,0.98386895,758.7668,274.96713)"
+              id="node1_west"
             >
               <path
-                id="path19"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node1_west_north"
+                d="M 621.66709,364.92557 V 170.48063 h -11.11152 l 19.4435,-38.8884 19.44539,38.8884 h -11.11057 v 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -1189,8 +1148,8 @@
                 "
               />
               <path
-                id="path20"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node1_west_south"
+                d="m 599.44446,131.59223 v 194.44503 h 11.11111 l -19.44345,38.88831 -19.44544,-38.88831 h 11.11111 V 131.59223 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -1211,12 +1170,11 @@
             </g>
             <g
               v-if="zaehlung.zaehlart === Zaehlart.FJS"
-              id="node1_right"
-              transform="matrix(0.94605826,0,0,0.98386895,906.90013,274.96713)"
+              id="node1_east"
             >
               <path
-                id="path39"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node1_east_north"
+                d="M 800.55599,364.92557 V 170.48063 h -11.11152 l 19.4435,-38.8884 19.44539,38.8884 h -11.11057 v 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -1235,8 +1193,8 @@
                 "
               />
               <path
-                id="path40"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node1_east_south"
+                d="m 778.33336,131.59223 v 194.44503 h 11.11111 l -19.44345,38.88831 -19.44544,-38.88831 h 11.11111 V 131.59223 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="
@@ -1258,19 +1216,18 @@
             <g
               v-if="zaehlung.zaehlart === Zaehlart.QU"
               id="node1_crossing"
-              transform="matrix(0,0.94605826,-0.79773158,0,28267.575,4038.8282)"
             >
               <path
-                id="path43"
-                d="m 14305.233,17535.315 v -165.798 h -5.582 l 9.768,-33.159 9.769,33.159 h -5.582 v 165.798 z"
+                id="node1_crossing_east"
+                d="m 583.33335,322.22223 h 194.44503 v -11.11111 l 38.88831,19.44345 -38.88831,19.44544 V 338.88889 H 583.33335 Z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(1, Himmelsrichtung.O)"
                 @click="handleClickOnQuerungsverkehr(1, Himmelsrichtung.O)"
               />
               <path
-                id="path44"
-                d="m 14288.406,17336.358 v 165.798 h 5.582 l -9.768,33.159 -9.769,-33.159 h 5.582 v -165.798 z"
+                id="node1_crossing_west"
+                d="M 816.66669,299.99959 H 622.22175 v 11.11153 l -38.8884,-19.4435 38.8884,-19.44539 v 11.11057 h 194.44494 z"
                 stroke="none"
                 :style="{ cursor: 'pointer' }"
                 :fill="calculateColorOfQuerungsverkehr(1, Himmelsrichtung.W)"
@@ -1285,7 +1242,7 @@
         v-if="hasAvailableKnotenarme"
         id="center"
         d="m 14253.004,17465.11 166.703,0 117.876,117.877 0,166.702 -117.876,117.877 -166.703,0 -117.876,-117.877 0,-166.702 z"
-        transform="matrix(0.37991612,-0.37991612,0.37991612,0.37991612,2288.1609,16577.386)"
+        transform="matrix(0.46656362,0,0,0.46656362,-5988.8219,-7542.4705)"
         fill="#1565c0"
       />
     </svg>
@@ -1936,3 +1893,10 @@ function createQuerungsverkehr(
   return querungsverkehr;
 }
 </script>
+<style scoped>
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+</style>
