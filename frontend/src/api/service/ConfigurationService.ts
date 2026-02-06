@@ -23,7 +23,7 @@ export default class ConfigurationService {
 
   static saveConfiguration(
     configuration: ConfigurationItemDTO[]
-  ): Promise<ConfigurationDTO> {
+  ): Promise<ConfigurationDTO[]> {
     return FetchService.postData(
       configuration,
       `${this.ENDPOINT}/all`,
