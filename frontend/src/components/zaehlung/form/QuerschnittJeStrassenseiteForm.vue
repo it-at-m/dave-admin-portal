@@ -268,16 +268,16 @@
           <g
             id="arrow4"
             style="cursor: pointer"
-            @click="activateArrow('4')"
+            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowFour()"
           >
             <path
               id="path4"
-              :fill="calculateColor('4')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowFour()"
               d="m 69.999999,860.99999 v -28 H 1330 v 27.997 z"
             />
             <path
               id="spike4"
-              :fill="calculateColor('4')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowFour()"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-544.45264)"
             />
@@ -285,16 +285,16 @@
           <g
             id="arrow3"
             style="cursor: pointer"
-            @click="activateArrow('3')"
+            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowThree()"
           >
             <path
               id="path3"
-              :fill="calculateColor('3')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowThree()"
               d="m 69.999999,804.99999 v -28 H 1330 v 27.997 z"
             />
             <path
               id="spike3"
-              :fill="calculateColor('3')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowThree()"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,2182.4526)"
             />
@@ -302,16 +302,16 @@
           <g
             id="arrow2"
             style="cursor: pointer"
-            @click="activateArrow('2')"
+            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowTwo()"
           >
             <path
               id="path2"
-              :fill="calculateColor('2')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowTwo()"
               d="M 69.999999,623 V 595 H 1330 v 27.997 z"
             />
             <path
               id="spike2"
-              :fill="calculateColor('2')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowTwo()"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(0.09192953,0,0,0.07964786,-38.395512,-782.45264)"
             />
@@ -319,16 +319,16 @@
           <g
             id="arrow1"
             style="cursor: pointer"
-            @click="activateArrow('1')"
+            @click="handleClickOnQuerschnittsverkehrJeStrassenseiteArrowOne()"
           >
             <path
               id="path1"
-              :fill="calculateColor('1')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowOne()"
               d="M 69.999999,567 V 539 H 1330 v 27.998 z"
             />
             <path
               id="spike1"
-              :fill="calculateColor('1')"
+              :fill="calculateColorOfVerkehrsbeziehungArrowOne()"
               d="m 15265.992,17469.828 -304.316,176.002 -0.265,-351.547 z"
               transform="matrix(-0.09192953,0,0,-0.07964786,1438.3955,1944.4526)"
             />
@@ -356,12 +356,13 @@
 
 <script setup lang="ts">
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { first, isEmpty, last } from "lodash";
+import { cloneDeep, first, last, toArray } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
-import { useEventbus } from "@/store/Eventbus";
+import Himmelsrichtung from "@/types/enum/Himmelsrichtung";
 import KnotenarmComparator from "@/util/KnotenarmComparator";
 
 interface Props {
@@ -377,10 +378,10 @@ const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
 const activeColor = "#D50000";
 const passiveColor = "#9E9E9E";
 
-const eventbus = useEventbus();
-const selectedKnotenarme = computed(() => {
-  return eventbus.getSelectedKnotenarme;
+const selectedVerkehrsbeziehungen = computed(() => {
+  return zaehlung.value.verkehrsbeziehungen;
 });
+
 const firstStreetname = ref<Array<string>>([]);
 const secondStreetname = ref<Array<string>>([]);
 
@@ -417,6 +418,205 @@ const rotateSvg = computed(() => {
   return rotation;
 });
 
+function createVerkehrsbeziehungArrowOne(): VerkehrsbeziehungDTO {
+  const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+  if (availableNodeNumbers.value.includes(1)) {
+    verkehrsbeziehung.von = 1;
+    verkehrsbeziehung.nach = 3;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.W;
+  }
+  if (availableNodeNumbers.value.includes(2)) {
+    verkehrsbeziehung.von = 2;
+    verkehrsbeziehung.nach = 4;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.N;
+  }
+  if (availableNodeNumbers.value.includes(5)) {
+    verkehrsbeziehung.von = 5;
+    verkehrsbeziehung.nach = 7;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.NW;
+  }
+  if (availableNodeNumbers.value.includes(6)) {
+    verkehrsbeziehung.von = 6;
+    verkehrsbeziehung.nach = 8;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.NO;
+  }
+  return verkehrsbeziehung;
+}
+
+function createVerkehrsbeziehungArrowTwo(): VerkehrsbeziehungDTO {
+  const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+  if (availableNodeNumbers.value.includes(1)) {
+    verkehrsbeziehung.von = 3;
+    verkehrsbeziehung.nach = 1;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.W;
+  }
+  if (availableNodeNumbers.value.includes(2)) {
+    verkehrsbeziehung.von = 4;
+    verkehrsbeziehung.nach = 2;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.N;
+  }
+  if (availableNodeNumbers.value.includes(5)) {
+    verkehrsbeziehung.von = 7;
+    verkehrsbeziehung.nach = 5;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.NW;
+  }
+  if (availableNodeNumbers.value.includes(6)) {
+    verkehrsbeziehung.von = 8;
+    verkehrsbeziehung.nach = 6;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.NO;
+  }
+  return verkehrsbeziehung;
+}
+
+function createVerkehrsbeziehungArrowThree(): VerkehrsbeziehungDTO {
+  const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+  if (availableNodeNumbers.value.includes(1)) {
+    verkehrsbeziehung.von = 1;
+    verkehrsbeziehung.nach = 3;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.O;
+  }
+  if (availableNodeNumbers.value.includes(2)) {
+    verkehrsbeziehung.von = 2;
+    verkehrsbeziehung.nach = 4;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.S;
+  }
+  if (availableNodeNumbers.value.includes(5)) {
+    verkehrsbeziehung.von = 5;
+    verkehrsbeziehung.nach = 7;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.SO;
+  }
+  if (availableNodeNumbers.value.includes(6)) {
+    verkehrsbeziehung.von = 6;
+    verkehrsbeziehung.nach = 8;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.SW;
+  }
+  return verkehrsbeziehung;
+}
+
+function createVerkehrsbeziehungArrowFour(): VerkehrsbeziehungDTO {
+  const verkehrsbeziehung = {} as VerkehrsbeziehungDTO;
+  if (availableNodeNumbers.value.includes(1)) {
+    verkehrsbeziehung.von = 3;
+    verkehrsbeziehung.nach = 1;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.O;
+  }
+  if (availableNodeNumbers.value.includes(2)) {
+    verkehrsbeziehung.von = 4;
+    verkehrsbeziehung.nach = 2;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.S;
+  }
+  if (availableNodeNumbers.value.includes(5)) {
+    verkehrsbeziehung.von = 7;
+    verkehrsbeziehung.nach = 5;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.SO;
+  }
+  if (availableNodeNumbers.value.includes(6)) {
+    verkehrsbeziehung.von = 8;
+    verkehrsbeziehung.nach = 6;
+    verkehrsbeziehung.strassenseite = Himmelsrichtung.SW;
+  }
+  return verkehrsbeziehung;
+}
+
+function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowOne() {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowOne();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  const verkehrsbeziehungen = toArray(
+    cloneDeep(selectedVerkehrsbeziehungen.value)
+  );
+
+  if (index >= 0) {
+    verkehrsbeziehungen.splice(index, 1);
+  } else {
+    verkehrsbeziehungen.push(verkehrsbeziehung);
+  }
+
+  zaehlung.value.verkehrsbeziehungen = verkehrsbeziehungen;
+}
+
+function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowTwo() {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowTwo();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  const verkehrsbeziehungen = toArray(
+    cloneDeep(selectedVerkehrsbeziehungen.value)
+  );
+
+  if (index >= 0) {
+    verkehrsbeziehungen.splice(index, 1);
+  } else {
+    verkehrsbeziehungen.push(verkehrsbeziehung);
+  }
+
+  zaehlung.value.verkehrsbeziehungen = verkehrsbeziehungen;
+}
+
+function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowThree() {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowThree();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  const verkehrsbeziehungen = toArray(
+    cloneDeep(selectedVerkehrsbeziehungen.value)
+  );
+
+  if (index >= 0) {
+    verkehrsbeziehungen.splice(index, 1);
+  } else {
+    verkehrsbeziehungen.push(verkehrsbeziehung);
+  }
+
+  zaehlung.value.verkehrsbeziehungen = verkehrsbeziehungen;
+}
+
+function handleClickOnQuerschnittsverkehrJeStrassenseiteArrowFour() {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowFour();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  const verkehrsbeziehungen = toArray(
+    cloneDeep(selectedVerkehrsbeziehungen.value)
+  );
+
+  if (index >= 0) {
+    verkehrsbeziehungen.splice(index, 1);
+  } else {
+    verkehrsbeziehungen.push(verkehrsbeziehung);
+  }
+
+  zaehlung.value.verkehrsbeziehungen = verkehrsbeziehungen;
+}
+
+function findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+  clickedVerkehrsbeziehung: VerkehrsbeziehungDTO
+) {
+  return selectedVerkehrsbeziehungen.value.findIndex(
+    (verkehrsbeziehung: VerkehrsbeziehungDTO) => {
+      return (
+        verkehrsbeziehung.von === clickedVerkehrsbeziehung.von &&
+        verkehrsbeziehung.nach === clickedVerkehrsbeziehung.nach &&
+        verkehrsbeziehung.strassenseite ===
+          clickedVerkehrsbeziehung.strassenseite
+      );
+    }
+  );
+}
+
 onMounted(() => {
   resetForm();
   prepareStreetnames();
@@ -431,30 +631,75 @@ watch(
   { deep: true, immediate: true }
 );
 
-/**
- * Wenn die Nummer des Pfeils im Array gefunden wurde, wird diese in der Grafik in der "activeColor" dargestellt,
- * ansonsten in der passiveColor.
- */
-function calculateColor(arrow: string): string | undefined {
+function calculateColorOfVerkehrsbeziehungArrowOne(): string | undefined {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowOne();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
   let color = passiveColor;
-  if (
-    !isEmpty(
-      selectedKnotenarme.value.filter(
-        (selectedArrow) => selectedArrow === arrow
-      )
-    )
-  ) {
+
+  if (index >= 0) {
     color = activeColor;
   }
+
   return color;
 }
 
-function activateArrow(arrow: string): void {
-  eventbus.activateKnotenarm(arrow);
+function calculateColorOfVerkehrsbeziehungArrowTwo(): string | undefined {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowTwo();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  let color = passiveColor;
+
+  if (index >= 0) {
+    color = activeColor;
+  }
+
+  return color;
+}
+
+function calculateColorOfVerkehrsbeziehungArrowThree(): string | undefined {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowThree();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  let color = passiveColor;
+
+  if (index >= 0) {
+    color = activeColor;
+  }
+
+  return color;
+}
+
+function calculateColorOfVerkehrsbeziehungArrowFour(): string | undefined {
+  const verkehrsbeziehung = createVerkehrsbeziehungArrowFour();
+
+  const index =
+    findIndexInSelectedVerkehrsbeziehungForClickedVerkehrsbeziehung(
+      verkehrsbeziehung
+    );
+
+  let color = passiveColor;
+
+  if (index >= 0) {
+    color = activeColor;
+  }
+
+  return color;
 }
 
 function resetForm(): void {
-  eventbus.resetSelectedKnotenarme();
   firstStreetname.value = [];
   secondStreetname.value = [];
 }
