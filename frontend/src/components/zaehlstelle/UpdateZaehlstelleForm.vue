@@ -143,8 +143,13 @@ const getStadtbezirksnummer = computed(() => {
 });
 
 const getStadtbezirksviertel = computed(() => {
-  const stadtbezirksviertelMap: Map<number, string> | undefined =
+  let stadtbezirksviertelMap: Map<number, string> | undefined;
+  if(zaehlstelle.value.stadtbezirkNummer >= 100) { // TODO for obvious reasons
+    stadtbezirksviertelMap = StadtbezirksviertelToBeschreibung.get(100);
+  } else {
     StadtbezirksviertelToBeschreibung.get(zaehlstelle.value.stadtbezirkNummer);
+  }
+    
   if (!isNil(stadtbezirksviertelMap)) {
     const stadtbezirksviertelnummer: string | undefined =
       stadtbezirksviertelMap.get(getStadtbezirksviertelNummer.value);
@@ -156,7 +161,6 @@ const getStadtbezirksviertel = computed(() => {
 });
 
 const getStadtbezirksviertelNummer = computed(() => {
-  console.log(zaehlstelle.value.nummer);
   if (!isNil(zaehlstelle.value.nummer)) {
     if (zaehlstelle.value.nummer.length === 5) {
       return parseInt(zaehlstelle.value.nummer.substring(1, 3));
@@ -165,7 +169,6 @@ const getStadtbezirksviertelNummer = computed(() => {
     } else if (zaehlstelle.value.nummer.length >= 6) {
       return 100;
     }
-
   }
   return -1;
 });

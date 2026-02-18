@@ -557,6 +557,7 @@ export const Stadtbezirksviertel32ToBeschreibung = new Map<number, string>([
   [88, "32.8.8 Landkreis Starnberg"],
 ]);
 
+// TODO this stuff needs to come from backend/DB. This whole file is horrible!
 export const StadtbezirksviertelWolfsburgToBeschreibung = new Map<number, string>([
   [100, "Stadt Wolfsburg"]
 ]);
