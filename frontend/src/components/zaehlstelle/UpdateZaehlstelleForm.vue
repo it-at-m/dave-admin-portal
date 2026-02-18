@@ -107,9 +107,11 @@ import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import MiniMap from "@/components/map/MiniMap.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import { StadtbezirkToBeschreibung } from "@/types/enum/Stadtbezirk";
 import { StadtbezirksviertelToBeschreibung } from "@/types/enum/Stadtbezirksviertel";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import { useCityInformationStore } from "@/store/CityInformationStore";
+
+const cityInformationStore = useCityInformationStore();
 
 const zaehlstelle = defineModel<ZaehlstelleDTO>({
   required: true,
@@ -131,7 +133,7 @@ const coords = computed(() => {
 });
 
 const getStadtbezirksnummer = computed(() => {
-  const stadtbezirksnummer: string | undefined = StadtbezirkToBeschreibung.get(
+  const stadtbezirksnummer: string | undefined = cityInformationStore.StadtbezirkToBeschreibung2.get(
     zaehlstelle.value.stadtbezirkNummer
   );
   if (!isNil(stadtbezirksnummer)) {
@@ -154,12 +156,16 @@ const getStadtbezirksviertel = computed(() => {
 });
 
 const getStadtbezirksviertelNummer = computed(() => {
+  console.log(zaehlstelle.value.nummer);
   if (!isNil(zaehlstelle.value.nummer)) {
     if (zaehlstelle.value.nummer.length === 5) {
       return parseInt(zaehlstelle.value.nummer.substring(1, 3));
     } else if (zaehlstelle.value.nummer.length === 6) {
       return parseInt(zaehlstelle.value.nummer.substring(2, 4));
+    } else if (zaehlstelle.value.nummer.length >= 6) {
+      return 100;
     }
+
   }
   return -1;
 });

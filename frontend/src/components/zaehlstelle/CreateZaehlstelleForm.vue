@@ -161,13 +161,13 @@ import LhmTextField from "@/components/common/LhmTextField.vue";
 import MiniMap from "@/components/map/MiniMap.vue";
 import { useConfigurationStore } from "@/store/ConfigurationStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import { stadtbezirke } from "@/types/enum/Stadtbezirk";
-import { stadtbezirksviertel } from "@/types/enum/Stadtbezirksviertel";
+import { useCityInformationStore } from "@/store/CityInformationStore";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import { useValidationUtils } from "@/util/ValidationUtils";
 
 const snackbarStore = useSnackbarStore();
 const configurationStore = useConfigurationStore();
+const cityInformationStore = useCityInformationStore();
 const validationUtils = useValidationUtils();
 const validZaehlstelle = ref(false);
 
@@ -198,15 +198,11 @@ onMounted(() => {
 });
 
 const getStadtbezirke = computed(() => {
-  return stadtbezirke;
+  return cityInformationStore.stadtbezirke2;
 });
 
 const getStadtbezirksviertel = computed(() => {
-  return stadtbezirksviertel(
-    zaehlstelle.value.stadtbezirkNummer
-      ? zaehlstelle.value.stadtbezirkNummer.toString()
-      : ""
-  );
+  return cityInformationStore.getStadtbezirksviertel(zaehlstelle.value.stadtbezirkNummer);
 });
 
 const zaehlstellenummer = computed(() => {
