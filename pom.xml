@@ -5,14 +5,14 @@
 
     <groupId>de.muenchen.dave</groupId>
     <artifactId>dave-admin-portal</artifactId>
-    <version>5.0.1</version>
+    <version>5.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>dave_adminportal_frontend</name>
 
     <scm>
         <connection>scm:git:https://github.com/starwit/dave-admin-portal.git</connection>
         <developerConnection>scm:git:https://github.com/starwit/dave-admin-portal.git</developerConnection>
-        <tag>dave-admin-portal-5.0.1</tag>
+        <tag>HEAD</tag>
   </scm>
 
 
