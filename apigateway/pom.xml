@@ -11,7 +11,6 @@
     <artifactId>dave-adminportal-apigateway</artifactId>
     <packaging>jar</packaging>
     <name>dave_adminportal_apigateway</name>
-    <version>5.0.3-SNAPSHOT</version>
 
 
     <properties>
