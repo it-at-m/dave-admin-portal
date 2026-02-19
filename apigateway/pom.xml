@@ -2,11 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.muenchen.dave.apigateway</groupId>
+    <parent>
+        <groupId>de.muenchen.dave</groupId>
+        <artifactId>dave-admin-portal</artifactId>
+        <version>5.0.2-SNAPSHOT</version>
+    </parent>
+
     <artifactId>dave-adminportal-apigateway</artifactId>
-    <version>3.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>dave_adminportal_apigateway</name>
+    <version>5.0.2-SNAPSHOT</version>
 
 
     <properties>
@@ -146,14 +151,6 @@
             <version>${logstash.encoder.version}</version>
         </dependency>
 
-        <!-- Frontend Lib -->
-        <dependency>
-            <groupId>de.muenchen.dave.frontend</groupId>
-            <version>3.0.3-SNAPSHOT</version>
-            <artifactId>dave-adminportal-frontend</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
     </dependencies>
 
 
@@ -162,6 +159,16 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <excludes>
+                    <exclude>static/**</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>static/**</include>
+                </includes>
             </resource>
         </resources>
         <plugins>
@@ -258,7 +265,70 @@
                 </executions>
             </plugin>
 
-            <!-- Generate Helm Chart -->
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/resources/static</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <!-- Copy frontend dist to static folder in Spring Boot app -->
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/src/main/resources/static</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/../frontend/dist</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+
+                    <!-- Generate Helm Chart -->
+                    <execution>
+                        <id>resources-helm-deployment</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/target/helm</outputDirectory>
+                            <delimiters>
+                                <delimiter>${*}</delimiter>
+                            </delimiters>
+                            <useDefaultDelimiters>false</useDefaultDelimiters>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${project.basedir}/../stack/helm
+                                    </directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>**/*.txt</include>
+                                        <include>**/*.yaml</include>
+                                        <include>**/*.yml</include>
+                                        <include>**/*.tpl</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
