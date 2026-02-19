@@ -557,10 +557,12 @@ export const Stadtbezirksviertel32ToBeschreibung = new Map<number, string>([
   [88, "32.8.8 Landkreis Starnberg"],
 ]);
 
-export const StadtbezirksviertelToBeschreibung = new Map<
-  number,
-  Map<number, string>
->([
+// TODO this stuff needs to come from backend/DB. This whole file is horrible!
+export const StadtbezirksviertelWolfsburgToBeschreibung = new Map<number, string>([
+  [100, "Stadt Wolfsburg"]
+]);
+
+export const StadtbezirksviertelToBeschreibung = new Map<number, Map<number, string>>([
   [1, Stadtbezirksviertel1ToBeschreibung],
   [2, Stadtbezirksviertel2ToBeschreibung],
   [3, Stadtbezirksviertel3ToBeschreibung],
@@ -587,6 +589,7 @@ export const StadtbezirksviertelToBeschreibung = new Map<
   [24, Stadtbezirksviertel24ToBeschreibung],
   [25, Stadtbezirksviertel25ToBeschreibung],
   [32, Stadtbezirksviertel32ToBeschreibung],
+  [100, StadtbezirksviertelWolfsburgToBeschreibung]
 ]);
 
 export const stadtbezirksviertel = (bezirksnummer: string) => {
@@ -671,6 +674,9 @@ export const stadtbezirksviertel = (bezirksnummer: string) => {
       break;
     case "32":
       toConvert = Stadtbezirksviertel32ToBeschreibung;
+      break;
+    case "100":
+      toConvert = StadtbezirksviertelWolfsburgToBeschreibung;
       break;
   }
 
