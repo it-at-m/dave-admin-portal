@@ -6,14 +6,14 @@
     <parent>
         <groupId>de.muenchen.dave</groupId>
         <artifactId>dave-admin-portal</artifactId>
-        <version>5.0.2-SNAPSHOT</version>
+        <version>5.0.2</version>
     </parent>
 
     <groupId>de.muenchen.dave.frontend</groupId>
     <artifactId>dave-adminportal-frontend</artifactId>
     <packaging>jar</packaging>
     <name>dave_adminportal_frontend</name>
-    <version>5.0.2-SNAPSHOT</version>
+    <version>5.0.2</version>
 
 
     <properties>
