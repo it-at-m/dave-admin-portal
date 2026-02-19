@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.muenchen.dave</groupId>
         <artifactId>dave-admin-portal</artifactId>
-        <version>5.0.3-SNAPSHOT</version>
+        <version>5.0.3</version>
     </parent>
 
     <groupId>de.muenchen.dave.frontend</groupId>
