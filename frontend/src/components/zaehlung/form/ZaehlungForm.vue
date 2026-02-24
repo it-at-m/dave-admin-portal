@@ -22,7 +22,7 @@
         <v-icon icon="mdi-routes" />
         Knoten & Lage
       </v-tab>
-      <v-tab :value="TAB_FAHRBEZIEHUNG">
+      <v-tab :value="TAB_BEWEGUNGSBEZIEHUNG">
         <v-icon icon="mdi-routes" />
         Fahrbeziehungen
       </v-tab>
@@ -51,7 +51,7 @@
           :is-knoten-lage-form-valid="isKnotenLageFormValid"
         />
       </v-tabs-window-item>
-      <v-tabs-window-item :value="TAB_FAHRBEZIEHUNG">
+      <v-tabs-window-item :value="TAB_BEWEGUNGSBEZIEHUNG">
         <verkehr-form
           v-model:zaehlung="zaehlung"
           :height="contentHeight"
@@ -105,7 +105,7 @@ const isKnotenLageFormValid = ref(false);
 
 const TAB_INFO = 0;
 const TAB_KNOTEN = 1;
-const TAB_FAHRBEZIEHUNG = 2;
+const TAB_BEWEGUNGSBEZIEHUNG = 2;
 const TAB_VERKEHRSART = 3;
 
 onMounted(() => {
@@ -136,17 +136,12 @@ watch(
   (newValue, oldValue) => {
     if (oldValue !== undefined && newValue !== oldValue) {
       zaehlung.value.kategorien = [];
+      zaehlung.value.verkehrsbeziehungen = [];
+      zaehlung.value.laengsverkehr = [];
+      zaehlung.value.querungsverkehr = [];
     }
   },
   { immediate: true }
-);
-
-watch(
-  () => eventbus.getSelectedKnotenarme,
-  () => {
-    validateZaehlung();
-  },
-  { immediate: true, deep: true }
 );
 
 const contentHeight = computed(() => {
@@ -162,18 +157,17 @@ function validateZaehlung(): void {
   isKnotenLageFormValid.value = validationUtils.validateKnotenLageForm(
     zaehlung.value
   );
-  const isVerkehrFormValid = validationUtils.validateVerkehrForm(
-    zaehlung.value,
-    eventbus.getSelectedKnotenarme
-  );
   const isVerkehrsartFormValid = validationUtils.validateVerkehrsartForm(
+    zaehlung.value
+  );
+  const isVerkehrFormValid = validationUtils.validateVerkehrForm(
     zaehlung.value
   );
   isZaehlungValid.value =
     isAllgemeineInfoFormValid.value !== null &&
     isAllgemeineInfoFormValid.value &&
     isKnotenLageFormValid.value &&
-    isVerkehrFormValid &&
-    isVerkehrsartFormValid;
+    isVerkehrsartFormValid &&
+    isVerkehrFormValid;
 }
 </script>
