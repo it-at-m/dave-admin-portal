@@ -29,6 +29,17 @@
               label="Projektname"
             />
           </v-col>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-checkbox
+              v-model="zaehlung.dauerzaehlung"
+              label="Dauerzählung"
+              color="quaternary"
+              hide-details
+            />
+          </v-col>
           <v-spacer />
         </v-row>
         <v-row dense>

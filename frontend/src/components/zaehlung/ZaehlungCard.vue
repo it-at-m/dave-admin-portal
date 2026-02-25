@@ -43,6 +43,7 @@
           md="8"
         >
           <v-card-title>{{ zaehlung.projektName }}</v-card-title>
+          <v-card-subtitle v-if="dauerzaehlung">Dauerzählung</v-card-subtitle>
           <v-card-subtitle>{{ datum }}</v-card-subtitle>
         </v-col>
         <v-col
@@ -325,6 +326,10 @@ const coordsZaehlung = computed(() => {
 
 const datum = computed(() => {
   return dateUtils.getShortVersionOfDate(zaehlung.value.datum);
+});
+
+const dauerzaehlung = computed(() => {
+  return zaehlung.value.dauerzaehlung;
 });
 
 const streets = computed(() => {
