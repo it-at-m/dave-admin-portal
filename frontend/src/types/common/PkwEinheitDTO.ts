@@ -7,4 +7,5 @@ export default interface PkwEinheitDTO extends BaseEntity {
   busse: number;
   kraftraeder: number;
   fahrradfahrer: number;
+  fussgaenger: number;
 }
