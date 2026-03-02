@@ -140,31 +140,31 @@ const notOnlyRadAndFussIsAllowed = computed(() => {
 });
 
 const pkwLabel = computed(() => {
-  return `Personenkraftwagen (Pkw) - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.pkw}`;
+  return `Personenkraftwagen (Pkw) ${pkwEinheitenOfStore.value.pkw ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.pkw}` : ''}`;
 });
 
 const lkwLabel = computed(() => {
-  return `Lastkraftwagen (Lkw) - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.lkw}`;
+  return `Lastkraftwagen (Lkw) ${pkwEinheitenOfStore.value.lkw ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.lkw}` : ''}`;
 });
 
 const lzLabel = computed(() => {
-  return `Lastzüge (Lz) - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.lastzuege}`;
+  return `Lastzüge (Lz) ${pkwEinheitenOfStore.value.lastzuege ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.lastzuege}` : ''}`;
 });
 
 const busLabel = computed(() => {
-  return `Bus - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.busse}`;
+  return `Bus ${pkwEinheitenOfStore.value.busse ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.busse}` : ''}`;
 });
 
 const kradLabel = computed(() => {
-  return `Krafträder (Krad) - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.kraftraeder}`;
+  return `Krafträder (Krad) ${pkwEinheitenOfStore.value.kraftraeder ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.kraftraeder}` : ''}`;
 });
 
 const radLabel = computed(() => {
-  return `Radfahrer - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.fahrradfahrer}`;
+  return `Radverkehr ${pkwEinheitenOfStore.value.fahrradfahrer ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.fahrradfahrer}` : ''}`;
 });
 
 const fussLabel = computed(() => {
-  return `Fußgänger - PKW-Einheit-Faktor: nicht existent`;
+  return `Fußverkehr ${pkwEinheitenOfStore.value.fussgaenger ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.fussgaenger}` : ''}`;
 });
 
 function updateKategorieWithPkw() {
@@ -279,3 +279,4 @@ function resetForm() {
   selectOrDeselectAllVmodel.value = zaehlung.value.kategorien.length === 7;
 }
 </script>
+
