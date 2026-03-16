@@ -135,8 +135,7 @@ watch(
   () => zaehlung.value.zaehlart,
   () => {
     zaehlung.value.kategorien = [];
-  },
-  { immediate: true }
+  }
 );
 
 watch(
