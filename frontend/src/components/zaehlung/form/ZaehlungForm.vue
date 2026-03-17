@@ -24,7 +24,7 @@
       </v-tab>
       <v-tab :value="TAB_BEWEGUNGSBEZIEHUNG">
         <v-icon icon="mdi-routes" />
-        Fahrbeziehungen
+        Verkehrsbeziehungen
       </v-tab>
       <v-tab :value="TAB_VERKEHRSART">
         <v-icon icon="mdi-car-multiple" />
