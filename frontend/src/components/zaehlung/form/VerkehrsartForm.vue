@@ -135,41 +135,49 @@ const labelSelectOrDeselectAll = computed(() => {
 });
 
 const allCategoriesAreAllowed = computed(() => {
-  const zaehlarten = [Zaehlart.QJS, Zaehlart.QU, Zaehlart.FJS];
-  return !zaehlarten.includes(zaehlung.value.zaehlart);
+  return checkIfZaehlartOfZaehlungAllowsAllCategories();
 });
 
+function checkIfZaehlartOfZaehlungAllowsAllCategories() {
+  const zaehlartenWithRestrictedCategories = [
+    Zaehlart.QJS,
+    Zaehlart.QU,
+    Zaehlart.FJS,
+  ];
+  return !zaehlartenWithRestrictedCategories.includes(zaehlung.value.zaehlart);
+}
+
 const pkwLabel = computed(() => {
-  return `Personenkraftwagen (Pkw) ${pkwEinheitenOfStore.value.pkw ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.pkw}` : ''}`;
+  return `Personenkraftwagen (Pkw) ${pkwEinheitenOfStore.value.pkw ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.pkw}` : ""}`;
 });
 
 const lkwLabel = computed(() => {
-  return `Lastkraftwagen (Lkw) ${pkwEinheitenOfStore.value.lkw ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.lkw}` : ''}`;
+  return `Lastkraftwagen (Lkw) ${pkwEinheitenOfStore.value.lkw ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.lkw}` : ""}`;
 });
 
 const lzLabel = computed(() => {
-  return `Lastzüge (Lz) ${pkwEinheitenOfStore.value.lastzuege ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.lastzuege}` : ''}`;
+  return `Lastzüge (Lz) ${pkwEinheitenOfStore.value.lastzuege ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.lastzuege}` : ""}`;
 });
 
 const busLabel = computed(() => {
-  return `Bus ${pkwEinheitenOfStore.value.busse ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.busse}` : ''}`;
+  return `Bus ${pkwEinheitenOfStore.value.busse ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.busse}` : ""}`;
 });
 
 const kradLabel = computed(() => {
-  return `Krafträder (Krad) ${pkwEinheitenOfStore.value.kraftraeder ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.kraftraeder}` : ''}`;
+  return `Krafträder (Krad) ${pkwEinheitenOfStore.value.kraftraeder ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.kraftraeder}` : ""}`;
 });
 
 const radLabel = computed(() => {
-  return `Radverkehr ${pkwEinheitenOfStore.value.fahrradfahrer ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.fahrradfahrer}` : ''}`;
+  return `Radverkehr ${pkwEinheitenOfStore.value.fahrradfahrer ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.fahrradfahrer}` : ""}`;
 });
 
 const fussLabel = computed(() => {
-  return `Fußverkehr ${pkwEinheitenOfStore.value.fussgaenger ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.fussgaenger}` : ''}`;
+  return `Fußverkehr ${pkwEinheitenOfStore.value.fussgaenger ? `- PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.fussgaenger}` : ""}`;
 });
 
 function updateKategorieWithPkw() {
   if (pkw.value) {
-    addKategorie(Fahrzeug.PKW);
+    addKategorieToZaehlung(Fahrzeug.PKW);
   } else {
     removeKategorie(Fahrzeug.PKW);
   }
@@ -177,7 +185,7 @@ function updateKategorieWithPkw() {
 
 function updateKategorieWithLkw() {
   if (lkw.value) {
-    addKategorie(Fahrzeug.LKW);
+    addKategorieToZaehlung(Fahrzeug.LKW);
   } else {
     removeKategorie(Fahrzeug.LKW);
   }
@@ -185,7 +193,7 @@ function updateKategorieWithLkw() {
 
 function updateKategorieWithLz() {
   if (lz.value) {
-    addKategorie(Fahrzeug.LZ);
+    addKategorieToZaehlung(Fahrzeug.LZ);
   } else {
     removeKategorie(Fahrzeug.LZ);
   }
@@ -193,7 +201,7 @@ function updateKategorieWithLz() {
 
 function updateKategorieWithBus() {
   if (bus.value) {
-    addKategorie(Fahrzeug.BUS);
+    addKategorieToZaehlung(Fahrzeug.BUS);
   } else {
     removeKategorie(Fahrzeug.BUS);
   }
@@ -201,7 +209,7 @@ function updateKategorieWithBus() {
 
 function updateKategorieWithKrad() {
   if (krad.value) {
-    addKategorie(Fahrzeug.KRAD);
+    addKategorieToZaehlung(Fahrzeug.KRAD);
   } else {
     removeKategorie(Fahrzeug.KRAD);
   }
@@ -209,7 +217,7 @@ function updateKategorieWithKrad() {
 
 function updateKategorieWithRad() {
   if (rad.value) {
-    addKategorie(Fahrzeug.RAD);
+    addKategorieToZaehlung(Fahrzeug.RAD);
   } else {
     removeKategorie(Fahrzeug.RAD);
   }
@@ -217,7 +225,7 @@ function updateKategorieWithRad() {
 
 function updateKategorieWithFuss() {
   if (fuss.value) {
-    addKategorie(Fahrzeug.FUSS);
+    addKategorieToZaehlung(Fahrzeug.FUSS);
   } else {
     removeKategorie(Fahrzeug.FUSS);
   }
@@ -229,29 +237,39 @@ function updateKategorieWithFuss() {
  * @private
  */
 function selectOrDeselectAll() {
-  pkw.value = selectOrDeselectAllVmodel.value;
-  lkw.value = selectOrDeselectAllVmodel.value;
-  lz.value = selectOrDeselectAllVmodel.value;
-  bus.value = selectOrDeselectAllVmodel.value;
-  krad.value = selectOrDeselectAllVmodel.value;
+  // Setzen der Checkboxen
+  if (allCategoriesAreAllowed.value) {
+    pkw.value = selectOrDeselectAllVmodel.value;
+    lkw.value = selectOrDeselectAllVmodel.value;
+    lz.value = selectOrDeselectAllVmodel.value;
+    bus.value = selectOrDeselectAllVmodel.value;
+    krad.value = selectOrDeselectAllVmodel.value;
+  } else {
+    pkw.value = false;
+    lkw.value = false;
+    lz.value = false;
+    bus.value = false;
+    krad.value = false;
+  }
   rad.value = selectOrDeselectAllVmodel.value;
   fuss.value = selectOrDeselectAllVmodel.value;
+
+  // Hinzufügen der Kategorien zur Zählung.
   zaehlung.value.kategorien = [];
   if (selectOrDeselectAllVmodel.value) {
     if (allCategoriesAreAllowed.value) {
-      addKategorie(Fahrzeug.PKW);
-      addKategorie(Fahrzeug.PKW);
-      addKategorie(Fahrzeug.LKW);
-      addKategorie(Fahrzeug.LZ);
-      addKategorie(Fahrzeug.BUS);
-      addKategorie(Fahrzeug.KRAD);
+      addKategorieToZaehlung(Fahrzeug.PKW);
+      addKategorieToZaehlung(Fahrzeug.LKW);
+      addKategorieToZaehlung(Fahrzeug.LZ);
+      addKategorieToZaehlung(Fahrzeug.BUS);
+      addKategorieToZaehlung(Fahrzeug.KRAD);
     }
-    addKategorie(Fahrzeug.RAD);
-    addKategorie(Fahrzeug.FUSS);
+    addKategorieToZaehlung(Fahrzeug.RAD);
+    addKategorieToZaehlung(Fahrzeug.FUSS);
   }
 }
 
-function addKategorie(kategorie: Fahrzeug) {
+function addKategorieToZaehlung(kategorie: Fahrzeug) {
   zaehlung.value.kategorien.push(kategorie);
 }
 
@@ -275,7 +293,13 @@ function resetForm() {
   krad.value = zaehlung.value.kategorien.includes(Fahrzeug.KRAD);
   rad.value = zaehlung.value.kategorien.includes(Fahrzeug.RAD);
   fuss.value = zaehlung.value.kategorien.includes(Fahrzeug.FUSS);
-  selectOrDeselectAllVmodel.value = zaehlung.value.kategorien.length === 7;
+  let numberOfChoosableCategories;
+  if (checkIfZaehlartOfZaehlungAllowsAllCategories()) {
+    numberOfChoosableCategories = 7;
+  } else {
+    numberOfChoosableCategories = 2;
+  }
+  selectOrDeselectAllVmodel.value =
+    zaehlung.value.kategorien.length === numberOfChoosableCategories;
 }
 </script>
-
