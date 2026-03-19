@@ -239,14 +239,15 @@ function selectOrDeselectAll() {
   zaehlung.value.kategorien = [];
   if (selectOrDeselectAllVmodel.value) {
     if (allCategoriesAreAllowed.value) {
-      zaehlung.value.kategorien.push(Fahrzeug.PKW);
-      zaehlung.value.kategorien.push(Fahrzeug.LKW);
-      zaehlung.value.kategorien.push(Fahrzeug.LZ);
-      zaehlung.value.kategorien.push(Fahrzeug.BUS);
-      zaehlung.value.kategorien.push(Fahrzeug.KRAD);
+      addKategorie(Fahrzeug.PKW);
+      addKategorie(Fahrzeug.PKW);
+      addKategorie(Fahrzeug.LKW);
+      addKategorie(Fahrzeug.LZ);
+      addKategorie(Fahrzeug.BUS);
+      addKategorie(Fahrzeug.KRAD);
     }
-    zaehlung.value.kategorien.push(Fahrzeug.RAD);
-    zaehlung.value.kategorien.push(Fahrzeug.FUSS);
+    addKategorie(Fahrzeug.RAD);
+    addKategorie(Fahrzeug.FUSS);
   }
 }
 
