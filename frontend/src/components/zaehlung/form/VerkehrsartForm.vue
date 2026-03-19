@@ -9,7 +9,7 @@
       <v-row dense>
         <v-col>
           <v-checkbox
-            v-if="notOnlyRadAndFussIsAllowed"
+            v-if="allCategoriesAreAllowed"
             v-model="pkw"
             :label="pkwLabel"
             color="quaternary"
@@ -17,7 +17,7 @@
             @update:model-value="updateKategorieWithPkw"
           />
           <v-checkbox
-            v-if="notOnlyRadAndFussIsAllowed"
+            v-if="allCategoriesAreAllowed"
             v-model="lkw"
             :label="lkwLabel"
             color="quaternary"
@@ -25,7 +25,7 @@
             @update:model-value="updateKategorieWithLkw"
           />
           <v-checkbox
-            v-if="notOnlyRadAndFussIsAllowed"
+            v-if="allCategoriesAreAllowed"
             v-model="lz"
             :label="lzLabel"
             color="quaternary"
@@ -33,7 +33,7 @@
             @update:model-value="updateKategorieWithLz"
           />
           <v-checkbox
-            v-if="notOnlyRadAndFussIsAllowed"
+            v-if="allCategoriesAreAllowed"
             v-model="bus"
             :label="busLabel"
             color="quaternary"
@@ -41,7 +41,7 @@
             @update:model-value="updateKategorieWithBus"
           />
           <v-checkbox
-            v-if="notOnlyRadAndFussIsAllowed"
+            v-if="allCategoriesAreAllowed"
             v-model="krad"
             :label="kradLabel"
             color="quaternary"
@@ -134,7 +134,7 @@ const labelSelectOrDeselectAll = computed(() => {
   return selectOrDeselectAllVmodel.value ? "Alles abwählen" : "Alles auswählen";
 });
 
-const notOnlyRadAndFussIsAllowed = computed(() => {
+const allCategoriesAreAllowed = computed(() => {
   const zaehlarten = [Zaehlart.QJS, Zaehlart.QU, Zaehlart.FJS];
   return !zaehlarten.includes(zaehlung.value.zaehlart);
 });
@@ -236,9 +236,9 @@ function selectOrDeselectAll() {
   krad.value = selectOrDeselectAllVmodel.value;
   rad.value = selectOrDeselectAllVmodel.value;
   fuss.value = selectOrDeselectAllVmodel.value;
+  zaehlung.value.kategorien = [];
   if (selectOrDeselectAllVmodel.value) {
-    zaehlung.value.kategorien = [];
-    if (notOnlyRadAndFussIsAllowed.value) {
+    if (allCategoriesAreAllowed.value) {
       zaehlung.value.kategorien.push(Fahrzeug.PKW);
       zaehlung.value.kategorien.push(Fahrzeug.LKW);
       zaehlung.value.kategorien.push(Fahrzeug.LZ);
@@ -247,8 +247,6 @@ function selectOrDeselectAll() {
     }
     zaehlung.value.kategorien.push(Fahrzeug.RAD);
     zaehlung.value.kategorien.push(Fahrzeug.FUSS);
-  } else {
-    zaehlung.value.kategorien = [];
   }
 }
 
