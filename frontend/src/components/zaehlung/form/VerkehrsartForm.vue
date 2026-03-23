@@ -9,7 +9,7 @@
       <v-row dense>
         <v-col>
           <v-checkbox
-            v-if="allCategoriesAreAllowed"
+            v-if="areAllVehicleCategoriesSelectable"
             v-model="pkw"
             :label="pkwLabel"
             color="quaternary"
@@ -17,7 +17,7 @@
             @update:model-value="updateKategorieWithPkw"
           />
           <v-checkbox
-            v-if="allCategoriesAreAllowed"
+            v-if="areAllVehicleCategoriesSelectable"
             v-model="lkw"
             :label="lkwLabel"
             color="quaternary"
@@ -25,7 +25,7 @@
             @update:model-value="updateKategorieWithLkw"
           />
           <v-checkbox
-            v-if="allCategoriesAreAllowed"
+            v-if="areAllVehicleCategoriesSelectable"
             v-model="lz"
             :label="lzLabel"
             color="quaternary"
@@ -33,7 +33,7 @@
             @update:model-value="updateKategorieWithLz"
           />
           <v-checkbox
-            v-if="allCategoriesAreAllowed"
+            v-if="areAllVehicleCategoriesSelectable"
             v-model="bus"
             :label="busLabel"
             color="quaternary"
@@ -41,7 +41,7 @@
             @update:model-value="updateKategorieWithBus"
           />
           <v-checkbox
-            v-if="allCategoriesAreAllowed"
+            v-if="areAllVehicleCategoriesSelectable"
             v-model="krad"
             :label="kradLabel"
             color="quaternary"
@@ -134,7 +134,7 @@ const labelSelectOrDeselectAll = computed(() => {
   return selectOrDeselectAllVmodel.value ? "Alles abwählen" : "Alles auswählen";
 });
 
-const allCategoriesAreAllowed = computed(() => {
+const areAllVehicleCategoriesSelectable = computed(() => {
   return checkIfZaehlartOfZaehlungAllowsAllCategories();
 });
 
@@ -238,7 +238,7 @@ function updateKategorieWithFuss() {
  */
 function selectOrDeselectAll() {
   // Setzen der Checkboxen
-  if (allCategoriesAreAllowed.value) {
+  if (areAllVehicleCategoriesSelectable.value) {
     pkw.value = selectOrDeselectAllVmodel.value;
     lkw.value = selectOrDeselectAllVmodel.value;
     lz.value = selectOrDeselectAllVmodel.value;
@@ -257,7 +257,7 @@ function selectOrDeselectAll() {
   // Hinzufügen der Kategorien zur Zählung.
   zaehlung.value.kategorien = [];
   if (selectOrDeselectAllVmodel.value) {
-    if (allCategoriesAreAllowed.value) {
+    if (areAllVehicleCategoriesSelectable.value) {
       addKategorieToZaehlung(Fahrzeug.PKW);
       addKategorieToZaehlung(Fahrzeug.LKW);
       addKategorieToZaehlung(Fahrzeug.LZ);
