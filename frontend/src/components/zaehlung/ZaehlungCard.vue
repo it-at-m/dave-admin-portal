@@ -503,16 +503,51 @@ function zaehlungKopieren() {
   zaehlungCopy.knotenarme.forEach((arm: KnotenarmDTO) => {
     arm.id = "";
   });
-  zaehlungCopy.verkehrsbeziehungen.forEach((vz: VerkehrsbeziehungDTO) => {
-    vz.id = "";
-    vz.hochrechnungsfaktor.id = "";
-  });
-  zaehlungCopy.querungsverkehr.forEach((qv: QuerungsverkehrDTO) => {
-    qv.id = "";
-  });
-  zaehlungCopy.laengsverkehr.forEach((lv: LaengsverkehrDTO) => {
-    lv.id = "";
-  });
+
+  try {
+    if (!zaehlungCopy.verkehrsbeziehungen) {
+      zaehlungCopy.verkehrsbeziehungen = [];
+    } else {
+      zaehlungCopy.verkehrsbeziehungen.forEach((vz: VerkehrsbeziehungDTO) => {
+        vz.id = "";
+        if (vz.hochrechnungsfaktor) {
+          vz.hochrechnungsfaktor.id = "";
+        } else {
+          vz.hochrechnungsfaktor = { id: "" } as any;
+        }
+      });
+    }
+  } catch (error) {
+    snackbarStore.showError("Fehler beim Kopieren der Verkehrsbeziehungen.");
+    console.error(error);
+  }
+
+  try {
+    if (!zaehlungCopy.querungsverkehr) {
+      zaehlungCopy.querungsverkehr = [];
+    } else {
+      zaehlungCopy.querungsverkehr.forEach((qv: QuerungsverkehrDTO) => {
+        qv.id = "";
+      });
+    }
+  } catch (error) {
+    snackbarStore.showError("Fehler beim Kopieren des Querungsverkehrs.");
+    console.error(error);
+  }
+
+  try {
+    if (!zaehlungCopy.laengsverkehr) {
+      zaehlungCopy.laengsverkehr = [];
+    } else {
+      zaehlungCopy.laengsverkehr.forEach((lv: LaengsverkehrDTO) => {
+        lv.id = "";
+      });
+    }
+  } catch (error) {
+    snackbarStore.showError("Fehler beim Kopieren des Längsverkehrs.");
+    console.error(error);
+  }
+
   ZaehlungService.saveZaehlung(zaehlungCopy, properties.zaehlstelleId)
     .then((backendIdDTO: BackendIdDTO) => {
       snackbarStore.showInfo(`Die Zählung vom ${datum.value} wurde kopiert.`);
