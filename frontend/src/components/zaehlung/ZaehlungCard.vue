@@ -256,6 +256,7 @@
 import type BackendIdDTO from "@/types/common/BackendIdDTO";
 import type GeoPoint from "@/types/common/GeoPoint";
 import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
+import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
 import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
@@ -290,6 +291,7 @@ interface Props {
   geoPointZaehlstelle: GeoPoint;
   zaehlstelleId: string;
 }
+
 const properties = defineProps<Props>();
 
 const zaehlung = defineModel<ZaehlungDTO>({
@@ -513,7 +515,17 @@ function zaehlungKopieren() {
         if (vz.hochrechnungsfaktor) {
           vz.hochrechnungsfaktor.id = "";
         } else {
-          vz.hochrechnungsfaktor = { id: "" } as any;
+          vz.hochrechnungsfaktor = {
+            id: "",
+            entityVersion: 0,
+            createdTime: "",
+            matrix: "NON",
+            kfz: 0,
+            sv: 0,
+            gv: 0,
+            active: true,
+            defaultFaktor: false,
+          } as HochrechnungsfaktorDTO;
         }
       });
     }
