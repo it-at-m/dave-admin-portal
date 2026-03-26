@@ -520,6 +520,8 @@ function zaehlungKopieren() {
   } catch (error) {
     snackbarStore.showError("Fehler beim Kopieren der Verkehrsbeziehungen.");
     console.error(error);
+    loading.value = false;
+    return;
   }
 
   try {
@@ -533,6 +535,8 @@ function zaehlungKopieren() {
   } catch (error) {
     snackbarStore.showError("Fehler beim Kopieren des Querungsverkehrs.");
     console.error(error);
+    loading.value = false;
+    return;
   }
 
   try {
@@ -546,6 +550,8 @@ function zaehlungKopieren() {
   } catch (error) {
     snackbarStore.showError("Fehler beim Kopieren des Längsverkehrs.");
     console.error(error);
+    loading.value = false;
+    return;
   }
 
   ZaehlungService.saveZaehlung(zaehlungCopy, properties.zaehlstelleId)
