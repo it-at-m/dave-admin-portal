@@ -295,7 +295,6 @@ function deleteKnotenarm(nummer: number) {
 function deleteAllVerkehrsbeziehungenByKnotenarmnummer(nummer: number) {
   const filtered = zaehlung.value.verkehrsbeziehungen.filter(
     (verkehrsbeziehung) => {
-      if (verkehrsbeziehung.knotenarm === nummer) {
       if (
         (zaehlung.value.kreisverkehr &&
           verkehrsbeziehung.knotenarm === nummer) ||
