@@ -6,7 +6,7 @@
     <zaehlung-card-map
       :lat-lng-zaehlstelle="coordsZaehlstelle"
       :lat-lng-zaehlung="coordsZaehlung"
-      :show-luftbild="true"
+      mapType="openstreetmaps"
     />
 
     <v-btn

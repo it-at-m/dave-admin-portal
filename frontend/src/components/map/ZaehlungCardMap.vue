@@ -26,7 +26,7 @@ interface Props {
   width?: string;
   minheight?: string;
   editZaehlungMarker?: boolean;
-  showLuftbild: boolean;
+  mapType: string;
   latLngZaehlstelle: LatLng;
   latLngZaehlung: LatLng;
 }
@@ -40,6 +40,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const mapAttribution =
   '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html">GeodatenService München</a>';
+const mapAttributionOpenStreetMap =
+  '&copy; <a href="https://www.openstreetmap.org/copyright" style="color: #c62828">OpenStreetMap</a>';
 
 const cardmapRef = ref<HTMLDivElement | null>(null);
 
@@ -90,6 +92,9 @@ function createLayersAndAddToMap(): void {
 }
 
 function createBaseLayers(): L.Control.LayersObject {
+
+  let baseLayer;
+
   const stadtkarteGesamt = L.tileLayer.wms(
     "https://geoportal.muenchen.de/geoserver/gsm/wms?",
     {
@@ -108,8 +113,29 @@ function createBaseLayers(): L.Control.LayersObject {
     }
   );
 
+  const osm = L.tileLayer.wms(
+    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      attribution: mapAttributionOpenStreetMap,
+    }
+  );
+
+  switch (props.mapType) {
+    case "luftbild":
+      baseLayer = luftbild;
+      break;
+    case "stadtkarte":
+      baseLayer = stadtkarteGesamt;
+      break;
+    case "openstreetmaps":
+      baseLayer = osm;
+      break;
+    default:
+      baseLayer = stadtkarteGesamt;
+  }
+
   return {
-    BaseLayer: props.showLuftbild ? luftbild : stadtkarteGesamt,
+      BaseLayer: baseLayer,
   };
 }
 
