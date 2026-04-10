@@ -296,9 +296,21 @@ function deleteAllVerkehrsbeziehungenByKnotenarmnummer(nummer: number) {
   const filtered = zaehlung.value.verkehrsbeziehungen.filter(
     (verkehrsbeziehung) => {
       if (verkehrsbeziehung.knotenarm === nummer) {
+      if (
+        (zaehlung.value.kreisverkehr &&
+          verkehrsbeziehung.knotenarm === nummer) ||
+        verkehrsbeziehung.von === nummer ||
+        verkehrsbeziehung.nach === nummer
+      ) {
         verkehrsbeziehung.active = false;
       }
-      return verkehrsbeziehung.knotenarm !== nummer;
+      return (
+        (zaehlung.value.kreisverkehr &&
+          verkehrsbeziehung.knotenarm !== nummer) ||
+        (!zaehlung.value.kreisverkehr &&
+          verkehrsbeziehung.von !== nummer &&
+          verkehrsbeziehung.nach !== nummer)
+      );
     }
   );
 
