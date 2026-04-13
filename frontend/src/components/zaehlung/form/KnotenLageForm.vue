@@ -295,21 +295,13 @@ function deleteKnotenarm(nummer: number) {
 function deleteAllVerkehrsbeziehungenByKnotenarmnummer(nummer: number) {
   const filtered = zaehlung.value.verkehrsbeziehungen.filter(
     (verkehrsbeziehung) => {
-      if (
-        (zaehlung.value.kreisverkehr &&
-          verkehrsbeziehung.knotenarm === nummer) ||
-        verkehrsbeziehung.von === nummer ||
-        verkehrsbeziehung.nach === nummer
-      ) {
+      const shouldRemove = zaehlung.value.kreisverkehr
+        ? verkehrsbeziehung.knotenarm === nummer
+        : verkehrsbeziehung.von === nummer || verkehrsbeziehung.nach === nummer;
+      if (shouldRemove) {
         verkehrsbeziehung.active = false;
       }
-      return (
-        (zaehlung.value.kreisverkehr &&
-          verkehrsbeziehung.knotenarm !== nummer) ||
-        (!zaehlung.value.kreisverkehr &&
-          verkehrsbeziehung.von !== nummer &&
-          verkehrsbeziehung.nach !== nummer)
-      );
+      return !shouldRemove;
     }
   );
 
