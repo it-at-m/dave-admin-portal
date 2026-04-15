@@ -246,6 +246,15 @@ watch(
   }
 );
 
+watch(
+  () => zaehlung.value.kreisverkehr,
+  () => {
+    zaehlung.value.verkehrsbeziehungen = [];
+    zaehlung.value.laengsverkehr = [];
+    zaehlung.value.querungsverkehr = [];
+  }
+);
+
 function resetForm() {
   // Alle Straßennamen löschen
   strassen.value = ["", "", "", "", "", "", "", ""];
