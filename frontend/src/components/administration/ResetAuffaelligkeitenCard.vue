@@ -19,7 +19,10 @@
       </v-row>
     </v-card-title>
     <v-card-text>
-      <v-date-picker v-model="choosenDate">
+      <v-date-picker
+        v-model="choosenDate"
+        :max="dateYesterday"
+      >
         <template #title />
       </v-date-picker>
     </v-card-text>
@@ -70,6 +73,7 @@
 
 <script setup lang="ts">
 import { isNil } from "lodash";
+import moment from "moment";
 import { computed, ref } from "vue";
 
 import AdministrationService from "@/api/service/AdministrationService";
@@ -93,11 +97,13 @@ const TITLE = "Tag auf Auffälligkeiten prüfen";
 const TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG =
   "Bei nachträglichen Änderungen an den auffälligen Tagen in Mobidam sollten diese neu geladen werden.";
 
-const dateToReset = ref(new Date());
+const dateYesterday = ref(moment(new Date()).subtract(1, "day").toDate());
+
+const dateToReset = ref(dateYesterday);
 
 const choosenDate = computed({
   get() {
-    let date = new Date();
+    let date = dateYesterday.value;
     if (!isNil(dateToReset.value)) {
       date = dateToReset.value;
       date.setHours(5);
@@ -114,7 +120,7 @@ const choosenDate = computed({
 });
 
 function closeDialog() {
-  dateToReset.value = new Date();
+  dateToReset.value = dateYesterday.value;
   openDialogModel.value = false;
 }
 
