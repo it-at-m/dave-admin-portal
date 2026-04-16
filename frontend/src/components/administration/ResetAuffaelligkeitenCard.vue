@@ -9,7 +9,7 @@
         dense
         no-gutters
       >
-        <span>Tag auf Auffälligkeiten prüfen</span>
+        <span>{{ TITLE }}</span>
         <v-spacer />
         <v-icon
           v-tooltip:end="TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG"
@@ -43,7 +43,7 @@
           start
           icon="mdi-calendar-search-outline"
         />
-        Tag auf Auffälligkeiten prüfen
+        {{ TITLE }}
       </v-card-title>
       <v-card-text>
         <span v-html="dialogtext" />
@@ -87,6 +87,8 @@ const dateUtils = useDateUtils();
 
 const openDialogModel = ref(false);
 const dialogtext = ref("Hier könnte Ihre Werbung stehen.");
+
+const TITLE = "Tag auf Auffälligkeiten prüfen";
 
 const TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG =
   "Bei nachträglichen Änderungen an den auffälligen Tagen in Mobidam sollten diese neu geladen werden.";
