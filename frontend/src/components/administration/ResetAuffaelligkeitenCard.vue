@@ -9,7 +9,7 @@
         dense
         no-gutters
       >
-        <span>Tag auf Auffälligkeiten prüfen</span>
+        <span>{{ TITLE }}</span>
         <v-spacer />
         <v-icon
           v-tooltip:end="TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG"
@@ -19,7 +19,10 @@
       </v-row>
     </v-card-title>
     <v-card-text>
-      <v-date-picker v-model="choosenDate">
+      <v-date-picker
+        v-model="choosenDate"
+        :max="dateYesterday"
+      >
         <template #title />
       </v-date-picker>
     </v-card-text>
@@ -43,7 +46,7 @@
           start
           icon="mdi-calendar-search-outline"
         />
-        Tag auf Auffälligkeiten prüfen
+        {{ TITLE }}
       </v-card-title>
       <v-card-text>
         <span v-html="dialogtext" />
@@ -69,7 +72,8 @@
 </template>
 
 <script setup lang="ts">
-import { isNil } from "lodash";
+import { isNil, cloneDeep } from "lodash";
+import moment from "moment";
 import { computed, ref } from "vue";
 
 import AdministrationService from "@/api/service/AdministrationService";
@@ -88,14 +92,18 @@ const dateUtils = useDateUtils();
 const openDialogModel = ref(false);
 const dialogtext = ref("Hier könnte Ihre Werbung stehen.");
 
+const TITLE = "Tag auf Auffälligkeiten prüfen";
+
 const TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG =
   "Bei nachträglichen Änderungen an den auffälligen Tagen in Mobidam sollten diese neu geladen werden.";
 
-const dateToReset = ref(new Date());
+const dateYesterday = ref(moment(new Date()).subtract(1, "day").toDate());
+
+const dateToReset = ref(cloneDeep(dateYesterday));
 
 const choosenDate = computed({
   get() {
-    let date = new Date();
+    let date = cloneDeep(dateYesterday.value);
     if (!isNil(dateToReset.value)) {
       date = dateToReset.value;
       date.setHours(5);
@@ -112,7 +120,7 @@ const choosenDate = computed({
 });
 
 function closeDialog() {
-  dateToReset.value = new Date();
+  dateToReset.value = cloneDeep(dateYesterday.value);
   openDialogModel.value = false;
 }
 
