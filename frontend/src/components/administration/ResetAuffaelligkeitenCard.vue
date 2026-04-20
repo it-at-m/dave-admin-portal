@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { isNil } from "lodash";
+import { isNil, cloneDeep } from "lodash";
 import moment from "moment";
 import { computed, ref } from "vue";
 
@@ -99,11 +99,11 @@ const TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG =
 
 const dateYesterday = ref(moment(new Date()).subtract(1, "day").toDate());
 
-const dateToReset = ref(dateYesterday);
+const dateToReset = ref(cloneDeep(dateYesterday));
 
 const choosenDate = computed({
   get() {
-    let date = dateYesterday.value;
+    let date = cloneDeep(dateYesterday.value);
     if (!isNil(dateToReset.value)) {
       date = dateToReset.value;
       date.setHours(5);
@@ -120,7 +120,7 @@ const choosenDate = computed({
 });
 
 function closeDialog() {
-  dateToReset.value = dateYesterday.value;
+  dateToReset.value = cloneDeep(dateYesterday.value);
   openDialogModel.value = false;
 }
 
