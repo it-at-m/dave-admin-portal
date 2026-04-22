@@ -154,20 +154,11 @@ const contentHeight = computed(() => {
 });
 
 function validateZaehlung(): void {
+  // Validierung zur Anzeige der Hinweismeldung bei QjS
   isKnotenLageFormValid.value = validationUtils.validateKnotenLageForm(
     zaehlung.value
   );
-  const isVerkehrsartFormValid = validationUtils.validateVerkehrsartForm(
-    zaehlung.value
-  );
-  const isVerkehrFormValid = validationUtils.validateVerkehrForm(
-    zaehlung.value
-  );
   isZaehlungValid.value =
-    isAllgemeineInfoFormValid.value !== null &&
-    isAllgemeineInfoFormValid.value &&
-    isKnotenLageFormValid.value &&
-    isVerkehrsartFormValid &&
-    isVerkehrFormValid;
+    isAllgemeineInfoFormValid.value !== null && isAllgemeineInfoFormValid.value;
 }
 </script>
