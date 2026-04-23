@@ -293,13 +293,22 @@ function resetForm() {
   krad.value = zaehlung.value.kategorien.includes(Fahrzeug.KRAD);
   rad.value = zaehlung.value.kategorien.includes(Fahrzeug.RAD);
   fuss.value = zaehlung.value.kategorien.includes(Fahrzeug.FUSS);
-  let numberOfChoosableCategories;
-  if (checkIfZaehlartOfZaehlungAllowsAllCategories()) {
-    numberOfChoosableCategories = 7;
-  } else {
-    numberOfChoosableCategories = 2;
-  }
+  const allowedCategories = checkIfZaehlartOfZaehlungAllowsAllCategories()
+    ? [
+        Fahrzeug.PKW,
+        Fahrzeug.LKW,
+        Fahrzeug.LZ,
+        Fahrzeug.BUS,
+        Fahrzeug.KRAD,
+        Fahrzeug.RAD,
+        Fahrzeug.FUSS,
+      ]
+    : [Fahrzeug.RAD, Fahrzeug.FUSS];
+
+  const choosableCategories = zaehlung.value.kategorien.filter((k) =>
+    allowedCategories.includes(k)
+  );
   selectOrDeselectAllVmodel.value =
-    zaehlung.value.kategorien.length === numberOfChoosableCategories;
+    choosableCategories.length === allowedCategories.length;
 }
 </script>
