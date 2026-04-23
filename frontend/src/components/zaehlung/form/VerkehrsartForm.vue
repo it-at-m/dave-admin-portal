@@ -8,6 +8,13 @@
     <v-card-text>
       <v-row dense>
         <v-col>
+          <v-btn
+            class="text-none"
+            density="compact"
+            variant="outlined"
+            :text="labelSelectOrDeselectAll"
+            @click="selectOrDeselectAll()"
+          />
           <v-checkbox
             v-if="areAllVehicleCategoriesSelectable"
             v-model="pkw"
@@ -61,13 +68,6 @@
             color="quaternary"
             hide-details
             @update:model-value="updateKategorieWithFuss"
-          />
-          <v-checkbox
-            v-model="selectOrDeselectAllVmodel"
-            :label="labelSelectOrDeselectAll"
-            color="quaternary"
-            hide-details
-            @update:model-value="selectOrDeselectAll()"
           />
         </v-col>
       </v-row>
@@ -237,6 +237,7 @@ function updateKategorieWithFuss() {
  * @private
  */
 function selectOrDeselectAll() {
+  selectOrDeselectAllVmodel.value = !selectOrDeselectAllVmodel.value;
   // Setzen der Checkboxen
   if (areAllVehicleCategoriesSelectable.value) {
     pkw.value = selectOrDeselectAllVmodel.value;
