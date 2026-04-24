@@ -140,7 +140,6 @@ describe("VerkehrsartForm.vue - Funktionen", () => {
     expect(vm.bus).toBe(false);
     expect(vm.krad).toBe(false);
 
-    // Rad und Fuss folgen weiterhin dem Wert der 'Alles auswählen/abwählen'-Checkbox
     expect(vm.rad).toBe(true);
     expect(vm.fuss).toBe(true);
 
@@ -174,7 +173,7 @@ describe("VerkehrsartForm.vue - Funktionen", () => {
   });
 
   it("resetForm setzt Checkbox-Refs entsprechend zaehlung.kategorien und setzt selectOrDeselectAllVmodel basierend auf der Anzahl wählbarer Kategorien", () => {
-    // Unbeschränkte Zählart: numberOfChoosableCategories = 7
+    // Unbeschränkte Zählart: choosableCategories.length = 7
     const wrapper1 = createWrapper({
       zaehlart: Zaehlart.N,
       kategorien: [
@@ -198,7 +197,7 @@ describe("VerkehrsartForm.vue - Funktionen", () => {
     expect(vm1.fuss).toBe(true);
     expect(vm1.selectOrDeselectAllVmodel).toBe(true);
 
-    // Restriktive Zählart: numberOfChoosableCategories = 2
+    // Restriktive Zählart: choosableCategories.length = 2
     const wrapper2 = createWrapper({
       zaehlart: Zaehlart.QJS,
       kategorien: [Fahrzeug.RAD, Fahrzeug.FUSS],
