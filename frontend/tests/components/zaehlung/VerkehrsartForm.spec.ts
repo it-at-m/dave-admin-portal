@@ -101,11 +101,10 @@ describe("VerkehrsartForm.vue - Funktionen", () => {
     const wrapper = createWrapper({ zaehlart: Zaehlart.N, kategorien: [] });
     const vm: any = wrapper.vm;
 
-    vm.selectOrDeselectAllVmodel = true; // simuliert das Aktivieren der 'Alles auswählen'-Checkbox
     // Ensure zaehlart allows all categories
     vm.zaehlung.zaehlart = Zaehlart.N;
 
-    vm.selectOrDeselectAll();
+    vm.selectOrDeselectAll(); // simuliert das Klicken des 'Alles auswählen'-Buttons
 
     // Wenn alle wählbar sind, sollten diese true sein
     expect(vm.pkw).toBe(true);
@@ -130,10 +129,9 @@ describe("VerkehrsartForm.vue - Funktionen", () => {
     const wrapper = createWrapper({ zaehlart: Zaehlart.QJS, kategorien: [] });
     const vm: any = wrapper.vm;
 
-    vm.selectOrDeselectAllVmodel = true;
     vm.zaehlung.zaehlart = Zaehlart.QJS;
 
-    vm.selectOrDeselectAll();
+    vm.selectOrDeselectAll(); // simuliert das Klicken des 'Alles auswählen'-Buttons
 
     // Restriktive Kategorien sollten false sein
     expect(vm.pkw).toBe(false);
