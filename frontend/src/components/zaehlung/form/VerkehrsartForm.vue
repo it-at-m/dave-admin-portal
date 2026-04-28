@@ -8,6 +8,13 @@
     <v-card-text>
       <v-row dense>
         <v-col>
+          <v-btn
+            class="text-none"
+            density="compact"
+            variant="outlined"
+            :text="labelSelectOrDeselectAll"
+            @click="selectOrDeselectAll()"
+          />
           <v-checkbox
             v-if="areAllVehicleCategoriesSelectable"
             v-model="pkw"
@@ -61,13 +68,6 @@
             color="quaternary"
             hide-details
             @update:model-value="updateKategorieWithFuss"
-          />
-          <v-checkbox
-            v-model="selectOrDeselectAllVmodel"
-            :label="labelSelectOrDeselectAll"
-            color="quaternary"
-            hide-details
-            @update:model-value="selectOrDeselectAll()"
           />
         </v-col>
       </v-row>
@@ -237,6 +237,7 @@ function updateKategorieWithFuss() {
  * @private
  */
 function selectOrDeselectAll() {
+  selectOrDeselectAllVmodel.value = !selectOrDeselectAllVmodel.value;
   // Setzen der Checkboxen
   if (areAllVehicleCategoriesSelectable.value) {
     pkw.value = selectOrDeselectAllVmodel.value;
@@ -293,13 +294,22 @@ function resetForm() {
   krad.value = zaehlung.value.kategorien.includes(Fahrzeug.KRAD);
   rad.value = zaehlung.value.kategorien.includes(Fahrzeug.RAD);
   fuss.value = zaehlung.value.kategorien.includes(Fahrzeug.FUSS);
-  let numberOfChoosableCategories;
-  if (checkIfZaehlartOfZaehlungAllowsAllCategories()) {
-    numberOfChoosableCategories = 7;
-  } else {
-    numberOfChoosableCategories = 2;
-  }
+  const allowedCategories = checkIfZaehlartOfZaehlungAllowsAllCategories()
+    ? [
+        Fahrzeug.PKW,
+        Fahrzeug.LKW,
+        Fahrzeug.LZ,
+        Fahrzeug.BUS,
+        Fahrzeug.KRAD,
+        Fahrzeug.RAD,
+        Fahrzeug.FUSS,
+      ]
+    : [Fahrzeug.RAD, Fahrzeug.FUSS];
+
+  const choosableCategories = zaehlung.value.kategorien.filter((k) =>
+    allowedCategories.includes(k)
+  );
   selectOrDeselectAllVmodel.value =
-    zaehlung.value.kategorien.length === numberOfChoosableCategories;
+    choosableCategories.length === allowedCategories.length;
 }
 </script>
