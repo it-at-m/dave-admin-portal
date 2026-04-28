@@ -101,11 +101,10 @@ describe("VerkehrsartForm.vue - Funktionen", () => {
     const wrapper = createWrapper({ zaehlart: Zaehlart.N, kategorien: [] });
     const vm: any = wrapper.vm;
 
-    vm.selectOrDeselectAllVmodel = true; // simuliert das Aktivieren der 'Alles auswählen'-Checkbox
     // Ensure zaehlart allows all categories
     vm.zaehlung.zaehlart = Zaehlart.N;
 
-    vm.selectOrDeselectAll();
+    vm.selectOrDeselectAll(); // simuliert das Klicken des 'Alles auswählen'-Buttons
 
     // Wenn alle wählbar sind, sollten diese true sein
     expect(vm.pkw).toBe(true);
@@ -130,10 +129,9 @@ describe("VerkehrsartForm.vue - Funktionen", () => {
     const wrapper = createWrapper({ zaehlart: Zaehlart.QJS, kategorien: [] });
     const vm: any = wrapper.vm;
 
-    vm.selectOrDeselectAllVmodel = true;
     vm.zaehlung.zaehlart = Zaehlart.QJS;
 
-    vm.selectOrDeselectAll();
+    vm.selectOrDeselectAll(); // simuliert das Klicken des 'Alles auswählen'-Buttons
 
     // Restriktive Kategorien sollten false sein
     expect(vm.pkw).toBe(false);
@@ -142,7 +140,6 @@ describe("VerkehrsartForm.vue - Funktionen", () => {
     expect(vm.bus).toBe(false);
     expect(vm.krad).toBe(false);
 
-    // Rad und Fuss folgen weiterhin dem Wert der 'Alles auswählen/abwählen'-Checkbox
     expect(vm.rad).toBe(true);
     expect(vm.fuss).toBe(true);
 
@@ -176,7 +173,7 @@ describe("VerkehrsartForm.vue - Funktionen", () => {
   });
 
   it("resetForm setzt Checkbox-Refs entsprechend zaehlung.kategorien und setzt selectOrDeselectAllVmodel basierend auf der Anzahl wählbarer Kategorien", () => {
-    // Unbeschränkte Zählart: numberOfChoosableCategories = 7
+    // Unbeschränkte Zählart: choosableCategories.length = 7
     const wrapper1 = createWrapper({
       zaehlart: Zaehlart.N,
       kategorien: [
@@ -200,7 +197,7 @@ describe("VerkehrsartForm.vue - Funktionen", () => {
     expect(vm1.fuss).toBe(true);
     expect(vm1.selectOrDeselectAllVmodel).toBe(true);
 
-    // Restriktive Zählart: numberOfChoosableCategories = 2
+    // Restriktive Zählart: choosableCategories.length = 2
     const wrapper2 = createWrapper({
       zaehlart: Zaehlart.QJS,
       kategorien: [Fahrzeug.RAD, Fahrzeug.FUSS],
