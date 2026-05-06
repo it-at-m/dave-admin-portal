@@ -18,6 +18,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
 import markerIconRed from "@/assets/marker-icon-red.png";
+import { useMapConfigStore } from "@/store/MapConfigStore";
 
 interface Props {
   coords: LatLng;
@@ -42,14 +43,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<(e: "updateZaehlstellenCoords", v: LatLng) => void>();
 
-const mapAttributionLhm =
-  '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html" style="color: #c62828">GeodatenService München</a>';
-const mapAttributionOpenStreetMap =
-  '&copy; <a href="https://www.openstreetmap.org/copyright" style="color: #c62828">OpenStreetMap</a>';
+const mapConfigStore = useMapConfigStore();
 
 const minimapRef = ref<HTMLDivElement | null>(null);
 
 let minimap: L.Map;
+let layerControl: L.Control.Layers;
 const marker = ref(createMarker());
 
 watch(
@@ -100,76 +99,60 @@ function initMap(): void {
 }
 
 function createLayersAndAddToMap(): void {
-  const baseLayers = createBaseLayers();
-  const overlayLayers = createOverlayLayers();
-  baseLayers.Stadtkarte.addTo(minimap);
+  layerControl = L.control.layers().addTo(minimap);
+  addBaseLayers();
   if (props.activateOverlays) {
-    overlayLayers.Stadtbezirke.addTo(minimap);
-    overlayLayers.Stadtviertel.addTo(minimap);
+    addOverlayLayers();
   }
-  L.control.layers(baseLayers, overlayLayers).addTo(minimap);
 }
 
-function createBaseLayers(): L.Control.LayersObject {
-  const stadtkarteGesamt = L.tileLayer.wms(
-    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-    {
-      layers: "gsm:g_stadtkarte_gesamt",
-      className: "Stadtkarte",
-      attribution: mapAttributionLhm,
-    }
-  );
+/**
+ * Fügt im Backend konfigurierte Base-Layer zur Karte hinzu.
+ */
+function addBaseLayers(): void {
+  const baseLayers = mapConfigStore.getMapConfig.baseLayers;
+  let firstLayerAddedToMap = false;
 
-  const luftbild = L.tileLayer.wms(
-    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-    {
-      layers: "gsm:g_luftbild",
-      className: "Luftbild",
-      attribution: mapAttributionLhm,
+  baseLayers.forEach((layerConfig) => {
+    const layer = L.tileLayer.wms(layerConfig.baseUrl, {
+      layers: layerConfig.layerName,
+      className: layerConfig.layerName,
+      attribution: layerConfig.attribution,
+      referrerPolicy: "strict-origin-when-cross-origin",
+    });
+    layerControl.addBaseLayer(layer, layerConfig.layerNameToDisplay);
+    if (!firstLayerAddedToMap) {
+      layer.addTo(minimap);
+      firstLayerAddedToMap = true;
     }
-  );
-
-  const osm = L.tileLayer.wms(
-    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-      attribution: mapAttributionOpenStreetMap,
-    }
-  );
-
-  return {
-    Stadtkarte: stadtkarteGesamt,
-    Luftbild: luftbild,
-    OpenStreetMaps: osm,
-  };
+  });
 }
 
-function createOverlayLayers(): L.Control.LayersObject {
-  const stadtbezirke = L.tileLayer.wms(
-    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-    {
-      layers: "gsm:stadtbezirk",
-      className: "Stadtbezirke",
+/**
+ * Fügt im Backend konfigurierte Overlay-Layer zur Karte hinzu.
+ */
+function addOverlayLayers(): void {
+  const overlayLayers = mapConfigStore.getMapConfig.overlayLayers;
+
+  overlayLayers.forEach((layerConfig) => {
+    const layer = L.tileLayer.wms(layerConfig.baseUrl, {
+      layers: layerConfig.layerName,
+      className: layerConfig.layerName,
       transparent: true,
       format: "image/png",
-      attribution: mapAttributionLhm,
-    }
-  );
-  const stadtviertel = L.tileLayer.wms(
-    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-    {
-      layers: "gsm:vablock_viertel_dave",
-      className: "Stadtviertel",
-      transparent: true,
-      format: "image/png",
-      attribution: mapAttributionLhm,
-    }
-  );
-
-  return {
-    Stadtbezirke: stadtbezirke,
-    Stadtviertel: stadtviertel,
-  };
+      attribution: layerConfig.attribution,
+      referrerPolicy: "strict-origin-when-cross-origin",
+    });
+    layerControl.addOverlay(layer, layerConfig.layerNameToDisplay);
+  });
 }
+
+watch(mapConfigStore, () => {
+  addBaseLayers();
+  if (props.activateOverlays) {
+    addOverlayLayers();
+  }
+});
 
 function createMarker(): L.Marker {
   const defaultIcon = new Icon.Default();
