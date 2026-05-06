@@ -100,11 +100,6 @@ import MessstelleStatus from "@/types/enum/MessstelleStatus";
 import { useDateUtils } from "@/util/DateUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
-const mapAttributionLhm =
-  '&copy; <a href="https://stadt.muenchen.de/infos/geobasisdaten.html" style="color: #c62828">GeodatenService München</a>';
-const mapAttributionOpenStreetMap =
-  '&copy; <a href="https://www.openstreetmap.org/copyright" style="color: #c62828">OpenStreetMap</a>';
-
 interface Props {
   minheight?: string;
   zId?: string;
@@ -138,6 +133,7 @@ const mapRef = ref<HTMLDivElement | null>(null);
 let map: L.Map;
 let mapMarkerClusterGroup = L.markerClusterGroup();
 const zaehlartenLayer = L.layerGroup();
+let layerControl: L.Control.Layers;
 
 onMounted(() => {
   initMap();
@@ -347,84 +343,56 @@ function createLatLngFromString(lat: string, lng: string): LatLng {
 }
 
 function createLayersAndAddToMap(): void {
-  const baseLayers = createBaseLayers();
-  const overlayLayers = createOverlayLayers();
-
-  baseLayers.Stadtkarte.addTo(map);
-  L.control.layers(baseLayers, overlayLayers).addTo(map);
+  layerControl = L.control.layers().addTo(map);
+  addBaseLayers();
+  addOverlayLayers();
 }
 
-function createBaseLayers(): L.Control.LayersObject {
-  const stadtkarteGesamt = L.tileLayer.wms(
-    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-    {
-      layers: "gsm:g_stadtkarte_gesamt",
-      className: "Stadtkarte",
-      attribution: mapAttributionLhm,
-    }
-  );
+/**
+ * Fügt im Backend konfigurierte Base-Layer zur Karte hinzu.
+ */
+function addBaseLayers(): void {
+  const baseLayers = mapConfigStore.getMapConfig.baseLayers;
+  let firstLayerAddedToMap = false;
 
-  const luftbild = L.tileLayer.wms(
-    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-    {
-      layers: "gsm:g_luftbild",
-      className: "Luftbild",
-      attribution: mapAttributionLhm,
+  baseLayers.forEach((layerConfig) => {
+    const layer = L.tileLayer.wms(layerConfig.baseUrl, {
+      layers: layerConfig.layerName,
+      className: layerConfig.layerName,
+      attribution: layerConfig.attribution,
+      referrerPolicy: "strict-origin-when-cross-origin",
+    });
+    layerControl.addBaseLayer(layer, layerConfig.layerNameToDisplay);
+    if (!firstLayerAddedToMap) {
+      layer.addTo(map);
+      firstLayerAddedToMap = true;
     }
-  );
-
-  const osm = L.tileLayer.wms(
-    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-      attribution: mapAttributionOpenStreetMap,
-    }
-  );
-
-  return {
-    Stadtkarte: stadtkarteGesamt,
-    Luftbild: luftbild,
-    OpenStreetMap: osm,
-  };
+  });
 }
 
-function createOverlayLayers(): L.Control.LayersObject {
-  const stadtbezirke = L.tileLayer.wms(
-    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-    {
-      layers: "gsm:stadtbezirk",
-      className: "Stadtbezirke",
-      transparent: true,
-      format: "image/png",
-      attribution: mapAttributionLhm,
-    }
-  );
-  const stadtviertel = L.tileLayer.wms(
-    "https://geoportal.muenchen.de/geoserver/gsm/wms?",
-    {
-      layers: "gsm:vablock_viertel_dave",
-      className: "Stadtviertel",
-      transparent: true,
-      format: "image/png",
-      attribution: mapAttributionLhm,
-    }
-  );
-  const lichtsignalanlagen = L.tileLayer.wms(
-    "https://geoportal.muenchen.de/geoserver/kvr/wms?",
-    {
-      layers: "kvr:lsa_dave",
-      className: "Lichtsignalanlagen",
-      transparent: true,
-      format: "image/png",
-      attribution: mapAttributionLhm,
-    }
-  );
+/**
+ * Fügt im Backend konfigurierte Overlay-Layer zur Karte hinzu.
+ */
+function addOverlayLayers(): void {
+  const overlayLayers = mapConfigStore.getMapConfig.overlayLayers;
 
-  return {
-    Stadtbezirke: stadtbezirke,
-    Stadtviertel: stadtviertel,
-    Lichtsignalanlagen: lichtsignalanlagen,
-  };
+  overlayLayers.forEach((layerConfig) => {
+    const layer = L.tileLayer.wms(layerConfig.baseUrl, {
+      layers: layerConfig.layerName,
+      className: layerConfig.layerName,
+      transparent: true,
+      format: "image/png",
+      attribution: layerConfig.attribution,
+      referrerPolicy: "strict-origin-when-cross-origin",
+    });
+    layerControl.addOverlay(layer, layerConfig.layerNameToDisplay);
+  });
 }
+
+watch(mapConfigStore, () => {
+  addBaseLayers();
+  addOverlayLayers();
+});
 
 const searchResult = computed(() => {
   return searchStore.getSearchResult;
