@@ -348,7 +348,8 @@ function createLayersAndAddToMap(): void {
  * Fügt im Backend konfigurierte Base-Layer zur Karte hinzu.
  */
 function addBaseLayers(): void {
-  const baseLayers = mapConfigStore.getMapConfig.baseLayers;
+  const baseLayers =
+    configurationStore.getTenantConfiguration.mapConfiguration.baseLayers;
   let firstLayerAddedToMap = false;
 
   baseLayers.forEach((layerConfig) => {
@@ -370,7 +371,8 @@ function addBaseLayers(): void {
  * Fügt im Backend konfigurierte Overlay-Layer zur Karte hinzu.
  */
 function addOverlayLayers(): void {
-  const overlayLayers = mapConfigStore.getMapConfig.overlayLayers;
+  const overlayLayers =
+    configurationStore.getTenantConfiguration.mapConfiguration.overlayLayers;
 
   overlayLayers.forEach((layerConfig) => {
     const layer = L.tileLayer.wms(layerConfig.baseUrl, {
@@ -385,7 +387,7 @@ function addOverlayLayers(): void {
   });
 }
 
-watch(mapConfigStore, () => {
+watch(configurationStore, () => {
   addBaseLayers();
   addOverlayLayers();
 });
