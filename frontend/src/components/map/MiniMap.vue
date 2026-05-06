@@ -118,6 +118,7 @@ function addBaseLayers(): void {
       layers: layerConfig.layerName,
       className: layerConfig.layerName,
       attribution: layerConfig.attribution,
+      referrerPolicy: "strict-origin-when-cross-origin",
     });
     layerControl.addBaseLayer(layer, layerConfig.layerNameToDisplay);
     if (!firstLayerAddedToMap) {
@@ -140,6 +141,7 @@ function addOverlayLayers(): void {
       transparent: true,
       format: "image/png",
       attribution: layerConfig.attribution,
+      referrerPolicy: "strict-origin-when-cross-origin",
     });
     layerControl.addOverlay(layer, layerConfig.layerNameToDisplay);
   });
