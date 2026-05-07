@@ -26,7 +26,6 @@
           width="100%"
           :lat-lng-zaehlstelle="coordsZaehlstelle"
           :lat-lng-zaehlung="coordsZaehlung"
-          :show-luftbild="false"
           :edit-zaehlung-marker="true"
           @update-zaehlung-coords="updateZaehlungCoords"
         />
