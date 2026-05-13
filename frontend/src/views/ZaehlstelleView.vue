@@ -16,6 +16,7 @@
             :kreuzungsname="kreuzungsname"
             :stadtbezirk-nummer="`${zaehlstelle.stadtbezirkNummer}`"
             :stadtbezirk="zaehlstelle.stadtbezirk"
+            :zaehlstelle-uuid="zaehlstelle.id"
             :style="{ cursor: 'pointer' }"
             @edit-zaehlstelle="editZaehlstelle"
           ></zaehlstelle-info>
