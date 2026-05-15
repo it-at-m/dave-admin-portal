@@ -61,7 +61,16 @@
               <div>Sichtbarkeitsstatus Datenportal<br /></div>
             </template>
           </v-checkbox>
-
+          <!-- File chooser here -->
+          <v-file-input
+            v-model="selectedImage"
+            label="Bild hochladen"
+            accept="image/*"
+            prepend-icon="mdi-camera"
+            variant="outlined"
+            density="compact"
+            show-size
+          />
           <v-card-actions>
             <v-spacer />
             <v-btn
@@ -104,6 +113,7 @@ import { isEmpty, isNil } from "lodash";
 import { computed, ref } from "vue";
 
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
+import ZaehlstellenImageService from "@/api/service/ZaehlstellenImageService";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import MiniMap from "@/components/map/MiniMap.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
@@ -125,6 +135,8 @@ const emits = defineEmits<{
 const snackbarStore = useSnackbarStore();
 
 const newSuchwort = ref("");
+
+const selectedImage = ref<File | null>(null);
 
 const coords = computed(() => {
   const punkt: GeoPoint = zaehlstelle.value.punkt;
@@ -193,6 +205,12 @@ function save(): void {
       emits("saved");
     })
     .catch((error) => snackbarStore.showApiError(error));
+  
+  if (selectedImage.value) {
+    ZaehlstellenImageService.uploadImage(zaehlstelle.value.id, selectedImage.value)
+      .catch((error) => snackbarStore.showApiError(error));
+  }
+
 }
 
 function cancel(): void {

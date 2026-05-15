@@ -15,6 +15,12 @@ export default class FetchService {
     return FetchService.sendRequest(url, request, errorMessage);
   }
 
+  static getForBlob(endpoint: string, errorMessage: string): Promise<Blob> {
+    const url = `${this.BASE}/${endpoint}`;
+    const request = FetchUtils.getBlobGETConfig();
+    return FetchService.sendRequestForBlob(url, request, errorMessage);
+  }
+
   static postData(
     dataToSave: any,
     endpoint: string,
@@ -53,6 +59,60 @@ export default class FetchService {
     const url = `${this.BASE}/${endpoint}`;
     const request = FetchUtils.getDELETEConfig(dataToDelete);
     return FetchService.sendRequest(url, request, errorMessage);
+  }
+
+  private static sendRequestForBlob(
+    url: string,
+    request: RequestInit,
+    errorMessage: string
+  ): Promise<Blob> {
+    return fetch(url, request)
+      .catch((error) => {
+        throw new ApiError(
+          Levels.ERROR,
+          `Die Verbindung zum Service konnte nicht aufgebaut werden.`,
+          error
+        );
+      })
+      .then((response) => {
+        if (!response.ok) {
+          if (response.status === 400) {
+            throw new ApiError(
+              Levels.ERROR,
+              errorMessage,
+              `Fehlerhafte Anfrage an das Backend geschickt, HTTP: 400.`
+            );
+          } else if (response.status === 403) {
+            throw new ApiError(
+              Levels.ERROR,
+              `Sie haben nicht die nötigen Rechte um diese Aktion durchzuführen.`
+            );
+          } else if (response.status === 409) {
+            throw new ApiError(
+              Levels.ERROR,
+              errorMessage,
+              `Eine Zählstelle mit der angegebenen Zählstellennummer und Zählart existiert bereits.`
+            );
+          } else if (response.status === 412) {
+            location.reload();
+            throw new ApiError(
+              Levels.ERROR,
+              `Die Daten wurden in der Zwischenzeit verändert. Die Seite wird neu geladen.`
+            );
+          } else if (
+            response.type === FetchService.RESPONSE_TYPE_OPAQUE_REDIRECT
+          ) {
+            location.reload();
+          }
+          throw new ApiError(
+            Levels.ERROR,
+            errorMessage,
+            `Fehler: ${response.status} ${response.statusText}`
+          );
+        }
+
+        return response.blob();
+      });
   }
 
   private static sendRequest(
