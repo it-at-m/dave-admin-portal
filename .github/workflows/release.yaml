@@ -91,4 +91,4 @@ jobs:
           git config --global user.name "GitHub Actions"
           # create pull request
           BRANCH="${GITHUB_REF#refs/heads/}" # preserves full branch path
-          gh pr create --base demo --head "$BRANCH" --title "$BRANCH to demo" --body "This PR is auto-generated"name: release
+          gh pr create --base demo --head "$BRANCH" --title "$BRANCH to demo" --body "This PR is auto-generated"
