@@ -100,7 +100,7 @@ function initMap(): void {
 function createLayersAndAddToMap(): void {
   const baseLayers = createBaseLayers();
   const overlayLayers = createOverlayLayers();
-  baseLayers.Stadtkarte.addTo(minimap);
+  baseLayers.OpenStreetMaps.addTo(minimap);
   L.control.layers(baseLayers, overlayLayers).addTo(minimap);
 }
 
@@ -127,6 +127,7 @@ function createBaseLayers(): L.Control.LayersObject {
     "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
       attribution: mapAttributionOpenStreetMap,
+      referrerPolicy: "strict-origin-when-cross-origin"
     }
   );
 

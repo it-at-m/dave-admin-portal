@@ -373,6 +373,7 @@ function createBaseLayers(): L.Control.LayersObject {
     "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
       attribution: mapAttributionOpenStreetMap,
+      referrerPolicy: "strict-origin-when-cross-origin"
     }
   );
 
