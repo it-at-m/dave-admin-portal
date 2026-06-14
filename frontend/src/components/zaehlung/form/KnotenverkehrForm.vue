@@ -39,17 +39,17 @@
               class="prevent-select"
               xml:space="preserve"
               style="
-                font-size: 63.0899px;
+                font-size: 63.0792px;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #ffffff;
-                stroke-width: 38.9426;
+                stroke-width: 38.936;
               "
-              x="603.00354"
-              y="-354.56787"
-              transform="matrix(0.68244987,0.68244987,-0.73265455,0.73265455,0,0)"
+              x="610.92841"
+              y="-343.84506"
+              transform="matrix(0.68285222,0.68285222,-0.73222286,0.73222286,0,0)"
               :style="{ cursor: getCursorType(8) }"
               @click="activateOrDeactivateTotalKnotenarm(8)"
             >
@@ -197,8 +197,8 @@
                 fill: #ffffff;
                 stroke-width: 38.9365;
               "
-              x="-424.5455"
-              y="1352.3147"
+              x="-412.68872"
+              y="1347.3943"
               transform="matrix(0.68289963,-0.68289963,0.73217202,0.73217202,0,0)"
               :style="{ cursor: getCursorType(7) }"
               @click="activateOrDeactivateTotalKnotenarm(7)"
@@ -348,8 +348,8 @@
                 fill: #ffffff;
                 stroke-width: 38.9365;
               "
-              x="-640.21271"
-              y="397.35382"
+              x="-650.37598"
+              y="388.95905"
               transform="matrix(-0.68289963,-0.68289963,0.73217202,-0.73217202,0,0)"
               :style="{ cursor: getCursorType(6) }"
               @click="activateOrDeactivateTotalKnotenarm(6)"
@@ -498,8 +498,8 @@
                 fill: #ffffff;
                 stroke-width: 38.9365;
               "
-              x="371.39447"
-              y="610.23108"
+              x="373.10757"
+              y="610.74023"
               transform="matrix(0.68289962,-0.68289962,0.73217203,0.73217203,0,0)"
               :style="{ cursor: getCursorType(5) }"
               @click="activateOrDeactivateTotalKnotenarm(5)"
@@ -655,8 +655,8 @@
                 fill: #ffffff;
                 stroke-width: 38.9426;
               "
-              x="133.91887"
-              y="-654.36975"
+              x="140.36589"
+              y="-652.59448"
               transform="matrix(0,0.96512986,-1.03613,0,0,0)"
               :style="{ cursor: getCursorType(4) }"
               @click="activateOrDeactivateTotalKnotenarm(4)"
@@ -798,17 +798,17 @@
               class="prevent-select"
               xml:space="preserve"
               style="
-                font-size: 63.0799px;
+                font-size: 58.8937px;
                 text-align: start;
                 writing-mode: lr-tb;
                 direction: ltr;
                 text-anchor: start;
                 fill: #ffffff;
-                stroke-width: 38.9365;
+                stroke-width: 36.3526;
               "
-              x="701.77631"
-              y="1229.7999"
-              transform="scale(0.96576591,1.0354476)"
+              x="729.64667"
+              y="1179.3456"
+              transform="scale(0.93549544,1.0689523)"
               :style="{ cursor: getCursorType(3) }"
               @click="activateOrDeactivateTotalKnotenarm(3)"
             >
@@ -958,8 +958,8 @@
                 fill: #ffffff;
                 stroke-width: 38.9365;
               "
-              x="-174.92575"
-              y="696.33978"
+              x="-177.17397"
+              y="699.4447"
               transform="matrix(0,-0.96576591,1.0354476,0,0,0)"
               :style="{ cursor: getCursorType(2) }"
               @click="activateOrDeactivateTotalKnotenarm(2)"
@@ -1109,9 +1109,9 @@
                 fill: #ffffff;
                 stroke-width: 38.9365;
               "
-              x="701.77631"
+              x="704.19226"
               y="179.69041"
-              transform="scale(0.96576588,1.0354476)"
+              transform="scale(0.9657659,1.0354476)"
               :style="{ cursor: getCursorType(1) }"
               @click="activateOrDeactivateTotalKnotenarm(1)"
             >
