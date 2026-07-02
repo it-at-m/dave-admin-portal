@@ -1,29 +1,36 @@
 <template>
   <div>
-    <span class="caption" v-if="showCaption">{{ caption }}</span><br/>
-    <span class="text text-info">{{ text }}</span><br/><br/>
+    <span
+      v-if="showCaption"
+      class="text-caption"
+      >{{ caption }}</span
+    ><br />
+    <span class="lhm-text-field">{{ text }}</span>
+    <br /><br v-if="addExtraBr" />
   </div>
 </template>
 
+<script setup lang="ts">
+import { isEmpty } from "lodash";
+import { computed } from "vue";
+
+interface Props {
+  addExtraBr?: boolean;
+  text?: string;
+  caption: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  addExtraBr: false,
+  text: "",
+});
+
+const showCaption = computed(() => !isEmpty(props.caption));
+</script>
+
 <style scoped>
-.text-info {
+.lhm-text-field {
   font-size: 18px;
   color: black;
 }
 </style>
-
-<script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
-
-@Component
-export default class LhmTextField extends Vue {
-
-  @Prop({default: ""}) private readonly caption!: string;
-  @Prop({default: ""}) private readonly text!: string;
-
-  get showCaption(): boolean {
-    return this.caption !== "";
-  }
-
-}
-</script>

@@ -1,13 +1,13 @@
 export default class XsrfTokenExtractor {
-
   static getXsrfToken(): string {
-    let help = document.cookie.match('(^|;)\\s*' + 'XSRF-TOKEN' + '\\s*=\\s*([^;]+)');
-    let csrf_cookie = help ? help.pop() : '';
+    const help = document.cookie.match(
+      "(^|;)\\s*" + "XSRF-TOKEN" + "\\s*=\\s*([^;]+)"
+    );
+    const csrf_cookie = help ? help.pop() : "";
     if (csrf_cookie === undefined) {
-      return '';
+      return "";
     } else {
       return csrf_cookie.toString();
     }
   }
-
 }

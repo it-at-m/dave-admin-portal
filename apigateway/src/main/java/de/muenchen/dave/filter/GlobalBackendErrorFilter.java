@@ -1,7 +1,3 @@
-/*
- * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
- * der Landeshauptstadt München, 2023
- */
 package de.muenchen.dave.filter;
 
 import de.muenchen.dave.util.GatewayUtils;
@@ -13,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
 
 /**
  * This {@link GlobalFilter} replaces the body by a generic error body, when a server responses
@@ -31,14 +26,12 @@ public class GlobalBackendErrorFilter implements GlobalFilter, Ordered {
     }
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> filter(final ServerWebExchange exchange, final GatewayFilterChain chain) {
         log.debug("Check for backend errors");
         return GatewayUtils.responseBodyManipulatorForServerWebExchange(
                 exchange,
                 chain,
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                GENERIC_ERROR
-        );
+                GENERIC_ERROR);
     }
-
 }

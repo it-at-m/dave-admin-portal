@@ -1,16 +1,16 @@
 import XsrfTokenExtractor from "@/api/util/XsrfTokenExtractor";
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export default class FetchUtils {
-
   /**
    * Liefert eine default GET-Config für fetch
    */
   static getGETConfig(): RequestInit {
     return {
       headers: this.getHeaders(),
-      mode: 'cors',
-      credentials: 'same-origin',
-      redirect: 'manual'
+      mode: "cors",
+      credentials: "same-origin",
+      redirect: "manual",
     };
   }
 
@@ -20,13 +20,13 @@ export default class FetchUtils {
    */
   static getPOSTConfig(body: any): RequestInit {
     return {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(body),
       headers: FetchUtils.getHeaders(),
-      mode: 'cors',
-      credentials: 'same-origin',
-      redirect: "manual"
-    }
+      mode: "cors",
+      credentials: "same-origin",
+      redirect: "manual",
+    };
   }
 
   /**
@@ -37,13 +37,13 @@ export default class FetchUtils {
    */
   static getPUTConfig(body: any): RequestInit {
     return {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(body),
       headers: this.getHeadersWithEtag(body),
-      mode: 'cors',
-      credentials: 'same-origin',
-      redirect: "manual"
-    }
+      mode: "cors",
+      credentials: "same-origin",
+      redirect: "manual",
+    };
   }
 
   /**
@@ -54,13 +54,13 @@ export default class FetchUtils {
    */
   static getPATCHConfig(body: any): RequestInit {
     return {
-      method: 'PATCH',
+      method: "PATCH",
       body: JSON.stringify(body),
       headers: this.getHeadersWithEtag(body),
-      mode: 'cors',
-      credentials: 'same-origin',
-      redirect: "manual"
-    }
+      mode: "cors",
+      credentials: "same-origin",
+      redirect: "manual",
+    };
   }
 
   /**
@@ -70,12 +70,12 @@ export default class FetchUtils {
    */
   static getDELETEConfig(body: any): RequestInit {
     return {
-      method: 'DELETE',
+      method: "DELETE",
       headers: this.getHeadersWithEtag(body),
-      mode: 'cors',
-      credentials: 'same-origin',
-      redirect: "manual"
-    }
+      mode: "cors",
+      credentials: "same-origin",
+      redirect: "manual",
+    };
   }
 
   /**
@@ -83,12 +83,11 @@ export default class FetchUtils {
    * @returns {Headers}
    */
   static getHeaders(): Headers {
-    let headers = new Headers({
-      'Content-Type': 'application/json',
-      'Accept-Language': 'de-DE',
-      'X-XSRF-TOKEN': XsrfTokenExtractor.getXsrfToken().toString()
+    return new Headers({
+      "Content-Type": "application/json",
+      "Accept-Language": "de-DE",
+      "X-XSRF-TOKEN": XsrfTokenExtractor.getXsrfToken().toString(),
     });
-    return headers;
   }
 
   /**
@@ -98,7 +97,7 @@ export default class FetchUtils {
   static getHeadersWithEtag(body: any): Headers {
     const headers = FetchUtils.getHeaders();
     if (body && body.entityVersion != null) {
-      headers.append("If-Match", body.entityVersion)
+      headers.append("If-Match", body.entityVersion);
     }
     return headers;
   }
@@ -108,24 +107,22 @@ export default class FetchUtils {
    */
   static getPdfPOSTConfig(body: any): RequestInit {
     return {
-      method: 'POST',
+      method: "POST",
       body: body,
       headers: FetchUtils.getPdfHeaders(),
-      mode: 'cors',
-      credentials: 'same-origin',
-      redirect: "manual"
-    }
+      mode: "cors",
+      credentials: "same-origin",
+      redirect: "manual",
+    };
   }
 
   /**
    * Baut den Header für ein PDF-Request auf
    */
   static getPdfHeaders(): Headers {
-    let headers = new Headers({
-      'Accept-Language': 'de-DE',
-      'X-XSRF-TOKEN': XsrfTokenExtractor.getXsrfToken().toString()
+    return new Headers({
+      "Accept-Language": "de-DE",
+      "X-XSRF-TOKEN": XsrfTokenExtractor.getXsrfToken().toString(),
     });
-    return headers;
   }
-
 }

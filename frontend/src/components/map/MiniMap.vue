@@ -1,206 +1,183 @@
 <template>
   <v-sheet
-      :height="height"
-      :width="width"
-      :min-height="minheight"
+    :height="height"
+    :width="width"
+    :min-height="minheight"
   >
-    <l-map
-        ref="minimap"
-        :options="this.mapOptions"
-        style="z-index: 1"
-        @ready="mapReady"
-        v-resize="onResize"
-    >
-      <l-control-layers/>
-      <!--      Kartenlayers. Bei layer-type="base" muss bei der Default-Karte :visible auf true gesetzt werden. -->
-      <!--      layer-type="overlay" sind zusätzlich zuschaltbare Ansichten. -->
-
-      <!--      Standardkarte Geoportal -->
-      <l-wms-tile-layer
-          base-url='https://geoportal.muenchen.de/geoserver/gsm/wms?'
-          layers='gsm:g_stadtkarte_gesamt'
-          :visible=true
-          name="Stadtkarte"
-          attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
-          layer-type="base"
-      />
-      <!--      Luftbild Geoportal -->
-      <l-wms-tile-layer
-          base-url='https://geoportal.muenchen.de/geoserver/gsm/wms?'
-          layers='gsm:g_luftbild'
-          :visible=false
-          name="Luftbild"
-          attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
-          layer-type="base"
-      />
-      <!--      OpenStreetMap -->
-      <l-wms-tile-layer
-          :visible=false
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap-Mitwirkende</a> by terrestris'
-          base-url='https://ows.terrestris.de/osm/service?'
-          layer-type="base"
-          layers='OSM-WMS'
-          name="OpenStreetMaps"
-      />
-      <!--      Beginn der overlay Layers   -->
-      <l-wms-tile-layer
-          base-url='https://geoportal.muenchen.de/geoserver/gsm/wms?'
-          layers='gsm:stadtbezirk'
-          :visible=true
-          :transparent=true
-          format="image/png"
-          name="Stadtbezirke"
-          attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
-          layer-type="overlay"
-      />
-      <l-wms-tile-layer
-          :transparent=true
-          :visible=true
-          attribution='&copy; <a href="https://www.muenchen.de/rathaus/Stadtverwaltung/Kommunalreferat/geodatenservice/geobasisdaten.html">GeodatenService München</a>'
-          base-url='https://geoportal.muenchen.de/geoserver/gsm/wms?'
-          format="image/png"
-          layer-type="overlay"
-          layers='gsm:vablock_viertel_dave'
-          name="Stadtviertel"
-      />
-    </l-map>
-
+    <div
+      id="minimap"
+      ref="minimapRef"
+      :style="mapStyle"
+    />
   </v-sheet>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-import {Component, Prop, Ref, Watch} from "vue-property-decorator"
-// imports for leaflet
-import {
-  LCircleMarker,
-  LControlLayers,
-  LIcon,
-  LLayerGroup,
-  LMap,
-  LMarker,
-  LTileLayer,
-  LTooltip,
-  LWMSTileLayer
-} from "vue2-leaflet"
-// Api
-/* eslint-disable no-unused-vars */
-import {control, Icon, LatLng, Marker} from "leaflet"
-import DefaultObjectCreator from "@/util/DefaultObjectCreator";
-/* eslint-enable no-unused-vars */
+<script setup lang="ts">
+import L, { Icon, LatLng } from "leaflet";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
-@Component({
-  components: {
-    LIcon,
-    LMap,
-    LTileLayer,
-    LMarker,
-    LCircleMarker,
-    LTooltip,
-    LControlLayers,
-    LLayerGroup,
-    'l-wms-tile-layer': LWMSTileLayer
+import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
+import markerIconRed from "@/assets/marker-icon-red.png";
+import { useMapConfigStore } from "@/store/MapConfigStore";
+
+interface Props {
+  coords: LatLng;
+  height?: string;
+  width?: string;
+  minheight?: string;
+  isMessstelle?: boolean;
+  resetMarker?: boolean;
+  draggable?: boolean;
+  activateOverlays?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  height: "100%",
+  width: "100%",
+  minheight: "160px",
+  isMessstelle: false,
+  resetMarker: false,
+  draggable: true,
+  activateOverlays: false,
+});
+
+const emit = defineEmits<(e: "updateZaehlstellenCoords", v: LatLng) => void>();
+
+const mapConfigStore = useMapConfigStore();
+
+const minimapRef = ref<HTMLDivElement | null>(null);
+
+let minimap: L.Map;
+let layerControl: L.Control.Layers;
+const marker = ref(createMarker());
+
+watch(
+  () => props.resetMarker,
+  () => {
+    marker.value.removeFrom(minimap);
+    marker.value = createMarker();
+    marker.value.addTo(minimap);
+    minimap.setView(props.coords, 18);
   }
-})
-export default class MiniMap extends Vue {
+);
 
-  @Prop({default: "15vh"})
-  private readonly height!: string;
+onMounted(() => {
+  initMap();
+});
 
-  @Prop({default: "160px"})
-  private readonly minheight!: string
+onBeforeUnmount(() => {
+  minimap.remove();
+});
 
-  @Prop({default: "100%"})
-  private readonly width!: string;
-  @Prop({default: DefaultObjectCreator.createCenterOfMunichLatLng()}) coords!: LatLng;
-
-  @Ref('minimap')
-  private readonly theMap!: LMap;
-
-  private zoom: number = 18;
-
-  private newMarker: Marker | null = null;
-
-  /**
-   * Optionen fuer die Darstellung der Karte
-   */
-  private mapOptions: object = {
+function initMap(): void {
+  minimap = L.map(minimapRef.value as HTMLElement, {
     minZoom: 10,
     maxZoom: 18,
+    zoom: 18,
     preferCanvas: false,
     attributionControl: false,
     fullscreenControl: true,
     fullscreenControlOptions: {
-      position: 'topleft'
-    }
-  };
+      position: "topleft",
+    },
+    center: props.coords,
+  });
 
-  // Wenn es neue Koordinaten gibt, wird die Karte zurückgesetzt
-  // und der Marker neu eingezeichnet
-  @Watch('coords')
-  private resetMap() {
+  minimap.whenReady(() => {
     setTimeout(() => {
-          this.deleteNewMarker();
-          this.createMarkerForNewZaehlstelle(this.coords);
-          this.theMap.mapObject?.setView(this.coords, this.zoom);
-        }
-        , 200);
-  }
-
-  // Legt einen neuen Marker an der Position coords an
-  // und fügt diesen der Karte hinzu
-  private createMarkerForNewZaehlstelle(coords: LatLng) {
-    let defaultIcon = new Icon.Default();
-    defaultIcon.options.iconUrl = require('@/assets/marker-icon-red.png');
-    this.newMarker = new Marker(
-        coords,
-        {icon: defaultIcon, opacity: 1.0, draggable: true}
-    );
-
-    this.newMarker.on('dragend', () => {
-      if (this.newMarker)
-        this.updateZaehlstellenCoords(this.newMarker.getLatLng())
-    });
-
-    this.newMarker.addTo(this.theMap.mapObject);
-  }
-
-  private updateZaehlstellenCoords(zaehlstellenCoords: LatLng) {
-    if (zaehlstellenCoords) {
-      this.$emit('updateZaehlstellenCoords', zaehlstellenCoords)
-    }
-  }
-
-  // Wenn ein neuer Marker existiert wird dieser gelöscht
-  // und der Anlegen-Modus wird verlassen
-  private deleteNewMarker() {
-    if (this.newMarker) {
-      this.theMap.mapObject.removeLayer(this.newMarker)
-      this.newMarker = null;
-    }
-  }
-
-  mapReady() {
-    this.theMap.mapObject.removeControl(control.attribution());
-    /*
-     * Wenn die Karte in einem Popup eingebettet ist,
-     * verhält diese sich glitchy, weil es zeitlich
-     * mit dem invalidateSize in onResize() kollidiert oder so.
-     */
-    setTimeout(() => {
-          this.deleteNewMarker();
-          this.createMarkerForNewZaehlstelle(this.coords);
-          this.theMap.mapObject?.setView(this.coords, this.zoom);
-        }
-        , 200);
-  }
-
-  onResize() {
-    //provoziert ein Rerendering der Karte
-    setTimeout(() => this.theMap.mapObject.invalidateSize(), 200);
-  }
-
+      minimap.invalidateSize();
+      minimap.addControl(
+        L.control.attribution({
+          position: "bottomleft",
+          prefix: "Leaflet",
+        })
+      );
+      createLayersAndAddToMap();
+      marker.value.addTo(minimap);
+    }, 10);
+  });
 }
+
+function createLayersAndAddToMap(): void {
+  layerControl = L.control.layers().addTo(minimap);
+  addBaseLayers();
+  if (props.activateOverlays) {
+    addOverlayLayers();
+  }
+}
+
+/**
+ * Fügt im Backend konfigurierte Base-Layer zur Karte hinzu.
+ */
+function addBaseLayers(): void {
+  const baseLayers = mapConfigStore.getMapConfig.baseLayers;
+  let firstLayerAddedToMap = false;
+
+  baseLayers.forEach((layerConfig) => {
+    const layer = L.tileLayer.wms(layerConfig.baseUrl, {
+      layers: layerConfig.layerName,
+      className: layerConfig.layerName,
+      attribution: layerConfig.attribution,
+      referrerPolicy: "strict-origin-when-cross-origin",
+    });
+    layerControl.addBaseLayer(layer, layerConfig.layerNameToDisplay);
+    if (!firstLayerAddedToMap) {
+      layer.addTo(minimap);
+      firstLayerAddedToMap = true;
+    }
+  });
+}
+
+/**
+ * Fügt im Backend konfigurierte Overlay-Layer zur Karte hinzu.
+ */
+function addOverlayLayers(): void {
+  const overlayLayers = mapConfigStore.getMapConfig.overlayLayers;
+
+  overlayLayers.forEach((layerConfig) => {
+    const layer = L.tileLayer.wms(layerConfig.baseUrl, {
+      layers: layerConfig.layerName,
+      className: layerConfig.layerName,
+      transparent: true,
+      format: "image/png",
+      attribution: layerConfig.attribution,
+      referrerPolicy: "strict-origin-when-cross-origin",
+    });
+    layerControl.addOverlay(layer, layerConfig.layerNameToDisplay);
+  });
+}
+
+watch(mapConfigStore, () => {
+  addBaseLayers();
+  if (props.activateOverlays) {
+    addOverlayLayers();
+  }
+});
+
+function createMarker(): L.Marker {
+  const defaultIcon = new Icon.Default();
+  if (props.isMessstelle) {
+    defaultIcon.options.iconUrl = markerIconDiamondRed;
+  } else {
+    defaultIcon.options.iconUrl = markerIconRed;
+  }
+
+  const marker = L.marker(props.coords, {
+    icon: defaultIcon,
+    opacity: 1.0,
+    draggable: props.draggable,
+  });
+
+  marker.on("dragend", () => {
+    emit("updateZaehlstellenCoords", marker.getLatLng());
+  });
+
+  return marker;
+}
+
+const mapStyle = computed(() => {
+  return `height: ${props.height}; width: ${props.width}; min-height: ${props.minheight}; z-index: 1`;
+});
 </script>
 
 <style lang="css">

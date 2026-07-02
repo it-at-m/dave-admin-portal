@@ -1,103 +1,128 @@
 <template>
   <v-card
-      :loading="loading"
-      class="mx-auto my-12"
-      max-width="374"
+    class="mx-auto mt-1 mb-4"
+    max-width="374"
   >
-    <template slot="progress">
-      <v-progress-linear
-          color="deep-purple"
-          height="10"
-          indeterminate
-      ></v-progress-linear>
-    </template>
-
     <zaehlung-card-map
-        :lat-lng-zaehlstelle="coordsZaehlstelle"
-        :lat-lng-zaehlung="coordsZaehlung"
-        :show-luftbild=true
+      :lat-lng-zaehlstelle="coordsZaehlstelle"
+      :lat-lng-zaehlung="coordsZaehlung"
     />
 
-    <v-speed-dial
-        v-model="fab"
-        absolute
-        top
-        left
+    <v-btn
+      v-tooltip:bottom="statusDesign.tooltip"
+      :color="statusDesign.color"
+      icon
+      :size="56"
+      elevation="6"
+      location="top start"
+      position="absolute"
+      class="ml-2 mt-2"
+      style="z-index: 400; cursor: default"
     >
-      <template v-slot:activator>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-avatar v-bind="attrs" v-on="on"
-                      :color="statusDesign.color"
-                      size="56">
-              <v-icon x-large>{{ statusDesign.iconPath }}</v-icon>
-            </v-avatar>
-          </template>
-          <span>
-          {{ statusDesign.tooltip }}
-        </span>
-        </v-tooltip>
-      </template>
-    </v-speed-dial>
+      <v-icon
+        :size="42"
+        :icon="statusDesign.iconPath"
+      />
+    </v-btn>
 
-    <div @click="openZaehlungDialog" :style="{cursor: 'pointer'}">
+    <v-progress-linear
+      v-if="loading"
+      color="deep-purple"
+      height="10"
+      indeterminate
+    />
 
+    <div
+      :style="{ cursor: 'pointer' }"
+      @click="openZaehlungDialog"
+    >
       <v-row>
-        <v-col cols="12" md="8">
-          <v-card-title>{{ title }}</v-card-title>
+        <v-col
+          cols="12"
+          md="8"
+        >
+          <v-card-title>{{ zaehlung.projektName }}</v-card-title>
           <v-card-subtitle>{{ datum }}</v-card-subtitle>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-card-title>
             <zaehlung-geometrie
-                height="60"
-                width="60"
-                activeColor="#1565C0"
-                passiveColor="#EEEEEE"
-                :knotenarme="zaehlung.knotenarme"
-            ></zaehlung-geometrie>
+              v-model="zaehlung.knotenarme"
+              height="60"
+              width="60"
+              active-color="#1565C0"
+              passive-color="#EEEEEE"
+            />
           </v-card-title>
         </v-col>
       </v-row>
 
       <v-card-text>
-
         <v-row
-            align="center"
-            class="mx-0 mt-2"
-            no-gutters>
-          <v-spacer/>
-          <v-col cols="12" md="1">
-            <zaehlart-icon :zaehlart="zaehlung.zaehlart" :color="iconColor"></zaehlart-icon>
+          align="center"
+          class="mx-0 mt-2"
+          no-gutters
+        >
+          <v-spacer />
+          <v-col
+            cols="12"
+            md="1"
+          >
+            <zaehlart-icon
+              :zaehlart="zaehlung.zaehlart"
+              :color="ICON_COLOR"
+            ></zaehlart-icon>
           </v-col>
-          <v-spacer/>
-          <v-col cols="12" md="1">
-            <wetter-icon :wetter="zaehlung.wetter" :color="iconColor"></wetter-icon>
+          <v-spacer />
+          <v-col
+            cols="12"
+            md="1"
+          >
+            <wetter-icon
+              :wetter="zaehlung.wetter"
+              :color="ICON_COLOR"
+            ></wetter-icon>
           </v-col>
-          <v-spacer/>
-          <v-col cols="12" md="1">
-            <zaehldauer-icon :zaehldauer="zaehlung.zaehldauer" :color="iconColor"></zaehldauer-icon>
+          <v-spacer />
+          <v-col
+            cols="12"
+            md="1"
+          >
+            <zaehldauer-icon
+              :zaehldauer="zaehlung.zaehldauer"
+              :color="ICON_COLOR"
+            ></zaehldauer-icon>
           </v-col>
-          <v-spacer/>
-          <v-col cols="12" md="1">
-            <quelle-icon :quelle="zaehlung.quelle" :color="iconColor"></quelle-icon>
+          <v-spacer />
+          <v-col
+            cols="12"
+            md="1"
+          >
+            <quelle-icon
+              :quelle="zaehlung.quelle"
+              :color="ICON_COLOR"
+            ></quelle-icon>
           </v-col>
-          <v-spacer/>
+          <v-spacer />
         </v-row>
 
         <v-row
-            align="center"
-            class="mx-0 mt-2"
-            no-gutters>
+          align="center"
+          class="mx-0 mt-2"
+          no-gutters
+        >
           <v-col md="12">
             <v-data-table
-                dense
-                :headers="streetsHeader"
-                :items="streets"
-                item-key="nummer"
-                :items-per-page="-1"
-                hide-default-footer
-                fixed-header
+              density="compact"
+              :headers="streetsHeader as Array<any>"
+              :items="streets"
+              item-key="nummer"
+              :items-per-page="-1"
+              hide-default-footer
+              fixed-header
             />
           </v-col>
         </v-row>
@@ -105,446 +130,414 @@
     </div>
 
     <v-card-actions>
+      <v-btn
+        v-if="showButtonFreigeben"
+        class="ml-2 mr-2"
+        color="secondary"
+        variant="elevated"
+        text="Freigeben"
+        @click="zaehlungFreigeben"
+      />
+      <v-btn
+        v-if="showButtonKorrektur"
+        class="ml-2 mr-2"
+        color="secondary"
+        variant="elevated"
+        text="Korrigieren"
+        @click="zaehlungKorrigieren"
+      />
+      <v-btn
+        v-if="showButtonBeauftragen"
+        class="ml-2 mr-2"
+        color="secondary"
+        variant="elevated"
+        text="Beauftragen"
+        @click="openDienstleisterDialog(true)"
+      />
+      <v-spacer />
 
-          <v-btn v-if="showButtonFreigeben"
-                 class="ml-2 mr-2"
-                 color="secondary"
-                 @click="zaehlungFreigeben">
-            Freigeben
-          </v-btn>
-          <v-btn v-if="showButtonKorrektur"
-                 class="ml-2 mr-2"
-                 color="secondary"
-                 @click="zaehlungKorrigieren">
-            Korrigieren
-          </v-btn>
-          <v-btn v-if="showButtonBeauftragen"
-                 class="ml-2 mr-2"
-                 color="secondary"
-                 @click="openDienstleisterDialog(true)">
-            Beauftragen
-          </v-btn>
-      <v-spacer/>
-
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on"
-                 class="ml-2 mr-2"
-                 icon
-                 color="secondary"
-                 @click="openChatDialog">
-            <v-badge v-if="zaehlung.unreadMessagesMobilitaetsreferat"
-                     dot
-                     color="red"
-            >
-              <v-icon>mdi-tooltip-account</v-icon>
-            </v-badge>
-            <v-icon v-else>mdi-tooltip-account</v-icon>
-          </v-btn>
-        </template>
-        <span>
-          Chat
-        </span>
-      </v-tooltip>
-
-      <v-menu
-          top
-          right
-          offset-x
-          offset-y
+      <v-btn
+        v-tooltip:bottom="'Chat'"
+        class="ml-2 mr-2"
+        icon
+        color="secondary"
+        @click="openChatDialog"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-              color="black"
-              icon
-              v-bind="attrs"
-              v-on="on"
-          >
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
+        <v-badge
+          v-if="zaehlung.unreadMessagesMobilitaetsreferat"
+          dot
+          floating
+          color="red"
+        >
+          <v-icon>mdi-tooltip-account</v-icon>
+        </v-badge>
+        <v-icon v-else>mdi-tooltip-account</v-icon>
+      </v-btn>
 
-        <v-list dense>
-          <v-list-item dense>
-            <v-tooltip right>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on"
-                       class="ml-2 mr-2"
-                       icon
-                       small
-                       color="secondary"
-                       @click="zaehlungLoeschen">
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
-              <span>
-                Löschen
-              </span>
-            </v-tooltip>
+      <v-menu location="right bottom">
+        <template #activator="{ props }">
+          <v-btn
+            v-bind="props"
+            icon="mdi-dots-vertical"
+            color="black"
+          />
+        </template>
+        <v-list density="compact">
+          <v-list-item density="compact">
+            <v-btn
+              v-tooltip:end="'Löschen'"
+              class="ml-2 mr-2"
+              icon="mdi-delete"
+              variant="text"
+              color="secondary"
+              @click="zaehlungLoeschen"
+            />
           </v-list-item>
-          <v-list-item dense v-if="showButtonDienstleisterKorrigieren">
-            <v-tooltip right>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on"
-                       class="ml-2 mr-2"
-                       icon
-                       color="secondary"
-                       @click="openDienstleisterDialog(false)">
-                  <v-icon>mdi-account-convert-outline</v-icon>
-                </v-btn>
-              </template>
-                <span>
-                  Dienstleister korrigieren
-                </span>
-            </v-tooltip>
+          <v-list-item
+            v-if="showButtonDienstleisterKorrigieren"
+            density="compact"
+          >
+            <v-btn
+              v-tooltip:end="'Dienstleister korrigieren'"
+              class="ml-2 mr-2"
+              icon="mdi-account-convert-outline"
+              variant="text"
+              color="secondary"
+              @click="openDienstleisterDialog(false)"
+            />
           </v-list-item>
-          <v-list-item dense>
-            <v-tooltip right>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on"
-                       class="ml-2 mr-2"
-                       icon
-                       small
-                       color="secondary"
-                       @click="zaehlungKopieren">
-                  <v-icon>mdi-content-copy</v-icon>
-                </v-btn>
-              </template>
-              <span>
-                Kopieren
-              </span>
-            </v-tooltip>
+          <v-list-item density="compact">
+            <v-btn
+              v-tooltip:end="'Kopieren'"
+              class="ml-2 mr-2"
+              icon="mdi-content-copy"
+              variant="text"
+              color="secondary"
+              @click="zaehlungKopieren"
+            />
           </v-list-item>
-          <v-list-item dense v-if="showButtonDatenportal">
-            <v-tooltip right>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on"
-                       class="ml-2 mr-2"
-                       icon
-                       color="secondary"
-                       @click="openZaehlungInDatenportal">
-                  <v-icon>mdi-link-variant</v-icon>
-                </v-btn>
-              </template>
-              <span>
-          Datenportal
-        </span>
-            </v-tooltip>
+          <v-list-item
+            v-if="showButtonDatenportal"
+            density="compact"
+          >
+            <v-btn
+              v-tooltip:end="'Datenportal'"
+              class="ml-2 mr-2"
+              icon="mdi-link-variant"
+              variant="text"
+              color="secondary"
+              @click="openZaehlungInDatenportal"
+            />
           </v-list-item>
         </v-list>
       </v-menu>
-
     </v-card-actions>
 
     <delete-zaehlung-dialog
-        :show-dialog="deleteDialog"
-        :dialogtext="deleteDialogText"
-        @cancel="deleteDialog = false"
-        @deleteIt="deleteZaehlung"/>
+      v-model="deleteDialog"
+      :dialogtext="deleteDialogText"
+      @cancel="deleteDialog = false"
+      @delete-it="deleteZaehlung"
+    />
 
     <beauftrage-zaehlung-dialog
-      :show-dialog="showBeauftragenDialog"
+      v-model="showBeauftragenDialog"
       :dienstleisterkennung="zaehlung.dienstleisterkennung"
       :is-beauftragen="isBeauftragen"
       @cancel="showBeauftragenDialog = false"
       @beauftragen="zaehlungBeauftragen"
       @korrigieren="dienstleisterKorrigieren"
     />
-
   </v-card>
 </template>
 
-<script lang="ts">
-import {Component, Prop, Vue} from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
-import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
-import {latLng, LatLng} from "leaflet";
-import GeoPoint from "@/domain/GeoPoint";
-import ZaehlartIcon from "@/components/icons/ZaehlartIcon.vue";
-import WetterIcon from "@/components/icons/WetterIcon.vue";
-import ZaehldauerIcon from "@/components/icons/ZaehldauerIcon.vue";
-import QuelleIcon from "@/components/icons/QuelleIcon.vue";
-import KnotenarmDTO from "@/domain/KnotenarmDTO";
-import KnotenarmComparator from "@/util/KnotenarmComparator";
-import Status, {statusIcon} from "@/domain/enums/Status";
-import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
-import IconOptions from "@/components/icons/IconOptions";
+<script setup lang="ts">
+import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type GeoPoint from "@/types/common/GeoPoint";
+import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
+import type FahrbeziehungDTO from "@/types/zaehlung/FahrbeziehungDTO";
+import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type UpdateStatusDTO from "@/types/zaehlung/UpdateStatusDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+
+import { LatLng } from "leaflet";
+import { cloneDeep } from "lodash";
+import { computed, ref } from "vue";
+
 import ZaehlungService from "@/api/service/ZaehlungService";
-import {ApiError, Levels} from "@/api/error";
-import BackendIdDTO from "@/domain/dto/bearbeiten/BackendIdDTO";
-import _ from "lodash";
-import DeleteZaehlungDialog from "@/components/zaehlung/DeleteZaehlungDialog.vue";
-import Wetter from "@/domain/enums/Wetter";
-import FahrbeziehungDTO from "@/domain/dto/FahrbeziehungDTO";
-import UpdateStatusDTO from "@/domain/dto/bearbeiten/UpdateStatusDTO";
-import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
+import IconOptions from "@/components/icons/IconOptions";
+import QuelleIcon from "@/components/icons/QuelleIcon.vue";
+import WetterIcon from "@/components/icons/WetterIcon.vue";
+import ZaehlartIcon from "@/components/icons/ZaehlartIcon.vue";
+import ZaehldauerIcon from "@/components/icons/ZaehldauerIcon.vue";
+import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
 import BeauftrageZaehlungDialog from "@/components/zaehlung/BeauftrageZaehlungDialog.vue";
-/* eslint-enable no-unused-vars */
-@Component({
-  components: {
-    BeauftrageZaehlungDialog,
-    DeleteZaehlungDialog,
-    ZaehlungGeometrie, QuelleIcon, ZaehldauerIcon, WetterIcon, ZaehlartIcon, ZaehlungCardMap, ZaehlstelleMap
+import DeleteZaehlungDialog from "@/components/zaehlung/DeleteZaehlungDialog.vue";
+import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
+import { useSnackbarStore } from "@/store/SnackbarStore";
+import Status, { statusIcon } from "@/types/enum/Status";
+import Wetter from "@/types/enum/Wetter";
+import { useDateUtils } from "@/util/DateUtils";
+import KnotenarmComparator from "@/util/KnotenarmComparator";
+
+const ICON_COLOR = "black";
+const deleteDialogText = ref("Wollen Sie die Zählung wirklich löschen?");
+
+interface Props {
+  geoPointZaehlstelle: GeoPoint;
+  zaehlstelleId: string;
+}
+const properties = defineProps<Props>();
+
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
+
+const emits = defineEmits<{
+  (e: "cancel"): void;
+  (e: "deleted"): void;
+  (e: "openZaehlungDialog", zaehlung: ZaehlungDTO): void;
+  (e: "openZaehlungDatenportal", zaehlungId: string): void;
+  (e: "openChatDialog", zaehlung: ZaehlungDTO): void;
+  (e: "saved", payload: BackendIdDTO): void;
+}>();
+
+const snackbarStore = useSnackbarStore();
+const dateUtils = useDateUtils();
+const loading = ref(false);
+const deleteDialog = ref(false);
+const isBeauftragen = ref(true);
+
+const showBeauftragenDialog = ref(false);
+
+const coordsZaehlstelle = computed(() => {
+  return createLatLngFromString(
+    properties.geoPointZaehlstelle.lat,
+    properties.geoPointZaehlstelle.lon
+  );
+});
+
+const coordsZaehlung = computed(() => {
+  const geoPoint: GeoPoint = zaehlung.value.punkt;
+  return createLatLngFromString(geoPoint.lat, geoPoint.lon);
+});
+
+const datum = computed(() => {
+  return dateUtils.getShortVersionOfDate(zaehlung.value.datum);
+});
+
+const streets = computed(() => {
+  return cloneDeep(zaehlung.value.knotenarme).sort(
+    KnotenarmComparator.sortByNumber
+  );
+});
+
+const streetsHeader = [
+  {
+    title: "Nummer",
+    align: "center",
+    sortable: false,
+    value: "nummer",
+    lastFixed: true,
+  },
+  {
+    title: "Straßenname",
+    align: "center",
+    sortable: false,
+    value: "strassenname",
+  },
+];
+
+const statusDesign = computed(() => {
+  let design: IconOptions | undefined = statusIcon.get(zaehlung.value.status);
+  if (!design) {
+    design = {} as IconOptions;
+    design.color = "deep-orange-lighten-4";
+    design.iconPath = "mdi-calendar-question";
+    design.tooltip = "Status unbekannt";
   }
-})
-export default class ZaehlungCard extends Vue {
+  return design;
+});
 
-  private fab: boolean = false;
-  private loading: boolean = false;
-  private iconColor: string = 'black';
-  private deleteDialog: boolean = false;
-  private deleteDialogText: string = "Wollen Sie die Zählung wirklich löschen?";
-  private isBeauftragen: boolean = true;
+const showButtonKorrektur = computed(() => {
+  return zaehlung.value.status === Status.ACCOMPLISHED;
+});
 
-  private showBeauftragenDialog: boolean = false;
+const showButtonFreigeben = computed(() => {
+  return zaehlung.value.status === Status.ACCOMPLISHED;
+});
 
-  @Prop()
-  private readonly zaehlung!: ZaehlungDTO;
+const showButtonBeauftragen = computed(() => {
+  return (
+    zaehlung.value.status === Status.CREATED &&
+    zaehlung.value.knotenarme &&
+    zaehlung.value.knotenarme.length > 0
+  );
+});
 
-  @Prop()
-  private readonly zaehlstelleId!: String;
+const showButtonDatenportal = computed(() => {
+  return (
+    zaehlung.value.status === Status.ACCOMPLISHED ||
+    zaehlung.value.status === Status.ACTIVE
+  );
+});
 
-  @Prop()
-  private readonly geoPointZaehlstelle!: GeoPoint;
+const showButtonDienstleisterKorrigieren = computed(() => {
+  return (
+    zaehlung.value.status === Status.INSTRUCTED ||
+    zaehlung.value.status === Status.COUNTING ||
+    zaehlung.value.status === Status.CORRECTION
+  );
+});
 
-  get getZaehlung(): ZaehlungDTO {
-    return this.zaehlung;
-  }
+// Erzeugt aus den String Koordinaten ein Objekt von Typ LatLng
+function createLatLngFromString(lat: string, lng: string): LatLng {
+  return new LatLng(parseFloat(lat), parseFloat(lng));
+}
 
-  get coordsZaehlstelle(): LatLng {
-    return this.createLatLngFromString(this.geoPointZaehlstelle.lat, this.geoPointZaehlstelle.lon);
-  }
-
-  get coordsZaehlung(): LatLng {
-    let geoPoint: GeoPoint = this.zaehlung.punkt;
-    return this.createLatLngFromString(geoPoint.lat, geoPoint.lon);
-  }
-
-  get title(): string {
-    return this.getZaehlung.projektName;
-  }
-
-  get datum(): string {
-    return `${this.$d(new Date(this.getZaehlung.datum), 'short', 'de-DE')}`;
-  }
-
-  get streets(): Array<KnotenarmDTO> {
-    let knotenarme: Array<KnotenarmDTO> = []
-    Object.assign(knotenarme, this.getZaehlung.knotenarme)
-    return knotenarme.sort(KnotenarmComparator.sortByNumber);
-  }
-
-  get streetsHeader(): Array<any> {
-    return [
-      {
-        text: 'Nummer',
-        align: 'center',
-        sortable: false,
-        value: 'nummer',
-        divider: "true",
-      },
-      {
-        text: 'Straßenname',
-        align: 'center',
-        sortable: false,
-        value: 'strassenname',
-      },
-    ];
-  }
-
-  get statusDesign(): IconOptions {
-    let design: IconOptions | undefined = statusIcon.get(this.zaehlung.status);
-    if (!design) {
-      design = {} as IconOptions;
-      design.color = 'deep-orange lighten-4';
-      design.iconPath = 'mdi-calendar-question';
-      design.tooltip = 'Status unbekannt';
-    }
-    return design;
-  }
-
-  get showButtonKorrektur(): boolean {
-    return this.zaehlung.status === Status.ACCOMPLISHED;
-  }
-
-  get showButtonFreigeben(): boolean {
-    return this.zaehlung.status === Status.ACCOMPLISHED;
-  }
-
-  get showButtonBeauftragen(): boolean {
-    return this.zaehlung.status === Status.CREATED && this.zaehlung.knotenarme && this.zaehlung.knotenarme.length > 0;
-  }
-
-  get showButtonDatenportal(): boolean {
-    return this.zaehlung.status === Status.ACCOMPLISHED ||
-        this.zaehlung.status === Status.ACTIVE;
-  }
-
-  get showButtonDienstleisterKorrigieren(): boolean {
-    return this.zaehlung.status === Status.INSTRUCTED
-        || this.zaehlung.status === Status.COUNTING
-        || this.zaehlung.status === Status.CORRECTION;
-  }
-
-  // Erzeugt aus den String Koordinaten ein Objekt von Typ LatLng
-  private createLatLngFromString(lat: string, lng: string): LatLng {
-    return latLng(
-        parseFloat(lat),
-        parseFloat(lng)
-    );
-  }
-
-  private zaehlungBeauftragen(dienstleister:DienstleisterDTO) {
-    this.loading = true;
-    const update: UpdateStatusDTO = {} as UpdateStatusDTO;
-    update.zaehlungId = this.zaehlung.id;
-    update.status = Status.INSTRUCTED;
-    update.dienstleisterkennung = dienstleister.kennung;
-    ZaehlungService.updateStatus(update).then(backendIdDTO => {
-      this.$store.dispatch('snackbar/showToast', {
-        level: Levels.INFO,
-        snackbarTextPart1: `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${this.getZaehlung.projektName} durchzuführen.`
-      });
-      this.$emit('saved', backendIdDTO);
-    }).catch((error: ApiError) => {
-      this.$store.dispatch('snackbar/showError', error);
-    }).finally(() => {
-      this.loading = false;
-      this.isBeauftragen = true;
+function zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
+  loading.value = true;
+  const update: UpdateStatusDTO = {} as UpdateStatusDTO;
+  update.zaehlungId = zaehlung.value.id;
+  update.status = Status.INSTRUCTED;
+  update.dienstleisterkennung = dienstleister.kennung;
+  ZaehlungService.updateStatus(update)
+    .then((backendIdDTO) => {
+      snackbarStore.showInfo(
+        `Der Zähldienstleister wurde beauftragt die Zählung ${zaehlung.value.projektName} durchzuführen.`
+      );
+      emits("saved", backendIdDTO);
+    })
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      loading.value = false;
+      isBeauftragen.value = true;
     });
-  }
+}
 
-  private zaehlungLoeschen() {
-    this.deleteDialogText = `Wollen Sie die Zählung vom ${this.datum} wirklich löschen?`
-    this.deleteDialog = true;
-  }
+function zaehlungLoeschen() {
+  deleteDialogText.value = `Wollen Sie die Zählung vom ${datum.value} wirklich löschen?`;
+  deleteDialog.value = true;
+}
 
-  private deleteZaehlung() {
-    this.deleteDialog = false;
-    this.loading = true;
-    ZaehlungService.deleteZaehlungById(this.zaehlung.id).then((isDeleted: boolean) => {
+function deleteZaehlung() {
+  deleteDialog.value = false;
+  loading.value = true;
+  ZaehlungService.deleteZaehlungById(zaehlung.value.id)
+    .then((isDeleted: boolean) => {
       if (isDeleted) {
-        this.$store.dispatch('snackbar/showToast', {
-          level: Levels.INFO,
-          snackbarTextPart1: `Die Zählung vom ${this.datum} wurde gelöscht.`
-        });
-        this.$emit('deleted');
+        snackbarStore.showInfo(
+          `Die Zählung vom ${datum.value} wurde gelöscht.`
+        );
+        emits("deleted");
       } else {
-        this.$store.dispatch('snackbar/showToast', {
-          level: Levels.ERROR,
-          snackbarTextPart1: `Die Zählung vom ${this.datum} konnte nicht gelöscht werden.`
-        });
+        snackbarStore.showError(
+          `Die Zählung vom ${datum.value} konnte nicht gelöscht werden.`
+        );
       }
-    }).catch((error: ApiError) => {
-      this.$store.dispatch('snackbar/showError', error);
-    }).finally(() => {
-      this.loading = false;
+    })
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      loading.value = false;
     });
-  }
+}
 
-  private zaehlungFreigeben() {
-    this.loading = true;
-    const update: UpdateStatusDTO = {} as UpdateStatusDTO;
-    update.zaehlungId = this.zaehlung.id;
-    update.status = Status.ACTIVE;
-    ZaehlungService.updateStatus(update).then(backendIdDTO => {
-      this.$store.dispatch('snackbar/showToast', {
-        level: Levels.INFO,
-        snackbarTextPart1: `Die Zählung vom ${this.datum} wurde freigegeben.`
-      });
-      this.$emit('saved', backendIdDTO);
-    }).catch((error: ApiError) => {
-      this.$store.dispatch('snackbar/showError', error);
-    }).finally(() => {
-      this.loading = false;
+function zaehlungFreigeben() {
+  loading.value = true;
+  const update: UpdateStatusDTO = {} as UpdateStatusDTO;
+  update.zaehlungId = zaehlung.value.id;
+  update.status = Status.ACTIVE;
+  ZaehlungService.updateStatus(update)
+    .then((backendIdDTO) => {
+      snackbarStore.showInfo(
+        `Die Zählung vom ${datum.value} wurde freigegeben.`
+      );
+      emits("saved", backendIdDTO);
     })
-  }
-
-  private zaehlungKorrigieren() {
-    this.loading = true;
-    const update: UpdateStatusDTO = {} as UpdateStatusDTO;
-    update.zaehlungId = this.zaehlung.id;
-    update.status = Status.CORRECTION;
-    ZaehlungService.updateStatus(update).then(backendIdDTO => {
-      this.$store.dispatch('snackbar/showToast', {
-        level: Levels.INFO,
-        snackbarTextPart1: `Die Zählung vom ${this.datum} wurde dem Zähldienstleister zur Korrektur übermittelt.`
-      });
-      this.$emit('saved', backendIdDTO);
-    }).catch((error: ApiError) => {
-      this.$store.dispatch('snackbar/showError', error);
-    }).finally(() => {
-      this.loading = false;
-    })
-  }
-
-  private openZaehlungDialog() {
-    this.$store.dispatch("setZaehlung", _.cloneDeep(this.zaehlung));
-    this.$emit('openZaehlungDialog');
-  }
-
-  private openZaehlungInDatenportal() {
-    this.$emit('openZaehlungDatenportal', this.getZaehlung.id);
-  }
-
-  private zaehlungKopieren() {
-    this.loading = true;
-    let zaehlungCopy: ZaehlungDTO = _.cloneDeep(this.zaehlung);
-    zaehlungCopy.id = '';
-    zaehlungCopy.kommentar = '';
-    zaehlungCopy.zaehlsituation = '';
-    zaehlungCopy.zaehlsituationErweitert = '';
-    zaehlungCopy.wetter = Wetter.NO_INFORMATION;
-    zaehlungCopy.status = Status.CREATED;
-    zaehlungCopy.dienstleisterkennung = '';
-    zaehlungCopy.datum = new Date().toISOString().substr(0, 10);
-    zaehlungCopy.knotenarme.forEach((arm: KnotenarmDTO) => {
-      arm.id = '';
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      loading.value = false;
     });
-    zaehlungCopy.fahrbeziehungen.forEach((fz: FahrbeziehungDTO) => {
-      fz.id = '';
-      fz.hochrechnungsfaktor.id = '';
-    })
-    ZaehlungService.saveZaehlung(zaehlungCopy, this.zaehlstelleId).then((backendIdDTO: BackendIdDTO) => {
-      this.$store.dispatch('snackbar/showToast', {
-        level: Levels.INFO,
-        snackbarTextPart1: `Die Zählung vom ${this.datum} wurde kopiert.`
-      });
-      this.$emit('saved', backendIdDTO);
-    }).catch((error: ApiError) => {
-      this.$store.dispatch('snackbar/showError', error);
-    }).finally(() => {
-      this.loading = false;
-    })
-  }
+}
 
-  private openChatDialog() {
-    this.$store.dispatch("setZaehlung", _.cloneDeep(this.zaehlung));
-    this.zaehlung.unreadMessagesMobilitaetsreferat = false;
-    this.$emit('openChatDialog', this.zaehlung.id);
-  }
-
-  private dienstleisterKorrigieren(dienstleister: DienstleisterDTO) {
-    this.loading = true;
-    ZaehlungService.updateDienstleisterkennung(this.getZaehlung.id, dienstleister).then(backendIdDTO => {
-      this.$store.dispatch('snackbar/showToast', {
-        level: Levels.INFO,
-        snackbarTextPart1: `Der Zähldienstleister ${dienstleister.name} wurde beauftragt die Zählung ${this.getZaehlung.projektName} durchzuführen. (Korrektur)`
-      });
-      this.$emit('saved', backendIdDTO);
-    }).catch((error: ApiError) => {
-      this.$store.dispatch('snackbar/showError', error);
-    }).finally(() => {
-      this.loading = false;
-      this.isBeauftragen = true;
+function zaehlungKorrigieren() {
+  loading.value = true;
+  const update: UpdateStatusDTO = {} as UpdateStatusDTO;
+  update.zaehlungId = zaehlung.value.id;
+  update.status = Status.CORRECTION;
+  ZaehlungService.updateStatus(update)
+    .then((backendIdDTO) => {
+      snackbarStore.showInfo(
+        `Die Zählung vom ${datum.value} wurde dem Zähldienstleister zur Korrektur übermittelt.`
+      );
+      emits("saved", backendIdDTO);
+    })
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      loading.value = false;
     });
-  }
+}
 
-  private openDienstleisterDialog(isBeauftragen: boolean): void {
-    this.showBeauftragenDialog = true;
-    this.isBeauftragen = isBeauftragen;
-  }
+function openZaehlungDialog() {
+  emits("openZaehlungDialog", zaehlung.value);
+}
+
+function openZaehlungInDatenportal() {
+  emits("openZaehlungDatenportal", zaehlung.value.id);
+}
+
+function zaehlungKopieren() {
+  loading.value = true;
+  const zaehlungCopy: ZaehlungDTO = cloneDeep(zaehlung.value);
+  zaehlungCopy.id = "";
+  zaehlungCopy.kommentar = "";
+  zaehlungCopy.zaehlsituation = "";
+  zaehlungCopy.zaehlsituationErweitert = "";
+  zaehlungCopy.wetter = Wetter.NO_INFORMATION;
+  zaehlungCopy.status = Status.CREATED;
+  zaehlungCopy.dienstleisterkennung = "";
+  zaehlungCopy.datum = new Date().toISOString().substring(0, 10);
+  zaehlungCopy.knotenarme.forEach((arm: KnotenarmDTO) => {
+    arm.id = "";
+  });
+  zaehlungCopy.fahrbeziehungen.forEach((fz: FahrbeziehungDTO) => {
+    fz.id = "";
+    fz.hochrechnungsfaktor.id = "";
+  });
+  ZaehlungService.saveZaehlung(zaehlungCopy, properties.zaehlstelleId)
+    .then((backendIdDTO: BackendIdDTO) => {
+      snackbarStore.showInfo(`Die Zählung vom ${datum.value} wurde kopiert.`);
+      emits("saved", backendIdDTO);
+    })
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      loading.value = false;
+    });
+}
+
+function openChatDialog() {
+  zaehlung.value.unreadMessagesMobilitaetsreferat = false;
+  emits("openChatDialog", zaehlung.value);
+}
+
+function dienstleisterKorrigieren(dienstleister: DienstleisterDTO) {
+  loading.value = true;
+  ZaehlungService.updateDienstleisterkennung(zaehlung.value.id, dienstleister)
+    .then((backendIdDTO) => {
+      snackbarStore.showInfo(
+        `Der Zähldienstleister wurde beauftragt die Zählung ${zaehlung.value.projektName} durchzuführen. (Korrektur)`
+      );
+      emits("saved", backendIdDTO);
+    })
+    .catch((error) => snackbarStore.showApiError(error))
+    .finally(() => {
+      loading.value = false;
+      isBeauftragen.value = true;
+    });
+}
+
+function openDienstleisterDialog(isBeauftragenParam: boolean): void {
+  showBeauftragenDialog.value = true;
+  isBeauftragen.value = isBeauftragenParam;
 }
 </script>

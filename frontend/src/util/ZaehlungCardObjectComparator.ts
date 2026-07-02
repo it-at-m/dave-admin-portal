@@ -1,9 +1,8 @@
-import ZaehlungCardObject from "@/domain/ZaehlungCardObject";
-import Zaehlart from "@/domain/enums/Zaehlart";
+import type ZaehlungCardObject from "@/types/zaehlung/ZaehlungCardObject";
 
+import Zaehlart from "@/types/enum/Zaehlart";
 
 export default class ZaehlungCardObjectComparator {
-
   /**
    * Sortiert eine Liste von ZaehlungCardObject nach dem Datum DESC
    * Neu -> Alt
@@ -11,24 +10,27 @@ export default class ZaehlungCardObjectComparator {
    * @param a
    * @param b
    */
-  public static sortByDatumDesc(a: ZaehlungCardObject, b: ZaehlungCardObject): number {
+  public static sortByDatumDesc(
+    a: ZaehlungCardObject,
+    b: ZaehlungCardObject
+  ): number {
     if (a.zaehlung.datum > b.zaehlung.datum) {
-      return -1
+      return -1;
     }
     if (a.zaehlung.datum < b.zaehlung.datum) {
-      return 1
+      return 1;
     }
     // Gibt es zwei neuste Zählungen mit dem selben Datum und eine davon ist
     // eine "klassische" Zählung, dann wird die als erstes ausgewählt.
     if (a.zaehlung.datum === b.zaehlung.datum) {
       if (a.zaehlung.zaehlart !== Zaehlart.N) {
-        return 1
+        return 1;
       }
       if (a.zaehlung.zaehlart === Zaehlart.N) {
-        return -1
+        return -1;
       }
     }
-    return 0
+    return 0;
   }
 
   /**
@@ -38,23 +40,26 @@ export default class ZaehlungCardObjectComparator {
    * @param a
    * @param b
    */
-  public static sortByDatumAsc(a: ZaehlungCardObject, b: ZaehlungCardObject): number {
+  public static sortByDatumAsc(
+    a: ZaehlungCardObject,
+    b: ZaehlungCardObject
+  ): number {
     if (a.zaehlung.datum > b.zaehlung.datum) {
-      return 1
+      return 1;
     }
     if (a.zaehlung.datum < b.zaehlung.datum) {
-      return -1
+      return -1;
     }
     // Gibt es zwei neuste Zählungen mit dem selben Datum und eine davon ist
     // eine "klassische" Zählung, dann wird die als erstes ausgewählt.
     if (a.zaehlung.datum === b.zaehlung.datum) {
       if (a.zaehlung.zaehlart !== Zaehlart.N) {
-        return -1
+        return -1;
       }
       if (a.zaehlung.zaehlart === Zaehlart.N) {
-        return 1
+        return 1;
       }
     }
-    return 0
+    return 0;
   }
 }

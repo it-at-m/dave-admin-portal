@@ -1,250 +1,260 @@
 <template>
-  <v-sheet width="100%" :height="height" :max-height="height" class="overflow-y-auto">
+  <v-sheet
+    width="100%"
+    :height="height"
+    :max-height="height"
+    class="overflow-y-auto"
+  >
     <v-card-text>
       <v-row dense>
         <v-col>
-          <v-checkbox v-model="pkw"
-                      :label="pkwLabel"
-                      color="grey darken-1"
-                      hide-details
-                      @click="updateKategorieWithPkw"
-                      dense></v-checkbox>
-          <v-checkbox v-model="lkw"
-                      :label="lkwLabel"
-                      color="grey darken-1"
-                      hide-details
-                      @click="updateKategorieWithLkw"
-                      dense></v-checkbox>
-          <v-checkbox v-model="lz"
-                      :label="lzLabel"
-                      color="grey darken-1"
-                      hide-details
-                      @click="updateKategorieWithLz"
-                      dense></v-checkbox>
-          <v-checkbox v-model="bus"
-                      :label="busLabel"
-                      color="grey darken-1"
-                      hide-details
-                      @click="updateKategorieWithBus"
-                      dense></v-checkbox>
-          <v-checkbox v-model="krad"
-                      :label="kradLabel"
-                      color="grey darken-1"
-                      hide-details
-                      @click="updateKategorieWithKrad"
-                      dense></v-checkbox>
-          <v-checkbox v-model="rad"
-                      :label="radLabel"
-                      color="grey darken-1"
-                      hide-details
-                      @click="updateKategorieWithRad"
-                      dense></v-checkbox>
-          <v-checkbox v-model="fuss"
-                      :label="fussLabel"
-                      color="grey darken-1"
-                      hide-details
-                      @click="updateKategorieWithFuss"
-                      dense></v-checkbox>
-          <v-checkbox v-model="selectOrDeselectAllVmodel"
-                      value=""
-                      :label="labelSelectOrDeselectAll"
-                      @click="selectOrDeselectAll()"
-                      color="grey darken-1"
-                      hide-details
-                      dense></v-checkbox>
+          <v-checkbox
+            v-model="pkw"
+            :label="pkwLabel"
+            color="quaternary"
+            hide-details
+            @update:model-value="updateKategorieWithPkw"
+          />
+          <v-checkbox
+            v-model="lkw"
+            :label="lkwLabel"
+            color="quaternary"
+            hide-details
+            @update:model-value="updateKategorieWithLkw"
+          />
+          <v-checkbox
+            v-model="lz"
+            :label="lzLabel"
+            color="quaternary"
+            hide-details
+            @update:model-value="updateKategorieWithLz"
+          />
+          <v-checkbox
+            v-model="bus"
+            :label="busLabel"
+            color="quaternary"
+            hide-details
+            @update:model-value="updateKategorieWithBus"
+          />
+          <v-checkbox
+            v-model="krad"
+            :label="kradLabel"
+            color="quaternary"
+            hide-details
+            @update:model-value="updateKategorieWithKrad"
+          />
+          <v-checkbox
+            v-model="rad"
+            :label="radLabel"
+            color="quaternary"
+            hide-details
+            @update:model-value="updateKategorieWithRad"
+          />
+          <v-checkbox
+            v-model="fuss"
+            :label="fussLabel"
+            color="quaternary"
+            hide-details
+            @update:model-value="updateKategorieWithFuss"
+          />
+          <v-checkbox
+            v-model="selectOrDeselectAllVmodel"
+            :label="labelSelectOrDeselectAll"
+            color="quaternary"
+            hide-details
+            @update:model-value="selectOrDeselectAll()"
+          />
         </v-col>
       </v-row>
     </v-card-text>
   </v-sheet>
 </template>
 
-<script lang="ts">
-import {Component, Prop, Vue, Watch} from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-import Fahrzeug from "@/domain/enums/Fahrzeug";
-import _ from "lodash";
-import PkwEinheitDTO from "@/domain/dto/PkwEinheitDTO";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-/* eslint-enable no-unused-vars */
+<script setup lang="ts">
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-@Component
-export default class FahrzeugeForm extends Vue {
+import { computed, onMounted, ref, watch } from "vue";
 
-  @Prop()
-  private readonly height!: string;
+import { useEventbus } from "@/store/Eventbus";
+import { usePkweinheitStore } from "@/store/PkweinheitStore";
+import Fahrzeug from "@/types/enum/Fahrzeug";
 
-  // Variablen für die Checkboxen
-  private pkw: boolean = false;
-  private lkw: boolean = false;
-  private lz: boolean = false;
-  private bus: boolean = false;
-  private krad: boolean = false;
-  private rad: boolean = false;
-  private fuss: boolean = false;
-  private selectOrDeselectAllVmodel: boolean = false;
+interface Props {
+  height: string;
+}
+defineProps<Props>();
 
-  mounted() {
-    this.resetForm();
+const zaehlung = defineModel<ZaehlungDTO>({
+  required: true,
+});
+
+const pkweinheitStore = usePkweinheitStore();
+const eventbus = useEventbus();
+
+// Variablen für die Checkboxen
+const pkw = ref(false);
+const lkw = ref(false);
+const lz = ref(false);
+const bus = ref(false);
+const krad = ref(false);
+const rad = ref(false);
+const fuss = ref(false);
+const selectOrDeselectAllVmodel = ref(false);
+
+onMounted(() => {
+  resetForm();
+});
+
+watch(
+  () => eventbus.getReloadEvent,
+  () => {
+    resetForm();
   }
+);
 
-  get zaehlungStore(): ZaehlungDTO {
-    return this.$store.getters.getZaehlung;
+const pkwEinheitenOfStore = computed(() => {
+  return pkweinheitStore.getPkwEinheit;
+});
+
+const labelSelectOrDeselectAll = computed(() => {
+  return selectOrDeselectAllVmodel.value ? "Alles abwählen" : "Alles auswählen";
+});
+
+const pkwLabel = computed(() => {
+  return `Personenkraftwagen (Pkw) - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.pkw}`;
+});
+
+const lkwLabel = computed(() => {
+  return `Lastkraftwagen (Lkw) - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.lkw}`;
+});
+
+const lzLabel = computed(() => {
+  return `Lastzüge (Lz) - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.lastzuege}`;
+});
+
+const busLabel = computed(() => {
+  return `Bus - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.busse}`;
+});
+
+const kradLabel = computed(() => {
+  return `Krafträder (Krad) - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.kraftraeder}`;
+});
+
+const radLabel = computed(() => {
+  return `Radfahrer - PKW-Einheit-Faktor: ${pkwEinheitenOfStore.value.fahrradfahrer}`;
+});
+
+const fussLabel = computed(() => {
+  return `Fußgänger - PKW-Einheit-Faktor: nicht existent`;
+});
+
+function updateKategorieWithPkw() {
+  if (pkw.value) {
+    addKategorie(Fahrzeug.PKW);
+  } else {
+    removeKategorie(Fahrzeug.PKW);
   }
+}
 
-  get kategorienStore(): Array<Fahrzeug> {
-    return this.$store.getters.getKategorien;
+function updateKategorieWithLkw() {
+  if (lkw.value) {
+    addKategorie(Fahrzeug.LKW);
+  } else {
+    removeKategorie(Fahrzeug.LKW);
   }
+}
 
-  get pkwEinheitenStore(): PkwEinheitDTO {
-    return this.$store.getters.getPkwEinheit;
+function updateKategorieWithLz() {
+  if (lz.value) {
+    addKategorie(Fahrzeug.LZ);
+  } else {
+    removeKategorie(Fahrzeug.LZ);
   }
+}
 
-  get labelSelectOrDeselectAll(): string {
-    return this.selectOrDeselectAllVmodel ? 'Alles abwählen' : 'Alles auswählen';
+function updateKategorieWithBus() {
+  if (bus.value) {
+    addKategorie(Fahrzeug.BUS);
+  } else {
+    removeKategorie(Fahrzeug.BUS);
   }
+}
 
-  get pkwLabel(): string {
-    return `Personenkraftwagen (Pkw) - PKW-Einheit-Faktor: ${this.pkwEinheitenStore.pkw}`;
+function updateKategorieWithKrad() {
+  if (krad.value) {
+    addKategorie(Fahrzeug.KRAD);
+  } else {
+    removeKategorie(Fahrzeug.KRAD);
   }
+}
 
-  get lkwLabel(): string {
-    return `Lastkraftwagen (Lkw) - PKW-Einheit-Faktor: ${this.pkwEinheitenStore.lkw}`;
+function updateKategorieWithRad() {
+  if (rad.value) {
+    addKategorie(Fahrzeug.RAD);
+  } else {
+    removeKategorie(Fahrzeug.RAD);
   }
+}
 
-  get lzLabel(): string {
-    return `Lastzüge (Lz) - PKW-Einheit-Faktor: ${this.pkwEinheitenStore.lastzuege}`;
+function updateKategorieWithFuss() {
+  if (fuss.value) {
+    addKategorie(Fahrzeug.FUSS);
+  } else {
+    removeKategorie(Fahrzeug.FUSS);
   }
+}
 
-  get busLabel(): string {
-    return `Bus - PKW-Einheit-Faktor: ${this.pkwEinheitenStore.busse}`;
+/**
+ * Hilfsmethode, um alle Checkboxen der Fahrzeugkategorien aufeinmal
+ * aus- oder abzuwählen, wenn diese nicht disabled sind.
+ * @private
+ */
+function selectOrDeselectAll() {
+  pkw.value = selectOrDeselectAllVmodel.value;
+  lkw.value = selectOrDeselectAllVmodel.value;
+  lz.value = selectOrDeselectAllVmodel.value;
+  bus.value = selectOrDeselectAllVmodel.value;
+  krad.value = selectOrDeselectAllVmodel.value;
+  rad.value = selectOrDeselectAllVmodel.value;
+  fuss.value = selectOrDeselectAllVmodel.value;
+  if (selectOrDeselectAllVmodel.value) {
+    zaehlung.value.kategorien = [];
+    zaehlung.value.kategorien.push(Fahrzeug.PKW);
+    zaehlung.value.kategorien.push(Fahrzeug.LKW);
+    zaehlung.value.kategorien.push(Fahrzeug.LZ);
+    zaehlung.value.kategorien.push(Fahrzeug.BUS);
+    zaehlung.value.kategorien.push(Fahrzeug.KRAD);
+    zaehlung.value.kategorien.push(Fahrzeug.RAD);
+    zaehlung.value.kategorien.push(Fahrzeug.FUSS);
+  } else {
+    zaehlung.value.kategorien = [];
   }
+}
 
-  get kradLabel(): string {
-    return `Krafträder (Krad) - PKW-Einheit-Faktor: ${this.pkwEinheitenStore.kraftraeder}`;
-  }
+function addKategorie(kategorie: Fahrzeug) {
+  zaehlung.value.kategorien.push(kategorie);
+}
 
-  get radLabel(): string {
-    return `Radfahrer - PKW-Einheit-Faktor: ${this.pkwEinheitenStore.fahrradfahrer}`;
-  }
-
-  get fussLabel(): string {
-    return `Fußgänger - PKW-Einheit-Faktor: nicht existent`;
-  }
-
-
-  @Watch('kategorienStore')
-  updateSelectDeselectAll() {
-    this.selectOrDeselectAllVmodel = this.kategorienStore.length === 7;
-  }
-
-  updateKategorieWithPkw() {
-    if (this.pkw) {
-      this.addKategorie(Fahrzeug.PKW)
-    } else {
-      this.removeKategorie(Fahrzeug.PKW);
+function removeKategorie(kategorie: Fahrzeug) {
+  let toDelete = -1;
+  zaehlung.value.kategorien.forEach((kat: Fahrzeug, index: number) => {
+    if (kat === kategorie) {
+      toDelete = index;
     }
+  });
+  if (toDelete > -1) {
+    zaehlung.value.kategorien.splice(toDelete, 1);
   }
+}
 
-  updateKategorieWithLkw() {
-    if (this.lkw) {
-      this.addKategorie(Fahrzeug.LKW)
-    } else {
-      this.removeKategorie(Fahrzeug.LKW);
-    }
-  }
-
-  updateKategorieWithLz() {
-    if (this.lz) {
-      this.addKategorie(Fahrzeug.LZ)
-    } else {
-      this.removeKategorie(Fahrzeug.LZ);
-    }
-  }
-
-  updateKategorieWithBus() {
-    if (this.bus) {
-      this.addKategorie(Fahrzeug.BUS)
-    } else {
-      this.removeKategorie(Fahrzeug.BUS);
-    }
-  }
-
-  updateKategorieWithKrad() {
-    if (this.krad) {
-      this.addKategorie(Fahrzeug.KRAD)
-    } else {
-      this.removeKategorie(Fahrzeug.KRAD);
-    }
-  }
-
-  updateKategorieWithRad() {
-    if (this.rad) {
-      this.addKategorie(Fahrzeug.RAD)
-    } else {
-      this.removeKategorie(Fahrzeug.RAD);
-    }
-  }
-
-  updateKategorieWithFuss() {
-    if (this.fuss) {
-      this.addKategorie(Fahrzeug.FUSS);
-    } else {
-      this.removeKategorie(Fahrzeug.FUSS);
-    }
-  }
-
-  /**
-   * Hilfsmethode, um alle Checkboxen der Fahrzeugkategorien aufeinmal
-   * aus- oder abzuwählen, wenn diese nicht disabled sind.
-   * @private
-   */
-  private selectOrDeselectAll() {
-    this.pkw = this.selectOrDeselectAllVmodel;
-    this.lkw = this.selectOrDeselectAllVmodel;
-    this.lz = this.selectOrDeselectAllVmodel;
-    this.bus = this.selectOrDeselectAllVmodel;
-    this.krad = this.selectOrDeselectAllVmodel;
-    this.rad = this.selectOrDeselectAllVmodel;
-    this.fuss = this.selectOrDeselectAllVmodel;
-    // in den Store schreiben//löschen
-    if (this.selectOrDeselectAllVmodel) {
-      let allFahrzeuge: Array<Fahrzeug> = [];
-      allFahrzeuge.push(Fahrzeug.PKW);
-      allFahrzeuge.push(Fahrzeug.LKW);
-      allFahrzeuge.push(Fahrzeug.LZ);
-      allFahrzeuge.push(Fahrzeug.BUS);
-      allFahrzeuge.push(Fahrzeug.KRAD);
-      allFahrzeuge.push(Fahrzeug.RAD);
-      allFahrzeuge.push(Fahrzeug.FUSS);
-      this.$store.dispatch("addAllKategorien", allFahrzeuge);
-    } else {
-      this.$store.dispatch("deleteAllKategorien")
-    }
-  }
-
-  private addKategorie(kategorie: Fahrzeug) {
-    this.$store.dispatch("addKategorie", _.cloneDeep(kategorie));
-  }
-
-  private removeKategorie(kategorie: Fahrzeug) {
-    this.$store.dispatch("deleteKategorie", _.cloneDeep(kategorie));
-  }
-
-  get resetFormEvent(): boolean {
-    return this.$store.getters.getResetformevent;
-  }
-
-  @Watch('resetFormEvent')
-  private resetForm() {
-    let zaehlung: ZaehlungDTO = this.zaehlungStore;
-    this.pkw = zaehlung.kategorien.includes(Fahrzeug.PKW);
-    this.lkw = zaehlung.kategorien.includes(Fahrzeug.LKW);
-    this.lz = zaehlung.kategorien.includes(Fahrzeug.LZ);
-    this.bus = zaehlung.kategorien.includes(Fahrzeug.BUS);
-    this.krad = zaehlung.kategorien.includes(Fahrzeug.KRAD);
-    this.rad = zaehlung.kategorien.includes(Fahrzeug.RAD);
-    this.fuss = zaehlung.kategorien.includes(Fahrzeug.FUSS);
-    this.selectOrDeselectAllVmodel = zaehlung.kategorien.length === 7;
-  }
+function resetForm() {
+  pkw.value = zaehlung.value.kategorien.includes(Fahrzeug.PKW);
+  lkw.value = zaehlung.value.kategorien.includes(Fahrzeug.LKW);
+  lz.value = zaehlung.value.kategorien.includes(Fahrzeug.LZ);
+  bus.value = zaehlung.value.kategorien.includes(Fahrzeug.BUS);
+  krad.value = zaehlung.value.kategorien.includes(Fahrzeug.KRAD);
+  rad.value = zaehlung.value.kategorien.includes(Fahrzeug.RAD);
+  fuss.value = zaehlung.value.kategorien.includes(Fahrzeug.FUSS);
+  selectOrDeselectAllVmodel.value = zaehlung.value.kategorien.length === 7;
 }
 </script>

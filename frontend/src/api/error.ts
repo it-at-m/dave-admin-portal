@@ -1,8 +1,8 @@
 export const enum Levels {
-  INFO = 'info',
-  SUCCESS = 'success',
-  WARNING = 'warning',
-  ERROR = 'error'
+  INFO = "info",
+  SUCCESS = "success",
+  WARNING = "warning",
+  ERROR = "error",
 }
 
 export class ApiError extends Error {
@@ -20,7 +20,8 @@ export class ApiError extends Error {
       level = Levels.ERROR;
     }
     if (message === undefined) {
-      message = "Ein unbekannter Fehler ist aufgetreten, bitte den Administrator informieren.";
+      message =
+        "Ein unbekannter Fehler ist aufgetreten, bitte den Administrator informieren.";
     }
     this.level = level;
     this.message = `${message}µ${error}`;

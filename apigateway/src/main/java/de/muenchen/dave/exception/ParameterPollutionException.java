@@ -1,7 +1,3 @@
-/*
- * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
- * der Landeshauptstadt München, 2023
- */
 package de.muenchen.dave.exception;
 
 import de.muenchen.dave.filter.GlobalRequestParameterPollutionFilter;
@@ -11,9 +7,9 @@ import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-
 /**
- * Used in {@link GlobalRequestParameterPollutionFilter} to signal a possible parameter pollution attack.
+ * Used in {@link GlobalRequestParameterPollutionFilter} to signal a possible parameter pollution
+ * attack.
  */
 @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "parameter pollution")
 @NoArgsConstructor

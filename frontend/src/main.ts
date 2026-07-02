@@ -1,28 +1,13 @@
-import Vue, {VNode} from 'vue';
-import 'babel-polyfill';
-import Vuetify from "./plugins/vuetify";
-import store from './store';
-import i18n from "./i18n"
-import App from './App.vue';
-import router from "./router";
-import moment from "moment";
-import validationRules from "@/mixins/validationRules";
-import './directives/infinitescroll';
-import './plugins/leafletmaps';
-import './registerServiceWorker'
+import { createApp } from "vue";
 
-import 'roboto-fontface/css/roboto/roboto-fontface.css'
+import App from "./App.vue";
 
-Vue.config.productionTip = false;
+import "./plugins/leafletmaps";
 
-Vue.use(validationRules);
+import { registerPlugins } from "@/plugins";
 
-moment.locale(window.navigator.language);
+const app = createApp(App);
 
-new Vue({
-  router,
-  store: store,
-  vuetify: Vuetify,
-  i18n,
-  render: (h): VNode => h(App),
-}).$mount('#app');
+registerPlugins(app);
+
+app.mount("#app");

@@ -1,31 +1,24 @@
-import ZaehlstelleKarteDTO from "@/domain/dto/ZaehlstelleKarteDTO";
-import Suggest from "@/domain/Suggest";
-import {LatLng} from "leaflet";
-import ZaehlungDTO from "@/domain/dto/ZaehlungDTO";
-import ZaehlstelleDTO from "@/domain/dto/ZaehlstelleDTO";
-import Wetter from "@/domain/enums/Wetter";
-import Quelle from "@/domain/enums/Quelle";
-import Status from "@/domain/enums/Status";
-import HochrechnungsfaktorDTO from "@/domain/dto/HochrechnungsfaktorDTO";
-import TooltipDTO from "@/domain/dto/TooltipDTO";
-import DienstleisterDTO from "@/domain/dto/DienstleisterDTO";
-import EmailAddressDTO from "@/domain/dto/EmailAddressDTO";
+import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
+import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
+import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type MapConfigDTO from "@/types/karte/MapConfigDTO";
+import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
+import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
+import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+
+import { LatLng } from "leaflet";
+
+import Verkehrsart from "@/domain/enums/Verkehrsart";
+import MessstelleStatus from "@/types/enum/MessstelleStatus";
+import Quelle from "@/types/enum/Quelle";
+import Status from "@/types/enum/Status";
+import Wetter from "@/types/enum/Wetter";
+import Suggest from "@/types/suche/Suggest";
 
 export default class DefaultObjectCreator {
-
   private static readonly MUNICH_CENTER_LATITUDE: number = 48.137227;
   private static readonly MUNICH_CENTER_LONGITUDE: number = 11.575517;
-
-  public static createDefaultZaehlstelleKarte(): ZaehlstelleKarteDTO {
-    return {
-      id: "",
-      nummer: "",
-      letzteZaehlungId: "",
-      tooltip: {} as TooltipDTO,
-      latitude: "",
-      longitude: "",
-    };
-  }
 
   public static createDefaultSuggestion(): Suggest {
     return {
@@ -33,15 +26,20 @@ export default class DefaultObjectCreator {
       type: "",
       zaehlstelleId: "",
       zaehlungId: "",
-    }
+      mstId: "",
+      props: {},
+    };
   }
 
   public static createCenterOfMunichLatLng(): LatLng {
-    return new LatLng(this.MUNICH_CENTER_LATITUDE, this.MUNICH_CENTER_LONGITUDE);
+    return new LatLng(
+      this.MUNICH_CENTER_LATITUDE,
+      this.MUNICH_CENTER_LONGITUDE
+    );
   }
 
   public static createDefaultZaehlungDTO(): ZaehlungDTO {
-    let zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
+    const zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
     zaehlung.customSuchwoerter = [];
     zaehlung.knotenarme = [];
     zaehlung.fahrbeziehungen = [];
@@ -61,9 +59,19 @@ export default class DefaultObjectCreator {
     return zaehlstelle;
   }
 
+  public static createDefaultMessstelleEditDTO(): MessstelleEditDTO {
+    const messstelle: MessstelleEditDTO = {} as MessstelleEditDTO;
+    messstelle.sichtbarDatenportal = false;
+    messstelle.lageplanVorhanden = false;
+    messstelle.status = MessstelleStatus.IN_PLANUNG;
+    messstelle.customSuchwoerter = [];
+    messstelle.messquerschnitte = [];
+    return messstelle;
+  }
+
   public static createDefaultHochrechnungsfaktor(): HochrechnungsfaktorDTO {
-    let faktor: HochrechnungsfaktorDTO = {} as HochrechnungsfaktorDTO;
-    faktor.matrix = '';
+    const faktor: HochrechnungsfaktorDTO = {} as HochrechnungsfaktorDTO;
+    faktor.matrix = "";
     faktor.kfz = 1;
     faktor.sv = 1;
     faktor.gv = 1;
@@ -71,7 +79,7 @@ export default class DefaultObjectCreator {
     faktor.defaultFaktor = false;
     return faktor;
   }
-  
+
   public static createDefaulDienstleisterDTO(): DienstleisterDTO {
     const dienstleisterDTO: DienstleisterDTO = {} as DienstleisterDTO;
     dienstleisterDTO.name = "";
@@ -81,10 +89,33 @@ export default class DefaultObjectCreator {
     dienstleisterDTO.erasable = true;
     return dienstleisterDTO;
   }
-  
+
   public static createDefaultEmailaddressDTO(): EmailAddressDTO {
     const emailaddressDTO: EmailAddressDTO = {} as EmailAddressDTO;
-    emailaddressDTO.emailAddress = '';
+    emailaddressDTO.emailAddress = "";
     return emailaddressDTO;
+  }
+
+  public static createDefaultSearchAndFilterOptionsDTO(): SearchAndFilterOptionsDTO {
+    return {
+      searchInMessstellen: true,
+      searchInZaehlstellen: true,
+      messstelleVerkehrsart: [
+        Verkehrsart.KFZ,
+        Verkehrsart.RAD,
+        Verkehrsart.UNBEKANNT,
+      ],
+    } as SearchAndFilterOptionsDTO;
+  }
+
+  public static createDefaultMapConfigDTO(): MapConfigDTO {
+    return {
+      // München Zentrum
+      lat: "48.137227",
+      lng: "11.575517",
+      zoom: 12,
+      baseLayers: [],
+      overlayLayers: [],
+    };
   }
 }

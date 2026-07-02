@@ -1,8 +1,6 @@
-import KnotenarmDTO from "@/domain/KnotenarmDTO";
-
+import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 
 export default class KnotenarmComparator {
-
   /**
    * Sortiert eine Liste von Knotenarmen nach der Nummer
    *
@@ -11,11 +9,11 @@ export default class KnotenarmComparator {
    */
   public static sortByNumber(a: KnotenarmDTO, b: KnotenarmDTO): number {
     if (a.nummer < b.nummer) {
-      return -1
+      return -1;
     }
     if (a.nummer > b.nummer) {
-      return 1
+      return 1;
     }
-    return 0
+    return 0;
   }
 }

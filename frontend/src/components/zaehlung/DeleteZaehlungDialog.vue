@@ -1,65 +1,63 @@
 <template>
   <v-dialog
-      v-model="showDialog"
-      persistent
-      width="420px"
+    v-model="showDialog"
+    persistent
+    width="420px"
   >
-    <v-card flat>
-
+    <v-card variant="flat">
       <v-card-title>
-        <v-icon left>mdi-calendar-remove</v-icon>
-        {{ dialogtitle }}
+        <v-icon
+          end
+          icon="mdi-calendar-remove"
+        />
+        {{ DIALOG_TITLE }}
       </v-card-title>
 
       <v-card-text style="font-weight: normal; font-size: larger">
         {{ dialogtext }}
       </v-card-text>
 
-      <v-card-actions>
-        <v-row no-gutters>
-          <v-col cols="12" md="4">
-            <v-btn color="grey lighten-1"
-                   @click="deleteIt()"
-            >
-              Löschen
-            </v-btn>
-          </v-col>
-          <v-spacer/>
-          <v-col cols="12" md="4">
-            <v-btn
-                color="secondary"
-                @click="cancel()"
-            >
-              Abbrechen
-            </v-btn>
-          </v-col>
-        </v-row>
+      <v-card-actions style="justify-content: center">
+        <v-btn
+          color="tertiary"
+          variant="elevated"
+          text="Löschen"
+          @click="deleteIt()"
+        />
+        <v-btn
+          class="ml-2"
+          color="secondary"
+          variant="elevated"
+          text="Abbrechen"
+          @click="cancel()"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+interface Props {
+  dialogtext: string;
+}
+defineProps<Props>();
 
-import {Component, Prop, Vue} from "vue-property-decorator";
-/* eslint-disable no-unused-vars */
-/* eslint-enable no-unused-vars */
-@Component
-export default class DeleteZaehlungDialog extends Vue {
-  /**
-   * Steuerflag für den Dialog
-   */
-  @Prop() showDialog!: boolean;
-  @Prop() dialogtext!: string;
+const showDialog = defineModel<boolean>({
+  required: true,
+});
 
-  private dialogtitle: string = "Zählung löschen";
+const emits = defineEmits<{
+  (e: "cancel"): void;
+  (e: "deleteIt"): void;
+}>();
 
-  private cancel(): void {
-    this.$emit('cancel');
-  }
+const DIALOG_TITLE = "Zählung löschen";
 
-  private deleteIt(): void {
-    this.$emit('deleteIt');
-  }
+function cancel(): void {
+  emits("cancel");
+}
+
+function deleteIt(): void {
+  emits("deleteIt");
 }
 </script>
