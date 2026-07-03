@@ -114,7 +114,7 @@ import SsoUserInfoResponse from "@/types/app/SsoUserInfoResponse";
 import VersionInfoResponse from "@/types/app/VersionInfoResponse";
 
 const URL_HANDBUCH_LINK =
-  "https://wilma.muenchen.de/web/senders/af10dc2a-8da5-4d24-815a-b6a9df4c686b/documents/54ddf065-d01f-4965-9bdf-c66ea47927c8";
+  "https://it-at-m.github.io/dave/de/DAVe_Anwenderhandbuch_Datenportal.pdf";
 
 const loggedInUser = ref("no-security");
 const backendVersion = ref("");
