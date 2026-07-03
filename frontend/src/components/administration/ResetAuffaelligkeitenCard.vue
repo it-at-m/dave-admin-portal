@@ -22,6 +22,7 @@
       <v-date-picker
         v-model="choosenDate"
         :max="dateYesterday"
+        multiple="range"
       >
         <template #title />
       </v-date-picker>
@@ -72,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { isNil, cloneDeep } from "lodash";
+import { cloneDeep, head, isEmpty, isNil, last } from "lodash";
 import moment from "moment";
 import { computed, ref } from "vue";
 
@@ -97,30 +98,30 @@ const TITLE = "Tag auf Auffälligkeiten prüfen";
 const TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG =
   "Bei nachträglichen Änderungen an den auffälligen Tagen in Mobidam sollten diese neu geladen werden.";
 
-const dateYesterday = ref(moment(new Date()).subtract(1, "day").toDate());
+const dateYesterday = ref<Date>(moment(new Date()).subtract(1, "day").toDate());
 
-const dateToReset = ref(cloneDeep(dateYesterday));
+const datesToReset = ref<Array<Date>>([cloneDeep(dateYesterday.value)]);
 
 const choosenDate = computed({
   get() {
-    let date = cloneDeep(dateYesterday.value);
-    if (!isNil(dateToReset.value)) {
-      date = dateToReset.value;
-      date.setHours(5);
+    let dates = [cloneDeep(dateYesterday.value)];
+    if (!isEmpty(datesToReset.value)) {
+      dates = datesToReset.value;
+      dates.forEach((date) => date.setHours(5));
     }
-    return date;
+    return dates;
   },
 
-  set(date: Date) {
-    if (!isNil(date)) {
-      date.setHours(5);
+  set(dates: Array<Date>) {
+    if (!isEmpty(dates)) {
+      dates.forEach((date) => date.setHours(5));
     }
-    dateToReset.value = date;
+    datesToReset.value = dates;
   },
 });
 
 function closeDialog() {
-  dateToReset.value = cloneDeep(dateYesterday.value);
+  datesToReset.value = [cloneDeep(dateYesterday.value)];
   openDialogModel.value = false;
 }
 
@@ -130,23 +131,26 @@ function openDialog(title: string) {
 }
 
 function resetAuffaelligkeiten() {
-  if (!isNil(dateToReset.value)) {
+  if (!isNil(datesToReset.value)) {
+    const resetAuffaelligkeiten = createResetAuffaelligkeitenDTO(
+      datesToReset.value
+    );
     openDialog(
-      `Soll der ${dateUtils.getShortVersionOfDate(dateToReset.value)} erneut auf Auffälligkeiten überprüft werden?
+      `Soll der Zeitraum von ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} erneut auf Auffälligkeiten überprüft werden?
             </br> Die bereits ermittelten Auffälligkeiten werden dabei überschrieben.`
     );
   }
 }
 
 function confirmReset() {
-  if (dateToReset.value) {
-    const resetAuffaelligkeiten = new ResetAuffaelligkeitenDTO(
-      dateToReset.value
+  if (datesToReset.value) {
+    const resetAuffaelligkeiten = createResetAuffaelligkeitenDTO(
+      datesToReset.value
     );
     AdministrationService.resetAuffaelligerTag(resetAuffaelligkeiten)
       .then(() => {
         snackbarStore.showSuccess(
-          `Der ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.dateToReset)} wurde erneut auf Auffälligkeiten überprüft.`
+          `Der Zeitraum von ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} wurde erneut auf Auffälligkeiten überprüft.`
         );
       })
       .catch((error) => {
@@ -154,5 +158,14 @@ function confirmReset() {
       })
       .finally(() => closeDialog());
   }
+}
+
+function createResetAuffaelligkeitenDTO(datesToReset: Array<Date>) {
+  const startDate = head(datesToReset);
+  const endDate = last(datesToReset);
+  return new ResetAuffaelligkeitenDTO(
+    startDate ? startDate : dateYesterday.value,
+    endDate ? endDate : dateYesterday.value
+  );
 }
 </script>
