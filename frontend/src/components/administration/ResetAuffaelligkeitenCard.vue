@@ -136,7 +136,7 @@ function resetAuffaelligkeiten() {
       datesToReset.value
     );
     openDialog(
-      `Soll der Zeitraum von ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} erneut auf Auffälligkeiten überprüft werden?
+      `Soll der Zeitraum vom ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} erneut auf Auffälligkeiten überprüft werden?
             </br> Die bereits ermittelten Auffälligkeiten werden dabei überschrieben.`
     );
   }
@@ -150,7 +150,7 @@ function confirmReset() {
     AdministrationService.resetAuffaelligerTag(resetAuffaelligkeiten)
       .then(() => {
         snackbarStore.showSuccess(
-          `Der Zeitraum von ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} wurde erneut auf Auffälligkeiten überprüft.`
+          `Der Zeitraum vom ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} wurde erneut auf Auffälligkeiten überprüft.`
         );
       })
       .catch((error) => {
