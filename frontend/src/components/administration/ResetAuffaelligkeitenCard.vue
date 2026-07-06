@@ -18,6 +18,10 @@
         />
       </v-row>
     </v-card-title>
+    <v-card-subtitle class="text-wrap">
+      Zur Prüfung kann ein Zeitraum von bis zu
+      {{ MAX_ALLOWED_NUMBER_OF_SELECTED_DATES }} Tagen ausgewählt werden.
+    </v-card-subtitle>
     <v-card-text>
       <v-date-picker
         v-model="choosenDates"
