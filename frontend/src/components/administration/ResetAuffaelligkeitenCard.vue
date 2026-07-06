@@ -176,7 +176,7 @@ function confirmReset() {
       })
       .catch((error) => {
         const message =
-          "Bei der Prüfung nach Auffälligkeiten ist ein Fehler aufgetreten.";
+          "Bei der Prüfung auf Auffälligkeiten ist ein Fehler aufgetreten.";
         snackbarStore.showError(error, message);
       })
       .finally(() => {
