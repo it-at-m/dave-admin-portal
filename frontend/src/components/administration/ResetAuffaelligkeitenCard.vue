@@ -42,7 +42,7 @@
     persistent
     width="800"
   >
-    <v-card>
+    <v-card :loading="isPruefungAuffaelligkeitenInProgress">
       <v-card-title>
         <v-icon
           start
@@ -59,14 +59,14 @@
           color="red-lighten-1"
           text="Ja"
           variant="elevated"
-          :disabled="disableDialogButtons"
+          :disabled="isPruefungAuffaelligkeitenInProgress"
           @click="confirmReset"
         />
         <v-btn
           color="tertiary"
           text="Nein"
           variant="elevated"
-          :disabled="disableDialogButtons"
+          :disabled="isPruefungAuffaelligkeitenInProgress"
           @click="closeDialog"
         />
         <v-spacer />
@@ -107,7 +107,7 @@ const dateYesterday = ref<Date>(moment(new Date()).subtract(1, "day").toDate());
 
 const datesToReset = ref<Array<Date>>([cloneDeep(dateYesterday.value)]);
 
-const disableDialogButtons = ref<boolean>(false);
+const isPruefungAuffaelligkeitenInProgress = ref<boolean>(false);
 
 const choosenDates = computed({
   get() {
@@ -162,7 +162,7 @@ function confirmReset() {
     );
 
     dialogtext.value = `Bitte Warten.</br>Der Zeitraum vom ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} wird erneut auf Auffälligkeiten überprüft.`;
-    disableDialogButtons.value = true;
+    isPruefungAuffaelligkeitenInProgress.value = true;
 
     AdministrationService.resetAuffaelligerTag(resetAuffaelligkeiten)
       .then(() => {
@@ -177,7 +177,7 @@ function confirmReset() {
       })
       .finally(() => {
         closeDialog();
-        disableDialogButtons.value = false;
+        isPruefungAuffaelligkeitenInProgress.value = false;
       });
   }
 }
