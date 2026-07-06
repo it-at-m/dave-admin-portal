@@ -58,12 +58,14 @@
           color="red-lighten-1"
           text="Ja"
           variant="elevated"
+          :disabled="disableDialogButtons"
           @click="confirmReset"
         />
         <v-btn
           color="tertiary"
           text="Nein"
           variant="elevated"
+          :disabled="disableDialogButtons"
           @click="closeDialog"
         />
         <v-spacer />
@@ -101,6 +103,8 @@ const TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG =
 const dateYesterday = ref<Date>(moment(new Date()).subtract(1, "day").toDate());
 
 const datesToReset = ref<Array<Date>>([cloneDeep(dateYesterday.value)]);
+
+const disableDialogButtons = ref<boolean>(false);
 
 const choosenDate = computed({
   get() {
@@ -147,6 +151,10 @@ function confirmReset() {
     const resetAuffaelligkeiten = createResetAuffaelligkeitenDTO(
       datesToReset.value
     );
+
+    dialogtext.value = `Bitte Warten.</br>Der Zeitraum vom ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} wird erneut auf Auffälligkeiten überprüft.`;
+    disableDialogButtons.value = true;
+
     AdministrationService.resetAuffaelligerTag(resetAuffaelligkeiten)
       .then(() => {
         snackbarStore.showSuccess(
@@ -154,9 +162,14 @@ function confirmReset() {
         );
       })
       .catch((error) => {
-        snackbarStore.showError(error);
+        const message =
+          "Bei der Prüfung nach Auffälligkeiten ist ein Fehler aufgetreten.";
+        snackbarStore.showError(error, message);
       })
-      .finally(() => closeDialog());
+      .finally(() => {
+        closeDialog();
+        disableDialogButtons.value = false;
+      });
   }
 }
 
