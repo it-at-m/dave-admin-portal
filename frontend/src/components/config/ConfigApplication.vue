@@ -17,14 +17,24 @@
             <h3 class="text-h6 mb-3">{{ category.toUpperCase() }}</h3>
             <v-list>
               <v-list-item v-for="item in items" :key="item.id">
-                <v-text-field
-                  :label="item.keyname"
-                  v-model="item.valuefield"
-                  variant="outlined"
-                  density="compact"
-                  class="pt-2"
-                  :rules="[validateDatatype(item)]"
-                />
+                <div class="d-flex align-center">
+                  <v-text-field
+                    :label="item.keyname"
+                    v-model="item.valuefield"
+                    variant="outlined"
+                    density="compact"
+                    class="flex-grow-1 pt-2"
+                    :rules="[validateDatatype(item)]"
+                  />
+                  <v-btn v-if="item.keyname === 'publicHolidaysApiUrl'"
+                    text="Importieren"
+                    color="secondary"
+                    variant="text"
+                    class="ml-2 mt-2"
+                    style="align-self: flex-start"
+                    @click="importPublicHolidays"
+                  />
+                </div>
               </v-list-item>
             </v-list>
           </div>
@@ -50,6 +60,7 @@
 
 import { ref, computed } from 'vue';
 import ConfigurationService from '@/api/service/ConfigurationService';
+import PublicHolidaysService from '@/api/service/PublicHolidaysService';
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import type ConfigurationItemDTO from '@/types/configuration/ConfigurationItemDTO';
 
@@ -93,6 +104,14 @@ function loadConfigValues() {
   });
 }
 
+function importPublicHolidays() {
+  PublicHolidaysService.importPublicHolidays().then((response) => {
+    snackbarStore.showSuccess(` ${response.toString()} Feiertage erfolgreich importiert`);
+  }).catch((error) => {
+    snackbarStore.showError('Fehler beim Importieren der Feiertage', error);
+  });
+}
+
 function saveConfigValues() {
   ConfigurationService.saveConfiguration(configItems.value).then(() => {
     loadConfigValues();
@@ -104,6 +123,6 @@ function saveConfigValues() {
 interface Props {
   height: string;
 }
-defineProps<Props>();
+const props = defineProps<Props>();
 
 </script>
