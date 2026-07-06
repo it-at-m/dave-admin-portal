@@ -20,7 +20,7 @@
     </v-card-title>
     <v-card-text>
       <v-date-picker
-        v-model="choosenDate"
+        v-model="choosenDates"
         :max="dateYesterday"
         multiple="range"
       >
@@ -32,6 +32,7 @@
       <v-btn
         variant="outlined"
         text="Prüfen"
+        :disabled="areMoreDatesSelectedThanAllowed"
         @click="resetAuffaelligkeiten"
       />
     </v-card-actions>
@@ -75,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { cloneDeep, head, isEmpty, isNil, last } from "lodash";
+import { cloneDeep, head, isEmpty, isNil, last, toArray } from "lodash";
 import moment from "moment";
 import { computed, ref } from "vue";
 
@@ -100,13 +101,15 @@ const TITLE = "Tag auf Auffälligkeiten prüfen";
 const TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG =
   "Bei nachträglichen Änderungen an den auffälligen Tagen in Mobidam sollten diese neu geladen werden.";
 
+const MAX_ALLOWED_NUMBER_OF_SELECTED_DATES = 31;
+
 const dateYesterday = ref<Date>(moment(new Date()).subtract(1, "day").toDate());
 
 const datesToReset = ref<Array<Date>>([cloneDeep(dateYesterday.value)]);
 
 const disableDialogButtons = ref<boolean>(false);
 
-const choosenDate = computed({
+const choosenDates = computed({
   get() {
     let dates = [cloneDeep(dateYesterday.value)];
     if (!isEmpty(datesToReset.value)) {
@@ -122,6 +125,12 @@ const choosenDate = computed({
     }
     datesToReset.value = dates;
   },
+});
+
+const areMoreDatesSelectedThanAllowed = computed<boolean>(() => {
+  return (
+    toArray(choosenDates.value).length > MAX_ALLOWED_NUMBER_OF_SELECTED_DATES
+  );
 });
 
 function closeDialog() {
