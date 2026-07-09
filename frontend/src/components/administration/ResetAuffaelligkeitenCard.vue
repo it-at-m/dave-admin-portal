@@ -18,10 +18,15 @@
         />
       </v-row>
     </v-card-title>
+    <v-card-subtitle class="text-wrap">
+      Zur Prüfung kann ein Zeitraum von bis zu
+      {{ MAX_ALLOWED_NUMBER_OF_SELECTED_DATES }} Tagen ausgewählt werden.
+    </v-card-subtitle>
     <v-card-text>
       <v-date-picker
-        v-model="choosenDate"
+        v-model="choosenDates"
         :max="dateYesterday"
+        multiple="range"
       >
         <template #title />
       </v-date-picker>
@@ -31,6 +36,7 @@
       <v-btn
         variant="outlined"
         text="Prüfen"
+        :disabled="areMoreDatesSelectedThanAllowed"
         @click="resetAuffaelligkeiten"
       />
     </v-card-actions>
@@ -40,7 +46,7 @@
     persistent
     width="800"
   >
-    <v-card>
+    <v-card :loading="isPruefungAuffaelligkeitenInProgress">
       <v-card-title>
         <v-icon
           start
@@ -57,12 +63,14 @@
           color="red-lighten-1"
           text="Ja"
           variant="elevated"
+          :disabled="isPruefungAuffaelligkeitenInProgress"
           @click="confirmReset"
         />
         <v-btn
           color="tertiary"
           text="Nein"
           variant="elevated"
+          :disabled="isPruefungAuffaelligkeitenInProgress"
           @click="closeDialog"
         />
         <v-spacer />
@@ -72,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { isNil, cloneDeep } from "lodash";
+import { cloneDeep, head, isEmpty, isNil, last, toArray } from "lodash";
 import moment from "moment";
 import { computed, ref } from "vue";
 
@@ -97,30 +105,40 @@ const TITLE = "Tag auf Auffälligkeiten prüfen";
 const TOOLTIP_RELOAD_UNAUFFAELLIGER_TAG =
   "Bei nachträglichen Änderungen an den auffälligen Tagen in Mobidam sollten diese neu geladen werden.";
 
-const dateYesterday = ref(moment(new Date()).subtract(1, "day").toDate());
+const MAX_ALLOWED_NUMBER_OF_SELECTED_DATES = 31;
 
-const dateToReset = ref(cloneDeep(dateYesterday));
+const dateYesterday = ref<Date>(moment(new Date()).subtract(1, "day").toDate());
 
-const choosenDate = computed({
+const datesToReset = ref<Array<Date>>([cloneDeep(dateYesterday.value)]);
+
+const isPruefungAuffaelligkeitenInProgress = ref<boolean>(false);
+
+const choosenDates = computed({
   get() {
-    let date = cloneDeep(dateYesterday.value);
-    if (!isNil(dateToReset.value)) {
-      date = dateToReset.value;
-      date.setHours(5);
+    let dates = [cloneDeep(dateYesterday.value)];
+    if (!isEmpty(datesToReset.value)) {
+      dates = datesToReset.value;
+      dates.forEach((date) => date.setHours(5));
     }
-    return date;
+    return dates;
   },
 
-  set(date: Date) {
-    if (!isNil(date)) {
-      date.setHours(5);
+  set(dates: Array<Date>) {
+    if (!isEmpty(dates)) {
+      dates.forEach((date) => date.setHours(5));
     }
-    dateToReset.value = date;
+    datesToReset.value = dates;
   },
 });
 
+const areMoreDatesSelectedThanAllowed = computed<boolean>(() => {
+  return (
+    toArray(choosenDates.value).length > MAX_ALLOWED_NUMBER_OF_SELECTED_DATES
+  );
+});
+
 function closeDialog() {
-  dateToReset.value = cloneDeep(dateYesterday.value);
+  datesToReset.value = [cloneDeep(dateYesterday.value)];
   openDialogModel.value = false;
 }
 
@@ -130,29 +148,50 @@ function openDialog(title: string) {
 }
 
 function resetAuffaelligkeiten() {
-  if (!isNil(dateToReset.value)) {
+  if (!isNil(datesToReset.value)) {
+    const resetAuffaelligkeiten = createResetAuffaelligkeitenDTO(
+      datesToReset.value
+    );
     openDialog(
-      `Soll der ${dateUtils.getShortVersionOfDate(dateToReset.value)} erneut auf Auffälligkeiten überprüft werden?
+      `Soll der Zeitraum vom ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} erneut auf Auffälligkeiten überprüft werden?
             </br> Die bereits ermittelten Auffälligkeiten werden dabei überschrieben.`
     );
   }
 }
 
 function confirmReset() {
-  if (dateToReset.value) {
-    const resetAuffaelligkeiten = new ResetAuffaelligkeitenDTO(
-      dateToReset.value
+  if (datesToReset.value) {
+    const resetAuffaelligkeiten = createResetAuffaelligkeitenDTO(
+      datesToReset.value
     );
+
+    dialogtext.value = `Bitte Warten.</br>Der Zeitraum vom ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} wird erneut auf Auffälligkeiten überprüft.`;
+    isPruefungAuffaelligkeitenInProgress.value = true;
+
     AdministrationService.resetAuffaelligerTag(resetAuffaelligkeiten)
       .then(() => {
         snackbarStore.showSuccess(
-          `Der ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.dateToReset)} wurde erneut auf Auffälligkeiten überprüft.`
+          `Der Zeitraum vom ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.startDateToReset)} bis ${dateUtils.getShortVersionOfDate(resetAuffaelligkeiten.endDateToReset)} wurde erneut auf Auffälligkeiten überprüft.`
         );
       })
       .catch((error) => {
-        snackbarStore.showError(error);
+        const message =
+          "Bei der Prüfung auf Auffälligkeiten ist ein Fehler aufgetreten.";
+        snackbarStore.showError(error, message);
       })
-      .finally(() => closeDialog());
+      .finally(() => {
+        closeDialog();
+        isPruefungAuffaelligkeitenInProgress.value = false;
+      });
   }
+}
+
+function createResetAuffaelligkeitenDTO(datesToReset: Array<Date>) {
+  const startDate = head(datesToReset);
+  const endDate = last(datesToReset);
+  return new ResetAuffaelligkeitenDTO(
+    startDate ? startDate : dateYesterday.value,
+    endDate ? endDate : dateYesterday.value
+  );
 }
 </script>
