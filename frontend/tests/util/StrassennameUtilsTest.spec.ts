@@ -1,7 +1,8 @@
+import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+
 import { describe, expect, it } from "vitest";
 
 import { useStrassennameUtils } from "@/util/StrassennameUtils";
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 
 describe("StrassennamenUtils", () => {
   // getStreetname ------------------------------------
@@ -48,7 +49,7 @@ describe("StrassennamenUtils", () => {
     const long = "Elisabeth-zu-Gutten...str.";
     const res = getStreetLines({ strassenname: long } as any);
     expect(res[0]).toBe("Elisabeth-zu-");
-    expect(res[1]).toBe("Gutten...-str.");
+    expect(res[1]).toBe("Gutten...str.");
   });
 
   it("getStreetLines: Platz der Opfer des Nationalsozialismus", () => {
@@ -223,5 +224,12 @@ describe("StrassennamenUtils", () => {
     const { getStreetLines } = useStrassennameUtils();
     const res = getStreetLines({ strassenname: "" } as any);
     expect(res).toEqual([""]);
+  });
+
+  it("getStreetLines: Manuell forcierter Zeilenumbruch (Himmel-schlüsselstr.)", () => {
+    const { getStreetLines } = useStrassennameUtils();
+    const res = getStreetLines({ strassenname: "Himmel-schlüsselstr." } as any);
+    expect(res[0]).toBe("Himmel-");
+    expect(res[1]).toBe("schlüsselstr.");
   });
 });
