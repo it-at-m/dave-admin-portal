@@ -57,6 +57,7 @@
           color="red-lighten-1"
           text="Ja"
           variant="elevated"
+          :disabled="isResetStarted"
           @click="confirmReset"
         />
         <v-btn
@@ -101,6 +102,8 @@ const dateYesterday = ref(moment(new Date()).subtract(1, "day").toDate());
 
 const dateToReset = ref(cloneDeep(dateYesterday));
 
+const isResetStarted = ref(false);
+
 const choosenDate = computed({
   get() {
     let date = cloneDeep(dateYesterday.value);
@@ -143,6 +146,7 @@ function confirmReset() {
     const resetAuffaelligkeiten = new ResetAuffaelligkeitenDTO(
       dateToReset.value
     );
+    isResetStarted.value = true;
     AdministrationService.resetAuffaelligerTag(resetAuffaelligkeiten)
       .then(() => {
         snackbarStore.showSuccess(
@@ -152,7 +156,10 @@ function confirmReset() {
       .catch((error) => {
         snackbarStore.showError(error);
       })
-      .finally(() => closeDialog());
+      .finally(() => {
+        isResetStarted.value = false;
+        closeDialog();
+      });
   }
 }
 </script>
