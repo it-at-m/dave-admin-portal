@@ -34,6 +34,14 @@
                     style="align-self: flex-start"
                     @click="importPublicHolidays"
                   />
+                  <v-btn v-if="item.keyname === 'schoolHolidaysApiUrl'"
+                    text="Importieren"
+                    color="secondary"
+                    variant="text"
+                    class="ml-2 mt-2"
+                    style="align-self: flex-start"
+                    @click="importSchoolHolidays"
+                  />
                 </div>
               </v-list-item>
             </v-list>
@@ -60,7 +68,7 @@
 
 import { ref, computed } from 'vue';
 import ConfigurationService from '@/api/service/ConfigurationService';
-import PublicHolidaysService from '@/api/service/PublicHolidaysService';
+import HolidaysService from '@/api/service/HolidaysService';
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import type ConfigurationItemDTO from '@/types/configuration/ConfigurationItemDTO';
 
@@ -105,10 +113,18 @@ function loadConfigValues() {
 }
 
 function importPublicHolidays() {
-  PublicHolidaysService.importPublicHolidays().then((response) => {
+  HolidaysService.importPublicHolidays().then((response) => {
     snackbarStore.showSuccess(` ${response.toString()} Feiertage erfolgreich importiert`);
   }).catch((error) => {
     snackbarStore.showError('Fehler beim Importieren der Feiertage', error);
+  });
+}
+
+function importSchoolHolidays() {
+  HolidaysService.importSchoolHolidays().then((response) => {
+    snackbarStore.showSuccess(` ${response.toString()} Schulferien erfolgreich importiert`);
+  }).catch((error) => {
+    snackbarStore.showError('Fehler beim Importieren der Schulferien', error);
   });
 }
 
