@@ -1,7 +1,9 @@
 export default class ResetAuffaelligkeitenDTO {
-  dateToReset: Date;
+  startDateToReset: Date;
+  endDateToReset: Date;
 
-  constructor(dateToReset: Date) {
-    this.dateToReset = dateToReset;
+  constructor(startDateToReset: Date, endDateToReset: Date) {
+    this.startDateToReset = startDateToReset;
+    this.endDateToReset = endDateToReset;
   }
 }
