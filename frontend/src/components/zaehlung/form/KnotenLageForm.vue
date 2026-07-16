@@ -229,6 +229,13 @@ watch(
   }
 );
 
+watch(
+  () => zaehlung.value.kreisverkehr,
+  () => {
+    zaehlung.value.fahrbeziehungen = [];
+  }
+);
+
 function resetForm() {
   // Alle Straßennamen löschen
   strassen.value = ["", "", "", "", "", "", "", ""];
@@ -278,10 +285,13 @@ function deleteKnotenarm(nummer: number) {
 
 function deleteAllFahrbeziehungByKnotenarmnummer(nummer: number) {
   const filtered = zaehlung.value.fahrbeziehungen.filter((fahrbeziehung) => {
-    if (fahrbeziehung.knotenarm === nummer) {
+    const shouldRemove = zaehlung.value.kreisverkehr
+      ? fahrbeziehung.knotenarm === nummer
+      : fahrbeziehung.von === nummer || fahrbeziehung.nach === nummer;
+    if (shouldRemove) {
       fahrbeziehung.active = false;
     }
-    return fahrbeziehung.knotenarm !== nummer;
+    return !shouldRemove;
   });
 
   zaehlung.value.fahrbeziehungen = [];
