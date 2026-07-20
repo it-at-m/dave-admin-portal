@@ -403,7 +403,6 @@
 </template>
 
 <script setup lang="ts">
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
@@ -412,6 +411,7 @@ import { computed, onMounted, ref, watch } from "vue";
 
 import Himmelsrichtung from "@/types/enum/Himmelsrichtung";
 import KnotenarmComparator from "@/util/KnotenarmComparator";
+import { useStrassennameUtils } from "@/util/StrassennameUtils";
 
 interface Props {
   height: string;
@@ -422,6 +422,8 @@ defineProps<Props>();
 const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
   required: true,
 });
+
+const strassennameUtils = useStrassennameUtils();
 
 const activeColor = "#D50000";
 const passiveColor = "#9E9E9E";
@@ -753,45 +755,7 @@ function resetForm(): void {
 }
 
 function prepareStreetnames(): void {
-  firstStreetname.value = getStreetname(firstNode.value);
-  secondStreetname.value = getStreetname(secondNode.value);
-}
-
-function getStreetname(knotenarm: KnotenarmDTO | undefined): Array<string> {
-  let strasse = "";
-  if (knotenarm && knotenarm.strassenname) {
-    strasse = knotenarm.strassenname;
-  }
-  let pieces = [strasse];
-  const zeichen = strasse.length;
-  // Anzahl Zeichen
-  if (zeichen > 17) {
-    pieces = ["", ""];
-    if (strasse.endsWith("str.")) {
-      const index = strasse.indexOf("str.");
-      pieces[0] = strasse.substring(0, zeichen - 4);
-      pieces[1] = strasse.substring(index, 4);
-    }
-    // Platz
-    if (strasse.endsWith("pl.")) {
-      const index = strasse.indexOf("pl.");
-      pieces[0] = strasse.substring(0, zeichen - 3);
-      pieces[1] = strasse.substring(index, 3);
-    }
-    // Bindestrich
-    if (strasse.includes("-")) {
-      // pieces = strasse.split(trenner);
-      const index = strasse.indexOf("-");
-      pieces[0] = strasse.substring(0, index + 1);
-      pieces[1] = strasse.substring(index + 1);
-    }
-    // Leerzeichen
-    else if (strasse.includes(" ")) {
-      const index = strasse.indexOf(" ");
-      pieces[0] = strasse.substring(0, index + 1);
-      pieces[1] = strasse.substring(index + 1);
-    }
-  }
-  return pieces;
+  firstStreetname.value = strassennameUtils.getStreetLines(firstNode.value);
+  secondStreetname.value = strassennameUtils.getStreetLines(secondNode.value);
 }
 </script>
