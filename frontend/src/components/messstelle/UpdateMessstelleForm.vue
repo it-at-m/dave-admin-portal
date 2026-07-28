@@ -100,6 +100,7 @@ import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 
 import { isEmpty, isNil } from "lodash";
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 
 import MessstelleService from "@/api/service/MessstelleService";
 import MessfaehigkeitForm from "@/components/messstelle/MessfaehigkeitForm.vue";
@@ -124,6 +125,7 @@ const messstelle = defineModel<MessstelleEditDTO>({
 
 const snackbarStore = useSnackbarStore();
 const daveUtils = useDaveUtils();
+const router = useRouter();
 
 const emits = defineEmits<{
   (e: "reload"): void;
@@ -158,14 +160,19 @@ function save(): void {
       })
       .catch((error) => snackbarStore.showApiError(error))
       .finally(() => {
-        cancel();
+        reloadMessstelle();
       });
   }
 }
 
-function cancel(): void {
+function reloadMessstelle(): void {
   activeTab.value = 0;
   emits("reload");
+}
+
+function cancel(): void {
+  activeTab.value = 0;
+  router.push("/");
 }
 
 function areAllFormsValid(): boolean {
