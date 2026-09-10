@@ -545,86 +545,120 @@ function createMarkerForMessstelle(
  *  - anzahlZaehlungen
  *  - datumLetzteZaehlung
  */
-function createTooltipZaehlstelle(tooltipDto: TooltipZaehlstelleDTO): string {
+function createTooltipZaehlstelle(
+  tooltipDto: TooltipZaehlstelleDTO
+): HTMLElement {
+  const tooltip = document.createElement("div");
   if (!tooltipDto) {
-    return "<div></div>";
+    return tooltip;
   }
-  let tooltip = "<div><b>";
+
   if (tooltipDto.zaehlstellennnummer) {
-    tooltip = `${tooltip}Zählstelle: ${tooltipDto.zaehlstellennnummer}</b><br/>`;
+    const b = document.createElement("b");
+    b.textContent = `Zählstelle: ${tooltipDto.zaehlstellennnummer}`;
+    tooltip.appendChild(b);
+    tooltip.appendChild(document.createElement("br"));
   }
   if (tooltipDto.kreuzungsname) {
-    tooltip = `${tooltip}${tooltipDto.kreuzungsname}<br/>`;
+    const t = document.createTextNode(tooltipDto.kreuzungsname);
+    tooltip.appendChild(t);
+    tooltip.appendChild(document.createElement("br"));
   }
-  if (!tooltipDto.zaehlstellennnummer) {
-    tooltip = `${tooltip}</b>`;
-  }
-  tooltip = `${tooltip}<br/>`;
+  tooltip.appendChild(document.createElement("br"));
+
   if (!tooltipDto.stadtbezirk) {
-    tooltip = `${tooltip}Stadtbezirk: Keine Angabe<br/>`;
+    const t = document.createTextNode("Stadtbezirk: Keine Angabe");
+    tooltip.appendChild(t);
+    tooltip.appendChild(document.createElement("br"));
   } else {
-    tooltip = `${tooltip}Stadtbezirk: `;
+    let label = "Stadtbezirk: ";
     if (tooltipDto.stadtbezirknummer) {
-      tooltip = `${tooltip}${tooltipDto.stadtbezirknummer} - `;
+      label += `${tooltipDto.stadtbezirknummer} - `;
     }
-    tooltip = `${tooltip}${tooltipDto.stadtbezirk}<br/>`;
+    const t = document.createTextNode(label + tooltipDto.stadtbezirk);
+    tooltip.appendChild(t);
+    tooltip.appendChild(document.createElement("br"));
   }
   if (tooltipDto.anzahlZaehlungen) {
-    tooltip = `${tooltip}Anzahl der Zählungen: ${tooltipDto.anzahlZaehlungen}<br/>`;
+    const t = document.createTextNode(
+      `Anzahl der Zählungen: ${tooltipDto.anzahlZaehlungen}`
+    );
+    tooltip.appendChild(t);
+    tooltip.appendChild(document.createElement("br"));
+
     if (tooltipDto.datumLetzteZaehlung) {
-      tooltip = `${tooltip}Letzte Zählung: ${tooltipDto.datumLetzteZaehlung}<br/>`;
+      const d = document.createTextNode(
+        `Letzte Zählung: ${tooltipDto.datumLetzteZaehlung}`
+      );
+      tooltip.appendChild(d);
+      tooltip.appendChild(document.createElement("br"));
     }
   } else {
-    tooltip = `${tooltip}Noch keine Zählungen vorhanden.`;
+    const t = document.createTextNode("Noch keine Zählungen vorhanden.");
+    tooltip.appendChild(t);
   }
-  tooltip = `${tooltip}</div>`;
+
   return tooltip;
 }
 
-function createTooltipMessstelle(tooltipDto: TooltipMessstelleDTO): string {
+function createTooltipMessstelle(
+  tooltipDto: TooltipMessstelleDTO
+): HTMLElement {
+  const tooltip = document.createElement("div");
   if (!tooltipDto) {
-    return "<div></div>";
-  }
-  let tooltip = "<div>";
-  if (tooltipDto.mstId) {
-    tooltip = `<b>${tooltip}Messstelle: ${tooltipDto.mstId}`;
-    if (tooltipDto.detektierteVerkehrsart) {
-      tooltip = `${tooltip} (${tooltipDto.detektierteVerkehrsart})`;
-    }
-    tooltip = `${tooltip}</b><br/>`;
-  }
-  if (tooltipDto.standort) {
-    tooltip = `${tooltip}${tooltipDto.standort}<br/>`;
-  }
-  tooltip = `${tooltip}<br/>`;
-  if (!tooltipDto.stadtbezirk) {
-    tooltip = `${tooltip}Stadtbezirk: Keine Angabe<br/>`;
-  } else {
-    tooltip = `${tooltip}Stadtbezirk: `;
-    if (tooltipDto.stadtbezirknummer) {
-      tooltip = `${tooltip}${tooltipDto.stadtbezirknummer} - `;
-    }
-    tooltip = `${tooltip}${tooltipDto.stadtbezirk}<br/>`;
-  }
-  tooltip = `${tooltip} Aufbau: `;
-  if (tooltipDto.realisierungsdatum) {
-    tooltip = `${tooltip}${dateUtils.formatDate(
-      tooltipDto.realisierungsdatum
-    )}`;
-  }
-  tooltip = `${tooltip}<br/>`;
-  if (tooltipDto.abbaudatum) {
-    tooltip = `${tooltip}Abbau: ${dateUtils.formatDate(
-      tooltipDto.abbaudatum
-    )}<br/>`;
-  }
-  if (tooltipDto.datumLetztePlausibleMessung) {
-    tooltip = `${tooltip}Letzte plausible Messung: ${dateUtils.formatDate(
-      tooltipDto.datumLetztePlausibleMessung
-    )}<br/>`;
+    return tooltip;
   }
 
-  tooltip = `${tooltip}</div>`;
+  if (tooltipDto.mstId) {
+    const b = document.createElement("b");
+    let text = `Messstelle: ${tooltipDto.mstId}`;
+    if (tooltipDto.detektierteVerkehrsart) {
+      text += ` (${tooltipDto.detektierteVerkehrsart})`;
+    }
+    b.textContent = text;
+    tooltip.appendChild(b);
+    tooltip.appendChild(document.createElement("br"));
+  }
+  if (tooltipDto.standort) {
+    const t = document.createTextNode(tooltipDto.standort);
+    tooltip.appendChild(t);
+    tooltip.appendChild(document.createElement("br"));
+  }
+  tooltip.appendChild(document.createElement("br"));
+
+  if (!tooltipDto.stadtbezirk) {
+    const t = document.createTextNode("Stadtbezirk: Keine Angabe");
+    tooltip.appendChild(t);
+    tooltip.appendChild(document.createElement("br"));
+  } else {
+    let label = "Stadtbezirk: ";
+    if (tooltipDto.stadtbezirknummer) {
+      label += `${tooltipDto.stadtbezirknummer} - `;
+    }
+    const t = document.createTextNode(label + tooltipDto.stadtbezirk);
+    tooltip.appendChild(t);
+    tooltip.appendChild(document.createElement("br"));
+  }
+
+  const aufbau = document.createTextNode(
+    `Aufbau: ${dateUtils.formatDate(tooltipDto.realisierungsdatum)}`
+  );
+  tooltip.appendChild(aufbau);
+  tooltip.appendChild(document.createElement("br"));
+
+  if (tooltipDto.abbaudatum) {
+    const abbau = document.createTextNode(
+      `Abbau: ${dateUtils.formatDate(tooltipDto.abbaudatum)}`
+    );
+    tooltip.appendChild(abbau);
+    tooltip.appendChild(document.createElement("br"));
+  }
+  const letzte = document.createTextNode(
+    `Letzte plausible Messung: ${dateUtils.formatDate(tooltipDto.datumLetztePlausibleMessung)}`
+  );
+  tooltip.appendChild(letzte);
+  tooltip.appendChild(document.createElement("br"));
+
   return tooltip;
 }
 
