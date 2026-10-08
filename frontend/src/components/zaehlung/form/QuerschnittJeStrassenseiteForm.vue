@@ -241,8 +241,8 @@
               stroke-dasharray: none;
               stroke-opacity: 1;
             "
-            cx="476"
-            cy="700"
+            :cx="xCoordNumberOne"
+            :cy="yCoordNumberOne"
             r="20.487822"
           />
           <text
@@ -259,15 +259,15 @@
               stroke-width: 52.2711;
               dominant-baseline: central;
             "
-            x="476"
-            y="700"
-            :transform="rotateNumber1Inverse"
+            :x="xCoordNumberOne"
+            :y="yCoordNumberOne"
+            :transform="rotateNumberOneInverse"
           >
             <tspan
               id="number1_tspan"
               style="stroke-width: 52.2711"
-              x="476"
-              y="700"
+              :x="xCoordNumberOne"
+              :y="yCoordNumberOne"
             >
               {{ firstKnotenarm?.nummer }}
             </tspan>
@@ -284,8 +284,8 @@
               stroke-dasharray: none;
               stroke-opacity: 1;
             "
-            cx="924"
-            cy="700"
+            :cx="xCoordNumberTwo"
+            :cy="yCoordNumberTwo"
             r="20.487822"
           />
           <text
@@ -302,14 +302,14 @@
               stroke-width: 52.2711;
               dominant-baseline: central;
             "
-            x="924"
-            y="700"
-            :transform="rotateNumber2Inverse"
+            :x="xCoordNumberTwo"
+            :y="yCoordNumberTwo"
+            :transform="rotateNumberTwoInverse"
           >
             <tspan
               id="number2_tspan"
-              x="924"
-              y="700"
+              :x="xCoordNumberTwo"
+              :y="yCoordNumberTwo"
               style="stroke-width: 52.2711"
             >
               {{ secondKnotenarm?.nummer }}
@@ -440,6 +440,11 @@ const selectedVerkehrsbeziehungen = computed(() => {
 const firstStreetname = ref<Array<string>>([]);
 const secondStreetname = ref<Array<string>>([]);
 
+const xCoordNumberOne = 476;
+const yCoordNumberOne = 700;
+const xCoordNumberTwo = 924;
+const yCoordNumberTwo = 700;
+
 const availableKnotenarmNummern = computed(() => {
   return availableKnotenarme.value.map((arm) => arm.nummer);
 });
@@ -473,15 +478,15 @@ const rotateSvg = computed(() => {
   return rotation;
 });
 
-const rotateNumber1Inverse = rotateNumberInverseFor(
+const rotateNumberOneInverse = rotateNumberInverseFor(
   availableKnotenarmNummern,
-  476,
-  700
+  xCoordNumberOne,
+  yCoordNumberOne
 );
-const rotateNumber2Inverse = rotateNumberInverseFor(
+const rotateNumberTwoInverse = rotateNumberInverseFor(
   availableKnotenarmNummern,
-  924,
-  700
+  xCoordNumberTwo,
+  yCoordNumberTwo
 );
 
 /**
