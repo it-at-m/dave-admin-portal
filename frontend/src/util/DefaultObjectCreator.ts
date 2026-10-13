@@ -1,7 +1,10 @@
 import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
 import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
 import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type MapConfigDTO from "@/types/karte/MapConfigDTO";
+import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
+import type MapConfigurationDTO from "@/types/configuration/MapConfigurationDTO";
+import type TenantConfigurationDTO from "@/types/configuration/TenantConfigurationDTO";
+import type ZaehlstelleConfigurationDTO from "@/types/configuration/ZaehlstelleConfigurationDTO";
 import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
@@ -42,7 +45,9 @@ export default class DefaultObjectCreator {
     const zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
     zaehlung.customSuchwoerter = [];
     zaehlung.knotenarme = [];
-    zaehlung.fahrbeziehungen = [];
+    zaehlung.querungsverkehr = [];
+    zaehlung.laengsverkehr = [];
+    zaehlung.verkehrsbeziehungen = [];
     zaehlung.kategorien = [];
     zaehlung.quelle = Quelle.MANUALLY;
     zaehlung.wetter = Wetter.NO_INFORMATION;
@@ -108,7 +113,20 @@ export default class DefaultObjectCreator {
     } as SearchAndFilterOptionsDTO;
   }
 
-  public static createDefaultMapConfigDTO(): MapConfigDTO {
+  public static createDefaultConfigurationDTO(): ConfigurationDTO {
+    return {
+      zaehlstelle: this.createDefaultZaehlstelleConfigurationDTO(),
+      tenant: this.createDefaultTenantConfigurationDTO(),
+    };
+  }
+
+  public static createDefaultZaehlstelleConfigurationDTO(): ZaehlstelleConfigurationDTO {
+    return {
+      automaticNumberAssignment: true,
+    };
+  }
+
+  public static createDefaultMapConfigurationDTO(): MapConfigurationDTO {
     return {
       // München Zentrum
       lat: "48.137227",
@@ -116,6 +134,13 @@ export default class DefaultObjectCreator {
       zoom: 12,
       baseLayers: [],
       overlayLayers: [],
+    };
+  }
+
+  public static createDefaultTenantConfigurationDTO(): TenantConfigurationDTO {
+    return {
+      datenportalHeader: "",
+      mapConfiguration: this.createDefaultMapConfigurationDTO(),
     };
   }
 }

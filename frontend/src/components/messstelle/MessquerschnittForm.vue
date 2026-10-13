@@ -111,8 +111,8 @@ import { onMounted, ref, watch } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import { useEventbus } from "@/store/Eventbus";
-import { himmelsRichtungenTextLong } from "@/types/enum/Himmelsrichtungen";
-import { useValidationUtils } from "@/util/validationUtils";
+import { himmelsRichtungenTextLong } from "@/types/enum/Himmelsrichtung";
+import { useValidationUtils } from "@/util/ValidationUtils";
 
 const validationUtils = useValidationUtils();
 

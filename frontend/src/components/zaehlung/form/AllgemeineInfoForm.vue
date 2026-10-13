@@ -8,7 +8,7 @@
     <v-card-text>
       <v-form
         ref="form"
-        v-model="validZaehlung"
+        v-model="isValid"
       >
         <v-row dense>
           <v-col
@@ -228,7 +228,7 @@
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { cloneDeep, isEmpty, isNil } from "lodash";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import { quelleDropDown } from "@/types/enum/Quelle";
 import Status from "@/types/enum/Status";
@@ -241,13 +241,12 @@ interface Props {
 }
 defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
   required: true,
 });
-
-const emits = defineEmits<{
-  (e: "isValid", payload: boolean): void;
-}>();
+const isValid = defineModel<boolean | null>("isValid", {
+  required: true,
+});
 
 const dateUtils = useDateUtils();
 
@@ -257,21 +256,12 @@ const ZAEHLINTERVALLE_15 = [{ title: "15 min", value: 15 }];
 
 const newSuchwort = ref("");
 const datepickerMenuModel = ref(false);
-const validZaehlung = ref(false);
 // Without Time
 const datepickerModel = ref<Date>(new Date());
 
 onMounted(() => {
-  validZaehlung.value = false;
   resetDatumToValueOfZaehlung();
 });
-
-watch(
-  () => validZaehlung.value,
-  () => {
-    emits("isValid", validZaehlung.value);
-  }
-);
 
 const datepickerDate = computed({
   get() {

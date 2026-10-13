@@ -91,8 +91,8 @@ import markerIconDiamondShadow from "@/assets/cards-diamond-shadow.png";
 import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleDialog.vue";
+import { useConfigurationStore } from "@/store/ConfigurationStore";
 import { useEventbus } from "@/store/Eventbus";
-import { useMapConfigStore } from "@/store/MapConfigStore";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
@@ -125,7 +125,7 @@ const snackbarStore = useSnackbarStore();
 const router = useRouter();
 const dateUtils = useDateUtils();
 const mapOptionsStore = useMapOptionsStore();
-const mapConfigStore = useMapConfigStore();
+const configurationStore = useConfigurationStore();
 const eventbus = useEventbus();
 
 const mapRef = ref<HTMLDivElement | null>(null);
@@ -283,8 +283,6 @@ function createZaehlstelle() {
 function deleteNewMarker() {
   if (newMarker.value) {
     newMarker.value.removeFrom(map);
-    // mapMarkerClusterGroup.removeLayer(newMarker.value);
-    // this.theMap.mapObject.removeLayer(newMarker.value);
     newMarker.value = null;
     resetBooleans();
   }
@@ -293,13 +291,11 @@ function deleteNewMarker() {
 function resetBooleans() {
   fab.value = false;
   fab2.value = false;
-  // speedDialOpen.value = false;
   addMarker.value = false;
   useCustomCursor.value = false;
 }
 
 function reloadDataAndCloseDialog(backendIdDTO: BackendIdDTO) {
-  searchErhebungsstelle();
   resetBooleans();
   closeDialog();
   routeToZaehlstelle(backendIdDTO.id);
@@ -332,8 +328,8 @@ const center = computed<LatLng>(() => {
     );
   } else {
     return createLatLngFromString(
-      mapConfigStore.getMapConfig.lat,
-      mapConfigStore.getMapConfig.lng
+      configurationStore.getTenantConfiguration.mapConfiguration.lat,
+      configurationStore.getTenantConfiguration.mapConfiguration.lng
     );
   }
 });
@@ -352,7 +348,8 @@ function createLayersAndAddToMap(): void {
  * Fügt im Backend konfigurierte Base-Layer zur Karte hinzu.
  */
 function addBaseLayers(): void {
-  const baseLayers = mapConfigStore.getMapConfig.baseLayers;
+  const baseLayers =
+    configurationStore.getTenantConfiguration.mapConfiguration.baseLayers;
   let firstLayerAddedToMap = false;
 
   baseLayers.forEach((layerConfig) => {
@@ -374,7 +371,8 @@ function addBaseLayers(): void {
  * Fügt im Backend konfigurierte Overlay-Layer zur Karte hinzu.
  */
 function addOverlayLayers(): void {
-  const overlayLayers = mapConfigStore.getMapConfig.overlayLayers;
+  const overlayLayers =
+    configurationStore.getTenantConfiguration.mapConfiguration.overlayLayers;
 
   overlayLayers.forEach((layerConfig) => {
     const layer = L.tileLayer.wms(layerConfig.baseUrl, {
@@ -389,7 +387,7 @@ function addOverlayLayers(): void {
   });
 }
 
-watch(mapConfigStore, () => {
+watch(configurationStore, () => {
   addBaseLayers();
   addOverlayLayers();
 });

@@ -2,8 +2,10 @@ import type BaseEntity from "@/types/common/BaseEntity";
 import type GeoPoint from "@/types/common/GeoPoint";
 import type PkwEinheitDTO from "@/types/common/PkwEinheitDTO";
 import type Fahrzeug from "@/types/enum/Fahrzeug";
-import type FahrbeziehungDTO from "@/types/zaehlung/FahrbeziehungDTO";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
+import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
+import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 
 import Quelle from "@/types/enum/Quelle";
 import Status from "@/types/enum/Status";
@@ -29,7 +31,9 @@ export default interface ZaehlungDTO extends BaseEntity {
   quelle: Quelle;
   zaehlart: Zaehlart;
   knotenarme: KnotenarmDTO[];
-  fahrbeziehungen: FahrbeziehungDTO[];
+  laengsverkehr: LaengsverkehrDTO[];
+  querungsverkehr: QuerungsverkehrDTO[];
+  verkehrsbeziehungen: VerkehrsbeziehungDTO[];
   kategorien: Array<Fahrzeug>;
   pkwEinheit: PkwEinheitDTO;
   customSuchwoerter: string[];

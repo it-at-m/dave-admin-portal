@@ -5,6 +5,20 @@
     :max-height="height"
     class="overflow-y-auto"
   >
+    <v-banner
+      v-if="!isKnotenLageFormValid"
+      lines="one"
+      width="100%"
+      text="Es müssen exakt 2 gegenüberliegende Knotenarme ausgewählt werden."
+    >
+      <template #prepend>
+        <v-icon
+          icon="mdi-alert-decagram-outline"
+          size="36"
+          color="error"
+        />
+      </template>
+    </v-banner>
     <v-card-text>
       <v-row dense>
         <zaehlung-card-map
@@ -202,15 +216,17 @@ import { computed, onMounted, ref, watch } from "vue";
 import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
 import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
 import { useEventbus } from "@/store/Eventbus";
+import Zaehlart from "@/types/enum/Zaehlart";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 interface Props {
   height: string;
   zaehlstelle: ZaehlstelleDTO;
+  isKnotenLageFormValid: boolean;
 }
 const props = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
   required: true,
 });
 
@@ -232,7 +248,9 @@ watch(
 watch(
   () => zaehlung.value.kreisverkehr,
   () => {
-    zaehlung.value.fahrbeziehungen = [];
+    zaehlung.value.verkehrsbeziehungen = [];
+    zaehlung.value.laengsverkehr = [];
+    zaehlung.value.querungsverkehr = [];
   }
 );
 
@@ -280,22 +298,52 @@ function deleteKnotenarm(nummer: number) {
   if (toDelete > -1) {
     zaehlung.value.knotenarme.splice(toDelete, 1);
   }
-  deleteAllFahrbeziehungByKnotenarmnummer(nummer);
+  if (zaehlung.value.zaehlart === Zaehlart.FJS) {
+    deleteAllLaengsverkehrBeziehungenByKnotenarmnummer(nummer);
+  } else if (zaehlung.value.zaehlart === Zaehlart.QU) {
+    deleteAllQuerungsverkehrBeziehungenByKnotenarmnummer(nummer);
+  } else {
+    deleteAllVerkehrsbeziehungenByKnotenarmnummer(nummer);
+  }
 }
 
-function deleteAllFahrbeziehungByKnotenarmnummer(nummer: number) {
-  const filtered = zaehlung.value.fahrbeziehungen.filter((fahrbeziehung) => {
-    const shouldRemove = zaehlung.value.kreisverkehr
-      ? fahrbeziehung.knotenarm === nummer
-      : fahrbeziehung.von === nummer || fahrbeziehung.nach === nummer;
-    if (shouldRemove) {
-      fahrbeziehung.active = false;
+function deleteAllVerkehrsbeziehungenByKnotenarmnummer(nummer: number) {
+  const filtered = zaehlung.value.verkehrsbeziehungen.filter(
+    (verkehrsbeziehung) => {
+      const shouldRemove = zaehlung.value.kreisverkehr
+        ? verkehrsbeziehung.knotenarm === nummer
+        : verkehrsbeziehung.von === nummer || verkehrsbeziehung.nach === nummer;
+      if (shouldRemove) {
+        verkehrsbeziehung.active = false;
+      }
+      return !shouldRemove;
     }
-    return !shouldRemove;
-  });
+  );
 
-  zaehlung.value.fahrbeziehungen = [];
-  zaehlung.value.fahrbeziehungen = [...filtered];
+  zaehlung.value.verkehrsbeziehungen = [];
+  zaehlung.value.verkehrsbeziehungen = [...filtered];
+}
+
+function deleteAllLaengsverkehrBeziehungenByKnotenarmnummer(nummer: number) {
+  const filtered = zaehlung.value.laengsverkehr.filter(
+    (laengsverkehrBeziehung) => {
+      return laengsverkehrBeziehung.knotenarm !== nummer;
+    }
+  );
+
+  zaehlung.value.laengsverkehr = [];
+  zaehlung.value.laengsverkehr = [...filtered];
+}
+
+function deleteAllQuerungsverkehrBeziehungenByKnotenarmnummer(nummer: number) {
+  const filtered = zaehlung.value.querungsverkehr.filter(
+    (querungsverkehrBeziehung) => {
+      return querungsverkehrBeziehung.knotenarm !== nummer;
+    }
+  );
+
+  zaehlung.value.querungsverkehr = [];
+  zaehlung.value.querungsverkehr = [...filtered];
 }
 
 const coordsZaehlstelle = computed(() => {

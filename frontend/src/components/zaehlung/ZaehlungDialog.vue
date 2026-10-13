@@ -19,9 +19,9 @@
 
       <v-card-text class="py-0">
         <zaehlung-form
-          v-model="zaehlung"
+          v-model:zaehlung="zaehlung"
+          v-model:is-valid="isValid"
           :zaehlstelle="zaehlstelle"
-          @is-valid="setAllgemeineFormValid"
         />
       </v-card-text>
       <v-card-actions>
@@ -67,9 +67,6 @@ const zaehlung = defineModel<ZaehlungDTO>({
 });
 
 const isValid = ref(false);
-function setAllgemeineFormValid(isPartValid: boolean) {
-  isValid.value = isPartValid;
-}
 
 const showDialogModel = computed(() => {
   return props.showDialog;
