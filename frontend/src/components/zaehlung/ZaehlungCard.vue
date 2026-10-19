@@ -252,9 +252,9 @@
 </template>
 
 <script setup lang="ts">
+import type { DienstleisterDTO } from "@/api/client";
 import type BackendIdDTO from "@/types/common/BackendIdDTO";
 import type GeoPoint from "@/types/common/GeoPoint";
-import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
 import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
@@ -530,7 +530,6 @@ function zaehlungKopieren() {
     }
   } catch (error) {
     snackbarStore.showError("Fehler beim Kopieren der Verkehrsbeziehungen.");
-    console.error(error);
     loading.value = false;
     return;
   }
@@ -545,7 +544,6 @@ function zaehlungKopieren() {
     }
   } catch (error) {
     snackbarStore.showError("Fehler beim Kopieren des Querungsverkehrs.");
-    console.error(error);
     loading.value = false;
     return;
   }
@@ -560,7 +558,6 @@ function zaehlungKopieren() {
     }
   } catch (error) {
     snackbarStore.showError("Fehler beim Kopieren des Längsverkehrs.");
-    console.error(error);
     loading.value = false;
     return;
   }

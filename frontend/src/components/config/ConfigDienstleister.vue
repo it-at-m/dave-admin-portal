@@ -330,7 +330,7 @@
 </template>
 
 <script setup lang="ts">
-import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
+import type { DienstleisterDTO } from "@/api/client";
 import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
 
 import { cloneDeep, isEmpty } from "lodash";

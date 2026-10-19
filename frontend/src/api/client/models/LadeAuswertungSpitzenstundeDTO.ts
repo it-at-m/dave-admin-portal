@@ -163,13 +163,13 @@ export interface LadeAuswertungSpitzenstundeDTO {
    * @type {number}
    * @memberof LadeAuswertungSpitzenstundeDTO
    */
-  schwerverkehr: number;
+  gueterverkehr: number;
   /**
    *
    * @type {number}
    * @memberof LadeAuswertungSpitzenstundeDTO
    */
-  gueterverkehr: number;
+  schwerverkehr: number;
   /**
    *
    * @type {number}
@@ -214,9 +214,9 @@ export function instanceOfLadeAuswertungSpitzenstundeDTO(
   if (!("pkwEinheiten" in value) || value["pkwEinheiten"] === undefined)
     return false;
   if (!("kfz" in value) || value["kfz"] === undefined) return false;
-  if (!("schwerverkehr" in value) || value["schwerverkehr"] === undefined)
-    return false;
   if (!("gueterverkehr" in value) || value["gueterverkehr"] === undefined)
+    return false;
+  if (!("schwerverkehr" in value) || value["schwerverkehr"] === undefined)
     return false;
   if (
     !("anteilSchwerverkehrAnKfzProzent" in value) ||
@@ -277,8 +277,8 @@ export function LadeAuswertungSpitzenstundeDTOFromJSONTyped(
         ? undefined
         : json["zaehlsituationErweitert"],
     kfz: json["kfz"],
-    schwerverkehr: json["schwerverkehr"],
     gueterverkehr: json["gueterverkehr"],
+    schwerverkehr: json["schwerverkehr"],
     anteilSchwerverkehrAnKfzProzent: json["anteilSchwerverkehrAnKfzProzent"],
     anteilGueterverkehrAnKfzProzent: json["anteilGueterverkehrAnKfzProzent"],
     gesamt: json["gesamt"],
@@ -326,8 +326,8 @@ export function LadeAuswertungSpitzenstundeDTOToJSONTyped(
     zaehlsituation: value["zaehlsituation"],
     zaehlsituationErweitert: value["zaehlsituationErweitert"],
     kfz: value["kfz"],
-    schwerverkehr: value["schwerverkehr"],
     gueterverkehr: value["gueterverkehr"],
+    schwerverkehr: value["schwerverkehr"],
     anteilSchwerverkehrAnKfzProzent: value["anteilSchwerverkehrAnKfzProzent"],
     anteilGueterverkehrAnKfzProzent: value["anteilGueterverkehrAnKfzProzent"],
     gesamt: value["gesamt"],

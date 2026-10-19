@@ -1,5 +1,5 @@
+import type { DienstleisterDTO } from "@/api/client";
 import type BackendIdDTO from "@/types/common/BackendIdDTO";
-import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
 import type OpenZaehlungDTO from "@/types/zaehlung/OpenZaehlungDTO";
 import type UpdateStatusDTO from "@/types/zaehlung/UpdateStatusDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";

@@ -97,13 +97,13 @@ export interface LadeZaehldatumDTO {
    * @type {number}
    * @memberof LadeZaehldatumDTO
    */
-  schwerverkehr: number;
+  gueterverkehr: number;
   /**
    *
    * @type {number}
    * @memberof LadeZaehldatumDTO
    */
-  gueterverkehr: number;
+  schwerverkehr: number;
   /**
    *
    * @type {number}
@@ -148,9 +148,9 @@ export function instanceOfLadeZaehldatumDTO(
   if (!("pkwEinheiten" in value) || value["pkwEinheiten"] === undefined)
     return false;
   if (!("kfz" in value) || value["kfz"] === undefined) return false;
-  if (!("schwerverkehr" in value) || value["schwerverkehr"] === undefined)
-    return false;
   if (!("gueterverkehr" in value) || value["gueterverkehr"] === undefined)
+    return false;
+  if (!("schwerverkehr" in value) || value["schwerverkehr"] === undefined)
     return false;
   if (
     !("anteilSchwerverkehrAnKfzProzent" in value) ||
@@ -190,8 +190,8 @@ export function LadeZaehldatumDTOFromJSONTyped(
     fussgaenger: json["fussgaenger"],
     pkwEinheiten: json["pkwEinheiten"],
     kfz: json["kfz"],
-    schwerverkehr: json["schwerverkehr"],
     gueterverkehr: json["gueterverkehr"],
+    schwerverkehr: json["schwerverkehr"],
     anteilSchwerverkehrAnKfzProzent: json["anteilSchwerverkehrAnKfzProzent"],
     anteilGueterverkehrAnKfzProzent: json["anteilGueterverkehrAnKfzProzent"],
     gesamt: json["gesamt"],
@@ -223,8 +223,8 @@ export function LadeZaehldatumDTOToJSONTyped(
     fussgaenger: value["fussgaenger"],
     pkwEinheiten: value["pkwEinheiten"],
     kfz: value["kfz"],
-    schwerverkehr: value["schwerverkehr"],
     gueterverkehr: value["gueterverkehr"],
+    schwerverkehr: value["schwerverkehr"],
     anteilSchwerverkehrAnKfzProzent: value["anteilSchwerverkehrAnKfzProzent"],
     anteilGueterverkehrAnKfzProzent: value["anteilGueterverkehrAnKfzProzent"],
     gesamt: value["gesamt"],

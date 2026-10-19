@@ -1,10 +1,12 @@
-import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
+import type {
+  ConfigurationDTO,
+  DienstleisterDTO,
+  MapConfigurationDTO,
+  TenantConfigurationDTO,
+  ZaehlstelleConfigurationDTO,
+} from "@/api/client";
 import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
 import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
-import type MapConfigurationDTO from "@/types/configuration/MapConfigurationDTO";
-import type TenantConfigurationDTO from "@/types/configuration/TenantConfigurationDTO";
-import type ZaehlstelleConfigurationDTO from "@/types/configuration/ZaehlstelleConfigurationDTO";
 import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
