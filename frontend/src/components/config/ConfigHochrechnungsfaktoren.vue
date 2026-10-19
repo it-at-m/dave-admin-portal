@@ -527,7 +527,9 @@ function pflichtfeld(value: string | number): boolean | string {
 /**
  * Prüft, ob der übergebene Wert eine Zahl ist.
  */
-function mustBePositivNumber(value: string | number): boolean | string {
+function mustBePositivNumber(
+  value: string | number | undefined
+): boolean | string {
   if (!isNumber(value) || value < 0) {
     return "Bitte eine Zahl >= 0 eingeben";
   }

@@ -61,13 +61,13 @@ export interface HochrechnungsfaktorDTO {
    * @type {boolean}
    * @memberof HochrechnungsfaktorDTO
    */
-  active?: boolean;
+  active: boolean;
   /**
    *
    * @type {boolean}
    * @memberof HochrechnungsfaktorDTO
    */
-  defaultFaktor?: boolean;
+  defaultFaktor: boolean;
 }
 
 /**
@@ -77,6 +77,9 @@ export function instanceOfHochrechnungsfaktorDTO(
   value: object
 ): value is HochrechnungsfaktorDTO {
   if (!("matrix" in value) || value["matrix"] === undefined) return false;
+  if (!("active" in value) || value["active"] === undefined) return false;
+  if (!("defaultFaktor" in value) || value["defaultFaktor"] === undefined)
+    return false;
   return true;
 }
 
@@ -101,9 +104,8 @@ export function HochrechnungsfaktorDTOFromJSONTyped(
     kfz: json["kfz"] == null ? undefined : json["kfz"],
     sv: json["sv"] == null ? undefined : json["sv"],
     gv: json["gv"] == null ? undefined : json["gv"],
-    active: json["active"] == null ? undefined : json["active"],
-    defaultFaktor:
-      json["defaultFaktor"] == null ? undefined : json["defaultFaktor"],
+    active: json["active"],
+    defaultFaktor: json["defaultFaktor"],
   };
 }
 
