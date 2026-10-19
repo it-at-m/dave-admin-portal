@@ -168,7 +168,7 @@
 </template>
 
 <script setup lang="ts">
-import type ChatMessageDTO from "@/types/chat/ChatMessageDTO";
+import type { ChatMessageDTO } from "@/api/client";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { isEmpty, isNil } from "lodash";

@@ -5,7 +5,7 @@ import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import { handleOpenApiError } from "@/api/util/OpenApiErrorHandler";
 
 export default class ConfigurationService {
-  private static readonly ENDPOINT: string = `${BaseUrlProvider.getBaseUrl()}/api/dave-backend-service/configuration`;
+  private static readonly ENDPOINT: string = `${BaseUrlProvider.getBaseUrl()}/api/dave-backend-service`;
   private static readonly API = new ConfigurationControllerApi(
     new Configuration({
       basePath: this.ENDPOINT,
