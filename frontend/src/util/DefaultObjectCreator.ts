@@ -2,11 +2,11 @@ import type {
   ConfigurationDTO,
   DienstleisterDTO,
   EmailAddressDTO,
+  HochrechnungsfaktorDTO,
   MapConfigurationDTO,
   TenantConfigurationDTO,
   ZaehlstelleConfigurationDTO,
 } from "@/api/client";
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
 import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";

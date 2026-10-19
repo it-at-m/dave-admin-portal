@@ -226,7 +226,7 @@
 </template>
 
 <script setup lang="ts">
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type { HochrechnungsfaktorDTO } from "@/api/client";
 
 import { cloneDeep, isEmpty, isNumber } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";

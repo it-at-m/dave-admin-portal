@@ -37,7 +37,7 @@ export interface HochrechnungsfaktorDTO {
    * @type {string}
    * @memberof HochrechnungsfaktorDTO
    */
-  matrix?: string;
+  matrix: string;
   /**
    *
    * @type {number}
@@ -76,6 +76,7 @@ export interface HochrechnungsfaktorDTO {
 export function instanceOfHochrechnungsfaktorDTO(
   value: object
 ): value is HochrechnungsfaktorDTO {
+  if (!("matrix" in value) || value["matrix"] === undefined) return false;
   return true;
 }
 
@@ -96,7 +97,7 @@ export function HochrechnungsfaktorDTOFromJSONTyped(
     id: json["id"] == null ? undefined : json["id"],
     entityVersion:
       json["entityVersion"] == null ? undefined : json["entityVersion"],
-    matrix: json["matrix"] == null ? undefined : json["matrix"],
+    matrix: json["matrix"],
     kfz: json["kfz"] == null ? undefined : json["kfz"],
     sv: json["sv"] == null ? undefined : json["sv"],
     gv: json["gv"] == null ? undefined : json["gv"],
