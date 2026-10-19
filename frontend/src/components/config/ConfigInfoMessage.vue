@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import type InfoMessageDTO from "@/types/config/InfoMessageDTO";
+import type { InfoMessageDTO } from "@/api/client";
 
 import { first } from "lodash";
 import { computed, onMounted, ref } from "vue";
