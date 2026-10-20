@@ -1,13 +1,13 @@
 import type {
   ConfigurationDTO,
   DienstleisterDTO,
+  EditMessstelleDTO,
   EmailAddressDTO,
   HochrechnungsfaktorDTO,
   MapConfigurationDTO,
   TenantConfigurationDTO,
   ZaehlstelleConfigurationDTO,
 } from "@/api/client";
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
@@ -66,8 +66,8 @@ export default class DefaultObjectCreator {
     return zaehlstelle;
   }
 
-  public static createDefaultMessstelleEditDTO(): MessstelleEditDTO {
-    const messstelle: MessstelleEditDTO = {} as MessstelleEditDTO;
+  public static createDefaultMessstelleEditDTO(): EditMessstelleDTO {
+    const messstelle: EditMessstelleDTO = {} as EditMessstelleDTO;
     messstelle.sichtbarDatenportal = false;
     messstelle.lageplanVorhanden = false;
     messstelle.status = MessstelleStatus.IN_PLANUNG;

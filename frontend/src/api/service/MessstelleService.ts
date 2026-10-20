@@ -1,31 +1,50 @@
-import type BackendIdDTO from "@/types/common/BackendIdDTO";
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
-import type MessstelleOverviewDTO from "@/types/messstelle/MessstelleOverviewDTO";
+import type {
+  BackendIdDTO,
+  EditMessstelleDTO,
+  GetBearbeiteMessstelleRequest,
+  MessstelleOverviewDTO,
+  UpdateMessstelleRequest,
+} from "@/api/client";
 
-import FetchService from "@/api/service/FetchService";
+import { Configuration, MessstelleControllerApi } from "@/api/client";
+import BaseUrlProvider from "@/api/util/BaseUrlProvider";
+import { handleOpenApiError } from "@/api/util/OpenApiErrorHandler";
 
 export default class MessstelleService {
-  private static readonly ENDPOINT: string =
-    "api/dave-backend-service/messstelle";
+  private static readonly ENDPOINT: string = `${BaseUrlProvider.getBaseUrl()}/api/dave-backend-service`;
+  private static readonly API = new MessstelleControllerApi(
+    new Configuration({
+      basePath: this.ENDPOINT,
+    })
+  );
 
-  static getMessstelleToEdit(id: string): Promise<MessstelleEditDTO> {
-    return FetchService.getData(
-      `${this.ENDPOINT}/edit?id=${id}`,
+  static getMessstelleToEdit(id: string): Promise<EditMessstelleDTO> {
+    const request = { id: id } as GetBearbeiteMessstelleRequest;
+
+    return handleOpenApiError(
+      this.API.getBearbeiteMessstelleRaw(request).then((response) =>
+        response.raw.json()
+      ),
       "Beim Laden der Messstellen ist ein Fehler aufgetreten."
     );
   }
 
   static getAllMessstellenForOverview(): Promise<Array<MessstelleOverviewDTO>> {
-    return FetchService.getData(
-      `${this.ENDPOINT}/loadAllMessstellenForOverview`,
+    return handleOpenApiError(
+      this.API.getAllMessstellenForOverviewRaw().then((response) =>
+        response.raw.json()
+      ),
       "Beim Laden aller offenen Messstellen ist ein Fehler aufgetreten."
     );
   }
 
-  static saveMessstelle(data: MessstelleEditDTO): Promise<BackendIdDTO> {
-    return FetchService.patchData(
-      data,
-      `${this.ENDPOINT}/update`,
+  static saveMessstelle(data: EditMessstelleDTO): Promise<BackendIdDTO> {
+    const request = { editMessstelleDTO: data } as UpdateMessstelleRequest;
+
+    return handleOpenApiError(
+      this.API.updateMessstelleRaw(request).then((response) =>
+        response.raw.json()
+      ),
       "Beim Aktualisieren der Daten ist ein Fehler aufgetreten. Bitte Daten kontrollieren."
     );
   }

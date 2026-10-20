@@ -39,9 +39,9 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleOverviewDTO from "@/types/messstelle/MessstelleOverviewDTO";
 
 import { useRouter } from "vue-router";
+import type { MessstelleOverviewDTO } from "@/api/client";
 
 interface Props {
   header: string;

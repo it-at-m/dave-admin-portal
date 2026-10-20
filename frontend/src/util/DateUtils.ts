@@ -6,7 +6,7 @@ import { useSnackbarStore } from "@/store/SnackbarStore";
 export function useDateUtils() {
   const snackbarStore = useSnackbarStore();
 
-  function formatDate(date: string): string {
+  function formatDate(date: string | undefined): string {
     if (!date) {
       return "";
     }

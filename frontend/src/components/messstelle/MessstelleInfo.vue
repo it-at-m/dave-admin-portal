@@ -35,8 +35,7 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import type { DocumentDto } from "@/api/client";
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type { DocumentDto, EditMessstelleDTO } from "@/api/client";
 
 import { computed, ref } from "vue";
 
@@ -52,7 +51,7 @@ withDefaults(defineProps<Props>(), {
   minheight: "160px",
 });
 
-const messstelle = defineModel<MessstelleEditDTO>({
+const messstelle = defineModel<EditMessstelleDTO>({
   required: true,
 });
 

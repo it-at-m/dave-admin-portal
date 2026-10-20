@@ -105,9 +105,10 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type { EditMessstelleDTO } from "@/api/client";
 
-import { onMounted, ref, watch } from "vue";
+import { toArray } from "lodash";
+import { computed, onMounted, ref, watch } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import { useEventbus } from "@/store/Eventbus";
@@ -122,13 +123,17 @@ interface Props {
 }
 
 defineProps<Props>();
-const messstelle = defineModel<MessstelleEditDTO>({
+const messstelle = defineModel<EditMessstelleDTO>({
   required: true,
+});
+
+const messquerschnitte = computed(() => {
+  return toArray(messstelle.value.messquerschnitte);
 });
 
 const eventbus = useEventbus();
 
-const selectedMessquerschnitt = ref(messstelle.value.messquerschnitte[0]);
+const selectedMessquerschnitt = ref(messquerschnitte.value[0]);
 
 onMounted(() => {
   initSelectedMessquerschnitt();
@@ -142,6 +147,6 @@ watch(
 );
 
 function initSelectedMessquerschnitt() {
-  selectedMessquerschnitt.value = messstelle.value.messquerschnitte[0];
+  selectedMessquerschnitt.value = messquerschnitte.value[0];
 }
 </script>
