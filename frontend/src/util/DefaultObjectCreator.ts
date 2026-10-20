@@ -5,10 +5,10 @@ import type {
   EmailAddressDTO,
   HochrechnungsfaktorDTO,
   MapConfigurationDTO,
+  SearchAndFilterOptionsDTO,
   TenantConfigurationDTO,
   ZaehlstelleConfigurationDTO,
 } from "@/api/client";
-import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 

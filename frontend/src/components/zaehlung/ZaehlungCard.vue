@@ -252,8 +252,11 @@
 </template>
 
 <script setup lang="ts">
-import type { DienstleisterDTO, HochrechnungsfaktorDTO } from "@/api/client";
-import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type {
+  BackendIdDTO,
+  DienstleisterDTO,
+  HochrechnungsfaktorDTO,
+} from "@/api/client";
 import type GeoPoint from "@/types/common/GeoPoint";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";

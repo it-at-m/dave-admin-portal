@@ -1,4 +1,4 @@
-import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type { BackendIdDTO } from "@/api/client";
 import type NextZaehlstellennummerDTO from "@/types/zaehlstelle/NextZaehlstellennummerDTO";
 import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
 
