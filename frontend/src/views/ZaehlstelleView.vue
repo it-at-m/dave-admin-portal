@@ -186,8 +186,7 @@
 </template>
 
 <script setup lang="ts">
-import type { HochrechnungsfaktorDTO } from "@/api/client";
-import type PkwEinheitDTO from "@/types/common/PkwEinheitDTO";
+import type { HochrechnungsfaktorDTO, PkwEinheitDTO } from "@/api/client";
 import type ZaehlungCardObject from "@/types/zaehlung/ZaehlungCardObject";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
