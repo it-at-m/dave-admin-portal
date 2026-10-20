@@ -40,13 +40,14 @@
 </template>
 
 <script setup lang="ts">
+import type { MessstelleOverviewDTO } from "@/api/client";
+
 import { computed, onMounted, ref } from "vue";
 
 import MessstelleService from "@/api/service/MessstelleService";
 import MessstelleOverviewPanel from "@/components/messstelle/MessstelleOverviewPanel.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import MessstelleStatus from "@/types/enum/MessstelleStatus";
-import type { MessstelleOverviewDTO } from "@/api/client";
 
 const snackbarStore = useSnackbarStore();
 
