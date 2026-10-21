@@ -30,7 +30,6 @@ export default class EmailAddressService {
 
   static update(data: EmailAddressDTO): Promise<EmailAddressDTO> {
     const request = { emailAddressDTO: data } as SaveEmailAddress1Request;
-
     return handleOpenApiError(
       this.API.saveEmailAddress1Raw(request).then((response) =>
         response.raw.json()
