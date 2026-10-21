@@ -22,13 +22,6 @@ export default class EmailAddressService {
     );
   }
 
-  static getEmailAddressByParticipantId(id: number): Promise<EmailAddressDTO> {
-    return FetchService.getData(
-      `${this.ENDPOINT}/emailAddressByParticipantId?participantId=${id}`,
-      "Beim Holen der Email-Adresse ist ein Fehler aufgetreten."
-    );
-  }
-
   static getEmailAddresses(): Promise<Array<EmailAddressDTO>> {
     return FetchService.getData(
       `${this.ENDPOINT}/emailAddresses`,
