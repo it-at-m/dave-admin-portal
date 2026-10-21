@@ -7,6 +7,7 @@
   />
 </template>
 <script setup lang="ts">
+import { toString } from "lodash";
 import { computed } from "vue";
 
 import IconTooltip from "@/components/icons/IconTooltip";
@@ -16,7 +17,7 @@ import Wetter from "@/types/enum/Wetter";
 interface Props {
   size?: string;
   color?: string;
-  wetter: string;
+  wetter: string | undefined;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -44,7 +45,7 @@ const wetterIcons: Map<string, IconTooltip> = new Map([
  * Lädt das richtige MDI Icon aus der Liste.
  */
 const icon = computed<IconTooltip>(() => {
-  let result = wetterIcons.get(props.wetter);
+  let result = wetterIcons.get(toString(props.wetter));
   if (result === undefined) {
     result = new IconTooltip(
       "mdi-cloud-question",

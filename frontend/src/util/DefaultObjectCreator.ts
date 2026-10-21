@@ -1,4 +1,6 @@
 import type {
+  BearbeiteZaehlstelleDTO,
+  BearbeiteZaehlungDTO,
   ConfigurationDTO,
   DienstleisterDTO,
   EditMessstelleDTO,
@@ -9,8 +11,6 @@ import type {
   TenantConfigurationDTO,
   ZaehlstelleConfigurationDTO,
 } from "@/api/client";
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { LatLng } from "leaflet";
 
@@ -43,8 +43,8 @@ export default class DefaultObjectCreator {
     );
   }
 
-  public static createDefaultZaehlungDTO(): ZaehlungDTO {
-    const zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
+  public static createDefaultZaehlungDTO(): BearbeiteZaehlungDTO {
+    const zaehlung = {} as BearbeiteZaehlungDTO;
     zaehlung.customSuchwoerter = [];
     zaehlung.knotenarme = [];
     zaehlung.querungsverkehr = [];
@@ -59,8 +59,8 @@ export default class DefaultObjectCreator {
     return zaehlung;
   }
 
-  public static createDefaultZaehlstelleDTO(): ZaehlstelleDTO {
-    const zaehlstelle: ZaehlstelleDTO = {} as ZaehlstelleDTO;
+  public static createDefaultZaehlstelleDTO(): BearbeiteZaehlstelleDTO {
+    const zaehlstelle = {} as BearbeiteZaehlstelleDTO;
     zaehlstelle.sichtbarDatenportal = true;
     zaehlstelle.customSuchwoerter = [];
     return zaehlstelle;

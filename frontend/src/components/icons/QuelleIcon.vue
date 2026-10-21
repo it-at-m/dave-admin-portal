@@ -7,6 +7,7 @@
   />
 </template>
 <script setup lang="ts">
+import { toString } from "lodash";
 import { computed } from "vue";
 
 import IconTooltip from "@/components/icons/IconTooltip";
@@ -16,7 +17,7 @@ import Quelle from "@/types/enum/Quelle";
 interface Props {
   size?: string;
   color?: string;
-  quelle: string;
+  quelle: string | undefined;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -41,7 +42,7 @@ const quelleIcons: Map<string, IconTooltip> = new Map([
  * Lädt das richtige MDI Icon aus der Liste.
  */
 const icon = computed<IconTooltip>(() => {
-  let result = quelleIcons.get(props.quelle);
+  let result = quelleIcons.get(toString(props.quelle));
   if (result === undefined) {
     result = new IconTooltip("mdi-help-box", "Keine Information zur Quelle");
   }

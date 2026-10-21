@@ -168,10 +168,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatMessageDTO } from "@/api/client";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type { BearbeiteZaehlungDTO, ChatMessageDTO } from "@/api/client";
 
-import { isEmpty, isNil } from "lodash";
+import { isEmpty, isNil, toString } from "lodash";
 import { computed, ref, watch } from "vue";
 
 import ChatMessageService from "@/api/service/ChatMessageService";
@@ -185,7 +184,7 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<BearbeiteZaehlungDTO>({
   required: true,
 });
 
@@ -228,7 +227,7 @@ function getMessageTime(item: ChatMessageDTO) {
 function loadMessages() {
   if (props.showDialog) {
     items.value = [];
-    ChatMessageService.getAllByZaehlungId(zaehlung.value.id)
+    ChatMessageService.getAllByZaehlungId(toString(zaehlung.value.id))
       .then((messageDTOs) => {
         items.value = messageDTOs;
       })
@@ -238,7 +237,7 @@ function loadMessages() {
       });
 
     ChatMessageService.updateUnreadMessages(
-      zaehlung.value.id,
+      toString(zaehlung.value.id),
       MOBILITAETSREFERAT_ID
     ).catch((error) => snackbarStore.showApiError(error));
   } else {

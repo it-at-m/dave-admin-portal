@@ -49,7 +49,7 @@ export function useDateUtils() {
     return `${i18n.global.d(date, "time", "de-DE")}`;
   }
 
-  function getShortVersionOfDate(date: Date | string): string {
+  function getShortVersionOfDate(date: Date | string | undefined): string {
     if (!date) {
       return "";
     }

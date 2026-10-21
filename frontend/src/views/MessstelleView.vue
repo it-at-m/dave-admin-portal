@@ -106,17 +106,11 @@ const messstelleId = computed(() => {
   return messstelleId;
 });
 
-const latlng = computed(() => {
-  if (
-    messstelle.value.longitude == undefined ||
-    messstelle.value.latitude == undefined
-  ) {
-    return [];
+const latlng = computed<number[]>(() => {
+  if (messstelle.value.longitude && messstelle.value.latitude) {
+    return [messstelle.value.latitude, messstelle.value.longitude];
   } else {
-    return [
-      messstelle.value.latitude.toString(),
-      messstelle.value.longitude.toString(),
-    ];
+    return [];
   }
 });
 

@@ -209,7 +209,7 @@ import { isEmpty, isNil } from "lodash";
 import { computed, ref } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
-import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
+import { FahrzeugklasseToBeschreibung } from "@/domain/enums/FahrzeugklasseText";
 import { messstelleStatusText } from "@/types/enum/MessstelleStatus";
 import { useDateUtils } from "@/util/DateUtils";
 import { useValidationUtils } from "@/util/ValidationUtils";

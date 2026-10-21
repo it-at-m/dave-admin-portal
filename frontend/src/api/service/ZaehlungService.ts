@@ -1,43 +1,65 @@
-import type { BackendIdDTO, DienstleisterDTO } from "@/api/client";
-import type OpenZaehlungDTO from "@/types/zaehlung/OpenZaehlungDTO";
-import type UpdateStatusDTO from "@/types/zaehlung/UpdateStatusDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type {
+  BackendIdDTO,
+  BearbeiteZaehlungDTO,
+  DeleteZaehlungRequest,
+  DienstleisterDTO,
+  OpenZaehlungDTO,
+  SaveZaehlungRequest,
+  UpdateDienstleisterkennungRequest,
+  UpdateStatusDTO,
+  UpdateStatusRequest,
+} from "@/api/client";
 
-import FetchService from "@/api/service/FetchService";
+import { Configuration, ZaehlungControllerApi } from "@/api/client";
+import BaseUrlProvider from "@/api/util/BaseUrlProvider";
+import { handleOpenApiError } from "@/api/util/OpenApiErrorHandler";
 
 export default class ZaehlungService {
-  private static readonly ENDPOINT: string =
-    "api/dave-backend-service/zaehlung";
+  private static readonly ENDPOINT: string = `${BaseUrlProvider.getBaseUrl()}/api/dave-backend-service`;
+  private static readonly API = new ZaehlungControllerApi(
+    new Configuration({
+      basePath: this.ENDPOINT,
+    })
+  );
 
   static saveZaehlung(
-    data: ZaehlungDTO,
+    data: BearbeiteZaehlungDTO,
     zaehlstelleId: string
   ): Promise<BackendIdDTO> {
-    return FetchService.postData(
-      data,
-      `${this.ENDPOINT}/save?zaehlstelle_id=${zaehlstelleId}`,
+    const request = {
+      bearbeiteZaehlungDTO: data,
+      zaehlstelleId: zaehlstelleId,
+    } as SaveZaehlungRequest;
+
+    return handleOpenApiError(
+      this.API.saveZaehlungRaw(request).then((response) => response.raw.json()),
       "Beim Speichern der Zählung ist ein Fehler aufgetreten. Bitte Daten kontrollieren."
     );
   }
 
   static deleteZaehlungById(id: string): Promise<boolean> {
-    return FetchService.getData(
-      `${this.ENDPOINT}/delete?zaehlung_id=${id}`,
+    const request = { zaehlungId: id } as DeleteZaehlungRequest;
+
+    return handleOpenApiError(
+      this.API.deleteZaehlung(request),
       "Beim Löschen der Zählung ist ein Fehler aufgetreten."
     );
   }
 
   static updateStatus(data: UpdateStatusDTO): Promise<BackendIdDTO> {
-    return FetchService.postData(
-      data,
-      `${this.ENDPOINT}/updateStatus`,
+    const request = { updateStatusDTO: data } as UpdateStatusRequest;
+
+    return handleOpenApiError(
+      this.API.updateStatusRaw(request).then((response) => response.raw.json()),
       "Beim Speichern der Zählung ist ein Fehler aufgetreten. Bitte Daten kontrollieren."
     );
   }
 
   static getAllOpenZaehlungen(): Promise<OpenZaehlungDTO[]> {
-    return FetchService.getData(
-      `${this.ENDPOINT}/loadAllOpenZaehlungen`,
+    return handleOpenApiError(
+      this.API.loadAllOpenZaehlungenRaw().then((response) =>
+        response.raw.json()
+      ),
       "Beim Laden aller offenen Zählungen ist ein Fehler aufgetreten."
     );
   }
@@ -46,9 +68,15 @@ export default class ZaehlungService {
     zaehlungId: string,
     dienstleister: DienstleisterDTO
   ): Promise<BackendIdDTO> {
-    return FetchService.postData(
-      dienstleister,
-      `${this.ENDPOINT}/updateDienstleisterkennung?zaehlung_id=${zaehlungId}`,
+    const request = {
+      zaehlungId: zaehlungId,
+      dienstleisterDTO: dienstleister,
+    } as UpdateDienstleisterkennungRequest;
+
+    return handleOpenApiError(
+      this.API.updateDienstleisterkennungRaw(request).then((response) =>
+        response.raw.json()
+      ),
       "Beim Aktualisieren des zugewiesenen Dienstleisters ist ein Fehler aufgetreten."
     );
   }

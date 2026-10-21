@@ -149,9 +149,11 @@
 </template>
 
 <script setup lang="ts">
-import type { BackendIdDTO } from "@/api/client";
-import type GeoPoint from "@/types/common/GeoPoint";
-import type NextZaehlstellennummerDTO from "@/types/zaehlstelle/NextZaehlstellennummerDTO";
+import type {
+  BackendIdDTO,
+  GeoPoint,
+  NextZaehlstellennummerDTO,
+} from "@/api/client";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isEqual, isNil } from "lodash";
@@ -319,7 +321,7 @@ function updateZaehlstellenCoords(newCoords: LatLng): void {
   if (!zaehlstelle.value.punkt) {
     zaehlstelle.value.punkt = {} as GeoPoint;
   }
-  zaehlstelle.value.punkt.lat = newCoords.lat.toString();
-  zaehlstelle.value.punkt.lon = newCoords.lng.toString();
+  zaehlstelle.value.punkt.lat = newCoords.lat;
+  zaehlstelle.value.punkt.lon = newCoords.lng;
 }
 </script>

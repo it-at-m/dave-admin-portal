@@ -117,7 +117,7 @@ models/ExternalQuerungsverkehrDTO.ts
 models/ExternalVerkehrsbeziehungDTO.ts
 models/ExternalZaehlungDTO.ts
 models/FahrzeugOptionsDTO.ts
-models/Fahrzeugklasse.ts
+models/FahrzeugklasseText.ts
 models/FjsKnotenarmValue.ts
 models/GenerateMessstellePdfRequest.ts
 models/GeneratePdfAuswertungRequest.ts

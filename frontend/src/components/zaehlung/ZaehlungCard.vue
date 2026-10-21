@@ -254,19 +254,18 @@
 <script setup lang="ts">
 import type {
   BackendIdDTO,
+  BearbeiteLaengsverkehrDTO,
+  BearbeiteQuerungsverkehrDTO,
+  BearbeiteVerkehrsbeziehungDTO,
+  BearbeiteZaehlungDTO,
   DienstleisterDTO,
+  GeoPoint,
   HochrechnungsfaktorDTO,
+  UpdateStatusDTO,
 } from "@/api/client";
-import type GeoPoint from "@/types/common/GeoPoint";
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
-import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
-import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
-import type UpdateStatusDTO from "@/types/zaehlung/UpdateStatusDTO";
-import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { LatLng } from "leaflet";
-import { cloneDeep } from "lodash";
+import { cloneDeep, toArray, toString } from "lodash";
 import { computed, ref } from "vue";
 
 import ZaehlungService from "@/api/service/ZaehlungService";
@@ -283,6 +282,7 @@ import { useSnackbarStore } from "@/store/SnackbarStore";
 import Status, { statusIcon } from "@/types/enum/Status";
 import Wetter from "@/types/enum/Wetter";
 import { useDateUtils } from "@/util/DateUtils";
+import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 import KnotenarmComparator from "@/util/KnotenarmComparator";
 
 const ICON_COLOR = "black";
@@ -295,16 +295,16 @@ interface Props {
 
 const properties = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<BearbeiteZaehlungDTO>({
   required: true,
 });
 
 const emits = defineEmits<{
   (e: "cancel"): void;
   (e: "deleted"): void;
-  (e: "openZaehlungDialog", zaehlung: ZaehlungDTO): void;
+  (e: "openZaehlungDialog", zaehlung: BearbeiteZaehlungDTO): void;
   (e: "openZaehlungDatenportal", zaehlungId: string): void;
-  (e: "openChatDialog", zaehlung: ZaehlungDTO): void;
+  (e: "openChatDialog", zaehlung: BearbeiteZaehlungDTO): void;
   (e: "saved", payload: BackendIdDTO): void;
 }>();
 
@@ -317,15 +317,17 @@ const isBeauftragen = ref(true);
 const showBeauftragenDialog = ref(false);
 
 const coordsZaehlstelle = computed(() => {
-  return createLatLngFromString(
-    properties.geoPointZaehlstelle.lat,
-    properties.geoPointZaehlstelle.lon
-  );
+  const lat = properties.geoPointZaehlstelle.lat;
+  const lon = properties.geoPointZaehlstelle.lon;
+  if (lat !== undefined && lon !== undefined) return new LatLng(lat, lon);
+  else return DefaultObjectCreator.createCenterOfMunichLatLng();
 });
 
 const coordsZaehlung = computed(() => {
-  const geoPoint: GeoPoint = zaehlung.value.punkt;
-  return createLatLngFromString(geoPoint.lat, geoPoint.lon);
+  const punkt = zaehlung.value.punkt;
+  if (punkt && punkt.lat !== undefined && punkt.lon !== undefined)
+    return new LatLng(punkt.lat, punkt.lon);
+  else return DefaultObjectCreator.createCenterOfMunichLatLng();
 });
 
 const datum = computed(() => {
@@ -333,7 +335,7 @@ const datum = computed(() => {
 });
 
 const streets = computed(() => {
-  return cloneDeep(zaehlung.value.knotenarme).sort(
+  return cloneDeep(toArray(zaehlung.value.knotenarme)).sort(
     KnotenarmComparator.sortByNumber
   );
 });
@@ -355,7 +357,9 @@ const streetsHeader = [
 ];
 
 const statusDesign = computed(() => {
-  let design: IconOptions | undefined = statusIcon.get(zaehlung.value.status);
+  let design: IconOptions | undefined = statusIcon.get(
+    toString(zaehlung.value.status)
+  );
   if (!design) {
     design = {} as IconOptions;
     design.color = "deep-orange-lighten-4";
@@ -396,11 +400,6 @@ const showButtonDienstleisterKorrigieren = computed(() => {
   );
 });
 
-// Erzeugt aus den String Koordinaten ein Objekt von Typ LatLng
-function createLatLngFromString(lat: string, lng: string): LatLng {
-  return new LatLng(parseFloat(lat), parseFloat(lng));
-}
-
 function zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
   loading.value = true;
   const update: UpdateStatusDTO = {} as UpdateStatusDTO;
@@ -429,7 +428,7 @@ function zaehlungLoeschen() {
 function deleteZaehlung() {
   deleteDialog.value = false;
   loading.value = true;
-  ZaehlungService.deleteZaehlungById(zaehlung.value.id)
+  ZaehlungService.deleteZaehlungById(toString(zaehlung.value.id))
     .then((isDeleted: boolean) => {
       if (isDeleted) {
         snackbarStore.showInfo(
@@ -494,7 +493,7 @@ function openZaehlungInDatenportal() {
 
 function zaehlungKopieren() {
   loading.value = true;
-  const zaehlungCopy: ZaehlungDTO = cloneDeep(zaehlung.value);
+  const zaehlungCopy: BearbeiteZaehlungDTO = cloneDeep(zaehlung.value);
   zaehlungCopy.id = "";
   zaehlungCopy.kommentar = "";
   zaehlungCopy.zaehlsituation = "";
@@ -502,33 +501,32 @@ function zaehlungKopieren() {
   zaehlungCopy.wetter = Wetter.NO_INFORMATION;
   zaehlungCopy.status = Status.CREATED;
   zaehlungCopy.dienstleisterkennung = "";
-  zaehlungCopy.datum = new Date().toISOString().substring(0, 10);
-  zaehlungCopy.knotenarme.forEach((arm: KnotenarmDTO) => {
-    arm.id = "";
-  });
+  zaehlungCopy.datum = new Date();
 
   try {
     if (!zaehlungCopy.verkehrsbeziehungen) {
       zaehlungCopy.verkehrsbeziehungen = [];
     } else {
-      zaehlungCopy.verkehrsbeziehungen.forEach((vz: VerkehrsbeziehungDTO) => {
-        vz.id = "";
-        if (vz.hochrechnungsfaktor) {
-          vz.hochrechnungsfaktor.id = "";
-        } else {
-          vz.hochrechnungsfaktor = {
-            id: "",
-            entityVersion: 0,
-            createdTime: "",
-            matrix: "NON",
-            kfz: 0,
-            sv: 0,
-            gv: 0,
-            active: true,
-            defaultFaktor: false,
-          } as HochrechnungsfaktorDTO;
+      zaehlungCopy.verkehrsbeziehungen.forEach(
+        (vz: BearbeiteVerkehrsbeziehungDTO) => {
+          vz.id = "";
+          if (vz.hochrechnungsfaktor) {
+            vz.hochrechnungsfaktor.id = "";
+          } else {
+            vz.hochrechnungsfaktor = {
+              id: "",
+              entityVersion: 0,
+              createdTime: "",
+              matrix: "NON",
+              kfz: 0,
+              sv: 0,
+              gv: 0,
+              active: true,
+              defaultFaktor: false,
+            } as HochrechnungsfaktorDTO;
+          }
         }
-      });
+      );
     }
   } catch (error) {
     snackbarStore.showError("Fehler beim Kopieren der Verkehrsbeziehungen.");
@@ -540,9 +538,11 @@ function zaehlungKopieren() {
     if (!zaehlungCopy.querungsverkehr) {
       zaehlungCopy.querungsverkehr = [];
     } else {
-      zaehlungCopy.querungsverkehr.forEach((qv: QuerungsverkehrDTO) => {
-        qv.id = "";
-      });
+      zaehlungCopy.querungsverkehr.forEach(
+        (qv: BearbeiteQuerungsverkehrDTO) => {
+          qv.id = "";
+        }
+      );
     }
   } catch (error) {
     snackbarStore.showError("Fehler beim Kopieren des Querungsverkehrs.");
@@ -554,7 +554,7 @@ function zaehlungKopieren() {
     if (!zaehlungCopy.laengsverkehr) {
       zaehlungCopy.laengsverkehr = [];
     } else {
-      zaehlungCopy.laengsverkehr.forEach((lv: LaengsverkehrDTO) => {
+      zaehlungCopy.laengsverkehr.forEach((lv: BearbeiteLaengsverkehrDTO) => {
         lv.id = "";
       });
     }
@@ -582,7 +582,10 @@ function openChatDialog() {
 
 function dienstleisterKorrigieren(dienstleister: DienstleisterDTO) {
   loading.value = true;
-  ZaehlungService.updateDienstleisterkennung(zaehlung.value.id, dienstleister)
+  ZaehlungService.updateDienstleisterkennung(
+    toString(zaehlung.value.id),
+    dienstleister
+  )
     .then((backendIdDTO) => {
       snackbarStore.showInfo(
         `Der Zähldienstleister wurde beauftragt die Zählung ${zaehlung.value.projektName} durchzuführen. (Korrektur)`

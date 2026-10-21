@@ -15,7 +15,7 @@ import type { EditMessfaehigkeitDTO } from "@/api/client";
 
 import { isNil } from "lodash";
 
-import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
+import { FahrzeugklasseToBeschreibung } from "@/domain/enums/FahrzeugklasseText";
 import { ZaehldatenIntervallToBeschreibung } from "@/domain/enums/ZaehldatenIntervall";
 
 interface Props {
