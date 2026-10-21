@@ -101,28 +101,4 @@ export default class FetchUtils {
     }
     return headers;
   }
-
-  /**
-   * Liefert die POST-Config für die generierung eines PDF
-   */
-  static getPdfPOSTConfig(body: any): RequestInit {
-    return {
-      method: "POST",
-      body: body,
-      headers: FetchUtils.getPdfHeaders(),
-      mode: "cors",
-      credentials: "same-origin",
-      redirect: "manual",
-    };
-  }
-
-  /**
-   * Baut den Header für ein PDF-Request auf
-   */
-  static getPdfHeaders(): Headers {
-    return new Headers({
-      "Accept-Language": "de-DE",
-      "X-XSRF-TOKEN": XsrfTokenExtractor.getXsrfToken().toString(),
-    });
-  }
 }
