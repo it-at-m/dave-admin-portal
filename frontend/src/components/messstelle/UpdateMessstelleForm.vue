@@ -65,7 +65,7 @@
     </v-tabs-window-item>
     <v-tabs-window-item :value="TAB_MESSFAEHIGKEIT">
       <messfaehigkeit-form
-        v-model="messstelle.messfaehigkeiten"
+        v-model="messfaehigkeiten"
         :height="contentHeight"
       />
     </v-tabs-window-item>
@@ -95,10 +95,9 @@
 </template>
 
 <script setup lang="ts">
-import type MessquerschnittEditDTO from "@/types/messstelle/MessquerschnittEditDTO";
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type { EditMessquerschnittDTO, EditMessstelleDTO } from "@/api/client";
 
-import { isEmpty, isNil } from "lodash";
+import { isEmpty, isNil, toArray } from "lodash";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -119,7 +118,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const messstelle = defineModel<MessstelleEditDTO>({
+const messstelle = defineModel<EditMessstelleDTO>({
   required: true,
 });
 
@@ -135,6 +134,10 @@ const TAB_MESSSTELLE = 0;
 const TAB_MESSQUERSCHNITT = 1;
 const TAB_MESSFAEHIGKEIT = 2;
 const TAB_STANDORT = 3;
+
+const messfaehigkeiten = computed(() => {
+  return toArray(messstelle.value.messfaehigkeiten);
+});
 
 const isMessstelleReadonly = computed(() => {
   return messstelle.value.status === MessstelleStatus.IN_PLANUNG;
@@ -176,11 +179,11 @@ function cancel(): void {
 }
 
 function areAllFormsValid(): boolean {
-  const invalidMqs = messstelle.value.messquerschnitte
+  const invalidMqs = toArray(messstelle.value.messquerschnitte)
     .filter((mq) => {
       return isNil(mq.standort) || isEmpty(mq.standort);
     })
-    .map((messquerschnitt: MessquerschnittEditDTO) => {
+    .map((messquerschnitt: EditMessquerschnittDTO) => {
       return messquerschnitt.mqId;
     });
   const invalidMst =
