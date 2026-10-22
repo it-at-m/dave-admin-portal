@@ -1,7 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from "./AbstractJsonSchemaPropertyObject";
-export * from "./AbstractLadeBelastungsplanDTOObject";
 export * from "./AuffaelligeTageDTO";
 export * from "./AuswertungMessstelleWithFileDTO";
 export * from "./AuswertungsZeitraum";
@@ -79,6 +78,7 @@ export * from "./GeoPoint";
 export * from "./HeadingAsset";
 export * from "./Himmelsrichtung";
 export * from "./Hochrechnung";
+export * from "./Hochrechnungsfaktor";
 export * from "./HochrechnungsfaktorDTO";
 export * from "./HochrechnungsfaktorRequestBody";
 export * from "./ImageAsset";
@@ -99,8 +99,8 @@ export * from "./LadeBelastungsplanQuDTO";
 export * from "./LadeMesswerteDTO";
 export * from "./LadeMesswerteListenausgabeDTO";
 export * from "./LadeProcessedMesswerteDTO";
+export * from "./LadeProcessedZaehldatenBelastungsplanDTO";
 export * from "./LadeProcessedZaehldatenDTO";
-export * from "./LadeProcessedZaehldatenDTOZaehldatenBelastungsplan";
 export * from "./LadeZaehldatenHeatmapDTO";
 export * from "./LadeZaehldatenSteplineDTO";
 export * from "./LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInner";

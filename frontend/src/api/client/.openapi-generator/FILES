@@ -14,7 +14,6 @@ apis/DienstleisterSearchControllerApi.ts
 apis/EaiControllerApi.ts
 apis/EmailAddressControllerApi.ts
 apis/EmailAddressEntityControllerApi.ts
-apis/EmailAddressSearchControllerApi.ts
 apis/GenerateCsvControllerApi.ts
 apis/GeneratePdfControllerApi.ts
 apis/HochrechnungsfaktorControllerApi.ts
@@ -50,7 +49,6 @@ apis/ZeitintervallSearchControllerApi.ts
 apis/index.ts
 index.ts
 models/AbstractJsonSchemaPropertyObject.ts
-models/AbstractLadeBelastungsplanDTOObject.ts
 models/AuffaelligeTageDTO.ts
 models/AuswertungMessstelleWithFileDTO.ts
 models/AuswertungsZeitraum.ts
@@ -117,7 +115,7 @@ models/ExternalQuerungsverkehrDTO.ts
 models/ExternalVerkehrsbeziehungDTO.ts
 models/ExternalZaehlungDTO.ts
 models/FahrzeugOptionsDTO.ts
-models/FahrzeugklasseText.ts
+models/Fahrzeugklasse.ts
 models/FjsKnotenarmValue.ts
 models/GenerateMessstellePdfRequest.ts
 models/GeneratePdfAuswertungRequest.ts
@@ -128,6 +126,7 @@ models/GeoPoint.ts
 models/HeadingAsset.ts
 models/Himmelsrichtung.ts
 models/Hochrechnung.ts
+models/Hochrechnungsfaktor.ts
 models/HochrechnungsfaktorDTO.ts
 models/HochrechnungsfaktorRequestBody.ts
 models/ImageAsset.ts
@@ -148,8 +147,8 @@ models/LadeBelastungsplanQuDTO.ts
 models/LadeMesswerteDTO.ts
 models/LadeMesswerteListenausgabeDTO.ts
 models/LadeProcessedMesswerteDTO.ts
+models/LadeProcessedZaehldatenBelastungsplanDTO.ts
 models/LadeProcessedZaehldatenDTO.ts
-models/LadeProcessedZaehldatenDTOZaehldatenBelastungsplan.ts
 models/LadeZaehldatenHeatmapDTO.ts
 models/LadeZaehldatenSteplineDTO.ts
 models/LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInner.ts
