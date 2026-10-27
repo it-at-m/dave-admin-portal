@@ -55,7 +55,7 @@ export interface InfoMessageDTO {
    * @type {boolean}
    * @memberof InfoMessageDTO
    */
-  aktiv?: boolean;
+  aktiv: boolean;
 }
 
 /**

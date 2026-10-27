@@ -37,7 +37,7 @@ export interface EmailAddressDTO {
    * @type {number}
    * @memberof EmailAddressDTO
    */
-  participantId?: number;
+  participantId: number;
   /**
    *
    * @type {string}

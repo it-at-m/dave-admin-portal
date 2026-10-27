@@ -35,7 +35,7 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import type LageplanDTO from "@/types/lageplan/LageplanDTO";
+import type Lageplan from "@/types/lageplan/Lageplan";
 import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 
 import { computed, ref } from "vue";
@@ -72,7 +72,7 @@ function loadLageplan() {
   }
   lageplanLoading.value = true;
   LageplanService.loadLageplan(messstelle.value.mstId)
-    .then((result: LageplanDTO) => {
+    .then((result: Lageplan) => {
       window.open(result.url);
     })
     .catch((error) => {

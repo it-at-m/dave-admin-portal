@@ -1,13 +1,12 @@
-import type Verkehrsart from "@/domain/enums/Verkehrsart";
+import type { MessstelleKarteDTOStatusEnum, Verkehrsart } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
-import type MessstelleStatus from "@/types/enum/MessstelleStatus";
 import type MessfaehigkeitEditDTO from "@/types/messstelle/MessfaehigkeitEditDTO";
 import type MessquerschnittEditDTO from "@/types/messstelle/MessquerschnittEditDTO";
 
 export default interface MessstelleEditDTO extends BaseEntity {
   mstId: string;
   name: string;
-  status: MessstelleStatus;
+  status: MessstelleKarteDTOStatusEnum;
   stadtbezirk: string;
   stadtbezirkNummer: string;
   bemerkung: string;

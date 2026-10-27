@@ -55,19 +55,19 @@ export interface DienstleisterDTO {
    * @type {boolean}
    * @memberof DienstleisterDTO
    */
-  active?: boolean;
+  active: boolean;
   /**
    *
    * @type {boolean}
    * @memberof DienstleisterDTO
    */
-  erasable?: boolean;
+  erasable: boolean;
   /**
    *
    * @type {string}
    * @memberof DienstleisterDTO
    */
-  emailAddressesAsString?: string;
+  emailAddressesAsString: string;
 }
 
 /**

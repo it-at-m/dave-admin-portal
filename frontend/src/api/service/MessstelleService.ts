@@ -1,4 +1,4 @@
-import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type { BackendIdDTO } from "@/api/client";
 import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 import type MessstelleOverviewDTO from "@/types/messstelle/MessstelleOverviewDTO";
 

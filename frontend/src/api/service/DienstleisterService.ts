@@ -1,4 +1,4 @@
-import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
+import type { DienstleisterDTO } from "@/api/client";
 
 import FetchService from "@/api/service/FetchService";
 

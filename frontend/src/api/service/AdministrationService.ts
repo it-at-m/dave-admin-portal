@@ -1,4 +1,4 @@
-import type ResetAuffaelligkeitenDTO from "@/types/config/ResetAuffaelligkeitenDTO";
+import type { ResetAuffaelligkeitenDTO } from "@/api/client";
 
 import FetchService from "@/api/service/FetchService";
 import { useDateUtils } from "@/util/DateUtils";
@@ -12,7 +12,7 @@ export default class AdministrationService {
     return FetchService.postData(
       data,
       `${this.ENDPOINT}/reset-unauffaelliger-tag`,
-      `Beim Aktualisieren der Auffälligkeiten für den ${dateUtils.getShortVersionOfDate(data.dateToReset)} ist ein Fehler aufgetreten.`
+      `Beim Aktualisieren der Auffälligkeiten für den ${dateUtils.getShortVersionOfDate(data.startDateToReset)} ist ein Fehler aufgetreten.`
     );
   }
 }

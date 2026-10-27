@@ -71,12 +71,14 @@
 </template>
 
 <script setup lang="ts">
-import type BackendIdDTO from "@/types/common/BackendIdDTO";
-import type AnzeigeKarteDTO from "@/types/karte/AnzeigeKarteDTO";
-import type MessstelleKarteDTO from "@/types/karte/MessstelleKarteDTO";
-import type TooltipMessstelleDTO from "@/types/karte/TooltipMessstelleDTO";
-import type TooltipZaehlstelleDTO from "@/types/karte/TooltipZaehlstelleDTO";
-import type ZaehlstelleKarteDTO from "@/types/karte/ZaehlstelleKarteDTO";
+import type {
+  BackendIdDTO,
+  MessstelleKarteDTO,
+  MessstelleTooltipDTO,
+  ZaehlstelleKarteDTO,
+  ZaehlstelleTooltipDTO,
+} from "@/api/client";
+import type AnzeigeKarte from "@/types/karte/AnzeigeKarte";
 import type { LeafletMouseEvent } from "leaflet";
 
 import L, { Icon, LatLng, latLng, Marker } from "leaflet";
@@ -84,6 +86,7 @@ import { cloneDeep } from "lodash";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
+import { MessstelleKarteDTOStatusEnum } from "@/api/client";
 import SucheService from "@/api/service/SucheService";
 import markerIconDiamondOrange from "@/assets/cards-diamond-orange.png";
 import markerIconDiamondRed from "@/assets/cards-diamond-red.png";
@@ -96,7 +99,6 @@ import { useEventbus } from "@/store/Eventbus";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import MessstelleStatus from "@/types/enum/MessstelleStatus";
 import { useDateUtils } from "@/util/DateUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
@@ -423,7 +425,7 @@ function setMarkerToMap() {
     spiderfyOnMaxZoom: false,
     chunkedLoading: true,
   });
-  const erhebungsstellenKarte: Array<AnzeigeKarteDTO> = searchResult.value;
+  const erhebungsstellenKarte: Array<AnzeigeKarte> = searchResult.value;
   const markers: Array<Marker> = [];
   erhebungsstellenKarte.forEach((erhebungsstelleKarte) => {
     if (erhebungsstelleKarte.type != "messstelle") {
@@ -495,7 +497,7 @@ function routeToMessstelle(id: string) {
   router.push(`/messstelle/${id}`);
 }
 
-function createLatLng(anzeigeKarte: AnzeigeKarteDTO): LatLng {
+function createLatLng(anzeigeKarte: AnzeigeKarte): LatLng {
   return latLng(anzeigeKarte.latitude, anzeigeKarte.longitude);
 }
 
@@ -546,7 +548,7 @@ function createMarkerForMessstelle(
  *  - datumLetzteZaehlung
  */
 function createTooltipZaehlstelle(
-  tooltipDto: TooltipZaehlstelleDTO
+  tooltipDto: ZaehlstelleTooltipDTO
 ): HTMLElement {
   const tooltip = document.createElement("div");
   if (!tooltipDto) {
@@ -602,7 +604,7 @@ function createTooltipZaehlstelle(
 }
 
 function createTooltipMessstelle(
-  tooltipDto: TooltipMessstelleDTO
+  tooltipDto: MessstelleTooltipDTO
 ): HTMLElement {
   const tooltip = document.createElement("div");
   if (!tooltipDto) {
@@ -682,7 +684,7 @@ function markerOptionsZaehlstelle(zaehlstelleKarte: ZaehlstelleKarteDTO) {
  */
 function markerOptionsMessstelle(messstelleKarte: MessstelleKarteDTO) {
   const isMessstelleInPlanung =
-    messstelleKarte.status === MessstelleStatus.IN_PLANUNG;
+    messstelleKarte.status === MessstelleKarteDTOStatusEnum.InPlanung;
   const defaultIcon = new Icon({
     iconUrl: isMessstelleInPlanung
       ? markerIconDiamondOrange

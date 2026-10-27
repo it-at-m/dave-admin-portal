@@ -1,4 +1,4 @@
-import type Verkehrsart from "@/domain/enums/Verkehrsart";
+import type { Verkehrsart } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
 
 import Himmelsrichtung from "@/types/enum/Himmelsrichtung";

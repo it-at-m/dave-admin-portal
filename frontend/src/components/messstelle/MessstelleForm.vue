@@ -210,7 +210,7 @@ import { computed, ref } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
-import { messstelleStatusText } from "@/types/enum/MessstelleStatus";
+import { messstelleStatusText } from "@/types/enum/MessstelleStatusText";
 import { useDateUtils } from "@/util/DateUtils";
 import { useValidationUtils } from "@/util/ValidationUtils";
 

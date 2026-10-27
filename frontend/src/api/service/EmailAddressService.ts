@@ -1,4 +1,4 @@
-import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
+import type { EmailAddressDTO } from "@/api/client";
 
 import FetchService from "@/api/service/FetchService";
 

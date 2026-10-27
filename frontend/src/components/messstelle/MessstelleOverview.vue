@@ -44,10 +44,10 @@ import type MessstelleOverviewDTO from "@/types/messstelle/MessstelleOverviewDTO
 
 import { computed, onMounted, ref } from "vue";
 
+import { MessstelleKarteDTOStatusEnum } from "@/api/client";
 import MessstelleService from "@/api/service/MessstelleService";
 import MessstelleOverviewPanel from "@/components/messstelle/MessstelleOverviewPanel.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import MessstelleStatus from "@/types/enum/MessstelleStatus";
 
 const snackbarStore = useSnackbarStore();
 
@@ -77,7 +77,7 @@ function loadOpenMessstellen(): void {
   MessstelleService.getAllMessstellenForOverview()
     .then((messstellen: Array<MessstelleOverviewDTO>) => {
       messstellen.forEach((messstelle: MessstelleOverviewDTO) => {
-        if (messstelle.status === MessstelleStatus.IN_PLANUNG) {
+        if (messstelle.status === MessstelleKarteDTOStatusEnum.InPlanung) {
           geplanteMessstellen.value.push(messstelle);
         } else if (!messstelle.geprueft) {
           neuUmgesetztMessstellen.value.push(messstelle);

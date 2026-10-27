@@ -1,4 +1,4 @@
-export default interface AnzeigeKarteDTO {
+export default interface AnzeigeKarte {
   id: string;
   fachId: string;
   type: string;

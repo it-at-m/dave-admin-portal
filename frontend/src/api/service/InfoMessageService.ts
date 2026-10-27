@@ -1,4 +1,4 @@
-import type InfoMessageDTO from "@/types/config/InfoMessageDTO";
+import type { InfoMessageDTO } from "@/api/client";
 
 import FetchService from "@/api/service/FetchService";
 

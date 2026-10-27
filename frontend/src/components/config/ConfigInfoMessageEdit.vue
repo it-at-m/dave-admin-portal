@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import type InfoMessageDTO from "@/types/config/InfoMessageDTO";
+import type { InfoMessageDTO } from "@/api/client";
 
 import { isEmpty, isNil } from "lodash";
 import { computed, ref, watch } from "vue";

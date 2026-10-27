@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import type InfoMessageDTO from "@/types/config/InfoMessageDTO";
+import type { InfoMessageDTO } from "@/api/client";
 
 import { computed } from "vue";
 

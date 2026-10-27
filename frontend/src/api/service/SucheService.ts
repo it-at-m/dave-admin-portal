@@ -1,6 +1,8 @@
-import type AnzeigeKarteDTO from "@/types/karte/AnzeigeKarteDTO";
-import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
-import type SucheComplexSuggestsDTO from "@/types/suche/SucheComplexSuggestsDTO";
+import type {
+  SearchAndFilterOptionsDTO,
+  SucheComplexSuggestsDTO,
+} from "@/api/client";
+import type AnzeigeKarte from "@/types/karte/AnzeigeKarte";
 
 import FetchService from "@/api/service/FetchService";
 
@@ -23,7 +25,7 @@ export default class SucheService {
   static searchErhebungsstelle(
     query: string,
     searchAndFilterOptions: SearchAndFilterOptionsDTO
-  ): Promise<Array<AnzeigeKarteDTO>> {
+  ): Promise<Array<AnzeigeKarte>> {
     return FetchService.postData(
       searchAndFilterOptions,
       `${this.ENDPOINT}/search?query=${query}`,

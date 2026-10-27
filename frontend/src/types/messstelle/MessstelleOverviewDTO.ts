@@ -1,10 +1,10 @@
+import type { MessstelleKarteDTOStatusEnum } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
-import type MessstelleStatus from "@/types/enum/MessstelleStatus";
 
 export default interface MessstelleOverviewDTO extends BaseEntity {
   mstId: string;
   name: string;
-  status: MessstelleStatus;
+  status: MessstelleKarteDTOStatusEnum;
   geprueft: boolean;
   sichtbarDatenportal: boolean;
   stadtbezirk: string;
