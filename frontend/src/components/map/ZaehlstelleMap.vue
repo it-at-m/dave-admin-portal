@@ -71,12 +71,14 @@
 </template>
 
 <script setup lang="ts">
-import type BackendIdDTO from "@/types/common/BackendIdDTO";
-import type AnzeigeKarteDTO from "@/types/karte/AnzeigeKarteDTO";
-import type MessstelleKarteDTO from "@/types/karte/MessstelleKarteDTO";
-import type TooltipMessstelleDTO from "@/types/karte/TooltipMessstelleDTO";
-import type TooltipZaehlstelleDTO from "@/types/karte/TooltipZaehlstelleDTO";
-import type ZaehlstelleKarteDTO from "@/types/karte/ZaehlstelleKarteDTO";
+import type {
+  BackendIdDTO,
+  ErhebungsstelleKarteDTO,
+  MessstelleKarteDTO,
+  MessstelleTooltipDTO,
+  ZaehlstelleKarteDTO,
+  ZaehlstelleTooltipDTO,
+} from "@/api/client";
 import type { LeafletMouseEvent } from "leaflet";
 
 import L, { Icon, LatLng, latLng, Marker } from "leaflet";
@@ -103,7 +105,7 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 interface Props {
   minheight?: string;
   zId?: string;
-  latlng?: Array<string>;
+  latlng?: Array<number>;
   height?: string;
   width?: string;
   showMarker?: boolean;
@@ -316,7 +318,7 @@ function closeDialog() {
  */
 const center = computed<LatLng>(() => {
   if (props.latlng && props.latlng.length > 0) {
-    return createLatLngFromString(props.latlng[0], props.latlng[1]);
+    return latLng(props.latlng[0], props.latlng[1]);
   } else if (
     mapOptionsStore.getMapOptions &&
     mapOptionsStore.getMapOptions.latitude &&
@@ -423,7 +425,8 @@ function setMarkerToMap() {
     spiderfyOnMaxZoom: false,
     chunkedLoading: true,
   });
-  const erhebungsstellenKarte: Array<AnzeigeKarteDTO> = searchResult.value;
+  const erhebungsstellenKarte: Array<ErhebungsstelleKarteDTO> =
+    searchResult.value;
   const markers: Array<Marker> = [];
   erhebungsstellenKarte.forEach((erhebungsstelleKarte) => {
     if (erhebungsstelleKarte.type != "messstelle") {
@@ -495,7 +498,7 @@ function routeToMessstelle(id: string) {
   router.push(`/messstelle/${id}`);
 }
 
-function createLatLng(anzeigeKarte: AnzeigeKarteDTO): LatLng {
+function createLatLng(anzeigeKarte: ErhebungsstelleKarteDTO): LatLng {
   return latLng(anzeigeKarte.latitude, anzeigeKarte.longitude);
 }
 
@@ -506,10 +509,13 @@ function createMarkerForZaehlstelle(
     createLatLng(zaehlstelleKarte),
     markerOptionsZaehlstelle(zaehlstelleKarte)
   );
-  marker.bindTooltip(createTooltipZaehlstelle(zaehlstelleKarte.tooltip), {
-    direction: "top",
-    offset: [-14, 0],
-  });
+  marker.bindTooltip(
+    createTooltipZaehlstelle(zaehlstelleKarte.tooltip as ZaehlstelleTooltipDTO),
+    {
+      direction: "top",
+      offset: [-14, 0],
+    }
+  );
 
   marker.on("click", () => {
     // Zeige alle Zaehlungen zur Zaehlstelle an.
@@ -525,10 +531,13 @@ function createMarkerForMessstelle(
     createLatLng(messstelleKarteDto),
     markerOptionsMessstelle(messstelleKarteDto)
   );
-  marker.bindTooltip(createTooltipMessstelle(messstelleKarteDto.tooltip), {
-    direction: "top",
-    offset: [0, -25],
-  });
+  marker.bindTooltip(
+    createTooltipMessstelle(messstelleKarteDto.tooltip as MessstelleTooltipDTO),
+    {
+      direction: "top",
+      offset: [0, -25],
+    }
+  );
   marker.on("click", () => {
     routeToMessstelle(messstelleKarteDto.id);
   });
@@ -546,7 +555,7 @@ function createMarkerForMessstelle(
  *  - datumLetzteZaehlung
  */
 function createTooltipZaehlstelle(
-  tooltipDto: TooltipZaehlstelleDTO
+  tooltipDto: ZaehlstelleTooltipDTO
 ): HTMLElement {
   const tooltip = document.createElement("div");
   if (!tooltipDto) {
@@ -602,7 +611,7 @@ function createTooltipZaehlstelle(
 }
 
 function createTooltipMessstelle(
-  tooltipDto: TooltipMessstelleDTO
+  tooltipDto: MessstelleTooltipDTO
 ): HTMLElement {
   const tooltip = document.createElement("div");
   if (!tooltipDto) {

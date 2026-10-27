@@ -213,8 +213,9 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type { BearbeiteKnotenarmDTO } from "@/api/client";
 
+import { toArray } from "lodash";
 import { computed } from "vue";
 
 interface Props {
@@ -231,7 +232,7 @@ const props = withDefaults(defineProps<Props>(), {
   passiveColor: "#757575",
 });
 
-const knotenarme = defineModel<Array<KnotenarmDTO>>({
+const knotenarme = defineModel<Array<BearbeiteKnotenarmDTO> | undefined>({
   required: true,
 });
 
@@ -241,7 +242,7 @@ const knotenarme = defineModel<Array<KnotenarmDTO>>({
  */
 function calculateColor(knotenarm: number): string | undefined {
   let color = props.passiveColor;
-  const gefilteterKnotenarm = knotenarme.value.filter(
+  const gefilteterKnotenarm = toArray(knotenarme.value).filter(
     (k) => k.nummer === knotenarm
   )[0];
   if (gefilteterKnotenarm) {
@@ -252,14 +253,14 @@ function calculateColor(knotenarm: number): string | undefined {
 
 const includesKnotenarm1and3 = computed(() => {
   return (
-    knotenarme.value.filter((k) => k.nummer === 1)[0] &&
-    knotenarme.value.filter((k) => k.nummer === 3)[0]
+    toArray(knotenarme.value).filter((k) => k.nummer === 1)[0] &&
+    toArray(knotenarme.value).filter((k) => k.nummer === 3)[0]
   );
 });
 const includesKnotenarm2and4 = computed(() => {
   return (
-    knotenarme.value.filter((k) => k.nummer === 2)[0] &&
-    knotenarme.value.filter((k) => k.nummer === 4)[0]
+    toArray(knotenarme.value).filter((k) => k.nummer === 2)[0] &&
+    toArray(knotenarme.value).filter((k) => k.nummer === 4)[0]
   );
 });
 const hasKnotenarme = computed(() => {

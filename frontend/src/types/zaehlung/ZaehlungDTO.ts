@@ -1,6 +1,6 @@
+import type { PkwEinheitDTO } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
 import type GeoPoint from "@/types/common/GeoPoint";
-import type PkwEinheitDTO from "@/types/common/PkwEinheitDTO";
 import type Fahrzeug from "@/types/enum/Fahrzeug";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";

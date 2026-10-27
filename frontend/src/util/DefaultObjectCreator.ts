@@ -1,14 +1,16 @@
-import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
-import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
-import type MapConfigurationDTO from "@/types/configuration/MapConfigurationDTO";
-import type TenantConfigurationDTO from "@/types/configuration/TenantConfigurationDTO";
-import type ZaehlstelleConfigurationDTO from "@/types/configuration/ZaehlstelleConfigurationDTO";
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
-import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type {
+  BearbeiteZaehlstelleDTO,
+  BearbeiteZaehlungDTO,
+  ConfigurationDTO,
+  DienstleisterDTO,
+  EditMessstelleDTO,
+  EmailAddressDTO,
+  HochrechnungsfaktorDTO,
+  MapConfigurationDTO,
+  SearchAndFilterOptionsDTO,
+  TenantConfigurationDTO,
+  ZaehlstelleConfigurationDTO,
+} from "@/api/client";
 
 import { LatLng } from "leaflet";
 
@@ -41,8 +43,8 @@ export default class DefaultObjectCreator {
     );
   }
 
-  public static createDefaultZaehlungDTO(): ZaehlungDTO {
-    const zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
+  public static createDefaultZaehlungDTO(): BearbeiteZaehlungDTO {
+    const zaehlung = {} as BearbeiteZaehlungDTO;
     zaehlung.customSuchwoerter = [];
     zaehlung.knotenarme = [];
     zaehlung.querungsverkehr = [];
@@ -57,15 +59,15 @@ export default class DefaultObjectCreator {
     return zaehlung;
   }
 
-  public static createDefaultZaehlstelleDTO(): ZaehlstelleDTO {
-    const zaehlstelle: ZaehlstelleDTO = {} as ZaehlstelleDTO;
+  public static createDefaultZaehlstelleDTO(): BearbeiteZaehlstelleDTO {
+    const zaehlstelle = {} as BearbeiteZaehlstelleDTO;
     zaehlstelle.sichtbarDatenportal = true;
     zaehlstelle.customSuchwoerter = [];
     return zaehlstelle;
   }
 
-  public static createDefaultMessstelleEditDTO(): MessstelleEditDTO {
-    const messstelle: MessstelleEditDTO = {} as MessstelleEditDTO;
+  public static createDefaultMessstelleEditDTO(): EditMessstelleDTO {
+    const messstelle: EditMessstelleDTO = {} as EditMessstelleDTO;
     messstelle.sichtbarDatenportal = false;
     messstelle.lageplanVorhanden = false;
     messstelle.status = MessstelleStatus.IN_PLANUNG;

@@ -50,7 +50,7 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type { EditMessstelleDTO } from "@/api/client";
 
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -63,7 +63,7 @@ import { useEventbus } from "@/store/Eventbus";
 import { useDaveUtils } from "@/util/DaveUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
-const messstelle = ref<MessstelleEditDTO>(
+const messstelle = ref<EditMessstelleDTO>(
   DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
 const route = useRoute();
@@ -106,17 +106,11 @@ const messstelleId = computed(() => {
   return messstelleId;
 });
 
-const latlng = computed(() => {
-  if (
-    messstelle.value.longitude == undefined ||
-    messstelle.value.latitude == undefined
-  ) {
-    return [];
+const latlng = computed<number[]>(() => {
+  if (messstelle.value.longitude && messstelle.value.latitude) {
+    return [messstelle.value.latitude, messstelle.value.longitude];
   } else {
-    return [
-      messstelle.value.latitude.toString(),
-      messstelle.value.longitude.toString(),
-    ];
+    return [];
   }
 });
 
