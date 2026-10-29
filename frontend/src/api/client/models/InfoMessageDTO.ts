@@ -70,6 +70,7 @@ export function instanceOfInfoMessageDTO(
   if (!("gueltigBis" in value) || value["gueltigBis"] === undefined)
     return false;
   if (!("gueltig" in value) || value["gueltig"] === undefined) return false;
+  if (!("aktiv" in value) || value["aktiv"] === undefined) return false;
   return true;
 }
 
@@ -90,7 +91,7 @@ export function InfoMessageDTOFromJSONTyped(
     gueltigVon: new Date(json["gueltigVon"]),
     gueltigBis: new Date(json["gueltigBis"]),
     gueltig: json["gueltig"],
-    aktiv: json["aktiv"] == null ? undefined : json["aktiv"],
+    aktiv: json["aktiv"],
   };
 }
 

@@ -61,10 +61,10 @@
 </template>
 
 <script setup lang="ts">
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
-import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
+import type Knotenarm from "@/types/zaehlung/Knotenarm";
+import type Verkehrsbeziehung from "@/types/zaehlung/Verkehrsbeziehung";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { cloneDeep, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
@@ -79,13 +79,13 @@ interface Props {
 }
 defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<Zaehlung>({
   required: true,
 });
 
 const hochrechnungsfaktorenStore = useHochrechnungsfaktorStore();
 
-const allPossibleVerkehrsbeziehungen = ref<Array<VerkehrsbeziehungDTO>>([]);
+const allPossibleVerkehrsbeziehungen = ref<Array<Verkehrsbeziehung>>([]);
 const selectAllModel = ref(false);
 const HEADERS = [
   {
@@ -128,7 +128,7 @@ const hochrechnungsfaktoreDropDown = computed(() => {
       .flatMap((value) => {
         return cloneDeep(value);
       });
-  const dropDown: Array<HochrechnungsfaktorDTO> = [...activeFactors];
+  const dropDown: Array<Hochrechnungsfaktor> = [...activeFactors];
 
   // Falls in Verkehrsbeziehung gespeicherter HOFA nachträglich inaktiv gesetzt wurde,
   // wird dieser trotzdem dem Dropdown hinzugefügt.
@@ -147,8 +147,8 @@ const hochrechnungsfaktoreDropDown = computed(() => {
 });
 
 function containsHochrechnungsfaktor(
-  activeFaktors: Array<HochrechnungsfaktorDTO>,
-  faktor: HochrechnungsfaktorDTO
+  activeFaktors: Array<Hochrechnungsfaktor>,
+  faktor: Hochrechnungsfaktor
 ): boolean {
   let contains = false;
   activeFaktors.forEach((value) => {
@@ -163,8 +163,8 @@ function updatePossibleVerkehrsbeziehungen(): void {
   allPossibleVerkehrsbeziehungen.value = cloneDeep(
     calculatePossibleVerkehrsbeziehung()
   );
-  allPossibleVerkehrsbeziehungen.value.forEach((pos: VerkehrsbeziehungDTO) => {
-    zaehlung.value.verkehrsbeziehungen.forEach((fahr: VerkehrsbeziehungDTO) => {
+  allPossibleVerkehrsbeziehungen.value.forEach((pos: Verkehrsbeziehung) => {
+    zaehlung.value.verkehrsbeziehungen.forEach((fahr: Verkehrsbeziehung) => {
       if (pos.von === fahr.von && pos.nach === fahr.nach) {
         pos.hochrechnungsfaktor = cloneDeep(fahr.hochrechnungsfaktor);
         if (fahr.id) {
@@ -184,17 +184,17 @@ function calculateSelectAllModel(): void {
     allPossibleVerkehrsbeziehungen.value.length / 2;
 }
 
-function calculatePossibleVerkehrsbeziehung(): Array<VerkehrsbeziehungDTO> {
-  const standardFaktor: HochrechnungsfaktorDTO =
+function calculatePossibleVerkehrsbeziehung(): Array<Verkehrsbeziehung> {
+  const standardFaktor: Hochrechnungsfaktor =
     hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
-  const allPossibleVerkehrsbeziehungen: Array<VerkehrsbeziehungDTO> = [];
+  const allPossibleVerkehrsbeziehungen: Array<Verkehrsbeziehung> = [];
   const possibleArms: Array<number> = [];
-  zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
+  zaehlung.value.knotenarme.forEach((arm: Knotenarm) => {
     possibleArms.push(arm.nummer);
   });
   possibleArms.forEach((vonNummer: number) => {
     possibleArms.forEach((nachNummer: number) => {
-      const newVzVon: VerkehrsbeziehungDTO = {} as VerkehrsbeziehungDTO;
+      const newVzVon: Verkehrsbeziehung = {} as Verkehrsbeziehung;
       newVzVon.von = vonNummer;
       newVzVon.nach = nachNummer;
       newVzVon.active = false;
@@ -209,9 +209,9 @@ function calculatePossibleVerkehrsbeziehung(): Array<VerkehrsbeziehungDTO> {
   return allPossibleVerkehrsbeziehungen;
 }
 
-function updateVerkehrsbeziehung(toSave: VerkehrsbeziehungDTO): void {
+function updateVerkehrsbeziehung(toSave: Verkehrsbeziehung): void {
   zaehlung.value.verkehrsbeziehungen.forEach(
-    (verkehrsbeziehung: VerkehrsbeziehungDTO) => {
+    (verkehrsbeziehung: Verkehrsbeziehung) => {
       if (
         verkehrsbeziehung.von === toSave.von &&
         verkehrsbeziehung.nach === toSave.nach
@@ -222,7 +222,7 @@ function updateVerkehrsbeziehung(toSave: VerkehrsbeziehungDTO): void {
   );
 }
 
-function getHochrechnungsfaktorAsText(hf: HochrechnungsfaktorDTO): string {
+function getHochrechnungsfaktorAsText(hf: Hochrechnungsfaktor): string {
   return ObjectToTextTranslator.getHochrechnungsfaktorAsText(hf);
 }
 
@@ -233,13 +233,13 @@ function selectAll(): void {
       ...allPossibleVerkehrsbeziehungen.value,
     ];
     zaehlung.value.verkehrsbeziehungen.forEach(
-      (verkehrsbeziehung: VerkehrsbeziehungDTO) => {
+      (verkehrsbeziehung: Verkehrsbeziehung) => {
         verkehrsbeziehung.active = selectAllModel.value;
       }
     );
   } else {
     zaehlung.value.verkehrsbeziehungen.forEach(
-      (verkehrsbeziehung: VerkehrsbeziehungDTO) => {
+      (verkehrsbeziehung: Verkehrsbeziehung) => {
         verkehrsbeziehung.active = selectAllModel.value;
       }
     );
@@ -247,7 +247,7 @@ function selectAll(): void {
   }
 }
 
-function selectItem(verkehrsbeziehung: VerkehrsbeziehungDTO): void {
+function selectItem(verkehrsbeziehung: Verkehrsbeziehung): void {
   if (verkehrsbeziehung.active) {
     zaehlung.value.verkehrsbeziehungen.push(verkehrsbeziehung);
   } else {
@@ -256,10 +256,10 @@ function selectItem(verkehrsbeziehung: VerkehrsbeziehungDTO): void {
   calculateSelectAllModel();
 }
 
-function removeVerkehrsbeziehung(toDelete: VerkehrsbeziehungDTO): void {
+function removeVerkehrsbeziehung(toDelete: Verkehrsbeziehung): void {
   let deleteIndex = -1;
   zaehlung.value.verkehrsbeziehungen.forEach(
-    (verkehrsbeziehung: VerkehrsbeziehungDTO, index: number) => {
+    (verkehrsbeziehung: Verkehrsbeziehung, index: number) => {
       if (
         verkehrsbeziehung.von === toDelete.von &&
         verkehrsbeziehung.nach === toDelete.nach

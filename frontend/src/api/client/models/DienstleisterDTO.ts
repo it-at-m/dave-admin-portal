@@ -80,6 +80,13 @@ export function instanceOfDienstleisterDTO(
   if (!("kennung" in value) || value["kennung"] === undefined) return false;
   if (!("emailAddresses" in value) || value["emailAddresses"] === undefined)
     return false;
+  if (!("active" in value) || value["active"] === undefined) return false;
+  if (!("erasable" in value) || value["erasable"] === undefined) return false;
+  if (
+    !("emailAddressesAsString" in value) ||
+    value["emailAddressesAsString"] === undefined
+  )
+    return false;
   return true;
 }
 
@@ -101,12 +108,9 @@ export function DienstleisterDTOFromJSONTyped(
     name: json["name"],
     kennung: json["kennung"],
     emailAddresses: json["emailAddresses"],
-    active: json["active"] == null ? undefined : json["active"],
-    erasable: json["erasable"] == null ? undefined : json["erasable"],
-    emailAddressesAsString:
-      json["emailAddressesAsString"] == null
-        ? undefined
-        : json["emailAddressesAsString"],
+    active: json["active"],
+    erasable: json["erasable"],
+    emailAddressesAsString: json["emailAddressesAsString"],
   };
 }
 

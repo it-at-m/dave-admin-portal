@@ -45,8 +45,8 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { isEmpty } from "lodash";
 import { computed, ref, watch } from "vue";
@@ -58,11 +58,11 @@ import { useSnackbarStore } from "@/store/SnackbarStore";
 
 interface Props {
   showDialog: boolean;
-  zaehlstelle: ZaehlstelleDTO;
+  zaehlstelle: Zaehlstelle;
 }
 const props = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<Zaehlung>({
   required: true,
 });
 

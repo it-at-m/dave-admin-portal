@@ -13,7 +13,7 @@ export default class ConfigurationService {
 
   static getConfiguration(): Promise<ConfigurationDTO> {
     return handleOpenApiError(
-      this.API.getConfigurationRaw().then((response) => response.raw.json()),
+      this.API.getConfiguration().then((response) => response),
       "Beim Laden der Anwendungskonfiguration ist ein Fehler aufgetreten."
     );
   }

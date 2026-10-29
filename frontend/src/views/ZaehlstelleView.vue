@@ -186,10 +186,10 @@
 </template>
 
 <script setup lang="ts">
-import type PkwEinheitDTO from "@/types/common/PkwEinheitDTO";
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type PkwEinheit from "@/types/common/PkwEinheit";
+import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 import type ZaehlungCardObject from "@/types/zaehlung/ZaehlungCardObject";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { cloneDeep } from "lodash";
 import { computed, onMounted, ref } from "vue";
@@ -222,7 +222,7 @@ const route = useRoute();
 const display = useDisplay();
 
 const zaehlstelle = ref(DefaultObjectCreator.createDefaultZaehlstelleDTO());
-const zaehlungen = ref([] as Array<ZaehlungDTO>);
+const zaehlungen = ref([] as Array<Zaehlung>);
 const showUpdateZaehlstelleDialog = ref(false);
 const showZaehlungDialog = ref(false);
 const showChatDialog = ref(false);
@@ -231,7 +231,7 @@ const speedDialOpen = ref(false);
 const query = ref("");
 const showtooltip = ref(false);
 
-const zaehlung = ref<ZaehlungDTO>(createDefaultZaehlungDTO());
+const zaehlung = ref<Zaehlung>(createDefaultZaehlungDTO());
 
 /**
  * Die Daten zur Zählstelle und der ausgewählten Zählung wird über die
@@ -257,7 +257,7 @@ const contentHeight = computed(() => {
 
 function loadHochrechnungsfaktoren() {
   HochrechnungsfaktorService.getAllHochrechnungsfaktoren()
-    .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
+    .then((faktoren: Array<Hochrechnungsfaktor>) => {
       hochrechnungsfaktorStore.setHochrechnungsfaktoren(cloneDeep(faktoren));
     })
     .catch((error) => snackbarStore.showApiError(error));
@@ -265,7 +265,7 @@ function loadHochrechnungsfaktoren() {
 
 function loadPkwEinheiten() {
   PkwEinheitenService.getPkweinheiten()
-    .then((latest: PkwEinheitDTO) => {
+    .then((latest: PkwEinheit) => {
       pkweinheitStore.setPkwEinheit(cloneDeep(latest));
     })
     .catch((error) => snackbarStore.showApiError(error));
@@ -334,8 +334,8 @@ function editZaehlstelle() {
   showUpdateZaehlstelleDialog.value = true;
 }
 
-function createDefaultZaehlungDTO(): ZaehlungDTO {
-  const zaehlung: ZaehlungDTO = DefaultObjectCreator.createDefaultZaehlungDTO();
+function createDefaultZaehlungDTO(): Zaehlung {
+  const zaehlung: Zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
   zaehlung.punkt = cloneDeep(zaehlstelle.value.punkt);
   zaehlung.zaehlIntervall = 15;
   const time = new Date().toLocaleTimeString(navigator.language, {
@@ -359,7 +359,7 @@ function loadZaehlstelle(openDialog = false): void {
     .then((response) => {
       zaehlstelle.value = response;
       zaehlungen.value = response.zaehlungen;
-      response.zaehlungen.forEach((zaehlung: ZaehlungDTO) => {
+      response.zaehlungen.forEach((zaehlung: Zaehlung) => {
         zaehlungCards.value.push({ flex: 3, zaehlung: zaehlung });
       });
       zaehlungCards.value.sort(ZaehlungCardObjectComparator.sortByDatumDesc);
@@ -400,7 +400,7 @@ function cancelZaehlungDialog() {
   showZaehlungDialog.value = false;
 }
 
-function openZaehlungDialog(zaehlungToEdit: ZaehlungDTO) {
+function openZaehlungDialog(zaehlungToEdit: Zaehlung) {
   zaehlung.value = cloneDeep(zaehlungToEdit);
   showZaehlungDialog.value = true;
 }
@@ -417,7 +417,7 @@ function openZaehlungDatenportal(zaehlungId: string) {
   window.open(url);
 }
 
-function openChatDialog(zaehlungToChat: ZaehlungDTO) {
+function openChatDialog(zaehlungToChat: Zaehlung) {
   zaehlung.value = cloneDeep(zaehlungToChat);
   showChatDialog.value = true;
 }

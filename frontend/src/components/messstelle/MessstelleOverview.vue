@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleOverviewDTO from "@/types/messstelle/MessstelleOverviewDTO";
+import type MessstelleOverview from "@/types/messstelle/MessstelleOverview";
 
 import { computed, onMounted, ref } from "vue";
 
@@ -53,9 +53,9 @@ const snackbarStore = useSnackbarStore();
 
 const hasMessstellen = ref(false);
 
-const geplanteMessstellen = ref<Array<MessstelleOverviewDTO>>([]);
-const neuUmgesetztMessstellen = ref<Array<MessstelleOverviewDTO>>([]);
-const nichtSichtbareMessstellen = ref<Array<MessstelleOverviewDTO>>([]);
+const geplanteMessstellen = ref<Array<MessstelleOverview>>([]);
+const neuUmgesetztMessstellen = ref<Array<MessstelleOverview>>([]);
+const nichtSichtbareMessstellen = ref<Array<MessstelleOverview>>([]);
 
 const geplanteMessstellenHeader = computed(() => {
   return `Geplante Messstellen: ${geplanteMessstellen.value.length}`;
@@ -75,8 +75,8 @@ onMounted(() => {
 function loadOpenMessstellen(): void {
   hasMessstellen.value = false;
   MessstelleService.getAllMessstellenForOverview()
-    .then((messstellen: Array<MessstelleOverviewDTO>) => {
-      messstellen.forEach((messstelle: MessstelleOverviewDTO) => {
+    .then((messstellen: Array<MessstelleOverview>) => {
+      messstellen.forEach((messstelle: MessstelleOverview) => {
         if (messstelle.status === MessstelleKarteDTOStatusEnum.InPlanung) {
           geplanteMessstellen.value.push(messstelle);
         } else if (!messstelle.geprueft) {
@@ -100,8 +100,8 @@ function sortDataArraysMessstelle(): void {
 }
 
 function sortByMstId(
-  toSort: Array<MessstelleOverviewDTO>
-): Array<MessstelleOverviewDTO> {
+  toSort: Array<MessstelleOverview>
+): Array<MessstelleOverview> {
   return toSort.sort((a, b) => (a.mstId > b.mstId ? 1 : -1));
 }
 

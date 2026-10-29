@@ -70,13 +70,13 @@ export interface BearbeiteZaehlstelleDTO {
    * @type {number}
    * @memberof BearbeiteZaehlstelleDTO
    */
-  lat?: number;
+  lat: number;
   /**
    *
    * @type {number}
    * @memberof BearbeiteZaehlstelleDTO
    */
-  lng?: number;
+  lng: number;
   /**
    *
    * @type {Array<string>}
@@ -115,6 +115,8 @@ export function instanceOfBearbeiteZaehlstelleDTO(
   )
     return false;
   if (!("punkt" in value) || value["punkt"] === undefined) return false;
+  if (!("lat" in value) || value["lat"] === undefined) return false;
+  if (!("lng" in value) || value["lng"] === undefined) return false;
   return true;
 }
 
@@ -137,8 +139,8 @@ export function BearbeiteZaehlstelleDTOFromJSONTyped(
     stadtbezirkNummer: json["stadtbezirkNummer"],
     stadtbezirk: json["stadtbezirk"] == null ? undefined : json["stadtbezirk"],
     punkt: GeoPointFromJSON(json["punkt"]),
-    lat: json["lat"] == null ? undefined : json["lat"],
-    lng: json["lng"] == null ? undefined : json["lng"],
+    lat: json["lat"],
+    lng: json["lng"],
     customSuchwoerter:
       json["customSuchwoerter"] == null ? undefined : json["customSuchwoerter"],
     zaehlungen:

@@ -1,9 +1,9 @@
 import type { Verkehrsart } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
 
-import Himmelsrichtung from "@/types/enum/Himmelsrichtung";
+import { Himmelsrichtung } from "@/api/client";
 
-export default interface MessquerschnittEditDTO extends BaseEntity {
+export default interface MessquerschnittEdit extends BaseEntity {
   mqId: string;
   strassenname: string;
   lageMessquerschnitt: string;

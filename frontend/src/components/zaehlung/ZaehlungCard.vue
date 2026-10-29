@@ -254,13 +254,13 @@
 <script setup lang="ts">
 import type { BackendIdDTO, DienstleisterDTO } from "@/api/client";
 import type GeoPoint from "@/types/common/GeoPoint";
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
-import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
-import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
-import type UpdateStatusDTO from "@/types/zaehlung/UpdateStatusDTO";
-import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
+import type Knotenarm from "@/types/zaehlung/Knotenarm";
+import type Laengsverkehr from "@/types/zaehlung/Laengsverkehr";
+import type Querungsverkehr from "@/types/zaehlung/Querungsverkehr";
+import type UpdateStatus from "@/types/zaehlung/UpdateStatus";
+import type Verkehrsbeziehung from "@/types/zaehlung/Verkehrsbeziehung";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { LatLng } from "leaflet";
 import { cloneDeep } from "lodash";
@@ -292,16 +292,16 @@ interface Props {
 
 const properties = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<Zaehlung>({
   required: true,
 });
 
 const emits = defineEmits<{
   (e: "cancel"): void;
   (e: "deleted"): void;
-  (e: "openZaehlungDialog", zaehlung: ZaehlungDTO): void;
+  (e: "openZaehlungDialog", zaehlung: Zaehlung): void;
   (e: "openZaehlungDatenportal", zaehlungId: string): void;
-  (e: "openChatDialog", zaehlung: ZaehlungDTO): void;
+  (e: "openChatDialog", zaehlung: Zaehlung): void;
   (e: "saved", payload: BackendIdDTO): void;
 }>();
 
@@ -400,7 +400,7 @@ function createLatLngFromString(lat: string, lng: string): LatLng {
 
 function zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
   loading.value = true;
-  const update: UpdateStatusDTO = {} as UpdateStatusDTO;
+  const update: UpdateStatus = {} as UpdateStatus;
   update.zaehlungId = zaehlung.value.id;
   update.status = Status.INSTRUCTED;
   update.dienstleisterkennung = dienstleister.kennung;
@@ -447,7 +447,7 @@ function deleteZaehlung() {
 
 function zaehlungFreigeben() {
   loading.value = true;
-  const update: UpdateStatusDTO = {} as UpdateStatusDTO;
+  const update: UpdateStatus = {} as UpdateStatus;
   update.zaehlungId = zaehlung.value.id;
   update.status = Status.ACTIVE;
   ZaehlungService.updateStatus(update)
@@ -465,7 +465,7 @@ function zaehlungFreigeben() {
 
 function zaehlungKorrigieren() {
   loading.value = true;
-  const update: UpdateStatusDTO = {} as UpdateStatusDTO;
+  const update: UpdateStatus = {} as UpdateStatus;
   update.zaehlungId = zaehlung.value.id;
   update.status = Status.CORRECTION;
   ZaehlungService.updateStatus(update)
@@ -491,7 +491,7 @@ function openZaehlungInDatenportal() {
 
 function zaehlungKopieren() {
   loading.value = true;
-  const zaehlungCopy: ZaehlungDTO = cloneDeep(zaehlung.value);
+  const zaehlungCopy: Zaehlung = cloneDeep(zaehlung.value);
   zaehlungCopy.id = "";
   zaehlungCopy.kommentar = "";
   zaehlungCopy.zaehlsituation = "";
@@ -500,7 +500,7 @@ function zaehlungKopieren() {
   zaehlungCopy.status = Status.CREATED;
   zaehlungCopy.dienstleisterkennung = "";
   zaehlungCopy.datum = new Date().toISOString().substring(0, 10);
-  zaehlungCopy.knotenarme.forEach((arm: KnotenarmDTO) => {
+  zaehlungCopy.knotenarme.forEach((arm: Knotenarm) => {
     arm.id = "";
   });
 
@@ -508,7 +508,7 @@ function zaehlungKopieren() {
     if (!zaehlungCopy.verkehrsbeziehungen) {
       zaehlungCopy.verkehrsbeziehungen = [];
     } else {
-      zaehlungCopy.verkehrsbeziehungen.forEach((vz: VerkehrsbeziehungDTO) => {
+      zaehlungCopy.verkehrsbeziehungen.forEach((vz: Verkehrsbeziehung) => {
         vz.id = "";
         if (vz.hochrechnungsfaktor) {
           vz.hochrechnungsfaktor.id = "";
@@ -523,7 +523,7 @@ function zaehlungKopieren() {
             gv: 0,
             active: true,
             defaultFaktor: false,
-          } as HochrechnungsfaktorDTO;
+          } as Hochrechnungsfaktor;
         }
       });
     }
@@ -538,7 +538,7 @@ function zaehlungKopieren() {
     if (!zaehlungCopy.querungsverkehr) {
       zaehlungCopy.querungsverkehr = [];
     } else {
-      zaehlungCopy.querungsverkehr.forEach((qv: QuerungsverkehrDTO) => {
+      zaehlungCopy.querungsverkehr.forEach((qv: Querungsverkehr) => {
         qv.id = "";
       });
     }
@@ -553,7 +553,7 @@ function zaehlungKopieren() {
     if (!zaehlungCopy.laengsverkehr) {
       zaehlungCopy.laengsverkehr = [];
     } else {
-      zaehlungCopy.laengsverkehr.forEach((lv: LaengsverkehrDTO) => {
+      zaehlungCopy.laengsverkehr.forEach((lv: Laengsverkehr) => {
         lv.id = "";
       });
     }

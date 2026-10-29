@@ -36,7 +36,7 @@
 </template>
 <script setup lang="ts">
 import type Lageplan from "@/types/lageplan/Lageplan";
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 
 import { computed, ref } from "vue";
 
@@ -52,7 +52,7 @@ withDefaults(defineProps<Props>(), {
   minheight: "160px",
 });
 
-const messstelle = defineModel<MessstelleEditDTO>({
+const messstelle = defineModel<MessstelleEdit>({
   required: true,
 });
 

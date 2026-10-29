@@ -1,6 +1,6 @@
 import type BaseEntity from "@/types/common/BaseEntity";
 
-export default interface PkwEinheitDTO extends BaseEntity {
+export default interface PkwEinheit extends BaseEntity {
   pkw: number;
   lkw: number;
   lastzuege: number;

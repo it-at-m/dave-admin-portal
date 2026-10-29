@@ -1,9 +1,9 @@
 import type { MessstelleKarteDTOStatusEnum, Verkehrsart } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
-import type MessfaehigkeitEditDTO from "@/types/messstelle/MessfaehigkeitEditDTO";
-import type MessquerschnittEditDTO from "@/types/messstelle/MessquerschnittEditDTO";
+import type MessfaehigkeitEdit from "@/types/messstelle/MessfaehigkeitEdit";
+import type MessquerschnittEdit from "@/types/messstelle/MessquerschnittEdit";
 
-export default interface MessstelleEditDTO extends BaseEntity {
+export default interface MessstelleEdit extends BaseEntity {
   mstId: string;
   name: string;
   status: MessstelleKarteDTOStatusEnum;
@@ -26,6 +26,6 @@ export default interface MessstelleEditDTO extends BaseEntity {
   sichtbarDatenportal: boolean;
   lageplanVorhanden: boolean;
 
-  messquerschnitte: Array<MessquerschnittEditDTO>;
-  messfaehigkeiten: Array<MessfaehigkeitEditDTO>;
+  messquerschnitte: Array<MessquerschnittEdit>;
+  messfaehigkeiten: Array<MessfaehigkeitEdit>;
 }

@@ -1,19 +1,19 @@
 import type BaseEntity from "@/types/common/BaseEntity";
 import type GeoPoint from "@/types/common/GeoPoint";
-import type PkwEinheitDTO from "@/types/common/PkwEinheitDTO";
+import type PkwEinheit from "@/types/common/PkwEinheit";
 import type Fahrzeug from "@/types/enum/Fahrzeug";
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
-import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
-import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
-import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
+import type Knotenarm from "@/types/zaehlung/Knotenarm";
+import type Laengsverkehr from "@/types/zaehlung/Laengsverkehr";
+import type Querungsverkehr from "@/types/zaehlung/Querungsverkehr";
+import type Verkehrsbeziehung from "@/types/zaehlung/Verkehrsbeziehung";
 
+import { Zaehldauer } from "@/api/client";
 import Quelle from "@/types/enum/Quelle";
 import Status from "@/types/enum/Status";
 import Wetter from "@/types/enum/Wetter";
 import Zaehlart from "@/types/enum/Zaehlart";
-import Zaehldauer from "@/types/enum/Zaehldauer";
 
-export default interface ZaehlungDTO extends BaseEntity {
+export default interface Zaehlung extends BaseEntity {
   datum: string;
   punkt: GeoPoint;
   projektNummer: string;
@@ -30,12 +30,12 @@ export default interface ZaehlungDTO extends BaseEntity {
   zaehldauer: Zaehldauer;
   quelle: Quelle;
   zaehlart: Zaehlart;
-  knotenarme: KnotenarmDTO[];
-  laengsverkehr: LaengsverkehrDTO[];
-  querungsverkehr: QuerungsverkehrDTO[];
-  verkehrsbeziehungen: VerkehrsbeziehungDTO[];
+  knotenarme: Knotenarm[];
+  laengsverkehr: Laengsverkehr[];
+  querungsverkehr: Querungsverkehr[];
+  verkehrsbeziehungen: Verkehrsbeziehung[];
   kategorien: Array<Fahrzeug>;
-  pkwEinheit: PkwEinheitDTO;
+  pkwEinheit: PkwEinheit;
   customSuchwoerter: string[];
   unreadMessagesMobilitaetsreferat: boolean;
   monat: string;

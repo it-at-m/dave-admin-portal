@@ -226,7 +226,7 @@
 </template>
 
 <script setup lang="ts">
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
 
 import { cloneDeep, isEmpty, isNumber } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
@@ -256,7 +256,7 @@ const hofaMatrizen = ref<Set<string>>(new Set<string>());
 const defaultFaktorPerMatrix = ref<Map<string, boolean>>(
   new Map<string, boolean>()
 );
-const hochrechnungsfaktoren = ref<Array<HochrechnungsfaktorDTO>>([]);
+const hochrechnungsfaktoren = ref<Array<Hochrechnungsfaktor>>([]);
 const editHochrechnungsfaktor = ref(
   DefaultObjectCreator.createDefaultHochrechnungsfaktor()
 );
@@ -381,7 +381,7 @@ const disableSpeicherButton = computed(() => {
  *
  * @param item das Item was gelöscht werden soll.
  */
-function deleteItem(item: HochrechnungsfaktorDTO) {
+function deleteItem(item: Hochrechnungsfaktor) {
   editIndex.value = hochrechnungsfaktoren.value.indexOf(item);
   editHochrechnungsfaktor.value = cloneDeep(item);
   showDeleteDialog.value = true;
@@ -427,7 +427,7 @@ function closeDelete() {
  * Öffnet den Dialog zum Ändern eines items.
  * @param item zum Ändern.
  */
-function editItem(item: HochrechnungsfaktorDTO) {
+function editItem(item: Hochrechnungsfaktor) {
   editIndex.value = hochrechnungsfaktoren.value.indexOf(item);
   editHochrechnungsfaktor.value = cloneDeep(item);
   showEditDialog.value = true;
@@ -494,7 +494,7 @@ function closeEditItemDialog() {
  */
 function getAllHochrechnungsfaktoren() {
   HochrechnungsfaktorService.getAllHochrechnungsfaktoren()
-    .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
+    .then((faktoren: Array<Hochrechnungsfaktor>) => {
       hochrechnungsfaktorStore.setHochrechnungsfaktoren(cloneDeep(faktoren));
       hochrechnungsfaktoren.value =
         hochrechnungsfaktorStore.getHochrechnungsfaktorenWithDefaultAtFirstPosition;

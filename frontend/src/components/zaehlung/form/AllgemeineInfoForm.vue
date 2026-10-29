@@ -225,7 +225,7 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { cloneDeep, isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref } from "vue";
@@ -233,7 +233,7 @@ import { computed, onMounted, ref } from "vue";
 import { quelleDropDown } from "@/types/enum/Quelle";
 import Status from "@/types/enum/Status";
 import { zaehlartenDropDown } from "@/types/enum/Zaehlart";
-import { zaehldauerDropDown } from "@/types/enum/Zaehldauer";
+import { zaehldauerDropDown } from "@/types/enum/ZaehldauerText";
 import { useDateUtils } from "@/util/DateUtils";
 
 interface Props {
@@ -241,7 +241,7 @@ interface Props {
 }
 defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
+const zaehlung = defineModel<Zaehlung>("zaehlung", {
   required: true,
 });
 const isValid = defineModel<boolean | null>("isValid", {

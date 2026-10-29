@@ -83,7 +83,6 @@ export * from "./Heading4Asset";
 export * from "./Heading5Asset";
 export * from "./Himmelsrichtung";
 export * from "./Hochrechnung";
-export * from "./Hochrechnungsfaktor";
 export * from "./HochrechnungsfaktorDTO";
 export * from "./HochrechnungsfaktorRequestBody";
 export * from "./ImageAsset";

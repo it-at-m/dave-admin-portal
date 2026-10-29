@@ -3,7 +3,7 @@ import type BaseEntity from "@/types/common/BaseEntity";
 import Status from "@/types/enum/Status";
 import Zaehlart from "@/types/enum/Zaehlart";
 
-export default interface OpenZaehlungDTO extends BaseEntity {
+export default interface OpenZaehlung extends BaseEntity {
   // ZaehlstellenInfos
   zaehlstellenNummer: string;
   zaehlstellenId: string;

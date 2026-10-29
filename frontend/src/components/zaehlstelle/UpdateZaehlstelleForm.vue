@@ -97,7 +97,7 @@
 
 <script setup lang="ts">
 import type GeoPoint from "@/types/common/GeoPoint";
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
+import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";
@@ -111,7 +111,7 @@ import { StadtbezirkToBeschreibung } from "@/types/enum/Stadtbezirk";
 import { StadtbezirksviertelToBeschreibung } from "@/types/enum/Stadtbezirksviertel";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
-const zaehlstelle = defineModel<ZaehlstelleDTO>({
+const zaehlstelle = defineModel<Zaehlstelle>({
   required: true,
 });
 

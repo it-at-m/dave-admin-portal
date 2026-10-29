@@ -1,4 +1,4 @@
-export default interface MessfaehigkeitEditDTO {
+export default interface MessfaehigkeitEdit {
   gueltigAb: string;
   gueltigBis: string;
   intervall: string;

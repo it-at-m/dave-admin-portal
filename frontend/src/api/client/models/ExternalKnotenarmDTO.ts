@@ -25,7 +25,7 @@ export interface ExternalKnotenarmDTO {
    * @type {number}
    * @memberof ExternalKnotenarmDTO
    */
-  nummer?: number;
+  nummer: number;
   /**
    *
    * @type {string}
@@ -46,6 +46,7 @@ export interface ExternalKnotenarmDTO {
 export function instanceOfExternalKnotenarmDTO(
   value: object
 ): value is ExternalKnotenarmDTO {
+  if (!("nummer" in value) || value["nummer"] === undefined) return false;
   return true;
 }
 
@@ -61,7 +62,7 @@ export function ExternalKnotenarmDTOFromJSONTyped(
     return json;
   }
   return {
-    nummer: json["nummer"] == null ? undefined : json["nummer"],
+    nummer: json["nummer"],
     filename: json["filename"] == null ? undefined : json["filename"],
     strassenname:
       json["strassenname"] == null ? undefined : json["strassenname"],

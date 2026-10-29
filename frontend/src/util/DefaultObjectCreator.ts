@@ -7,10 +7,10 @@ import type {
   TenantConfigurationDTO,
   ZaehlstelleConfigurationDTO,
 } from "@/api/client";
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
+import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
+import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { LatLng } from "leaflet";
 
@@ -42,8 +42,8 @@ export default class DefaultObjectCreator {
     );
   }
 
-  public static createDefaultZaehlungDTO(): ZaehlungDTO {
-    const zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
+  public static createDefaultZaehlungDTO(): Zaehlung {
+    const zaehlung: Zaehlung = {} as Zaehlung;
     zaehlung.customSuchwoerter = [];
     zaehlung.knotenarme = [];
     zaehlung.querungsverkehr = [];
@@ -58,15 +58,15 @@ export default class DefaultObjectCreator {
     return zaehlung;
   }
 
-  public static createDefaultZaehlstelleDTO(): ZaehlstelleDTO {
-    const zaehlstelle: ZaehlstelleDTO = {} as ZaehlstelleDTO;
+  public static createDefaultZaehlstelleDTO(): Zaehlstelle {
+    const zaehlstelle: Zaehlstelle = {} as Zaehlstelle;
     zaehlstelle.sichtbarDatenportal = true;
     zaehlstelle.customSuchwoerter = [];
     return zaehlstelle;
   }
 
-  public static createDefaultMessstelleEditDTO(): MessstelleEditDTO {
-    const messstelle: MessstelleEditDTO = {} as MessstelleEditDTO;
+  public static createDefaultMessstelleEditDTO(): MessstelleEdit {
+    const messstelle: MessstelleEdit = {} as MessstelleEdit;
     messstelle.sichtbarDatenportal = false;
     messstelle.lageplanVorhanden = false;
     messstelle.status = MessstelleKarteDTOStatusEnum.InPlanung;
@@ -75,8 +75,8 @@ export default class DefaultObjectCreator {
     return messstelle;
   }
 
-  public static createDefaultHochrechnungsfaktor(): HochrechnungsfaktorDTO {
-    const faktor: HochrechnungsfaktorDTO = {} as HochrechnungsfaktorDTO;
+  public static createDefaultHochrechnungsfaktor(): Hochrechnungsfaktor {
+    const faktor: Hochrechnungsfaktor = {} as Hochrechnungsfaktor;
     faktor.matrix = "";
     faktor.kfz = 1;
     faktor.sv = 1;

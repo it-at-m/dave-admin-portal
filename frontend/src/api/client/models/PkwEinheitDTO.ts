@@ -65,7 +65,7 @@ export interface PkwEinheitDTO {
 }
 
 /**
- * Check if a given object implements the PkwEinheitDTO interface.
+ * Check if a given object implements the PkwEinheit interface.
  */
 export function instanceOfPkwEinheitDTO(value: object): value is PkwEinheitDTO {
   return true;

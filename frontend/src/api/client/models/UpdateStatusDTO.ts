@@ -41,7 +41,7 @@ export interface UpdateStatusDTO {
 }
 
 /**
- * Check if a given object implements the UpdateStatusDTO interface.
+ * Check if a given object implements the UpdateStatus interface.
  */
 export function instanceOfUpdateStatusDTO(
   value: object

@@ -1,7 +1,7 @@
 import type { MessstelleKarteDTOStatusEnum } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
 
-export default interface MessstelleOverviewDTO extends BaseEntity {
+export default interface MessstelleOverview extends BaseEntity {
   mstId: string;
   name: string;
   status: MessstelleKarteDTOStatusEnum;

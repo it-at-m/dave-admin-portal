@@ -95,8 +95,8 @@
 </template>
 
 <script setup lang="ts">
-import type MessquerschnittEditDTO from "@/types/messstelle/MessquerschnittEditDTO";
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type MessquerschnittEdit from "@/types/messstelle/MessquerschnittEdit";
+import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 
 import { isEmpty, isNil } from "lodash";
 import { computed, ref } from "vue";
@@ -119,7 +119,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const messstelle = defineModel<MessstelleEditDTO>({
+const messstelle = defineModel<MessstelleEdit>({
   required: true,
 });
 
@@ -180,7 +180,7 @@ function areAllFormsValid(): boolean {
     .filter((mq) => {
       return isNil(mq.standort) || isEmpty(mq.standort);
     })
-    .map((messquerschnitt: MessquerschnittEditDTO) => {
+    .map((messquerschnitt: MessquerschnittEdit) => {
       return messquerschnitt.mqId;
     });
   const invalidMst =

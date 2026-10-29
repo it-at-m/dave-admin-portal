@@ -31,19 +31,19 @@ export interface ChatMessageDTO {
    * @type {string}
    * @memberof ChatMessageDTO
    */
-  zaehlungId?: string;
+  zaehlungId: string;
   /**
    *
    * @type {string}
    * @memberof ChatMessageDTO
    */
-  content?: string;
+  content: string;
   /**
    *
    * @type {number}
    * @memberof ChatMessageDTO
    */
-  participantId?: number;
+  participantId: number;
   /**
    *
    * @type {Date}
@@ -55,19 +55,19 @@ export interface ChatMessageDTO {
    * @type {string}
    * @memberof ChatMessageDTO
    */
-  type?: string;
+  type: string;
   /**
    *
    * @type {boolean}
    * @memberof ChatMessageDTO
    */
-  uploaded?: boolean;
+  uploaded: boolean;
   /**
    *
    * @type {boolean}
    * @memberof ChatMessageDTO
    */
-  viewed?: boolean;
+  viewed: boolean;
 }
 
 /**
@@ -76,7 +76,15 @@ export interface ChatMessageDTO {
 export function instanceOfChatMessageDTO(
   value: object
 ): value is ChatMessageDTO {
+  if (!("zaehlungId" in value) || value["zaehlungId"] === undefined)
+    return false;
+  if (!("content" in value) || value["content"] === undefined) return false;
+  if (!("participantId" in value) || value["participantId"] === undefined)
+    return false;
   if (!("timestamp" in value) || value["timestamp"] === undefined) return false;
+  if (!("type" in value) || value["type"] === undefined) return false;
+  if (!("uploaded" in value) || value["uploaded"] === undefined) return false;
+  if (!("viewed" in value) || value["viewed"] === undefined) return false;
   return true;
 }
 
@@ -93,14 +101,13 @@ export function ChatMessageDTOFromJSONTyped(
   }
   return {
     id: json["id"] == null ? undefined : json["id"],
-    zaehlungId: json["zaehlungId"] == null ? undefined : json["zaehlungId"],
-    content: json["content"] == null ? undefined : json["content"],
-    participantId:
-      json["participantId"] == null ? undefined : json["participantId"],
+    zaehlungId: json["zaehlungId"],
+    content: json["content"],
+    participantId: json["participantId"],
     timestamp: new Date(json["timestamp"]),
-    type: json["type"] == null ? undefined : json["type"],
-    uploaded: json["uploaded"] == null ? undefined : json["uploaded"],
-    viewed: json["viewed"] == null ? undefined : json["viewed"],
+    type: json["type"],
+    uploaded: json["uploaded"],
+    viewed: json["viewed"],
   };
 }
 

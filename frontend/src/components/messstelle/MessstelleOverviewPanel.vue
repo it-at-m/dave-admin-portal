@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleOverviewDTO from "@/types/messstelle/MessstelleOverviewDTO";
+import type MessstelleOverview from "@/types/messstelle/MessstelleOverview";
 
 import { useRouter } from "vue-router";
 
@@ -47,17 +47,17 @@ interface Props {
   header: string;
   icon: string;
   color: string;
-  messstellen: Array<MessstelleOverviewDTO>;
+  messstellen: Array<MessstelleOverview>;
 }
 
 defineProps<Props>();
 const router = useRouter();
 
-function getItemTitle(messstelle: MessstelleOverviewDTO): string {
+function getItemTitle(messstelle: MessstelleOverview): string {
   return `${messstelle.mstId}, ${messstelle.name}, Stadtbezirk ${messstelle.stadtbezirkNummer}, ${messstelle.stadtbezirk}`;
 }
 
-function openMessstelle(messstelle: MessstelleOverviewDTO): void {
+function openMessstelle(messstelle: MessstelleOverview): void {
   router.push(`/messstelle/${messstelle.id}`);
 }
 </script>

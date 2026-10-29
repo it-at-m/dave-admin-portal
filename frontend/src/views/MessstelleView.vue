@@ -50,7 +50,7 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -63,7 +63,7 @@ import { useEventbus } from "@/store/Eventbus";
 import { useDaveUtils } from "@/util/DaveUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
-const messstelle = ref<MessstelleEditDTO>(
+const messstelle = ref<MessstelleEdit>(
   DefaultObjectCreator.createDefaultMessstelleEditDTO()
 );
 const route = useRoute();

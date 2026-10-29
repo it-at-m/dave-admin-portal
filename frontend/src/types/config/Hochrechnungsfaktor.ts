@@ -1,6 +1,6 @@
 import type BaseEntity from "@/types/common/BaseEntity";
 
-export default interface HochrechnungsfaktorDTO extends BaseEntity {
+export default interface Hochrechnungsfaktor extends BaseEntity {
   /**
    * Der eindeutige Bezeichner.
    */

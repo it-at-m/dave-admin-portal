@@ -77,7 +77,7 @@ export interface OpenZaehlungDTO {
 }
 
 /**
- * Check if a given object implements the OpenZaehlungDTO interface.
+ * Check if a given object implements the OpenZaehlung interface.
  */
 export function instanceOfOpenZaehlungDTO(
   value: object

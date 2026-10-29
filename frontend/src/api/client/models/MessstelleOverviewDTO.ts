@@ -77,7 +77,7 @@ export interface MessstelleOverviewDTO {
 }
 
 /**
- * Check if a given object implements the MessstelleOverviewDTO interface.
+ * Check if a given object implements the MessstelleOverview interface.
  */
 export function instanceOfMessstelleOverviewDTO(
   value: object

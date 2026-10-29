@@ -91,13 +91,7 @@ export interface LadeZaehldatumDTO {
    * @type {number}
    * @memberof LadeZaehldatumDTO
    */
-  gesamt: number;
-  /**
-   *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
-   */
-  kfz: number;
+  schwerverkehr: number;
   /**
    *
    * @type {number}
@@ -115,13 +109,19 @@ export interface LadeZaehldatumDTO {
    * @type {number}
    * @memberof LadeZaehldatumDTO
    */
-  gueterverkehr: number;
+  kfz: number;
   /**
    *
    * @type {number}
    * @memberof LadeZaehldatumDTO
    */
-  schwerverkehr: number;
+  gesamt: number;
+  /**
+   *
+   * @type {number}
+   * @memberof LadeZaehldatumDTO
+   */
+  gueterverkehr: number;
 }
 
 /**
@@ -146,8 +146,8 @@ export function instanceOfLadeZaehldatumDTO(
     return false;
   if (!("pkwEinheiten" in value) || value["pkwEinheiten"] === undefined)
     return false;
-  if (!("gesamt" in value) || value["gesamt"] === undefined) return false;
-  if (!("kfz" in value) || value["kfz"] === undefined) return false;
+  if (!("schwerverkehr" in value) || value["schwerverkehr"] === undefined)
+    return false;
   if (
     !("anteilSchwerverkehrAnKfzProzent" in value) ||
     value["anteilSchwerverkehrAnKfzProzent"] === undefined
@@ -158,9 +158,9 @@ export function instanceOfLadeZaehldatumDTO(
     value["anteilGueterverkehrAnKfzProzent"] === undefined
   )
     return false;
+  if (!("kfz" in value) || value["kfz"] === undefined) return false;
+  if (!("gesamt" in value) || value["gesamt"] === undefined) return false;
   if (!("gueterverkehr" in value) || value["gueterverkehr"] === undefined)
-    return false;
-  if (!("schwerverkehr" in value) || value["schwerverkehr"] === undefined)
     return false;
   return true;
 }
@@ -188,12 +188,12 @@ export function LadeZaehldatumDTOFromJSONTyped(
     fahrradfahrer: json["fahrradfahrer"],
     fussgaenger: json["fussgaenger"],
     pkwEinheiten: json["pkwEinheiten"],
-    gesamt: json["gesamt"],
-    kfz: json["kfz"],
+    schwerverkehr: json["schwerverkehr"],
     anteilSchwerverkehrAnKfzProzent: json["anteilSchwerverkehrAnKfzProzent"],
     anteilGueterverkehrAnKfzProzent: json["anteilGueterverkehrAnKfzProzent"],
+    kfz: json["kfz"],
+    gesamt: json["gesamt"],
     gueterverkehr: json["gueterverkehr"],
-    schwerverkehr: json["schwerverkehr"],
   };
 }
 
@@ -221,11 +221,11 @@ export function LadeZaehldatumDTOToJSONTyped(
     fahrradfahrer: value["fahrradfahrer"],
     fussgaenger: value["fussgaenger"],
     pkwEinheiten: value["pkwEinheiten"],
-    gesamt: value["gesamt"],
-    kfz: value["kfz"],
+    schwerverkehr: value["schwerverkehr"],
     anteilSchwerverkehrAnKfzProzent: value["anteilSchwerverkehrAnKfzProzent"],
     anteilGueterverkehrAnKfzProzent: value["anteilGueterverkehrAnKfzProzent"],
+    kfz: value["kfz"],
+    gesamt: value["gesamt"],
     gueterverkehr: value["gueterverkehr"],
-    schwerverkehr: value["schwerverkehr"],
   };
 }

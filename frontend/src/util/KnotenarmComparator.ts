@@ -1,4 +1,4 @@
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type Knotenarm from "@/types/zaehlung/Knotenarm";
 
 export default class KnotenarmComparator {
   /**
@@ -7,7 +7,7 @@ export default class KnotenarmComparator {
    * @param a
    * @param b
    */
-  public static sortByNumber(a: KnotenarmDTO, b: KnotenarmDTO): number {
+  public static sortByNumber(a: Knotenarm, b: Knotenarm): number {
     if (a.nummer < b.nummer) {
       return -1;
     }

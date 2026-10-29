@@ -205,9 +205,9 @@
 
 <script setup lang="ts">
 import type GeoPoint from "@/types/common/GeoPoint";
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
+import type Knotenarm from "@/types/zaehlung/Knotenarm";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";
@@ -221,12 +221,12 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 interface Props {
   height: string;
-  zaehlstelle: ZaehlstelleDTO;
+  zaehlstelle: Zaehlstelle;
   isKnotenLageFormValid: boolean;
 }
 const props = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
+const zaehlung = defineModel<Zaehlung>("zaehlung", {
   required: true,
 });
 
@@ -259,7 +259,7 @@ function resetForm() {
   strassen.value = ["", "", "", "", "", "", "", ""];
 
   // Straßennamen neu setzen, wenn vorhanden
-  zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
+  zaehlung.value.knotenarme.forEach((arm: Knotenarm) => {
     strassen.value[arm.nummer - 1] = arm.strassenname;
   });
 }
@@ -271,14 +271,14 @@ function updateModel(knotenarmnummer: number, strassenname: string) {
   } else {
     // Add or update
     let updated = false;
-    zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
+    zaehlung.value.knotenarme.forEach((arm: Knotenarm) => {
       if (arm.nummer === knotenarmnummer) {
         arm.strassenname = strassenname;
         updated = true;
       }
     });
     if (!updated) {
-      const knotenarm: KnotenarmDTO = {} as KnotenarmDTO;
+      const knotenarm: Knotenarm = {} as Knotenarm;
       knotenarm.nummer = knotenarmnummer;
       knotenarm.strassenname = strassenname.trim();
       zaehlung.value.knotenarme.push(knotenarm);
@@ -288,13 +288,11 @@ function updateModel(knotenarmnummer: number, strassenname: string) {
 
 function deleteKnotenarm(nummer: number) {
   let toDelete = -1;
-  zaehlung.value.knotenarme.forEach(
-    (knotenarm: KnotenarmDTO, index: number) => {
-      if (knotenarm.nummer === nummer) {
-        toDelete = index;
-      }
+  zaehlung.value.knotenarme.forEach((knotenarm: Knotenarm, index: number) => {
+    if (knotenarm.nummer === nummer) {
+      toDelete = index;
     }
-  );
+  });
   if (toDelete > -1) {
     zaehlung.value.knotenarme.splice(toDelete, 1);
   }

@@ -73,12 +73,12 @@
 <script setup lang="ts">
 import type {
   BackendIdDTO,
+  ErhebungsstelleKarteDTO,
   MessstelleKarteDTO,
   MessstelleTooltipDTO,
   ZaehlstelleKarteDTO,
   ZaehlstelleTooltipDTO,
 } from "@/api/client";
-import type AnzeigeKarte from "@/types/karte/AnzeigeKarte";
 import type { LeafletMouseEvent } from "leaflet";
 
 import L, { Icon, LatLng, latLng, Marker } from "leaflet";
@@ -425,7 +425,8 @@ function setMarkerToMap() {
     spiderfyOnMaxZoom: false,
     chunkedLoading: true,
   });
-  const erhebungsstellenKarte: Array<AnzeigeKarte> = searchResult.value;
+  const erhebungsstellenKarte: Array<ErhebungsstelleKarteDTO> =
+    searchResult.value;
   const markers: Array<Marker> = [];
   erhebungsstellenKarte.forEach((erhebungsstelleKarte) => {
     if (erhebungsstelleKarte.type != "messstelle") {
@@ -497,7 +498,7 @@ function routeToMessstelle(id: string) {
   router.push(`/messstelle/${id}`);
 }
 
-function createLatLng(anzeigeKarte: AnzeigeKarte): LatLng {
+function createLatLng(anzeigeKarte: ErhebungsstelleKarteDTO): LatLng {
   return latLng(anzeigeKarte.latitude, anzeigeKarte.longitude);
 }
 
@@ -508,10 +509,13 @@ function createMarkerForZaehlstelle(
     createLatLng(zaehlstelleKarte),
     markerOptionsZaehlstelle(zaehlstelleKarte)
   );
-  marker.bindTooltip(createTooltipZaehlstelle(zaehlstelleKarte.tooltip), {
-    direction: "top",
-    offset: [-14, 0],
-  });
+  marker.bindTooltip(
+    createTooltipZaehlstelle(zaehlstelleKarte.tooltip as ZaehlstelleTooltipDTO),
+    {
+      direction: "top",
+      offset: [-14, 0],
+    }
+  );
 
   marker.on("click", () => {
     // Zeige alle Zaehlungen zur Zaehlstelle an.
@@ -527,10 +531,13 @@ function createMarkerForMessstelle(
     createLatLng(messstelleKarteDto),
     markerOptionsMessstelle(messstelleKarteDto)
   );
-  marker.bindTooltip(createTooltipMessstelle(messstelleKarteDto.tooltip), {
-    direction: "top",
-    offset: [0, -25],
-  });
+  marker.bindTooltip(
+    createTooltipMessstelle(messstelleKarteDto.tooltip as MessstelleTooltipDTO),
+    {
+      direction: "top",
+      offset: [0, -25],
+    }
+  );
   marker.on("click", () => {
     routeToMessstelle(messstelleKarteDto.id);
   });

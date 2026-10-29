@@ -1,8 +1,8 @@
 import type BaseEntity from "@/types/common/BaseEntity";
 import type GeoPoint from "@/types/common/GeoPoint";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
-export default interface ZaehlstelleDTO extends BaseEntity {
+export default interface Zaehlstelle extends BaseEntity {
   nummer: string;
   name: string;
   stadtbezirk: string;
@@ -11,7 +11,7 @@ export default interface ZaehlstelleDTO extends BaseEntity {
   lat: number;
   lng: number;
   customSuchwoerter: string[];
-  zaehlungen: ZaehlungDTO[];
+  zaehlungen: Zaehlung[];
   kommentar: string;
   sichtbarDatenportal: boolean;
 }
