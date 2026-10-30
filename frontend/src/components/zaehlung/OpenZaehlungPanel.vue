@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import type OpenZaehlungDTO from "@/types/zaehlung/OpenZaehlungDTO";
+import type OpenZaehlung from "@/types/zaehlung/OpenZaehlung";
 
 import { useRouter } from "vue-router";
 
@@ -51,7 +51,7 @@ import { useDateUtils } from "@/util/DateUtils";
 interface Props {
   header: string;
   statusDesign: IconOptions;
-  zaehlungen: Array<OpenZaehlungDTO>;
+  zaehlungen: Array<OpenZaehlung>;
 }
 
 defineProps<Props>();
@@ -59,17 +59,17 @@ defineProps<Props>();
 const router = useRouter();
 const dateUtils = useDateUtils();
 
-function getItemTitle(zaehlung: OpenZaehlungDTO) {
+function getItemTitle(zaehlung: OpenZaehlung) {
   return `Zählung vom ${dateUtils.getShortVersionOfDate(zaehlung.datum)} an Zählstelle ${zaehlung.zaehlstellenNummer} in ${zaehlung.stadtbezirk}`;
 }
 
-function getItemSubtitle(zaehlung: OpenZaehlungDTO) {
+function getItemSubtitle(zaehlung: OpenZaehlung) {
   return `Projektnummer: ${zaehlung.projektNummer}, Projektname: ${
     zaehlung.projektName
   }, Zählart: ${zaehlartText.get(zaehlung.zaehlart)}`;
 }
 
-function openZaehlung(zaehlung: OpenZaehlungDTO): void {
+function openZaehlung(zaehlung: OpenZaehlung): void {
   router.push(`/zaehlstelle/${zaehlung.zaehlstellenId}/${zaehlung.id}`);
 }
 </script>

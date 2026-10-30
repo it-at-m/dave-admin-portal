@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
+import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
 
 import { computed } from "vue";
 
@@ -39,7 +39,7 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const zaehlstelle = defineModel<ZaehlstelleDTO>({
+const zaehlstelle = defineModel<Zaehlstelle>({
   required: true,
 });
 

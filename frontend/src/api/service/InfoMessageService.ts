@@ -1,30 +1,34 @@
-import type InfoMessageDTO from "@/types/config/InfoMessageDTO";
+import type { InfoMessageDTO } from "@/api/client";
 
-import FetchService from "@/api/service/FetchService";
+import { Configuration, InfoMessageControllerApi } from "@/api/client";
+import BaseUrlProvider from "@/api/util/BaseUrlProvider";
+import { handleOpenApiError } from "@/api/util/OpenApiErrorHandler";
 
 export default class InfoMessageService {
-  private static readonly ENDPOINT: string =
-    "api/dave-backend-service/infomessage";
+  private static readonly ENDPOINT = `${BaseUrlProvider.getBaseUrl()}/api/dave-backend-service`;
+  private static readonly API = new InfoMessageControllerApi(
+    new Configuration({ basePath: this.ENDPOINT })
+  );
 
   static save(data: InfoMessageDTO): Promise<Array<InfoMessageDTO>> {
-    return FetchService.postData(
-      data,
-      `${this.ENDPOINT}/save`,
+    return handleOpenApiError(
+      this.API.saveInfoMessage({ infoMessageDTO: data }).then(
+        (response) => response
+      ),
       "Beim Speichern der Infonachricht ist ein Fehler aufgetreten. Bitte Daten kontrollieren."
     );
   }
 
   static getAllInfoMessages(): Promise<Array<InfoMessageDTO>> {
-    return FetchService.getData(
-      `${this.ENDPOINT}/all`,
+    return handleOpenApiError(
+      this.API.getAllInfoMessages().then((response) => response),
       "Beim Laden der Infonachrichten ist ein Fehler aufgetreten."
     );
   }
 
-  static setAllInfoMessagesInactive(): Promise<void> {
-    return FetchService.postData(
-      "",
-      `${this.ENDPOINT}/set-all-inactive`,
+  static setAllInfoMessagesInactive(): Promise<object> {
+    return handleOpenApiError(
+      this.API.setAllInfoMessagesInactive().then((response) => response),
       "Beim deaktivieren der Infonachricht ist ein Fehler aufgetreten."
     );
   }

@@ -93,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
+import type { ConfigurationDTO } from "@/api/client";
 
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
