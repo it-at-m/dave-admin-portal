@@ -10,7 +10,7 @@ spring:
     timeout: 36000  # in seconds; Goal: same lifetime as SSO Session (e.g. 10 hours)
 
 server:
-  port: 8083
+  port: 8084
   error:
     include-exception: false
     include-stacktrace: never
@@ -25,8 +25,8 @@ management:
     web:
       cors:
         allowedOrigins:
-          - "http://localhost:8085"
-          - "http://127.0.0.1:8085"
+          - "http://localhost:8083"
+          - "http://127.0.0.1:8083"
         allowedMethods: "*"
         allowedHeaders: "*"
         allowCredentials: on
