@@ -72,7 +72,7 @@ export default class ZaehlstellenService {
       lat: obj.lat,
       lng: obj.lng,
       customSuchwoerter: obj.customSuchwoerter,
-      zaehlungen: obj.zaehlungen.map((z) => this.mapToZaehlung(z)),
+      zaehlungen: obj.zaehlungen?.map((z) => this.mapToZaehlung(z)),
       kommentar: obj.kommentar,
       sichtbarDatenportal: obj.sichtbarDatenportal,
     };
