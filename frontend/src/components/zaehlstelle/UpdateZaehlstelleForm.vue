@@ -126,7 +126,7 @@ const newSuchwort = ref("");
 
 const coords = computed(() => {
   const punkt: GeoPoint = zaehlstelle.value.punkt;
-  if (punkt) return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+  if (punkt) return new LatLng(punkt.lat || 0, punkt.lon || 0);
   else return DefaultObjectCreator.createCenterOfMunichLatLng();
 });
 
@@ -194,7 +194,7 @@ function updateZaehlstellenCoords(newCoords: LatLng): void {
   if (!zaehlstelle.value.punkt) {
     zaehlstelle.value.punkt = {} as GeoPoint;
   }
-  zaehlstelle.value.punkt.lat = newCoords.lat.toString();
-  zaehlstelle.value.punkt.lon = newCoords.lng.toString();
+  zaehlstelle.value.punkt.lat = newCoords.lat;
+  zaehlstelle.value.punkt.lon = newCoords.lng;
 }
 </script>

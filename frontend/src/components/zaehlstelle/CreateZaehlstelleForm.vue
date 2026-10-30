@@ -321,7 +321,7 @@ function updateZaehlstellenCoords(newCoords: LatLng): void {
   if (!zaehlstelle.value.punkt) {
     zaehlstelle.value.punkt = {} as GeoPoint;
   }
-  zaehlstelle.value.punkt.lat = newCoords.lat.toString();
-  zaehlstelle.value.punkt.lon = newCoords.lng.toString();
+  zaehlstelle.value.punkt.lat = newCoords.lat;
+  zaehlstelle.value.punkt.lon = newCoords.lng;
 }
 </script>

@@ -10,6 +10,7 @@ export const useHochrechnungsfaktorStore = defineStore(
   () => {
     const hochrechnungsfaktoren = ref<Array<HochrechnungsfaktorDTO>>([]);
     const getHochrechnungsfaktorenWithDefaultAtFirstPosition = computed(() => {
+      console.log("HRF");
       const defaultFactors = hochrechnungsfaktoren.value.filter(
         (hochrechnungsfaktor) => hochrechnungsfaktor.defaultFaktor
       );

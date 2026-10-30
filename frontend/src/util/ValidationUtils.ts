@@ -37,6 +37,8 @@ export function useValidationUtils() {
       // => Absolute Subtraktion der Kontenarmnummern muss immer 2 sein
       isValid =
         zaehlung.knotenarme.length === 2 &&
+        zaehlung.knotenarme[0].nummer !== undefined &&
+        zaehlung.knotenarme[1].nummer !== undefined &&
         Math.abs(
           zaehlung.knotenarme[0].nummer - zaehlung.knotenarme[1].nummer
         ) === 2;

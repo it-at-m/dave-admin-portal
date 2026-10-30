@@ -99,6 +99,7 @@ export default class ZaehlstellenService {
         heraus,
         vorbei,
         strassenseite,
+        hochrechnungsfaktor,
       }) => ({
         id,
         isKreuzung: !obj.kreisverkehr,
@@ -109,6 +110,7 @@ export default class ZaehlstellenService {
         heraus,
         vorbei,
         strassenseite,
+        hochrechnungsfaktor,
       })
     );
   }

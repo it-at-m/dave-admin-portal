@@ -109,6 +109,15 @@ watch(
   { deep: true, immediate: true }
 );
 
+watch(
+  () =>
+    hochrechnungsfaktorenStore.getHochrechnungsfaktorenWithDefaultAtFirstPosition,
+  () => {
+    updatePossibleVerkehrsbeziehungen();
+  },
+  { deep: true }
+);
+
 const isHochrechnungsfaktorEditable = computed(() => {
   return [Status.CREATED, Status.INSTRUCTED].includes(zaehlung.value.status);
 });
@@ -165,7 +174,10 @@ function updatePossibleVerkehrsbeziehungen(): void {
   allPossibleVerkehrsbeziehungen.value.forEach((pos: Verkehrsbeziehung) => {
     zaehlung.value.verkehrsbeziehungen.forEach((fahr: Verkehrsbeziehung) => {
       if (pos.von === fahr.von && pos.nach === fahr.nach) {
-        pos.hochrechnungsfaktor = cloneDeep(fahr.hochrechnungsfaktor);
+        // Bereits gespeicherte Beziehungen ohne Faktor verwenden den Standardfaktor.
+        if (fahr.hochrechnungsfaktor?.matrix) {
+          pos.hochrechnungsfaktor = cloneDeep(fahr.hochrechnungsfaktor);
+        }
         if (fahr.id) {
           pos.active = true;
         } else {

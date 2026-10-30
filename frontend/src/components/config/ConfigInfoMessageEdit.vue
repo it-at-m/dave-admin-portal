@@ -164,8 +164,8 @@ function resetDatum(): void {
 
 function saveDate(): void {
   if (datepickerModelVon.value && datepickerModelBis.value) {
-    activeInfoMessage.value.gueltigVon = datepickerModelVon.value.toISOString();
-    activeInfoMessage.value.gueltigBis = datepickerModelBis.value.toISOString();
+    activeInfoMessage.value.gueltigVon = datepickerModelVon.value;
+    activeInfoMessage.value.gueltigBis = datepickerModelBis.value;
     datepickerMenuModel.value = false;
   }
 }

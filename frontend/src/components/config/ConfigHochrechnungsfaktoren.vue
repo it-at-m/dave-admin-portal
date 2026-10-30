@@ -367,8 +367,11 @@ const disableSpeicherButton = computed(() => {
   return (
     isEmpty(matrix) ||
     hofaMatrizen.value.has(matrix) ||
+    !editHochrechnungsfaktor.value.kfz ||
     mustBePositivNumber(editHochrechnungsfaktor.value.kfz) !== true ||
+    !editHochrechnungsfaktor.value.sv ||
     mustBePositivNumber(editHochrechnungsfaktor.value.sv) !== true ||
+    !editHochrechnungsfaktor.value.gv ||
     mustBePositivNumber(editHochrechnungsfaktor.value.gv) !== true ||
     !checkForValidDefaultFactor(editHochrechnungsfaktor.value.defaultFaktor)
   );

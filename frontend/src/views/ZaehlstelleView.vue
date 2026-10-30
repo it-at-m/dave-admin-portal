@@ -297,7 +297,10 @@ const kreuzungsname = computed(() => {
  */
 const latlng = computed(() => {
   if (zaehlstelle.value.punkt != null) {
-    return [zaehlstelle.value.punkt.lat, zaehlstelle.value.punkt.lon];
+    return [
+      zaehlstelle.value.punkt.lat?.toString() || "0",
+      zaehlstelle.value.punkt.lon?.toString() || "0",
+    ];
   } else {
     return [];
   }

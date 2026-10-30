@@ -68,10 +68,10 @@ const daveUtils = useDaveUtils();
 function infoMessageToDateArray(infoMessage: InfoMessageDTO): Array<string> {
   const dates: Array<string> = [];
   if (infoMessage.gueltigVon) {
-    dates.push(infoMessage.gueltigVon.substring(0, 10));
+    dates.push(infoMessage.gueltigVon.toISOString());
   }
   if (infoMessage.gueltigBis) {
-    dates.push(infoMessage.gueltigBis.substring(0, 10));
+    dates.push(infoMessage.gueltigBis.toISOString());
   }
   return dates;
 }

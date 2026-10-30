@@ -147,6 +147,7 @@ function mapToBearbeiteZaehlungDTO(obj: Zaehlung): BearbeiteZaehlungDTO {
         heraus,
         vorbei,
         strassenseite,
+        hochrechnungsfaktor,
       }) => ({
         id,
         isKreuzung: !obj.kreisverkehr,
@@ -157,6 +158,7 @@ function mapToBearbeiteZaehlungDTO(obj: Zaehlung): BearbeiteZaehlungDTO {
         heraus,
         vorbei,
         strassenseite,
+        hochrechnungsfaktor,
       })
     ),
     unreadMessagesMobilitaetsreferat: obj.unreadMessagesMobilitaetsreferat,

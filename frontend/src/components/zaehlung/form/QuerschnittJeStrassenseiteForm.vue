@@ -446,7 +446,9 @@ const xCoordNumberTwo = 924;
 const yCoordNumberTwo = 700;
 
 const availableKnotenarmNummern = computed(() => {
-  return availableKnotenarme.value.map((arm) => arm.nummer);
+  return availableKnotenarme.value
+    .filter((arm) => arm.nummer)
+    .map((arm) => arm.nummer as number);
 });
 const availableKnotenarme = computed(() => {
   return zaehlung.value.knotenarme
