@@ -1,4 +1,4 @@
-import type Knotenarm from "@/types/zaehlung/Knotenarm";
+import type { Knotenarm } from "@/api/client";
 
 import { describe, expect, it } from "vitest";
 

@@ -1,5 +1,4 @@
 import type { DocumentDto } from "@/api/client";
-import type Lageplan from "@/types/lageplan/Lageplan";
 
 import { Configuration, LageplanControllerApi } from "@/api/client";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
@@ -11,7 +10,7 @@ export default class LageplanService {
     new Configuration({ basePath: this.ENDPOINT })
   );
 
-  static loadLageplan(messstelleId: string): Promise<Lageplan> {
+  static loadLageplan(messstelleId: string): Promise<DocumentDto> {
     return handleOpenApiError(
       this.API.loadLageplan({ mstId: messstelleId }).then((response) =>
         this.mapToLageplan(response)
@@ -20,7 +19,7 @@ export default class LageplanService {
     );
   }
 
-  private static mapToLageplan(dto: DocumentDto): Lageplan {
+  private static mapToLageplan(dto: DocumentDto): DocumentDto {
     return {
       url: dto.url ?? "",
     };

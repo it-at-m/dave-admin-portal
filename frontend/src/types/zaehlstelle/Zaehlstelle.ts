@@ -1,5 +1,5 @@
+import type { GeoPoint } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
-import type GeoPoint from "@/types/common/GeoPoint";
 import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 export default interface Zaehlstelle extends BaseEntity {

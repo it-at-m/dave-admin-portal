@@ -2,12 +2,12 @@ import type {
   ConfigurationDTO,
   DienstleisterDTO,
   EmailAddressDTO,
+  HochrechnungsfaktorDTO,
   MapConfigurationDTO,
   SearchAndFilterOptionsDTO,
   TenantConfigurationDTO,
   ZaehlstelleConfigurationDTO,
 } from "@/api/client";
-import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
 import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
 import type Zaehlung from "@/types/zaehlung/Zaehlung";
@@ -75,8 +75,8 @@ export default class DefaultObjectCreator {
     return messstelle;
   }
 
-  public static createDefaultHochrechnungsfaktor(): Hochrechnungsfaktor {
-    const faktor: Hochrechnungsfaktor = {} as Hochrechnungsfaktor;
+  public static createDefaultHochrechnungsfaktor(): HochrechnungsfaktorDTO {
+    const faktor: HochrechnungsfaktorDTO = {} as HochrechnungsfaktorDTO;
     faktor.matrix = "";
     faktor.kfz = 1;
     faktor.sv = 1;

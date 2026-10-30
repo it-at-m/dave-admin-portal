@@ -1250,7 +1250,7 @@
 </template>
 
 <script setup lang="ts">
-import type Knotenarm from "@/types/zaehlung/Knotenarm";
+import type { Knotenarm } from "@/api/client";
 import type Laengsverkehr from "@/types/zaehlung/Laengsverkehr";
 import type Querungsverkehr from "@/types/zaehlung/Querungsverkehr";
 import type Zaehlung from "@/types/zaehlung/Zaehlung";

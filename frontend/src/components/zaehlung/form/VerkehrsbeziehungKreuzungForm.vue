@@ -61,8 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
-import type Knotenarm from "@/types/zaehlung/Knotenarm";
+import type { HochrechnungsfaktorDTO, Knotenarm } from "@/api/client";
 import type Verkehrsbeziehung from "@/types/zaehlung/Verkehrsbeziehung";
 import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
@@ -128,7 +127,7 @@ const hochrechnungsfaktoreDropDown = computed(() => {
       .flatMap((value) => {
         return cloneDeep(value);
       });
-  const dropDown: Array<Hochrechnungsfaktor> = [...activeFactors];
+  const dropDown: Array<HochrechnungsfaktorDTO> = [...activeFactors];
 
   // Falls in Verkehrsbeziehung gespeicherter HOFA nachträglich inaktiv gesetzt wurde,
   // wird dieser trotzdem dem Dropdown hinzugefügt.
@@ -147,8 +146,8 @@ const hochrechnungsfaktoreDropDown = computed(() => {
 });
 
 function containsHochrechnungsfaktor(
-  activeFaktors: Array<Hochrechnungsfaktor>,
-  faktor: Hochrechnungsfaktor
+  activeFaktors: Array<HochrechnungsfaktorDTO>,
+  faktor: HochrechnungsfaktorDTO
 ): boolean {
   let contains = false;
   activeFaktors.forEach((value) => {
@@ -185,12 +184,12 @@ function calculateSelectAllModel(): void {
 }
 
 function calculatePossibleVerkehrsbeziehung(): Array<Verkehrsbeziehung> {
-  const standardFaktor: Hochrechnungsfaktor =
+  const standardFaktor: HochrechnungsfaktorDTO =
     hochrechnungsfaktorenStore.getStandardHochrechnungsfaktor;
   const allPossibleVerkehrsbeziehungen: Array<Verkehrsbeziehung> = [];
   const possibleArms: Array<number> = [];
   zaehlung.value.knotenarme.forEach((arm: Knotenarm) => {
-    possibleArms.push(arm.nummer);
+    if (arm.nummer) possibleArms.push(arm.nummer);
   });
   possibleArms.forEach((vonNummer: number) => {
     possibleArms.forEach((nachNummer: number) => {
@@ -222,7 +221,7 @@ function updateVerkehrsbeziehung(toSave: Verkehrsbeziehung): void {
   );
 }
 
-function getHochrechnungsfaktorAsText(hf: Hochrechnungsfaktor): string {
+function getHochrechnungsfaktorAsText(hf: HochrechnungsfaktorDTO): string {
   return ObjectToTextTranslator.getHochrechnungsfaktorAsText(hf);
 }
 

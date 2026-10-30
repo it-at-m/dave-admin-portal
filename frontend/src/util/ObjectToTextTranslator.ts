@@ -1,7 +1,9 @@
-import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
+import type { HochrechnungsfaktorDTO } from "@/api/client";
 
 export default class ObjectToTextTranslator {
-  public static getHochrechnungsfaktorAsText(hf: Hochrechnungsfaktor): string {
+  public static getHochrechnungsfaktorAsText(
+    hf: HochrechnungsfaktorDTO
+  ): string {
     return `${hf.matrix} - KFZ: ${hf.kfz} - SV: ${hf.sv} - GV: ${hf.gv}`;
   }
 }

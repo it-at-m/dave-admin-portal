@@ -1,5 +1,4 @@
 import type { PkwEinheitDTO } from "@/api/client";
-import type PkwEinheit from "@/types/common/PkwEinheit";
 
 import { Configuration, PkwEinheitControllerApi } from "@/api/client";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
@@ -11,7 +10,7 @@ export default class PkwEinheitenService {
     new Configuration({ basePath: this.ENDPOINT })
   );
 
-  static getPkweinheiten(): Promise<PkwEinheit> {
+  static getPkweinheiten(): Promise<PkwEinheitDTO> {
     return handleOpenApiError(
       this.API.getLatestPkwEinheiten().then((response) =>
         this.mapToPkwEinheit(response)
@@ -20,11 +19,8 @@ export default class PkwEinheitenService {
     );
   }
 
-  private static mapToPkwEinheit(dto: PkwEinheitDTO): PkwEinheit {
+  private static mapToPkwEinheit(dto: PkwEinheitDTO): PkwEinheitDTO {
     return {
-      id: "",
-      entityVersion: 0,
-      createdTime: "",
       pkw: dto.pkw || 0,
       lkw: dto.lkw || 0,
       lastzuege: dto.lastzuege || 0,

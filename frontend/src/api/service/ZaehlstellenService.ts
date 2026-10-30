@@ -1,16 +1,12 @@
 import type {
-  GeoPoint as ApiGeoPoint,
   BackendIdDTO,
   BearbeiteVerkehrsbeziehungDTO,
   BearbeiteZaehlstelleDTO,
   BearbeiteZaehlungDTO,
   LadeZaehlstelleWithUnreadMessageDTO,
   NextZaehlstellennummerDTO,
-  PkwEinheitDTO,
 } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
-import type GeoPoint from "@/types/common/GeoPoint";
-import type PkwEinheit from "@/types/common/PkwEinheit";
 import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
 import type Verkehrsbeziehung from "@/types/zaehlung/Verkehrsbeziehung";
 import type Zaehlung from "@/types/zaehlung/Zaehlung";
@@ -72,7 +68,7 @@ export default class ZaehlstellenService {
       nummer: obj.nummer,
       stadtbezirkNummer: obj.stadtbezirkNummer,
       stadtbezirk: obj.stadtbezirk,
-      punkt: this.mapToGeoPoint(obj.punkt),
+      punkt: obj.punkt,
       lat: obj.lat,
       lng: obj.lng,
       customSuchwoerter: obj.customSuchwoerter,
@@ -87,52 +83,6 @@ export default class ZaehlstellenService {
       id: id ?? "",
       entityVersion,
       createdTime: "",
-    };
-  }
-
-  private static mapToGeoPoint(point: GeoPoint): ApiGeoPoint;
-  private static mapToGeoPoint(point: ApiGeoPoint): GeoPoint;
-  private static mapToGeoPoint(
-    point: GeoPoint | ApiGeoPoint
-  ): GeoPoint | ApiGeoPoint {
-    if (typeof point.lat === "string" || typeof point.lon === "string") {
-      return {
-        lat: Number.parseFloat(String(point.lat ?? 0)),
-        lon: Number.parseFloat(String(point.lon ?? 0)),
-      };
-    }
-
-    return {
-      lat: String(point.lat ?? 0),
-      lon: String(point.lon ?? 0),
-    };
-  }
-
-  private static mapToPkwEinheit(dto: PkwEinheitDTO | undefined): PkwEinheit;
-  private static mapToPkwEinheit(
-    value: PkwEinheit | PkwEinheitDTO | undefined
-  ): PkwEinheit | PkwEinheitDTO {
-    if (value && "id" in value) {
-      return {
-        pkw: value.pkw,
-        lkw: value.lkw,
-        lastzuege: value.lastzuege,
-        busse: value.busse,
-        kraftraeder: value.kraftraeder,
-        fahrradfahrer: value.fahrradfahrer,
-        fussgaenger: value.fussgaenger,
-      };
-    }
-
-    return {
-      ...this.mapToBaseEntity(),
-      pkw: value?.pkw ?? 0,
-      lkw: value?.lkw ?? 0,
-      lastzuege: value?.lastzuege ?? 0,
-      busse: value?.busse ?? 0,
-      kraftraeder: value?.kraftraeder ?? 0,
-      fahrradfahrer: value?.fahrradfahrer ?? 0,
-      fussgaenger: value?.fussgaenger ?? 0,
     };
   }
 
@@ -227,7 +177,7 @@ export default class ZaehlstellenService {
       name: "",
       stadtbezirk: "",
       stadtbezirkNummer: 0,
-      punkt: this.mapToGeoPoint({ lat: dto.lat, lon: dto.lng }),
+      punkt: { lat: dto.lat, lon: dto.lng },
       lat: dto.lat ?? 0,
       lng: dto.lng ?? 0,
       customSuchwoerter: [],
@@ -256,7 +206,7 @@ export default class ZaehlstellenService {
       name: "",
       stadtbezirk: dto.stadtbezirk ?? "",
       stadtbezirkNummer: dto.stadtbezirkNummer,
-      punkt: this.mapToGeoPoint(dto.punkt ?? { lat: dto.lat, lon: dto.lng }),
+      punkt: dto.punkt,
       lat: dto.lat,
       lng: dto.lng,
       customSuchwoerter: dto.customSuchwoerter ?? [],
@@ -272,7 +222,7 @@ export default class ZaehlstellenService {
     return {
       ...this.mapToBaseEntity(dto.id),
       datum: dto.datum?.toISOString().substring(0, 10) ?? "",
-      punkt: this.mapToGeoPoint(dto.punkt ?? { lat: dto.lat, lon: dto.lng }),
+      punkt: dto.punkt ?? { lat: dto.lat, lon: dto.lng },
       projektNummer: dto.projektNummer ?? "",
       projektName: dto.projektName ?? "",
       kreuzungsname: dto.kreuzungsname ?? "",
@@ -312,7 +262,15 @@ export default class ZaehlstellenService {
         dto.kreisverkehr
       ),
       kategorien: (dto.kategorien ?? []) as Zaehlung["kategorien"],
-      pkwEinheit: this.mapToPkwEinheit(dto.pkwEinheit),
+      pkwEinheit: dto.pkwEinheit || {
+        pkw: 0,
+        lkw: 0,
+        lastzuege: 0,
+        busse: 0,
+        kraftraeder: 0,
+        fahrradfahrer: 0,
+        fussgaenger: 0,
+      },
       customSuchwoerter: dto.customSuchwoerter ?? [],
       unreadMessagesMobilitaetsreferat: dto.unreadMessagesMobilitaetsreferat,
       monat: dto.monat ?? "",
@@ -326,9 +284,9 @@ export default class ZaehlstellenService {
       id: obj.id,
       datum: new Date(obj.datum),
       zaehlart: obj.zaehlart,
-      punkt: this.mapToGeoPoint(obj.punkt),
-      lat: Number.parseFloat(obj.punkt.lat),
-      lng: Number.parseFloat(obj.punkt.lon),
+      punkt: obj.punkt,
+      lat: obj.punkt.lat || 0,
+      lng: obj.punkt.lon || 0,
       projektNummer: obj.projektNummer,
       projektName: obj.projektName,
       kreuzungsname: obj.kreuzungsname,
@@ -344,12 +302,12 @@ export default class ZaehlstellenService {
       zaehldauer: obj.zaehldauer,
       kommentar: obj.kommentar,
       customSuchwoerter: obj.customSuchwoerter,
-      pkwEinheit: this.mapToPkwEinheit(obj.pkwEinheit),
-      knotenarme: obj.knotenarme.map(({ nummer, strassenname }) => ({
-        nummer,
-        strassenname,
+      pkwEinheit: obj.pkwEinheit,
+      knotenarme: (obj.knotenarme ?? []).map(({ nummer, strassenname }) => ({
+        nummer: nummer ?? 0,
+        strassenname: strassenname ?? "",
       })),
-      laengsverkehr: obj.laengsverkehr.map(
+      laengsverkehr: (obj.laengsverkehr ?? []).map(
         ({ id, knotenarm, richtung, strassenseite }) => ({
           id,
           knotenarm,
@@ -357,7 +315,7 @@ export default class ZaehlstellenService {
           strassenseite,
         })
       ),
-      querungsverkehr: obj.querungsverkehr.map(
+      querungsverkehr: (obj.querungsverkehr ?? []).map(
         ({ id, knotenarm, richtung }) => ({ id, knotenarm, richtung })
       ),
       verkehrsbeziehungen: this.mapToBearbeiteVerkehrsbeziehungen(obj),

@@ -186,8 +186,7 @@
 </template>
 
 <script setup lang="ts">
-import type PkwEinheit from "@/types/common/PkwEinheit";
-import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
+import type { HochrechnungsfaktorDTO, PkwEinheitDTO } from "@/api/client";
 import type Zaehlung from "@/types/zaehlung/Zaehlung";
 import type ZaehlungCardObject from "@/types/zaehlung/ZaehlungCardObject";
 
@@ -257,7 +256,7 @@ const contentHeight = computed(() => {
 
 function loadHochrechnungsfaktoren() {
   HochrechnungsfaktorService.getAllHochrechnungsfaktoren()
-    .then((faktoren: Array<Hochrechnungsfaktor>) => {
+    .then((faktoren: Array<HochrechnungsfaktorDTO>) => {
       hochrechnungsfaktorStore.setHochrechnungsfaktoren(cloneDeep(faktoren));
     })
     .catch((error) => snackbarStore.showApiError(error));
@@ -265,7 +264,7 @@ function loadHochrechnungsfaktoren() {
 
 function loadPkwEinheiten() {
   PkwEinheitenService.getPkweinheiten()
-    .then((latest: PkwEinheit) => {
+    .then((latest: PkwEinheitDTO) => {
       pkweinheitStore.setPkwEinheit(cloneDeep(latest));
     })
     .catch((error) => snackbarStore.showApiError(error));

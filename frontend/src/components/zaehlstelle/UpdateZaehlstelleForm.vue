@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import type GeoPoint from "@/types/common/GeoPoint";
+import type { GeoPoint } from "@/api/client";
 import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
 
 import { LatLng } from "leaflet";

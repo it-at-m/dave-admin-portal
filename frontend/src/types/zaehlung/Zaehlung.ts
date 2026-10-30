@@ -1,8 +1,6 @@
+import type { GeoPoint, Knotenarm, PkwEinheitDTO } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
-import type GeoPoint from "@/types/common/GeoPoint";
-import type PkwEinheit from "@/types/common/PkwEinheit";
 import type Fahrzeug from "@/types/enum/Fahrzeug";
-import type Knotenarm from "@/types/zaehlung/Knotenarm";
 import type Laengsverkehr from "@/types/zaehlung/Laengsverkehr";
 import type Querungsverkehr from "@/types/zaehlung/Querungsverkehr";
 import type Verkehrsbeziehung from "@/types/zaehlung/Verkehrsbeziehung";
@@ -35,7 +33,7 @@ export default interface Zaehlung extends BaseEntity {
   querungsverkehr: Querungsverkehr[];
   verkehrsbeziehungen: Verkehrsbeziehung[];
   kategorien: Array<Fahrzeug>;
-  pkwEinheit: PkwEinheit;
+  pkwEinheit: PkwEinheitDTO;
   customSuchwoerter: string[];
   unreadMessagesMobilitaetsreferat: boolean;
   monat: string;

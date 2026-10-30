@@ -149,8 +149,11 @@
 </template>
 
 <script setup lang="ts">
-import type { BackendIdDTO, NextZaehlstellennummerDTO } from "@/api/client";
-import type GeoPoint from "@/types/common/GeoPoint";
+import type {
+  BackendIdDTO,
+  GeoPoint,
+  NextZaehlstellennummerDTO,
+} from "@/api/client";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isEqual, isNil } from "lodash";

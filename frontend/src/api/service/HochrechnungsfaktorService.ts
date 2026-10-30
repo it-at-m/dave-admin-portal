@@ -1,5 +1,4 @@
 import type { HochrechnungsfaktorDTO } from "@/api/client";
-import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
 
 import { Configuration, HochrechnungsfaktorControllerApi } from "@/api/client";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
@@ -11,7 +10,7 @@ export default class HochrechnungsfaktorService {
     new Configuration({ basePath: this.ENDPOINT })
   );
 
-  static getAllHochrechnungsfaktoren(): Promise<Array<Hochrechnungsfaktor>> {
+  static getAllHochrechnungsfaktoren(): Promise<Array<HochrechnungsfaktorDTO>> {
     return handleOpenApiError(
       this.API.getAllHochrechnungsfaktoren().then((response) =>
         response.map(this.mapToHochrechnungsfaktor)
@@ -21,8 +20,8 @@ export default class HochrechnungsfaktorService {
   }
 
   static postHochrechnungsfaktor(
-    data: Hochrechnungsfaktor
-  ): Promise<Hochrechnungsfaktor> {
+    data: HochrechnungsfaktorDTO
+  ): Promise<HochrechnungsfaktorDTO> {
     return handleOpenApiError(
       this.API.saveHochrechnungsfaktor({
         hochrechnungsfaktorDTO: {
@@ -39,8 +38,8 @@ export default class HochrechnungsfaktorService {
   }
 
   static putHochrechnungsfaktor(
-    data: Hochrechnungsfaktor
-  ): Promise<Hochrechnungsfaktor> {
+    data: HochrechnungsfaktorDTO
+  ): Promise<HochrechnungsfaktorDTO> {
     return handleOpenApiError(
       this.API.saveHochrechnungsfaktor({
         hochrechnungsfaktorDTO: {
@@ -56,7 +55,9 @@ export default class HochrechnungsfaktorService {
     );
   }
 
-  static deleteHochrechnungsfaktor(data: Hochrechnungsfaktor): Promise<object> {
+  static deleteHochrechnungsfaktor(
+    data: HochrechnungsfaktorDTO
+  ): Promise<object> {
     if (!data.id) {
       throw new Error(
         "Hochrechnungsfaktor mit leerer ID kann nicht gelöscht werden."
@@ -72,11 +73,10 @@ export default class HochrechnungsfaktorService {
 
   private static mapToHochrechnungsfaktor(
     dto: HochrechnungsfaktorDTO
-  ): Hochrechnungsfaktor {
+  ): HochrechnungsfaktorDTO {
     return {
       id: dto.id ?? "",
       entityVersion: dto.entityVersion ?? 0,
-      createdTime: "",
       matrix: dto.matrix,
       kfz: dto.kfz ?? 0,
       sv: dto.sv ?? 0,

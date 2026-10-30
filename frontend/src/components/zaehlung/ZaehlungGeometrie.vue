@@ -213,7 +213,7 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import type Knotenarm from "@/types/zaehlung/Knotenarm";
+import type { Knotenarm } from "@/api/client";
 
 import { computed } from "vue";
 

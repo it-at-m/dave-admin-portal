@@ -252,13 +252,15 @@
 </template>
 
 <script setup lang="ts">
-import type { BackendIdDTO, DienstleisterDTO } from "@/api/client";
-import type GeoPoint from "@/types/common/GeoPoint";
-import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
-import type Knotenarm from "@/types/zaehlung/Knotenarm";
+import type {
+  BackendIdDTO,
+  DienstleisterDTO,
+  GeoPoint,
+  HochrechnungsfaktorDTO,
+  UpdateStatusDTO,
+} from "@/api/client";
 import type Laengsverkehr from "@/types/zaehlung/Laengsverkehr";
 import type Querungsverkehr from "@/types/zaehlung/Querungsverkehr";
-import type UpdateStatus from "@/types/zaehlung/UpdateStatus";
 import type Verkehrsbeziehung from "@/types/zaehlung/Verkehrsbeziehung";
 import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
@@ -314,15 +316,15 @@ const isBeauftragen = ref(true);
 const showBeauftragenDialog = ref(false);
 
 const coordsZaehlstelle = computed(() => {
-  return createLatLngFromString(
-    properties.geoPointZaehlstelle.lat,
-    properties.geoPointZaehlstelle.lon
+  return new LatLng(
+    properties.geoPointZaehlstelle.lat || 0,
+    properties.geoPointZaehlstelle.lon || 0
   );
 });
 
 const coordsZaehlung = computed(() => {
   const geoPoint: GeoPoint = zaehlung.value.punkt;
-  return createLatLngFromString(geoPoint.lat, geoPoint.lon);
+  return new LatLng(geoPoint.lat || 0, geoPoint.lon || 0);
 });
 
 const datum = computed(() => {
@@ -393,14 +395,9 @@ const showButtonDienstleisterKorrigieren = computed(() => {
   );
 });
 
-// Erzeugt aus den String Koordinaten ein Objekt von Typ LatLng
-function createLatLngFromString(lat: string, lng: string): LatLng {
-  return new LatLng(parseFloat(lat), parseFloat(lng));
-}
-
 function zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
   loading.value = true;
-  const update: UpdateStatus = {} as UpdateStatus;
+  const update: UpdateStatusDTO = {} as UpdateStatusDTO;
   update.zaehlungId = zaehlung.value.id;
   update.status = Status.INSTRUCTED;
   update.dienstleisterkennung = dienstleister.kennung;
@@ -447,7 +444,7 @@ function deleteZaehlung() {
 
 function zaehlungFreigeben() {
   loading.value = true;
-  const update: UpdateStatus = {} as UpdateStatus;
+  const update: UpdateStatusDTO = {} as UpdateStatusDTO;
   update.zaehlungId = zaehlung.value.id;
   update.status = Status.ACTIVE;
   ZaehlungService.updateStatus(update)
@@ -465,7 +462,7 @@ function zaehlungFreigeben() {
 
 function zaehlungKorrigieren() {
   loading.value = true;
-  const update: UpdateStatus = {} as UpdateStatus;
+  const update: UpdateStatusDTO = {} as UpdateStatusDTO;
   update.zaehlungId = zaehlung.value.id;
   update.status = Status.CORRECTION;
   ZaehlungService.updateStatus(update)
@@ -500,9 +497,6 @@ function zaehlungKopieren() {
   zaehlungCopy.status = Status.CREATED;
   zaehlungCopy.dienstleisterkennung = "";
   zaehlungCopy.datum = new Date().toISOString().substring(0, 10);
-  zaehlungCopy.knotenarme.forEach((arm: Knotenarm) => {
-    arm.id = "";
-  });
 
   try {
     if (!zaehlungCopy.verkehrsbeziehungen) {
@@ -523,7 +517,7 @@ function zaehlungKopieren() {
             gv: 0,
             active: true,
             defaultFaktor: false,
-          } as Hochrechnungsfaktor;
+          } as HochrechnungsfaktorDTO;
         }
       });
     }

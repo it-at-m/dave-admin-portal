@@ -1,6 +1,5 @@
-import type { Himmelsrichtung } from "@/api/client";
+import type { Himmelsrichtung, HochrechnungsfaktorDTO } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
-import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
 
 export default interface Verkehrsbeziehung extends BaseEntity {
   // Kreuzung
@@ -15,7 +14,7 @@ export default interface Verkehrsbeziehung extends BaseEntity {
 
   strassenseite: Himmelsrichtung;
 
-  hochrechnungsfaktor: Hochrechnungsfaktor;
+  hochrechnungsfaktor: HochrechnungsfaktorDTO;
 
   // nur im Frontend
   active: boolean;

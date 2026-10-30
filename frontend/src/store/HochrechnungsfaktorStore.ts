@@ -1,4 +1,4 @@
-import type Hochrechnungsfaktor from "@/types/config/Hochrechnungsfaktor";
+import type { HochrechnungsfaktorDTO } from "@/api/client";
 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
@@ -8,7 +8,7 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 export const useHochrechnungsfaktorStore = defineStore(
   "hochrechnungsfaktorStore",
   () => {
-    const hochrechnungsfaktoren = ref<Array<Hochrechnungsfaktor>>([]);
+    const hochrechnungsfaktoren = ref<Array<HochrechnungsfaktorDTO>>([]);
     const getHochrechnungsfaktorenWithDefaultAtFirstPosition = computed(() => {
       const defaultFactors = hochrechnungsfaktoren.value.filter(
         (hochrechnungsfaktor) => hochrechnungsfaktor.defaultFaktor
@@ -19,9 +19,9 @@ export const useHochrechnungsfaktorStore = defineStore(
       return defaultFactors.concat(nonDefaultFactors);
     });
     const getStandardHochrechnungsfaktor = computed(() => {
-      let standardFaktor: Hochrechnungsfaktor =
+      let standardFaktor: HochrechnungsfaktorDTO =
         DefaultObjectCreator.createDefaultHochrechnungsfaktor();
-      hochrechnungsfaktoren.value.forEach((faktor: Hochrechnungsfaktor) => {
+      hochrechnungsfaktoren.value.forEach((faktor: HochrechnungsfaktorDTO) => {
         if (faktor.defaultFaktor) {
           standardFaktor = faktor;
         }
@@ -29,7 +29,7 @@ export const useHochrechnungsfaktorStore = defineStore(
       return standardFaktor;
     });
     // function()s become actions
-    function setHochrechnungsfaktoren(payload: Array<Hochrechnungsfaktor>) {
+    function setHochrechnungsfaktoren(payload: Array<HochrechnungsfaktorDTO>) {
       hochrechnungsfaktoren.value = payload;
     }
     return {

@@ -3,9 +3,9 @@ import type {
   BearbeiteZaehlungDTO,
   DienstleisterDTO,
   OpenZaehlungDTO,
+  UpdateStatusDTO,
 } from "@/api/client";
 import type OpenZaehlung from "@/types/zaehlung/OpenZaehlung";
-import type UpdateStatus from "@/types/zaehlung/UpdateStatus";
 import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { Configuration, ZaehlungControllerApi } from "@/api/client";
@@ -41,7 +41,7 @@ export default class ZaehlungService {
     );
   }
 
-  static updateStatus(data: UpdateStatus): Promise<BackendIdDTO> {
+  static updateStatus(data: UpdateStatusDTO): Promise<BackendIdDTO> {
     return handleOpenApiError(
       this.API.updateStatus({
         updateStatusDTO: {
@@ -99,12 +99,9 @@ function mapToBearbeiteZaehlungDTO(obj: Zaehlung): BearbeiteZaehlungDTO {
     id: obj.id,
     datum: new Date(obj.datum),
     zaehlart: obj.zaehlart,
-    punkt: {
-      lat: Number.parseFloat(obj.punkt.lat),
-      lon: Number.parseFloat(obj.punkt.lon),
-    },
-    lat: Number.parseFloat(obj.punkt.lat),
-    lng: Number.parseFloat(obj.punkt.lon),
+    punkt: obj.punkt,
+    lat: obj.punkt.lat || 0,
+    lng: obj.punkt.lon || 0,
     projektNummer: obj.projektNummer,
     projektName: obj.projektName,
     kreuzungsname: obj.kreuzungsname,
@@ -120,20 +117,12 @@ function mapToBearbeiteZaehlungDTO(obj: Zaehlung): BearbeiteZaehlungDTO {
     zaehldauer: obj.zaehldauer,
     kommentar: obj.kommentar,
     customSuchwoerter: obj.customSuchwoerter,
-    pkwEinheit: {
-      pkw: obj.pkwEinheit.pkw,
-      lkw: obj.pkwEinheit.lkw,
-      lastzuege: obj.pkwEinheit.lastzuege,
-      busse: obj.pkwEinheit.busse,
-      kraftraeder: obj.pkwEinheit.kraftraeder,
-      fahrradfahrer: obj.pkwEinheit.fahrradfahrer,
-      fussgaenger: obj.pkwEinheit.fussgaenger,
-    },
-    knotenarme: obj.knotenarme.map(({ nummer, strassenname }) => ({
-      nummer,
-      strassenname,
+    pkwEinheit: obj.pkwEinheit,
+    knotenarme: (obj.knotenarme ?? []).map(({ nummer, strassenname }) => ({
+      nummer: nummer ?? 0,
+      strassenname: strassenname ?? "",
     })),
-    laengsverkehr: obj.laengsverkehr.map(
+    laengsverkehr: (obj.laengsverkehr ?? []).map(
       ({ id, knotenarm, richtung, strassenseite }) => ({
         id,
         knotenarm,
@@ -141,11 +130,13 @@ function mapToBearbeiteZaehlungDTO(obj: Zaehlung): BearbeiteZaehlungDTO {
         strassenseite,
       })
     ),
-    querungsverkehr: obj.querungsverkehr.map(({ id, knotenarm, richtung }) => ({
-      id,
-      knotenarm,
-      richtung,
-    })),
+    querungsverkehr: (obj.querungsverkehr ?? []).map(
+      ({ id, knotenarm, richtung }) => ({
+        id,
+        knotenarm,
+        richtung,
+      })
+    ),
     verkehrsbeziehungen: obj.verkehrsbeziehungen.map(
       ({
         id,

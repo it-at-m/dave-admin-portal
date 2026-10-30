@@ -35,7 +35,7 @@
   </v-sheet>
 </template>
 <script setup lang="ts">
-import type Lageplan from "@/types/lageplan/Lageplan";
+import type { DocumentDto } from "@/api/client";
 import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 
 import { computed, ref } from "vue";
@@ -72,8 +72,10 @@ function loadLageplan() {
   }
   lageplanLoading.value = true;
   LageplanService.loadLageplan(messstelle.value.mstId)
-    .then((result: Lageplan) => {
-      window.open(result.url);
+    .then((result: DocumentDto) => {
+      if (result.url) {
+        window.open(result.url);
+      }
     })
     .catch((error) => {
       snackbarStore.showApiError(error);

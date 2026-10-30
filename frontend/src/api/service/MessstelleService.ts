@@ -1,14 +1,13 @@
 import type {
   EditMessfaehigkeitDTO as ApiEditMessfaehigkeitDTO,
   EditMessquerschnittDTO as ApiEditMessquerschnittDTO,
-  MessstelleOverviewDTO as ApiMessstelleOverviewDTO,
   BackendIdDTO,
   EditMessstelleDTO,
+  MessstelleOverviewDTO,
 } from "@/api/client";
 import type MessfaehigkeitEdit from "@/types/messstelle/MessfaehigkeitEdit";
 import type MessquerschnittEdit from "@/types/messstelle/MessquerschnittEdit";
 import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
-import type MessstelleOverview from "@/types/messstelle/MessstelleOverview";
 
 import {
   Configuration,
@@ -48,11 +47,9 @@ export default class MessstelleService {
     );
   }
 
-  static getAllMessstellenForOverview(): Promise<Array<MessstelleOverview>> {
+  static getAllMessstellenForOverview(): Promise<Array<MessstelleOverviewDTO>> {
     return handleOpenApiError(
-      this.API.getAllMessstellenForOverview().then((response) =>
-        this.mapToMessstelleOverview(response)
-      ),
+      this.API.getAllMessstellenForOverview().then((response) => response),
       "Beim Laden aller offenen Messstellen ist ein Fehler aufgetreten."
     );
   }
@@ -114,20 +111,10 @@ export default class MessstelleService {
       ),
     };
   }
-
-  private static mapToMessstelleOverview(
-    dtos: Array<ApiMessstelleOverviewDTO>
-  ): Array<MessstelleOverview> {
-    return dtos.map(
-      (dto): MessstelleOverview => ({
-        ...mapToMessstelleBasis(dto),
-      })
-    );
-  }
 }
 
 function mapToMessstelleBasis(
-  dto: EditMessstelleDTO | ApiMessstelleOverviewDTO
+  dto: EditMessstelleDTO | MessstelleOverviewDTO
 ): MessstelleBasis {
   return {
     id: dto.id ?? "",
