@@ -1,13 +1,14 @@
 import type { DocumentDto } from "@/api/client";
 
-import { Configuration, LageplanControllerApi } from "@/api/client";
+import { LageplanControllerApi } from "@/api/client";
+import createBackendApiConfiguration from "@/api/util/BackendApiConfiguration";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import { handleOpenApiError } from "@/api/util/OpenApiErrorHandler";
 
 export default class LageplanService {
   private static readonly ENDPOINT = `${BaseUrlProvider.getBaseUrl()}/api/dave-backend-service`;
   private static readonly API = new LageplanControllerApi(
-    new Configuration({ basePath: this.ENDPOINT })
+    createBackendApiConfiguration(this.ENDPOINT)
   );
 
   static loadLageplan(messstelleId: string): Promise<DocumentDto> {

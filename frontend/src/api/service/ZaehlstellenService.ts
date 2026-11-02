@@ -11,14 +11,15 @@ import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
 import type Verkehrsbeziehung from "@/types/zaehlung/Verkehrsbeziehung";
 import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
-import { Configuration, ZaehlstelleControllerApi } from "@/api/client";
+import { ZaehlstelleControllerApi } from "@/api/client";
+import createBackendApiConfiguration from "@/api/util/BackendApiConfiguration";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import { handleOpenApiError } from "@/api/util/OpenApiErrorHandler";
 
 export default class ZaehlstellenService {
   private static readonly ENDPOINT = `${BaseUrlProvider.getBaseUrl()}/api/dave-backend-service`;
   private static readonly API = new ZaehlstelleControllerApi(
-    new Configuration({ basePath: this.ENDPOINT })
+    createBackendApiConfiguration(this.ENDPOINT)
   );
 
   static getNextZaehlstellennummer(

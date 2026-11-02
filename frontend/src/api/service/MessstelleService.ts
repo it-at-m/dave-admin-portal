@@ -10,11 +10,11 @@ import type MessquerschnittEdit from "@/types/messstelle/MessquerschnittEdit";
 import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 
 import {
-  Configuration,
   MessstelleControllerApi,
   MessstelleKarteDTOStatusEnum,
   Verkehrsart,
 } from "@/api/client";
+import createBackendApiConfiguration from "@/api/util/BackendApiConfiguration";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import { handleOpenApiError } from "@/api/util/OpenApiErrorHandler";
 
@@ -35,7 +35,7 @@ type MessstelleBasis = Pick<
 export default class MessstelleService {
   private static readonly ENDPOINT = `${BaseUrlProvider.getBaseUrl()}/api/dave-backend-service`;
   private static readonly API = new MessstelleControllerApi(
-    new Configuration({ basePath: this.ENDPOINT })
+    createBackendApiConfiguration(this.ENDPOINT)
   );
 
   static getMessstelleToEdit(id: string): Promise<MessstelleEdit> {

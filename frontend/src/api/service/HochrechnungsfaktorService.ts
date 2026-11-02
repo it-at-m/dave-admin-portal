@@ -1,13 +1,14 @@
 import type { HochrechnungsfaktorDTO } from "@/api/client";
 
-import { Configuration, HochrechnungsfaktorControllerApi } from "@/api/client";
+import { HochrechnungsfaktorControllerApi } from "@/api/client";
+import createBackendApiConfiguration from "@/api/util/BackendApiConfiguration";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import { handleOpenApiError } from "@/api/util/OpenApiErrorHandler";
 
 export default class HochrechnungsfaktorService {
   private static readonly ENDPOINT = `${BaseUrlProvider.getBaseUrl()}/api/dave-backend-service`;
   private static readonly API = new HochrechnungsfaktorControllerApi(
-    new Configuration({ basePath: this.ENDPOINT })
+    createBackendApiConfiguration(this.ENDPOINT)
   );
 
   static getAllHochrechnungsfaktoren(): Promise<Array<HochrechnungsfaktorDTO>> {
