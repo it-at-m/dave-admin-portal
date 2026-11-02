@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import KnotenverkehrForm from "@/components/zaehlung/form/KnotenverkehrForm.vue";
 import QuerschnittJeStrassenseiteForm from "@/components/zaehlung/form/QuerschnittJeStrassenseiteForm.vue";
@@ -39,7 +39,7 @@ interface Props {
 }
 defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
+const zaehlung = defineModel<Zaehlung>("zaehlung", {
   required: true,
 });
 </script>

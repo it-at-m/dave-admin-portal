@@ -330,8 +330,7 @@
 </template>
 
 <script setup lang="ts">
-import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
-import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
+import type { DienstleisterDTO, EmailAddressDTO } from "@/api/client";
 
 import { cloneDeep, isEmpty } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";

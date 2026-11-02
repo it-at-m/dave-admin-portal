@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import type BackendIdDTO from "@/types/common/BackendIdDTO";
+import type { BackendIdDTO } from "@/api/client";
 
 import { LatLng } from "leaflet";
 import { computed } from "vue";

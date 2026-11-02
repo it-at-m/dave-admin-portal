@@ -95,20 +95,20 @@
 </template>
 
 <script setup lang="ts">
-import type MessquerschnittEditDTO from "@/types/messstelle/MessquerschnittEditDTO";
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type MessquerschnittEdit from "@/types/messstelle/MessquerschnittEdit";
+import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 
 import { isEmpty, isNil } from "lodash";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 
+import { MessstelleKarteDTOStatusEnum } from "@/api/client";
 import MessstelleService from "@/api/service/MessstelleService";
 import MessfaehigkeitForm from "@/components/messstelle/MessfaehigkeitForm.vue";
 import MessquerschnittForm from "@/components/messstelle/MessquerschnittForm.vue";
 import MessstelleForm from "@/components/messstelle/MessstelleForm.vue";
 import StandortTabItem from "@/components/messstelle/StandortTabItem.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import MessstelleStatus from "@/types/enum/MessstelleStatus";
 import { useDaveUtils } from "@/util/DaveUtils";
 
 const activeTab = ref(0);
@@ -119,7 +119,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const messstelle = defineModel<MessstelleEditDTO>({
+const messstelle = defineModel<MessstelleEdit>({
   required: true,
 });
 
@@ -137,7 +137,7 @@ const TAB_MESSFAEHIGKEIT = 2;
 const TAB_STANDORT = 3;
 
 const isMessstelleReadonly = computed(() => {
-  return messstelle.value.status === MessstelleStatus.IN_PLANUNG;
+  return messstelle.value.status === MessstelleKarteDTOStatusEnum.InPlanung;
 });
 /**
  * Berechnet die Höhe der Fläche unter den Tabs in "vh"
@@ -180,7 +180,7 @@ function areAllFormsValid(): boolean {
     .filter((mq) => {
       return isNil(mq.standort) || isEmpty(mq.standort);
     })
-    .map((messquerschnitt: MessquerschnittEditDTO) => {
+    .map((messquerschnitt: MessquerschnittEdit) => {
       return messquerschnitt.mqId;
     });
   const invalidMst =

@@ -1,4 +1,4 @@
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type { HochrechnungsfaktorDTO } from "@/api/client";
 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
@@ -10,6 +10,7 @@ export const useHochrechnungsfaktorStore = defineStore(
   () => {
     const hochrechnungsfaktoren = ref<Array<HochrechnungsfaktorDTO>>([]);
     const getHochrechnungsfaktorenWithDefaultAtFirstPosition = computed(() => {
+      console.log("HRF");
       const defaultFactors = hochrechnungsfaktoren.value.filter(
         (hochrechnungsfaktor) => hochrechnungsfaktor.defaultFaktor
       );
