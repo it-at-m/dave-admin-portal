@@ -29,7 +29,8 @@ export function handleOpenApiError<T>(
       if (response.status === 403) {
         throw new ApiError(
           Levels.ERROR,
-          "Sie haben nicht die nötigen Rechte um diese Aktion durchzuführen."
+          "Sie haben nicht die nötigen Rechte um diese Aktion durchzuführen.",
+          ""
         );
       }
       if (response.status === 409) {
@@ -43,7 +44,8 @@ export function handleOpenApiError<T>(
         location.reload();
         throw new ApiError(
           Levels.ERROR,
-          "Die Daten wurden in der Zwischenzeit verändert. Die Seite wird neu geladen."
+          "Die Daten wurden in der Zwischenzeit verändert. Die Seite wird neu geladen.",
+          ""
         );
       }
       if (response.type === RESPONSE_TYPE_OPAQUE_REDIRECT) {
