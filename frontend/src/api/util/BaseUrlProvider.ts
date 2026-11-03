@@ -6,17 +6,17 @@ export default class BaseUrlProvider {
 
   static getBaseUrl(): string {
     const location = window.location;
-    if (location.host === "localhost:8085") {
-      return `${location.protocol}//localhost:8083`;
+    if (location.host === "localhost:8083") {
+      return `${location.protocol}//localhost:8084`;
     }
     return `${location.protocol}//${location.host}`;
   }
 
   static getBaseUrlDatenportal(): string {
     const location = window.location;
-    if (location.host === "localhost:8085") {
+    if (location.host === "localhost:8083") {
       return `${location.protocol}//localhost:8081`;
-    } else if (location.host === "localhost:8083") {
+    } else if (location.host === "localhost:8084") {
       return `${location.protocol}//localhost:8082`;
     } else {
       // Ich bin auf dem Server und muss das Portal wechseln

@@ -14,16 +14,6 @@ export function useDateUtils() {
     return `${day}.${month}.${year}`;
   }
 
-  function sortDatesDescAsStrings(arrayToSort: string[]): string[] {
-    return arrayToSort.sort(function (a, b) {
-      return new Date(b).valueOf() - new Date(a).valueOf();
-    });
-  }
-
-  function isDateAfter(dateToCheck: string, dateAfter: Date | string): boolean {
-    return new Date(dateToCheck).valueOf() > new Date(dateAfter).valueOf();
-  }
-
   function formatDateForBackend(date: Date | string): string {
     if (!date) {
       return "";
@@ -69,16 +59,6 @@ export function useDateUtils() {
     return `${getShortVersionOfDate(date)} - ${getTimeOfDate(date)}`;
   }
 
-  function getLongVersionOfDate(date: Date | string): string {
-    if (!date) {
-      return "";
-    }
-    if (typeof date === "string") {
-      date = getDatumOfString(date);
-    }
-    return `${i18n.global.d(date, "long", "de-DE")}`;
-  }
-
   /**
    * es muss für i18n ein Datumsobjekt erzeugt werden.
    */
@@ -96,14 +76,11 @@ export function useDateUtils() {
   }
 
   return {
-    sortDatesDescAsStrings,
     formatDate,
-    isDateAfter,
     formatDateForBackend,
     getTimeOfDate,
     getShortVersionOfDate,
     getShortVersionOfDateWithTime,
-    getLongVersionOfDate,
     getDatumOfString,
   };
 }

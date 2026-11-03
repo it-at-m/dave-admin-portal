@@ -7,7 +7,7 @@
     <artifactId>dave-admin-portal</artifactId>
     <version>11.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>dave_adminportal_frontend</name>
+    <name>dave_adminportal</name>
 
     <scm>
         <connection>scm:git:https://github.com/it-at-m/dave-admin-portal.git</connection>
