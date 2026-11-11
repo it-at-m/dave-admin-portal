@@ -9,7 +9,7 @@ export default class FetchUtils {
     return {
       headers: this.getHeaders(),
       mode: "cors",
-      credentials: "same-origin",
+      credentials: "include",
       redirect: "manual",
     };
   }
@@ -24,7 +24,7 @@ export default class FetchUtils {
       body: JSON.stringify(body),
       headers: FetchUtils.getHeaders(),
       mode: "cors",
-      credentials: "same-origin",
+      credentials: "include",
       redirect: "manual",
     };
   }
@@ -41,7 +41,7 @@ export default class FetchUtils {
       body: JSON.stringify(body),
       headers: this.getHeadersWithEtag(body),
       mode: "cors",
-      credentials: "same-origin",
+      credentials: "include",
       redirect: "manual",
     };
   }
@@ -58,7 +58,7 @@ export default class FetchUtils {
       body: JSON.stringify(body),
       headers: this.getHeadersWithEtag(body),
       mode: "cors",
-      credentials: "same-origin",
+      credentials: "include",
       redirect: "manual",
     };
   }
@@ -73,7 +73,7 @@ export default class FetchUtils {
       method: "DELETE",
       headers: this.getHeadersWithEtag(body),
       mode: "cors",
-      credentials: "same-origin",
+      credentials: "include",
       redirect: "manual",
     };
   }
@@ -88,6 +88,20 @@ export default class FetchUtils {
       "Accept-Language": "de-DE",
       "X-XSRF-TOKEN": XsrfTokenExtractor.getXsrfToken().toString(),
     });
+  }
+
+  static getOpenApiFetch(): typeof fetch {
+    return (url, init) => {
+      const headers = new Headers(init?.headers);
+      this.getHeaders().forEach((value, key) => headers.set(key, value));
+      return fetch(url, {
+        ...init,
+        headers,
+        mode: "cors",
+        credentials: "include",
+        redirect: "manual",
+      });
+    };
   }
 
   /**

@@ -1,4 +1,4 @@
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type { HochrechnungsfaktorDTO } from "@/api/client";
 
 export default class ObjectToTextTranslator {
   public static getHochrechnungsfaktorAsText(

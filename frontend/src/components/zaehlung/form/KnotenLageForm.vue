@@ -204,10 +204,9 @@
 </template>
 
 <script setup lang="ts">
-import type GeoPoint from "@/types/common/GeoPoint";
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type { GeoPoint, Knotenarm } from "@/api/client";
+import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";
@@ -221,12 +220,12 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 interface Props {
   height: string;
-  zaehlstelle: ZaehlstelleDTO;
+  zaehlstelle: Zaehlstelle;
   isKnotenLageFormValid: boolean;
 }
 const props = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
+const zaehlung = defineModel<Zaehlung>("zaehlung", {
   required: true,
 });
 
@@ -259,8 +258,10 @@ function resetForm() {
   strassen.value = ["", "", "", "", "", "", "", ""];
 
   // Straßennamen neu setzen, wenn vorhanden
-  zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
-    strassen.value[arm.nummer - 1] = arm.strassenname;
+  zaehlung.value.knotenarme.forEach((arm: Knotenarm) => {
+    if (arm.nummer && arm.strassenname) {
+      strassen.value[arm.nummer - 1] = arm.strassenname;
+    }
   });
 }
 
@@ -271,14 +272,14 @@ function updateModel(knotenarmnummer: number, strassenname: string) {
   } else {
     // Add or update
     let updated = false;
-    zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
+    zaehlung.value.knotenarme.forEach((arm: Knotenarm) => {
       if (arm.nummer === knotenarmnummer) {
         arm.strassenname = strassenname;
         updated = true;
       }
     });
     if (!updated) {
-      const knotenarm: KnotenarmDTO = {} as KnotenarmDTO;
+      const knotenarm: Knotenarm = {} as Knotenarm;
       knotenarm.nummer = knotenarmnummer;
       knotenarm.strassenname = strassenname.trim();
       zaehlung.value.knotenarme.push(knotenarm);
@@ -288,13 +289,11 @@ function updateModel(knotenarmnummer: number, strassenname: string) {
 
 function deleteKnotenarm(nummer: number) {
   let toDelete = -1;
-  zaehlung.value.knotenarme.forEach(
-    (knotenarm: KnotenarmDTO, index: number) => {
-      if (knotenarm.nummer === nummer) {
-        toDelete = index;
-      }
+  zaehlung.value.knotenarme.forEach((knotenarm: Knotenarm, index: number) => {
+    if (knotenarm.nummer === nummer) {
+      toDelete = index;
     }
-  );
+  });
   if (toDelete > -1) {
     zaehlung.value.knotenarme.splice(toDelete, 1);
   }
@@ -349,7 +348,7 @@ function deleteAllQuerungsverkehrBeziehungenByKnotenarmnummer(nummer: number) {
 const coordsZaehlstelle = computed(() => {
   const punkt: GeoPoint = props.zaehlstelle.punkt;
   if (punkt) {
-    return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+    return new LatLng(punkt.lat || 0, punkt.lon || 0);
   } else {
     return DefaultObjectCreator.createCenterOfMunichLatLng();
   }
@@ -358,7 +357,7 @@ const coordsZaehlstelle = computed(() => {
 const coordsZaehlung = computed(() => {
   const punkt: GeoPoint = zaehlung.value.punkt;
   if (punkt) {
-    return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+    return new LatLng(punkt.lat || 0, punkt.lon || 0);
   } else {
     return coordsZaehlstelle.value;
   }
@@ -368,7 +367,7 @@ function updateZaehlungCoords(newCoords: LatLng): void {
   if (!zaehlung.value.punkt) {
     zaehlung.value.punkt = {} as GeoPoint;
   }
-  zaehlung.value.punkt.lat = newCoords.lat.toString();
-  zaehlung.value.punkt.lon = newCoords.lng.toString();
+  zaehlung.value.punkt.lat = newCoords.lat;
+  zaehlung.value.punkt.lon = newCoords.lng;
 }
 </script>

@@ -80,13 +80,14 @@
 </template>
 
 <script setup lang="ts">
+import type { ResetAuffaelligkeitenDTO } from "@/api/client";
+
 import { cloneDeep, head, isEmpty, isNil, last, toArray } from "lodash";
 import moment from "moment";
 import { computed, ref } from "vue";
 
 import AdministrationService from "@/api/service/AdministrationService";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import ResetAuffaelligkeitenDTO from "@/types/config/ResetAuffaelligkeitenDTO";
 import { useDateUtils } from "@/util/DateUtils";
 
 interface Props {
@@ -189,9 +190,9 @@ function confirmReset() {
 function createResetAuffaelligkeitenDTO(datesToReset: Array<Date>) {
   const startDate = head(datesToReset);
   const endDate = last(datesToReset);
-  return new ResetAuffaelligkeitenDTO(
-    startDate ? startDate : dateYesterday.value,
-    endDate ? endDate : dateYesterday.value
-  );
+  return {
+    startDateToReset: startDate ? startDate : dateYesterday.value,
+    endDateToReset: endDate ? endDate : dateYesterday.value,
+  } as ResetAuffaelligkeitenDTO;
 }
 </script>

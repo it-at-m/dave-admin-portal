@@ -186,10 +186,9 @@
 </template>
 
 <script setup lang="ts">
-import type PkwEinheitDTO from "@/types/common/PkwEinheitDTO";
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type { HochrechnungsfaktorDTO, PkwEinheitDTO } from "@/api/client";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 import type ZaehlungCardObject from "@/types/zaehlung/ZaehlungCardObject";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
 import { cloneDeep } from "lodash";
 import { computed, onMounted, ref } from "vue";
@@ -222,7 +221,7 @@ const route = useRoute();
 const display = useDisplay();
 
 const zaehlstelle = ref(DefaultObjectCreator.createDefaultZaehlstelleDTO());
-const zaehlungen = ref([] as Array<ZaehlungDTO>);
+const zaehlungen = ref([] as Array<Zaehlung>);
 const showUpdateZaehlstelleDialog = ref(false);
 const showZaehlungDialog = ref(false);
 const showChatDialog = ref(false);
@@ -231,7 +230,7 @@ const speedDialOpen = ref(false);
 const query = ref("");
 const showtooltip = ref(false);
 
-const zaehlung = ref<ZaehlungDTO>(createDefaultZaehlungDTO());
+const zaehlung = ref<Zaehlung>(createDefaultZaehlungDTO());
 
 /**
  * Die Daten zur Zählstelle und der ausgewählten Zählung wird über die
@@ -298,7 +297,10 @@ const kreuzungsname = computed(() => {
  */
 const latlng = computed(() => {
   if (zaehlstelle.value.punkt != null) {
-    return [zaehlstelle.value.punkt.lat, zaehlstelle.value.punkt.lon];
+    return [
+      zaehlstelle.value.punkt.lat?.toString() || "0",
+      zaehlstelle.value.punkt.lon?.toString() || "0",
+    ];
   } else {
     return [];
   }
@@ -334,8 +336,8 @@ function editZaehlstelle() {
   showUpdateZaehlstelleDialog.value = true;
 }
 
-function createDefaultZaehlungDTO(): ZaehlungDTO {
-  const zaehlung: ZaehlungDTO = DefaultObjectCreator.createDefaultZaehlungDTO();
+function createDefaultZaehlungDTO(): Zaehlung {
+  const zaehlung: Zaehlung = DefaultObjectCreator.createDefaultZaehlungDTO();
   zaehlung.punkt = cloneDeep(zaehlstelle.value.punkt);
   zaehlung.zaehlIntervall = 15;
   const time = new Date().toLocaleTimeString(navigator.language, {
@@ -359,7 +361,7 @@ function loadZaehlstelle(openDialog = false): void {
     .then((response) => {
       zaehlstelle.value = response;
       zaehlungen.value = response.zaehlungen;
-      response.zaehlungen.forEach((zaehlung: ZaehlungDTO) => {
+      response.zaehlungen.forEach((zaehlung: Zaehlung) => {
         zaehlungCards.value.push({ flex: 3, zaehlung: zaehlung });
       });
       zaehlungCards.value.sort(ZaehlungCardObjectComparator.sortByDatumDesc);
@@ -400,7 +402,7 @@ function cancelZaehlungDialog() {
   showZaehlungDialog.value = false;
 }
 
-function openZaehlungDialog(zaehlungToEdit: ZaehlungDTO) {
+function openZaehlungDialog(zaehlungToEdit: Zaehlung) {
   zaehlung.value = cloneDeep(zaehlungToEdit);
   showZaehlungDialog.value = true;
 }
@@ -417,7 +419,7 @@ function openZaehlungDatenportal(zaehlungId: string) {
   window.open(url);
 }
 
-function openChatDialog(zaehlungToChat: ZaehlungDTO) {
+function openChatDialog(zaehlungToChat: Zaehlung) {
   zaehlung.value = cloneDeep(zaehlungToChat);
   showChatDialog.value = true;
 }

@@ -1,19 +1,20 @@
-import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
-import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type ConfigurationDTO from "@/types/configuration/ConfigurationDTO";
-import type MapConfigurationDTO from "@/types/configuration/MapConfigurationDTO";
-import type TenantConfigurationDTO from "@/types/configuration/TenantConfigurationDTO";
-import type ZaehlstelleConfigurationDTO from "@/types/configuration/ZaehlstelleConfigurationDTO";
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
-import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type {
+  ConfigurationDTO,
+  DienstleisterDTO,
+  EmailAddressDTO,
+  HochrechnungsfaktorDTO,
+  MapConfigurationDTO,
+  SearchAndFilterOptionsDTO,
+  TenantConfigurationDTO,
+  ZaehlstelleConfigurationDTO,
+} from "@/api/client";
+import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
+import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { LatLng } from "leaflet";
 
-import Verkehrsart from "@/domain/enums/Verkehrsart";
-import MessstelleStatus from "@/types/enum/MessstelleStatus";
+import { MessstelleKarteDTOStatusEnum, Verkehrsart } from "@/api/client";
 import Quelle from "@/types/enum/Quelle";
 import Status from "@/types/enum/Status";
 import Wetter from "@/types/enum/Wetter";
@@ -41,8 +42,8 @@ export default class DefaultObjectCreator {
     );
   }
 
-  public static createDefaultZaehlungDTO(): ZaehlungDTO {
-    const zaehlung: ZaehlungDTO = {} as ZaehlungDTO;
+  public static createDefaultZaehlungDTO(): Zaehlung {
+    const zaehlung: Zaehlung = {} as Zaehlung;
     zaehlung.customSuchwoerter = [];
     zaehlung.knotenarme = [];
     zaehlung.querungsverkehr = [];
@@ -57,18 +58,18 @@ export default class DefaultObjectCreator {
     return zaehlung;
   }
 
-  public static createDefaultZaehlstelleDTO(): ZaehlstelleDTO {
-    const zaehlstelle: ZaehlstelleDTO = {} as ZaehlstelleDTO;
+  public static createDefaultZaehlstelleDTO(): Zaehlstelle {
+    const zaehlstelle: Zaehlstelle = {} as Zaehlstelle;
     zaehlstelle.sichtbarDatenportal = true;
     zaehlstelle.customSuchwoerter = [];
     return zaehlstelle;
   }
 
-  public static createDefaultMessstelleEditDTO(): MessstelleEditDTO {
-    const messstelle: MessstelleEditDTO = {} as MessstelleEditDTO;
+  public static createDefaultMessstelleEditDTO(): MessstelleEdit {
+    const messstelle: MessstelleEdit = {} as MessstelleEdit;
     messstelle.sichtbarDatenportal = false;
     messstelle.lageplanVorhanden = false;
-    messstelle.status = MessstelleStatus.IN_PLANUNG;
+    messstelle.status = MessstelleKarteDTOStatusEnum.InPlanung;
     messstelle.customSuchwoerter = [];
     messstelle.messquerschnitte = [];
     return messstelle;
@@ -106,9 +107,9 @@ export default class DefaultObjectCreator {
       searchInMessstellen: true,
       searchInZaehlstellen: true,
       messstelleVerkehrsart: [
-        Verkehrsart.KFZ,
-        Verkehrsart.RAD,
-        Verkehrsart.UNBEKANNT,
+        Verkehrsart.Kfz,
+        Verkehrsart.Rad,
+        Verkehrsart.Unbekannt,
       ],
     } as SearchAndFilterOptionsDTO;
   }
