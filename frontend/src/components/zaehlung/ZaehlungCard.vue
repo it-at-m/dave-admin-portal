@@ -3,9 +3,16 @@
     class="mx-auto mt-1 mb-4"
     max-width="374"
   >
-    <zaehlung-card-map
-      :lat-lng-zaehlstelle="coordsZaehlstelle"
-      :lat-lng-zaehlung="coordsZaehlung"
+    <my-map
+      :lat-lng-marker="coordsZaehlung"
+      :lat-lng-circle="coordsZaehlstelle"
+      :zoom="16"
+      :draggable="false"
+      :zoom-control="false"
+      :fullscreen-control="false"
+      :attribution-control="false"
+      :layer-control="false"
+      :show-overlay-layers="false"
     />
 
     <v-btn
@@ -273,7 +280,7 @@ import QuelleIcon from "@/components/icons/QuelleIcon.vue";
 import WetterIcon from "@/components/icons/WetterIcon.vue";
 import ZaehlartIcon from "@/components/icons/ZaehlartIcon.vue";
 import ZaehldauerIcon from "@/components/icons/ZaehldauerIcon.vue";
-import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
+import MyMap from "@/components/map/MyMap.vue";
 import BeauftrageZaehlungDialog from "@/components/zaehlung/BeauftrageZaehlungDialog.vue";
 import DeleteZaehlungDialog from "@/components/zaehlung/DeleteZaehlungDialog.vue";
 import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
