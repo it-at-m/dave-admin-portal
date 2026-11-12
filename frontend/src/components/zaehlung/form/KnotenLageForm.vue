@@ -21,12 +21,17 @@
     </v-banner>
     <v-card-text>
       <v-row dense>
-        <zaehlung-card-map
+        <my-map
           height="200px"
           width="100%"
-          :lat-lng-zaehlstelle="coordsZaehlstelle"
-          :lat-lng-zaehlung="coordsZaehlung"
-          :edit-zaehlung-marker="true"
+          :lat-lng-marker="coordsZaehlung"
+          :lat-lng-circle="coordsZaehlstelle"
+          :draggable="true"
+          :zoom-control="false"
+          :fullscreen-control="false"
+          :attribution-control="false"
+          :layer-control="false"
+          :show-overlay-layers="false"
           @update-zaehlung-coords="updateZaehlungCoords"
         />
       </v-row>
@@ -213,7 +218,7 @@ import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
-import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
+import MyMap from "@/components/map/MyMap.vue";
 import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
 import { useEventbus } from "@/store/Eventbus";
 import Zaehlart from "@/types/enum/Zaehlart";
