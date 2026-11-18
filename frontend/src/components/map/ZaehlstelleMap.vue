@@ -362,9 +362,6 @@ function setMarkerToMap() {
      * Auf diese eine mit einem Icon angezeigte Zaehlstelle muss dann zentriert werden.
      */
     leafletMap.map.value?.setView(createLatLng(erhebungsstellenKarte[0]), 18);
-  } else if (props.zaehlstelleId && props.center) {
-    // Zaehlartenmarker erzeugen
-    leafletMap.map.value?.setView(center.value, zoomValue.value);
   } else {
     leafletMap.map.value?.setView(center.value, zoomValue.value);
   }
