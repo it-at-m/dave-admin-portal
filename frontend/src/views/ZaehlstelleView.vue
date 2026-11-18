@@ -24,7 +24,7 @@
       <v-col cols="9">
         <zaehlstelle-map
           :z-id="zaehlstelleId"
-          :latlng="latlng"
+          :center="latLngCenter"
           :zoom="17"
           :height="headerHeightVh"
           :minheight="headerHeightVh"
@@ -191,7 +191,8 @@ import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
 import type ZaehlungCardObject from "@/types/zaehlung/ZaehlungCardObject";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { cloneDeep } from "lodash";
+import { latLng } from "leaflet";
+import { cloneDeep, toNumber } from "lodash";
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
@@ -294,13 +295,16 @@ const kreuzungsname = computed(() => {
 });
 
 /**
- * Erzeugt aus dem übergebenen Punkt ein Array aus lat und lon.
+ * Erzeugt aus dem übergebenen Punkt ein LatLng.
  */
-const latlng = computed(() => {
+const latLngCenter = computed(() => {
   if (zaehlstelle.value.punkt != null) {
-    return [zaehlstelle.value.punkt.lat, zaehlstelle.value.punkt.lon];
+    return latLng(
+      toNumber(zaehlstelle.value.punkt.lat),
+      toNumber(zaehlstelle.value.punkt.lon)
+    );
   } else {
-    return [];
+    return undefined;
   }
 });
 

@@ -104,7 +104,7 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 interface Props {
   minheight?: string;
   zId?: string;
-  latlng?: Array<string>;
+  center?: LatLng;
   height?: string;
   width?: string;
   showMarker?: boolean;
@@ -113,12 +113,12 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   minheight: "160px",
+  zId: "",
+  center: undefined,
   height: "15vh",
   width: "100%",
   showMarker: false,
   zoom: 12,
-  zId: "",
-  latlng: undefined,
 });
 
 const searchStore = useSearchStore();
@@ -133,8 +133,8 @@ const eventbus = useEventbus();
  * Die Methode setzt Koordinate auf welche Zentriert werden soll.
  */
 const center = computed<LatLng>(() => {
-  if (props.latlng && props.latlng.length > 0) {
-    return createLatLngFromString(props.latlng[0], props.latlng[1]);
+  if (props.center) {
+    return props.center;
   } else if (
     mapOptionsStore.getMapOptions &&
     mapOptionsStore.getMapOptions.latitude &&
@@ -153,7 +153,7 @@ const center = computed<LatLng>(() => {
 });
 
 const zoomValue = computed(() => {
-  if (props.latlng && props.latlng.length > 0) {
+  if (props.center) {
     return props.zoom;
   } else if (
     mapOptionsStore.getMapOptions &&
@@ -189,7 +189,7 @@ onBeforeUnmount(() => {
 });
 
 const showSpeedDial = computed(() => {
-  return !(props.latlng !== undefined && props.latlng.length === 2);
+  return props.center === undefined;
 });
 
 const newMarker = ref<Marker | null>(null);
@@ -319,7 +319,7 @@ watch(searchResult, () => {
 });
 
 watch(
-  () => [eventbus.getReloadEvent, props.latlng],
+  () => [eventbus.getReloadEvent, props.center],
   ([newA, newB], [prevA, prevB]) => {
     if (newA !== prevA && newB !== prevB) {
       searchErhebungsstelle();
@@ -364,7 +364,7 @@ function setMarkerToMap() {
      * Auf diese eine mit einem Icon angezeigte Zaehlstelle muss dann zentriert werden.
      */
     leafletMap.map.value?.setView(createLatLng(erhebungsstellenKarte[0]), 18);
-  } else if (props.zId && props.latlng && props.latlng.length > 0) {
+  } else if (props.zId && props.center) {
     // Zaehlartenmarker erzeugen
     leafletMap.map.value?.setView(center.value, zoomValue.value);
   } else {

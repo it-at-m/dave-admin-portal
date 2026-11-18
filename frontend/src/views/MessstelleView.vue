@@ -20,7 +20,7 @@
         <zaehlstelle-map
           :z-id="messstelleId"
           :zoom="17"
-          :latlng="latlng"
+          :center="latLngCenter"
           :height="headerHeightVh"
           :minheight="headerHeightVh"
           :show-marker="true"
@@ -52,6 +52,7 @@
 <script setup lang="ts">
 import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 
+import { latLng } from "leaflet";
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -106,17 +107,11 @@ const messstelleId = computed(() => {
   return messstelleId;
 });
 
-const latlng = computed(() => {
-  if (
-    messstelle.value.longitude == undefined ||
-    messstelle.value.latitude == undefined
-  ) {
-    return [];
+const latLngCenter = computed(() => {
+  if (messstelle.value.latitude && messstelle.value.longitude) {
+    return latLng(messstelle.value.latitude, messstelle.value.longitude);
   } else {
-    return [
-      messstelle.value.latitude.toString(),
-      messstelle.value.longitude.toString(),
-    ];
+    return undefined;
   }
 });
 
