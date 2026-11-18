@@ -28,7 +28,6 @@
           :zoom="17"
           :height="headerHeightVh"
           :min-height="headerHeightVh"
-          :show-marker="true"
           width="100%"
         />
       </v-col>

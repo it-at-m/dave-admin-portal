@@ -107,7 +107,6 @@ interface Props {
   center?: LatLng;
   height?: string;
   width?: string;
-  showMarker?: boolean;
   zoom?: number;
 }
 
@@ -117,7 +116,6 @@ const props = withDefaults(defineProps<Props>(), {
   center: undefined,
   height: "15vh",
   width: "100%",
-  showMarker: false,
   zoom: 12,
 });
 

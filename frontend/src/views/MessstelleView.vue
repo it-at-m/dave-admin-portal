@@ -23,7 +23,6 @@
           :center="latLngCenter"
           :height="headerHeightVh"
           :min-height="headerHeightVh"
-          :show-marker="true"
           width="100%"
         />
       </v-col>
