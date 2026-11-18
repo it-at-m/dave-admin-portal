@@ -89,6 +89,10 @@ onBeforeUnmount(() => {
   leafletMap.map.value?.remove();
 });
 
+/**
+ * Erstellt einen Marker mit passendem Icon (je nachdem, ob Zählstelle oder Messstelle)
+ * und meldet Koordinatenänderungen nach dem Verschieben eines Markers.
+ */
 function createMarker(latLngMarker: LatLng): L.Marker {
   const defaultIcon = new Icon.Default();
   if (props.isMessstelle) {
@@ -116,6 +120,9 @@ function createMarker(latLngMarker: LatLng): L.Marker {
   return marker;
 }
 
+/**
+ * Erstellt einen Kreismarker mit dem Tooltip „Zählstelle“.
+ */
 function createCircleMarker(latLngCircle: LatLng): L.CircleMarker {
   const circleMarker = L.circleMarker(latLngCircle, {
     opacity: 1.0,
@@ -130,6 +137,14 @@ function createCircleMarker(latLngCircle: LatLng): L.CircleMarker {
   return circleMarker;
 }
 
+/**
+ * Fügt einen Marker und bei vorhandenen Kreiskoordinaten auch einen
+ * Kreismarker zur Karte hinzu.
+ * - Wenn vorhanden, repräsentiert der Kreismarker eine Zählstelle und die
+ *   "normalen" Marker die Zählungen der Zählstelle.
+ * - Wenn kein Kreismarker vorhanden ist, repräsentiert der "normale" Marker
+ *   eine Zählstelle.
+ */
 function createMarkersAndAddToMap() {
   marker.value = createMarker(props.latLngMarker);
   marker.value.addTo(leafletMap.map.value as L.Map);
@@ -139,6 +154,10 @@ function createMarkersAndAddToMap() {
   }
 }
 
+/**
+ * Ersetzt die vorhandenen Marker anhand der aktuellen Props und setzt
+ * Kartenzentrum und Zoom zurück.
+ */
 function resetMarkers() {
   marker.value?.removeFrom(leafletMap.map.value as L.Map);
   circleMarker.value?.removeFrom(leafletMap.map.value as L.Map);
