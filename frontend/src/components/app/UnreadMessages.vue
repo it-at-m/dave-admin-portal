@@ -36,8 +36,10 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type {
+  LadeZaehlstelleWithUnreadMessageDTO,
+  LadeZaehlungWithUnreadMessageDTO,
+} from "@/api/client";
 
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -50,7 +52,7 @@ const router = useRouter();
 const dateUtils = useDateUtils();
 const snackbarStore = useSnackbarStore();
 
-const items = ref<Array<ZaehlstelleDTO>>([]);
+const items = ref<Array<LadeZaehlstelleWithUnreadMessageDTO>>([]);
 
 onMounted(() => {
   loadZaehlstellenWithUnreadMessages();
@@ -68,15 +70,15 @@ function loadZaehlstellenWithUnreadMessages(): void {
     .catch((error) => snackbarStore.showApiError(error));
 }
 
-function selectItem(item: ZaehlstelleDTO): void {
+function selectItem(item: LadeZaehlstelleWithUnreadMessageDTO): void {
   router.push(`/zaehlstelle/${item.id}`);
 }
 
-function getTitle(item: ZaehlstelleDTO): string {
+function getTitle(item: LadeZaehlstelleWithUnreadMessageDTO): string {
   return `Zählstelle ${item.nummer}`;
 }
 
-function getSubTitle(item: ZaehlungDTO): string {
+function getSubTitle(item: LadeZaehlungWithUnreadMessageDTO): string {
   return `${dateUtils.getShortVersionOfDate(item.datum)} - ${item.projektName}`;
 }
 </script>

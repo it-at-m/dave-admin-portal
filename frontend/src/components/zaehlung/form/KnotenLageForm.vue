@@ -204,13 +204,15 @@
 </template>
 
 <script setup lang="ts">
-import type GeoPoint from "@/types/common/GeoPoint";
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type {
+  BearbeiteKnotenarmDTO,
+  BearbeiteZaehlstelleDTO,
+  BearbeiteZaehlungDTO,
+  GeoPoint,
+} from "@/api/client";
 
 import { LatLng } from "leaflet";
-import { isEmpty, isNil } from "lodash";
+import { isEmpty, isNil, toArray, toString } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import ZaehlungCardMap from "@/components/map/ZaehlungCardMap.vue";
@@ -221,12 +223,12 @@ import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 interface Props {
   height: string;
-  zaehlstelle: ZaehlstelleDTO;
+  zaehlstelle: BearbeiteZaehlstelleDTO;
   isKnotenLageFormValid: boolean;
 }
 const props = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
+const zaehlung = defineModel<BearbeiteZaehlungDTO>("zaehlung", {
   required: true,
 });
 
@@ -259,8 +261,8 @@ function resetForm() {
   strassen.value = ["", "", "", "", "", "", "", ""];
 
   // Straßennamen neu setzen, wenn vorhanden
-  zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
-    strassen.value[arm.nummer - 1] = arm.strassenname;
+  zaehlung.value.knotenarme?.forEach((arm: BearbeiteKnotenarmDTO) => {
+    strassen.value[arm.nummer - 1] = toString(arm.strassenname);
   });
 }
 
@@ -271,32 +273,32 @@ function updateModel(knotenarmnummer: number, strassenname: string) {
   } else {
     // Add or update
     let updated = false;
-    zaehlung.value.knotenarme.forEach((arm: KnotenarmDTO) => {
+    zaehlung.value.knotenarme?.forEach((arm: BearbeiteKnotenarmDTO) => {
       if (arm.nummer === knotenarmnummer) {
         arm.strassenname = strassenname;
         updated = true;
       }
     });
     if (!updated) {
-      const knotenarm: KnotenarmDTO = {} as KnotenarmDTO;
+      const knotenarm = {} as BearbeiteKnotenarmDTO;
       knotenarm.nummer = knotenarmnummer;
       knotenarm.strassenname = strassenname.trim();
-      zaehlung.value.knotenarme.push(knotenarm);
+      zaehlung.value.knotenarme?.push(knotenarm);
     }
   }
 }
 
 function deleteKnotenarm(nummer: number) {
   let toDelete = -1;
-  zaehlung.value.knotenarme.forEach(
-    (knotenarm: KnotenarmDTO, index: number) => {
+  zaehlung.value.knotenarme?.forEach(
+    (knotenarm: BearbeiteKnotenarmDTO, index: number) => {
       if (knotenarm.nummer === nummer) {
         toDelete = index;
       }
     }
   );
   if (toDelete > -1) {
-    zaehlung.value.knotenarme.splice(toDelete, 1);
+    zaehlung.value.knotenarme?.splice(toDelete, 1);
   }
   if (zaehlung.value.zaehlart === Zaehlart.FJS) {
     deleteAllLaengsverkehrBeziehungenByKnotenarmnummer(nummer);
@@ -308,7 +310,7 @@ function deleteKnotenarm(nummer: number) {
 }
 
 function deleteAllVerkehrsbeziehungenByKnotenarmnummer(nummer: number) {
-  const filtered = zaehlung.value.verkehrsbeziehungen.filter(
+  const filtered = toArray(zaehlung.value.verkehrsbeziehungen).filter(
     (verkehrsbeziehung) => {
       const shouldRemove = zaehlung.value.kreisverkehr
         ? verkehrsbeziehung.knotenarm === nummer
@@ -325,7 +327,7 @@ function deleteAllVerkehrsbeziehungenByKnotenarmnummer(nummer: number) {
 }
 
 function deleteAllLaengsverkehrBeziehungenByKnotenarmnummer(nummer: number) {
-  const filtered = zaehlung.value.laengsverkehr.filter(
+  const filtered = toArray(zaehlung.value.laengsverkehr).filter(
     (laengsverkehrBeziehung) => {
       return laengsverkehrBeziehung.knotenarm !== nummer;
     }
@@ -336,7 +338,7 @@ function deleteAllLaengsverkehrBeziehungenByKnotenarmnummer(nummer: number) {
 }
 
 function deleteAllQuerungsverkehrBeziehungenByKnotenarmnummer(nummer: number) {
-  const filtered = zaehlung.value.querungsverkehr.filter(
+  const filtered = toArray(zaehlung.value.querungsverkehr).filter(
     (querungsverkehrBeziehung) => {
       return querungsverkehrBeziehung.knotenarm !== nummer;
     }
@@ -347,18 +349,18 @@ function deleteAllQuerungsverkehrBeziehungenByKnotenarmnummer(nummer: number) {
 }
 
 const coordsZaehlstelle = computed(() => {
-  const punkt: GeoPoint = props.zaehlstelle.punkt;
-  if (punkt) {
-    return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+  const punkt = props.zaehlstelle.punkt;
+  if (punkt && punkt.lat && punkt.lon) {
+    return new LatLng(punkt.lat, punkt.lon);
   } else {
     return DefaultObjectCreator.createCenterOfMunichLatLng();
   }
 });
 
 const coordsZaehlung = computed(() => {
-  const punkt: GeoPoint = zaehlung.value.punkt;
-  if (punkt) {
-    return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+  const punkt = zaehlung.value.punkt;
+  if (punkt && punkt.lat && punkt.lon) {
+    return new LatLng(punkt.lat, punkt.lon);
   } else {
     return coordsZaehlstelle.value;
   }
@@ -368,7 +370,7 @@ function updateZaehlungCoords(newCoords: LatLng): void {
   if (!zaehlung.value.punkt) {
     zaehlung.value.punkt = {} as GeoPoint;
   }
-  zaehlung.value.punkt.lat = newCoords.lat.toString();
-  zaehlung.value.punkt.lon = newCoords.lng.toString();
+  zaehlung.value.punkt.lat = newCoords.lat;
+  zaehlung.value.punkt.lon = newCoords.lng;
 }
 </script>

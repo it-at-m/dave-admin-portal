@@ -225,30 +225,27 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type { BearbeiteZaehlungDTO } from "@/api/client";
 
 import { cloneDeep, isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref } from "vue";
 
 import { quelleDropDown } from "@/types/enum/Quelle";
-import Status from "@/types/enum/Status";
+import Status, { getStatusByString } from "@/types/enum/Status";
 import { zaehlartenDropDown } from "@/types/enum/Zaehlart";
 import { zaehldauerDropDown } from "@/types/enum/Zaehldauer";
-import { useDateUtils } from "@/util/DateUtils";
 
 interface Props {
   height: string;
 }
 defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
+const zaehlung = defineModel<BearbeiteZaehlungDTO>("zaehlung", {
   required: true,
 });
 const isValid = defineModel<boolean | null>("isValid", {
   required: true,
 });
-
-const dateUtils = useDateUtils();
 
 const PFLICHTFELD_TEXT =
   "Hierbei handelt es sich um ein Pflichtfeld. Bitte ausfüllen";
@@ -281,7 +278,8 @@ const showZaehlsituation = computed(() => {
     Status.CORRECTION,
     Status.COUNTING,
   ];
-  return possibleStatus.includes(zaehlung.value.status);
+  const status: Status | undefined = getStatusByString(zaehlung.value.status);
+  return status && possibleStatus.includes(status);
 });
 
 const formattedDate = computed(() => {
@@ -306,7 +304,7 @@ function addSuchwortToList(): void {
 
 function saveDate(): void {
   datepickerMenuModel.value = false;
-  zaehlung.value.datum = dateUtils.formatDateForBackend(datepickerDate.value);
+  zaehlung.value.datum = datepickerDate.value;
 }
 
 function closeMenu(): void {
@@ -315,6 +313,8 @@ function closeMenu(): void {
 }
 
 function resetDatumToValueOfZaehlung(): void {
-  datepickerDate.value = dateUtils.getDatumOfString(zaehlung.value.datum);
+  datepickerDate.value = zaehlung.value.datum
+    ? zaehlung.value.datum
+    : new Date();
 }
 </script>

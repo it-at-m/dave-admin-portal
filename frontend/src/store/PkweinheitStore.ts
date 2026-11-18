@@ -1,4 +1,4 @@
-import type PkwEinheitDTO from "@/types/common/PkwEinheitDTO";
+import type { PkwEinheitDTO } from "@/api/client";
 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";

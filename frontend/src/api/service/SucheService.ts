@@ -1,21 +1,34 @@
-import type AnzeigeKarteDTO from "@/types/karte/AnzeigeKarteDTO";
-import type SearchAndFilterOptionsDTO from "@/types/suche/SearchAndFilterOptionsDTO";
-import type SucheComplexSuggestsDTO from "@/types/suche/SucheComplexSuggestsDTO";
+import type {
+  ErhebungsstelleKarteDTO,
+  SearchAndFilterOptionsDTO,
+  SearchErhebungsstelleForMapRequest,
+  SucheComplexSuggestsDTO,
+  SuggestRequest,
+} from "@/api/client";
 
-import FetchService from "@/api/service/FetchService";
+import { Configuration, SucheControllerApi } from "@/api/client";
+import BaseUrlProvider from "@/api/util/BaseUrlProvider";
+import { handleOpenApiError } from "@/api/util/OpenApiErrorHandler";
 
 export default class SucheService {
-  private static readonly ENDPOINT: string = "api/dave-backend-service";
+  private static readonly ENDPOINT: string = `${BaseUrlProvider.getBaseUrl()}/api/dave-backend-service`;
+  private static readonly API = new SucheControllerApi(
+    new Configuration({
+      basePath: this.ENDPOINT,
+    })
+  );
 
-  // Die Query muss als letzter Parameter mitgeschickt werden, damit mögliche Leerzeichen
-  // am Ende automatisch entfernt werden
   static getSuggestions(
     query: string,
     searchAndFilterOptions: SearchAndFilterOptionsDTO
   ): Promise<SucheComplexSuggestsDTO> {
-    return FetchService.postData(
-      searchAndFilterOptions,
-      `${this.ENDPOINT}/suggest?query=${query}`,
+    const request = {
+      query: query,
+      searchAndFilterOptionsDTO: searchAndFilterOptions,
+    } as SuggestRequest;
+
+    return handleOpenApiError(
+      this.API.suggestRaw(request).then((response) => response.raw.json()),
       "Beim Lesen der Vorschläge ist ein Fehler aufgetreten."
     );
   }
@@ -23,10 +36,16 @@ export default class SucheService {
   static searchErhebungsstelle(
     query: string,
     searchAndFilterOptions: SearchAndFilterOptionsDTO
-  ): Promise<Array<AnzeigeKarteDTO>> {
-    return FetchService.postData(
-      searchAndFilterOptions,
-      `${this.ENDPOINT}/search?query=${query}`,
+  ): Promise<Array<ErhebungsstelleKarteDTO>> {
+    const request = {
+      query: query,
+      searchAndFilterOptionsDTO: searchAndFilterOptions,
+    } as SearchErhebungsstelleForMapRequest;
+
+    return handleOpenApiError(
+      this.API.searchErhebungsstelleForMapRaw(request).then((response) =>
+        response.raw.json()
+      ),
       "Beim Suchen von Zähl-/Messstellen ist ein Fehler aufgetreten."
     );
   }

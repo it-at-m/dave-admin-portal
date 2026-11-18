@@ -7,6 +7,7 @@
   />
 </template>
 <script setup lang="ts">
+import { toString } from "lodash";
 import { computed } from "vue";
 
 import IconTooltip from "@/components/icons/IconTooltip";
@@ -16,7 +17,7 @@ import Zaehlart from "@/types/enum/Zaehlart";
 interface Props {
   size?: string;
   color?: string;
-  zaehlart: string;
+  zaehlart: string | undefined;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -65,7 +66,7 @@ const zaehlartIcons: Map<string, IconTooltip> = new Map([
  * Lädt das richtige MDI Icon aus der Liste.
  */
 const icon = computed<IconTooltip>(() => {
-  let result = zaehlartIcons.get(props.zaehlart);
+  let result = zaehlartIcons.get(toString(props.zaehlart));
   if (result === undefined) {
     result = new IconTooltip("mdi-help-box", "Keine Information zur Zählart");
   }

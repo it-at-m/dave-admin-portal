@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import type InfoMessageDTO from "@/types/config/InfoMessageDTO";
+import type { InfoMessageDTO } from "@/api/client";
 
 import { computed } from "vue";
 
@@ -68,10 +68,14 @@ const daveUtils = useDaveUtils();
 function infoMessageToDateArray(infoMessage: InfoMessageDTO): Array<string> {
   const dates: Array<string> = [];
   if (infoMessage.gueltigVon) {
-    dates.push(infoMessage.gueltigVon.substring(0, 10));
+    dates.push(
+      dateUtils.formatDateForBackend(infoMessage.gueltigVon).substring(0, 10)
+    );
   }
   if (infoMessage.gueltigBis) {
-    dates.push(infoMessage.gueltigBis.substring(0, 10));
+    dates.push(
+      dateUtils.formatDateForBackend(infoMessage.gueltigBis).substring(0, 10)
+    );
   }
   return dates;
 }

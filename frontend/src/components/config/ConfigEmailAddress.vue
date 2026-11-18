@@ -146,7 +146,7 @@
 </template>
 
 <script setup lang="ts">
-import type EmailAddressDTO from "@/types/config/EmailAddressDTO";
+import type { EmailAddressDTO } from "@/api/client";
 
 import { cloneDeep, isEmpty, isNull } from "lodash";
 import { computed, onMounted, ref } from "vue";

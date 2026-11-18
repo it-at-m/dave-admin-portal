@@ -89,3 +89,15 @@ export const statusIcon = new Map<string, IconOptions>([
     },
   ],
 ]);
+
+function isValidStatusKey(key: string | undefined): key is keyof typeof Status {
+  return key !== undefined && key in Status;
+}
+
+export function getStatusByString(key: string | undefined): Status | undefined {
+  if (isValidStatusKey(key)) {
+    return Status[key];
+  } else {
+    return undefined;
+  }
+}

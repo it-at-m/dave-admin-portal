@@ -76,8 +76,9 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type { BearbeiteZaehlungDTO } from "@/api/client";
 
+import { toArray } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
 import { useEventbus } from "@/store/Eventbus";
@@ -90,7 +91,7 @@ interface Props {
 }
 defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<BearbeiteZaehlungDTO>({
   required: true,
 });
 
@@ -287,13 +288,14 @@ function removeKategorie(kategorie: Fahrzeug) {
 }
 
 function resetForm() {
-  pkw.value = zaehlung.value.kategorien.includes(Fahrzeug.PKW);
-  lkw.value = zaehlung.value.kategorien.includes(Fahrzeug.LKW);
-  lz.value = zaehlung.value.kategorien.includes(Fahrzeug.LZ);
-  bus.value = zaehlung.value.kategorien.includes(Fahrzeug.BUS);
-  krad.value = zaehlung.value.kategorien.includes(Fahrzeug.KRAD);
-  rad.value = zaehlung.value.kategorien.includes(Fahrzeug.RAD);
-  fuss.value = zaehlung.value.kategorien.includes(Fahrzeug.FUSS);
+  const kategorien = toArray(zaehlung.value.kategorien);
+  pkw.value = kategorien.includes(Fahrzeug.PKW);
+  lkw.value = kategorien.includes(Fahrzeug.LKW);
+  lz.value = kategorien.includes(Fahrzeug.LZ);
+  bus.value = kategorien.includes(Fahrzeug.BUS);
+  krad.value = kategorien.includes(Fahrzeug.KRAD);
+  rad.value = kategorien.includes(Fahrzeug.RAD);
+  fuss.value = kategorien.includes(Fahrzeug.FUSS);
   const allowedCategories = checkIfZaehlartOfZaehlungAllowsAllCategories()
     ? [
         Fahrzeug.PKW,
@@ -306,7 +308,7 @@ function resetForm() {
       ]
     : [Fahrzeug.RAD, Fahrzeug.FUSS];
 
-  const choosableCategories = zaehlung.value.kategorien.filter((k) =>
+  const choosableCategories = kategorien.filter((k) =>
     allowedCategories.includes(k)
   );
   selectOrDeselectAllVmodel.value =

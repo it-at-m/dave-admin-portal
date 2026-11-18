@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type { HochrechnungsfaktorDTO } from "@/api/client";
 import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
 import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";

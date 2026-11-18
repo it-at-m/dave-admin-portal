@@ -1,7 +1,7 @@
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type { BearbeiteZaehlungDTO } from "@/api/client";
 
 export default interface ZaehlungCardObject {
-  zaehlung: ZaehlungDTO;
+  zaehlung: BearbeiteZaehlungDTO;
   // Wird für die Breite der Spalten benötig im Grid
   flex: number;
 }

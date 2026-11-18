@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type { EditMessstelleDTO } from "@/api/client";
 
 import { LatLng } from "leaflet";
 import { computed } from "vue";
@@ -27,7 +27,7 @@ interface Props {
 }
 
 defineProps<Props>();
-const messstelle = defineModel<MessstelleEditDTO>({
+const messstelle = defineModel<EditMessstelleDTO>({
   required: true,
 });
 

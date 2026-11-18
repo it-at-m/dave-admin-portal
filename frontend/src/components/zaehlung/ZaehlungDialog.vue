@@ -45,10 +45,12 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type {
+  BearbeiteZaehlstelleDTO,
+  BearbeiteZaehlungDTO,
+} from "@/api/client";
 
-import { isEmpty } from "lodash";
+import { isEmpty, toString } from "lodash";
 import { computed, ref, watch } from "vue";
 
 import ZaehlungService from "@/api/service/ZaehlungService";
@@ -58,11 +60,11 @@ import { useSnackbarStore } from "@/store/SnackbarStore";
 
 interface Props {
   showDialog: boolean;
-  zaehlstelle: ZaehlstelleDTO;
+  zaehlstelle: BearbeiteZaehlstelleDTO;
 }
 const props = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<BearbeiteZaehlungDTO>({
   required: true,
 });
 
@@ -107,7 +109,7 @@ watch(
 );
 
 function save(): void {
-  ZaehlungService.saveZaehlung(zaehlung.value, props.zaehlstelle.id)
+  ZaehlungService.saveZaehlung(zaehlung.value, toString(props.zaehlstelle.id))
     .then(() => {
       snackbarStore.showSuccess(`Die Zählung wurde erfolgreich gespeichert.`);
       emits("saved");

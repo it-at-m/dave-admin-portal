@@ -23,7 +23,7 @@
       </v-col>
       <v-col cols="9">
         <zaehlstelle-map
-          :z-id="zaehlstelleId"
+          :z-id="zaehlstelleIdFromRoute"
           :latlng="latlng"
           :zoom="17"
           :height="headerHeightVh"
@@ -109,7 +109,7 @@
         >
           <zaehlung-card
             v-model="card.zaehlung"
-            :zaehlstelle-id="zaehlstelle.id"
+            :zaehlstelle-id="zaehlstelleIdFromZaehlstelle"
             :geo-point-zaehlstelle="zaehlstelle.punkt"
             @open-zaehlung-dialog="openZaehlungDialog"
             @open-zaehlung-datenportal="openZaehlungDatenportal"
@@ -186,12 +186,14 @@
 </template>
 
 <script setup lang="ts">
-import type PkwEinheitDTO from "@/types/common/PkwEinheitDTO";
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type {
+  BearbeiteZaehlungDTO,
+  HochrechnungsfaktorDTO,
+  PkwEinheitDTO,
+} from "@/api/client";
 import type ZaehlungCardObject from "@/types/zaehlung/ZaehlungCardObject";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { cloneDeep } from "lodash";
+import { cloneDeep, toArray, toString } from "lodash";
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
@@ -222,7 +224,7 @@ const route = useRoute();
 const display = useDisplay();
 
 const zaehlstelle = ref(DefaultObjectCreator.createDefaultZaehlstelleDTO());
-const zaehlungen = ref([] as Array<ZaehlungDTO>);
+const zaehlungen = ref([] as Array<BearbeiteZaehlungDTO>);
 const showUpdateZaehlstelleDialog = ref(false);
 const showZaehlungDialog = ref(false);
 const showChatDialog = ref(false);
@@ -231,7 +233,7 @@ const speedDialOpen = ref(false);
 const query = ref("");
 const showtooltip = ref(false);
 
-const zaehlung = ref<ZaehlungDTO>(createDefaultZaehlungDTO());
+const zaehlung = ref<BearbeiteZaehlungDTO>(createDefaultZaehlungDTO());
 
 /**
  * Die Daten zur Zählstelle und der ausgewählten Zählung wird über die
@@ -288,7 +290,7 @@ const kreuzungsname = computed(() => {
     getZaehlungenForCards.value;
   let kreuzungsname = "";
   if (zaehlungCardObjects.length > 0) {
-    kreuzungsname = zaehlungCardObjects[0].zaehlung.kreuzungsname;
+    kreuzungsname = toString(zaehlungCardObjects[0].zaehlung.kreuzungsname);
   }
   return kreuzungsname;
 });
@@ -296,11 +298,15 @@ const kreuzungsname = computed(() => {
 /**
  * Erzeugt aus dem übergebenen Punkt ein Array aus lat und lon.
  */
-const latlng = computed(() => {
-  if (zaehlstelle.value.punkt != null) {
+const latlng = computed<number[]>(() => {
+  if (
+    zaehlstelle.value.punkt &&
+    zaehlstelle.value.punkt.lat &&
+    zaehlstelle.value.punkt.lon
+  ) {
     return [zaehlstelle.value.punkt.lat, zaehlstelle.value.punkt.lon];
   } else {
-    return [];
+    return new Array<number>();
   }
 });
 
@@ -334,8 +340,9 @@ function editZaehlstelle() {
   showUpdateZaehlstelleDialog.value = true;
 }
 
-function createDefaultZaehlungDTO(): ZaehlungDTO {
-  const zaehlung: ZaehlungDTO = DefaultObjectCreator.createDefaultZaehlungDTO();
+function createDefaultZaehlungDTO(): BearbeiteZaehlungDTO {
+  const zaehlung: BearbeiteZaehlungDTO =
+    DefaultObjectCreator.createDefaultZaehlungDTO();
   zaehlung.punkt = cloneDeep(zaehlstelle.value.punkt);
   zaehlung.zaehlIntervall = 15;
   const time = new Date().toLocaleTimeString(navigator.language, {
@@ -345,7 +352,7 @@ function createDefaultZaehlungDTO(): ZaehlungDTO {
   });
   zaehlung.datum = new Date(
     new Date().toISOString().substring(0, 10) + "T" + time
-  ).toISOString();
+  );
   return zaehlung;
 }
 
@@ -358,8 +365,8 @@ function loadZaehlstelle(openDialog = false): void {
   ZaehlstellenService.getZaehlstelleById(zaehlstelleId)
     .then((response) => {
       zaehlstelle.value = response;
-      zaehlungen.value = response.zaehlungen;
-      response.zaehlungen.forEach((zaehlung: ZaehlungDTO) => {
+      zaehlungen.value = toArray(response.zaehlungen);
+      toArray(response.zaehlungen).forEach((zaehlung: BearbeiteZaehlungDTO) => {
         zaehlungCards.value.push({ flex: 3, zaehlung: zaehlung });
       });
       zaehlungCards.value.sort(ZaehlungCardObjectComparator.sortByDatumDesc);
@@ -377,7 +384,11 @@ const hasNoZaehlung = computed(() => {
   return zaehlungen.value.length === 0;
 });
 
-const zaehlstelleId = computed(() => {
+const zaehlstelleIdFromZaehlstelle = computed(() => {
+  return toString(zaehlstelle.value.id);
+});
+
+const zaehlstelleIdFromRoute = computed(() => {
   const zaehlstelleId: string = route.params.zaehlstelleId as string;
   if (!zaehlstelleId) {
     return "";
@@ -400,7 +411,7 @@ function cancelZaehlungDialog() {
   showZaehlungDialog.value = false;
 }
 
-function openZaehlungDialog(zaehlungToEdit: ZaehlungDTO) {
+function openZaehlungDialog(zaehlungToEdit: BearbeiteZaehlungDTO) {
   zaehlung.value = cloneDeep(zaehlungToEdit);
   showZaehlungDialog.value = true;
 }
@@ -417,7 +428,7 @@ function openZaehlungDatenportal(zaehlungId: string) {
   window.open(url);
 }
 
-function openChatDialog(zaehlungToChat: ZaehlungDTO) {
+function openChatDialog(zaehlungToChat: BearbeiteZaehlungDTO) {
   zaehlung.value = cloneDeep(zaehlungToChat);
   showChatDialog.value = true;
 }
@@ -445,27 +456,30 @@ const filteredZaehlungCardObjects = computed(() => {
       const searchString: string = w.toLocaleLowerCase();
       filteredZs = filteredZs.filter(
         (z) =>
-          new Date(z.zaehlung.datum)
-            .toLocaleDateString("de-De", {
-              year: "numeric",
-              month: "numeric",
-              day: "numeric",
-            })
-            .includes(searchString) ||
-          z.zaehlung.projektNummer.toLocaleLowerCase().includes(searchString) ||
-          z.zaehlung.kreuzungsname.toLocaleLowerCase().includes(searchString) ||
-          z.zaehlung.projektName.toLocaleLowerCase().includes(searchString) ||
-          z.zaehlung.monat.toLocaleLowerCase().includes(searchString) ||
-          z.zaehlung.jahreszeit.toLocaleLowerCase().includes(searchString) ||
-          wetterText
-            .get(z.zaehlung.wetter)
+          (z.zaehlung.datum &&
+            new Date(z.zaehlung.datum)
+              .toLocaleDateString("de-De", {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+              })
+              .includes(searchString)) ||
+          z.zaehlung.projektNummer
             ?.toLocaleLowerCase()
             .includes(searchString) ||
-          z.zaehlung.zaehlart.toLocaleLowerCase().includes(searchString) ||
-          // Suche nach einem Zählartbuchstaben ist manchaml schwierig,
-          // deshalb kann hier nach dem ganzen Text gesucht werden
+          z.zaehlung.kreuzungsname
+            ?.toLocaleLowerCase()
+            .includes(searchString) ||
+          z.zaehlung.projektName?.toLocaleLowerCase().includes(searchString) ||
+          z.zaehlung.monat?.toLocaleLowerCase().includes(searchString) ||
+          z.zaehlung.jahreszeit?.toLocaleLowerCase().includes(searchString) ||
+          wetterText
+            .get(toString(z.zaehlung.wetter))
+            ?.toLocaleLowerCase()
+            .includes(searchString) ||
+          z.zaehlung.zaehlart?.toLocaleLowerCase().includes(searchString) ||
           zaehlartText
-            .get(z.zaehlung.zaehlart)
+            .get(toString(z.zaehlung.zaehlart))
             ?.toLocaleLowerCase()
             .includes(searchString)
       );

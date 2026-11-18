@@ -96,8 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import type GeoPoint from "@/types/common/GeoPoint";
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
+import type { BearbeiteZaehlstelleDTO, GeoPoint } from "@/api/client";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";
@@ -111,7 +110,7 @@ import { StadtbezirkToBeschreibung } from "@/types/enum/Stadtbezirk";
 import { StadtbezirksviertelToBeschreibung } from "@/types/enum/Stadtbezirksviertel";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
-const zaehlstelle = defineModel<ZaehlstelleDTO>({
+const zaehlstelle = defineModel<BearbeiteZaehlstelleDTO>({
   required: true,
 });
 
@@ -126,7 +125,8 @@ const newSuchwort = ref("");
 
 const coords = computed(() => {
   const punkt: GeoPoint = zaehlstelle.value.punkt;
-  if (punkt) return new LatLng(parseFloat(punkt.lat), parseFloat(punkt.lon));
+  if (punkt && punkt.lat !== undefined && punkt.lon !== undefined)
+    return new LatLng(punkt.lat, punkt.lon);
   else return DefaultObjectCreator.createCenterOfMunichLatLng();
 });
 
@@ -194,7 +194,7 @@ function updateZaehlstellenCoords(newCoords: LatLng): void {
   if (!zaehlstelle.value.punkt) {
     zaehlstelle.value.punkt = {} as GeoPoint;
   }
-  zaehlstelle.value.punkt.lat = newCoords.lat.toString();
-  zaehlstelle.value.punkt.lon = newCoords.lng.toString();
+  zaehlstelle.value.punkt.lat = newCoords.lat;
+  zaehlstelle.value.punkt.lon = newCoords.lng;
 }
 </script>

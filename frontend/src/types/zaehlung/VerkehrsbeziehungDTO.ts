@@ -1,5 +1,5 @@
+import type { HochrechnungsfaktorDTO } from "@/api/client";
 import type BaseEntity from "@/types/common/BaseEntity";
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
 import type Himmelsrichtung from "@/types/enum/Himmelsrichtung";
 
 export default interface VerkehrsbeziehungDTO extends BaseEntity {

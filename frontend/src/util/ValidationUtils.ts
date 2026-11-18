@@ -1,6 +1,6 @@
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type { BearbeiteZaehlungDTO } from "@/api/client";
 
-import { toNumber } from "lodash";
+import { toArray, toNumber } from "lodash";
 
 import Zaehlart from "@/types/enum/Zaehlart";
 
@@ -30,16 +30,15 @@ export function useValidationUtils() {
     return true;
   }
 
-  function validateKnotenLageForm(zaehlung: ZaehlungDTO): boolean {
+  function validateKnotenLageForm(zaehlung: BearbeiteZaehlungDTO): boolean {
     let isValid = true;
     if (zaehlung.zaehlart === Zaehlart.QJS) {
       // Erlaubte Kombinationen: 1 & 3, 2 & 4, 5 & 7, 6 & 8
       // => Absolute Subtraktion der Kontenarmnummern muss immer 2 sein
+      const knotenarme = toArray(zaehlung.knotenarme);
       isValid =
-        zaehlung.knotenarme.length === 2 &&
-        Math.abs(
-          zaehlung.knotenarme[0].nummer - zaehlung.knotenarme[1].nummer
-        ) === 2;
+        knotenarme.length === 2 &&
+        Math.abs(knotenarme[0].nummer - knotenarme[1].nummer) === 2;
     }
     return isValid;
   }
