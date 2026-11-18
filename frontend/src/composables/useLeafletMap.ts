@@ -2,7 +2,7 @@ import type { LatLng } from "leaflet";
 import type { Ref } from "vue";
 
 import L from "leaflet";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 import { useConfigurationStore } from "@/store/ConfigurationStore";
 
@@ -37,6 +37,10 @@ export function useLeafletMap(
   const map = ref<L.Map | undefined>(undefined);
   const layerControl = ref<L.Control.Layers | undefined>(undefined);
   const configurationStore = useConfigurationStore();
+
+  watch(configurationStore, () => {
+    createLayersAndAddToMap();
+  });
 
   function initMap(): void {
     map.value = L.map(mapRef.value as HTMLElement, {
@@ -73,7 +77,7 @@ export function useLeafletMap(
   function createLayersAndAddToMap(): void {
     if (!map.value) return;
 
-    if (options.layerControl) {
+    if (options.layerControl && !layerControl.value) {
       layerControl.value = L.control.layers().addTo(map.value as L.Map);
     }
     addBaseLayers();

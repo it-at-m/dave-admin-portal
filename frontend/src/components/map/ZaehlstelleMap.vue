@@ -57,7 +57,7 @@
         color="red"
         density="default"
         :disabled="!hasNewMarker"
-        @click="deleteNewMarker"
+        @click="deleteNewMarkerIfExists"
       />
     </v-speed-dial>
 
@@ -91,6 +91,7 @@ import markerIconDiamondShadow from "@/assets/cards-diamond-shadow.png";
 import markerIconDiamondViolet from "@/assets/cards-diamond-violet.png";
 import markerIconRed from "@/assets/marker-icon-red.png";
 import CreateZaehlstelleDialog from "@/components/zaehlstelle/CreateZaehlstelleDialog.vue";
+import { useLeafletMap } from "@/composables/useLeafletMap";
 import { useConfigurationStore } from "@/store/ConfigurationStore";
 import { useEventbus } from "@/store/Eventbus";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
@@ -128,53 +129,28 @@ const mapOptionsStore = useMapOptionsStore();
 const configurationStore = useConfigurationStore();
 const eventbus = useEventbus();
 
-const mapRef = ref<HTMLDivElement | null>(null);
-
-let map: L.Map;
-let mapMarkerClusterGroup = L.markerClusterGroup();
-const zaehlartenLayer = L.layerGroup();
-let layerControl: L.Control.Layers;
-
-onMounted(() => {
-  initMap();
+/**
+ * Die Methode setzt Koordinate auf welche Zentriert werden soll.
+ */
+const center = computed<LatLng>(() => {
+  if (props.latlng && props.latlng.length > 0) {
+    return createLatLngFromString(props.latlng[0], props.latlng[1]);
+  } else if (
+    mapOptionsStore.getMapOptions &&
+    mapOptionsStore.getMapOptions.latitude &&
+    mapOptionsStore.getMapOptions.longitude
+  ) {
+    return createLatLngFromString(
+      mapOptionsStore.getMapOptions.latitude,
+      mapOptionsStore.getMapOptions.longitude
+    );
+  } else {
+    return createLatLngFromString(
+      configurationStore.getTenantConfiguration.mapConfiguration.lat,
+      configurationStore.getTenantConfiguration.mapConfiguration.lng
+    );
+  }
 });
-
-onBeforeUnmount(() => {
-  map.remove();
-});
-
-function initMap(): void {
-  map = L.map(mapRef.value as HTMLElement, {
-    zoom: zoomValue.value,
-    minZoom: 8,
-    maxZoom: 18,
-    preferCanvas: false,
-    attributionControl: false,
-    fullscreenControl: true,
-    fullscreenControlOptions: {
-      position: "topleft",
-    },
-    center: center.value,
-  });
-  map.whenReady(() => {
-    setTimeout(() => {
-      map.invalidateSize();
-      map.addControl(
-        L.control.attribution({
-          position: "bottomleft",
-          prefix: "Leaflet",
-        })
-      );
-      map.setZoom(zoomValue.value);
-      createLayersAndAddToMap();
-      mapMarkerClusterGroup.addTo(map);
-      searchErhebungsstelle();
-      map.on("click", (e) => {
-        mouseUp(e);
-      });
-    }, 10);
-  });
-}
 
 const zoomValue = computed(() => {
   if (props.latlng && props.latlng.length > 0) {
@@ -189,14 +165,35 @@ const zoomValue = computed(() => {
   }
 });
 
+const mapRef = ref<HTMLDivElement | null>(null);
+const leafletMap = useLeafletMap(mapRef, {
+  center: center.value,
+  zoom: zoomValue.value,
+  minZoom: 8,
+  maxZoom: 18,
+});
+const mapMarkerClusterGroup = ref<L.MarkerClusterGroup | null>(null);
+
+onMounted(() => {
+  leafletMap.initMap();
+  mapMarkerClusterGroup.value = L.markerClusterGroup();
+  mapMarkerClusterGroup.value?.addTo(leafletMap.map.value as L.Map);
+  searchErhebungsstelle();
+  leafletMap.map.value?.on("click", (e) => {
+    mouseUp(e);
+  });
+});
+
+onBeforeUnmount(() => {
+  leafletMap.map.value?.remove();
+});
+
 const showSpeedDial = computed(() => {
   return !(props.latlng !== undefined && props.latlng.length === 2);
 });
 
 const newMarker = ref<Marker | null>(null);
 const speedDialOpen = ref(false);
-const fab = ref(false);
-const fab2 = ref(false);
 const addMarker = ref(false);
 const useCustomCursor = ref(false);
 const showCreateZaehlstelleDialog = ref(false);
@@ -237,7 +234,7 @@ const newCoords = computed(() => {
 function addZaehlstellenMarker() {
   addMarker.value = !addMarker.value;
   useCustomCursor.value = !useCustomCursor.value;
-  deleteNewMarker();
+  deleteNewMarkerIfExists();
 }
 
 // Klick-Event zum anlegen eines neuen Markers auf der Karte
@@ -252,7 +249,7 @@ function mouseUp(event: LeafletMouseEvent) {
 // und fügt diesen der Karte hinzu
 function createMarkerForNewZaehlstelle(coords: LatLng) {
   newMarker.value = createNewMarker(coords);
-  newMarker.value.addTo(map);
+  newMarker.value.addTo(leafletMap.map.value as L.Map);
 }
 
 // Erzeugt einen neuen roten Marker auf der Karte
@@ -280,17 +277,15 @@ function createZaehlstelle() {
 
 // Wenn ein neuer Marker existiert wird dieser gelöscht
 // und der Anlegen-Modus wird verlassen
-function deleteNewMarker() {
+function deleteNewMarkerIfExists() {
   if (newMarker.value) {
-    newMarker.value.removeFrom(map);
+    newMarker.value.removeFrom(leafletMap.map.value as L.Map);
     newMarker.value = null;
     resetBooleans();
   }
 }
 
 function resetBooleans() {
-  fab.value = false;
-  fab2.value = false;
   addMarker.value = false;
   useCustomCursor.value = false;
 }
@@ -302,7 +297,7 @@ function reloadDataAndCloseDialog(backendIdDTO: BackendIdDTO) {
 }
 
 function cancelCreateZaehlstelleDialog() {
-  deleteNewMarker();
+  deleteNewMarkerIfExists();
   resetBooleans();
   closeDialog();
 }
@@ -311,86 +306,9 @@ function closeDialog() {
   showCreateZaehlstelleDialog.value = false;
 }
 
-/**
- * Die Methode setzt Koordinate auf welche Zentriert werden soll.
- */
-const center = computed<LatLng>(() => {
-  if (props.latlng && props.latlng.length > 0) {
-    return createLatLngFromString(props.latlng[0], props.latlng[1]);
-  } else if (
-    mapOptionsStore.getMapOptions &&
-    mapOptionsStore.getMapOptions.latitude &&
-    mapOptionsStore.getMapOptions.longitude
-  ) {
-    return createLatLngFromString(
-      mapOptionsStore.getMapOptions.latitude,
-      mapOptionsStore.getMapOptions.longitude
-    );
-  } else {
-    return createLatLngFromString(
-      configurationStore.getTenantConfiguration.mapConfiguration.lat,
-      configurationStore.getTenantConfiguration.mapConfiguration.lng
-    );
-  }
-});
-
 function createLatLngFromString(lat: string, lng: string): LatLng {
   return latLng(parseFloat(lat), parseFloat(lng));
 }
-
-function createLayersAndAddToMap(): void {
-  layerControl = L.control.layers().addTo(map);
-  addBaseLayers();
-  addOverlayLayers();
-}
-
-/**
- * Fügt im Backend konfigurierte Base-Layer zur Karte hinzu.
- */
-function addBaseLayers(): void {
-  const baseLayers =
-    configurationStore.getTenantConfiguration.mapConfiguration.baseLayers;
-  let firstLayerAddedToMap = false;
-
-  baseLayers.forEach((layerConfig) => {
-    const layer = L.tileLayer.wms(layerConfig.baseUrl, {
-      layers: layerConfig.layerName,
-      className: layerConfig.layerName,
-      attribution: layerConfig.attribution,
-      referrerPolicy: "strict-origin-when-cross-origin",
-    });
-    layerControl.addBaseLayer(layer, layerConfig.layerNameToDisplay);
-    if (!firstLayerAddedToMap) {
-      layer.addTo(map);
-      firstLayerAddedToMap = true;
-    }
-  });
-}
-
-/**
- * Fügt im Backend konfigurierte Overlay-Layer zur Karte hinzu.
- */
-function addOverlayLayers(): void {
-  const overlayLayers =
-    configurationStore.getTenantConfiguration.mapConfiguration.overlayLayers;
-
-  overlayLayers.forEach((layerConfig) => {
-    const layer = L.tileLayer.wms(layerConfig.baseUrl, {
-      layers: layerConfig.layerName,
-      className: layerConfig.layerName,
-      transparent: true,
-      format: "image/png",
-      attribution: layerConfig.attribution,
-      referrerPolicy: "strict-origin-when-cross-origin",
-    });
-    layerControl.addOverlay(layer, layerConfig.layerNameToDisplay);
-  });
-}
-
-watch(configurationStore, () => {
-  addBaseLayers();
-  addOverlayLayers();
-});
 
 const searchResult = computed(() => {
   return searchStore.getSearchResult;
@@ -410,15 +328,14 @@ watch(
 );
 
 function resetMarker(): void {
-  mapMarkerClusterGroup.removeFrom(map);
-  mapMarkerClusterGroup.clearLayers();
-  zaehlartenLayer.removeFrom(map);
+  mapMarkerClusterGroup.value?.removeFrom(leafletMap.map.value as L.Map);
+  mapMarkerClusterGroup.value?.clearLayers();
   setMarkerToMap();
 }
 
 function setMarkerToMap() {
-  mapMarkerClusterGroup.clearLayers();
-  mapMarkerClusterGroup = L.markerClusterGroup({
+  mapMarkerClusterGroup.value?.clearLayers();
+  mapMarkerClusterGroup.value = L.markerClusterGroup({
     disableClusteringAtZoom: 15,
     spiderfyOnMaxZoom: false,
     chunkedLoading: true,
@@ -437,8 +354,8 @@ function setMarkerToMap() {
     }
   });
 
-  mapMarkerClusterGroup.addLayers(markers);
-  mapMarkerClusterGroup.addTo(map);
+  mapMarkerClusterGroup.value?.addLayers(markers);
+  mapMarkerClusterGroup.value?.addTo(leafletMap.map.value as L.Map);
   if (erhebungsstellenKarte.length === 1) {
     /**
      * Falls in der Main.view nach einer bestimmten Zaehlstelle gesucht
@@ -446,12 +363,12 @@ function setMarkerToMap() {
      * umfasst das Suchergebnis somit nur eine Zaehlstelle.
      * Auf diese eine mit einem Icon angezeigte Zaehlstelle muss dann zentriert werden.
      */
-    map.setView(createLatLng(erhebungsstellenKarte[0]), 18);
+    leafletMap.map.value?.setView(createLatLng(erhebungsstellenKarte[0]), 18);
   } else if (props.zId && props.latlng && props.latlng.length > 0) {
     // Zaehlartenmarker erzeugen
-    map.setView(center.value, zoomValue.value);
+    leafletMap.map.value?.setView(center.value, zoomValue.value);
   } else {
-    map.setView(center.value, zoomValue.value);
+    leafletMap.map.value?.setView(center.value, zoomValue.value);
   }
 }
 
@@ -472,11 +389,12 @@ function searchErhebungsstelle() {
 }
 
 function saveMapPosition() {
-  const mapCenter = map.getBounds().getCenter();
+  if (!leafletMap.map.value) return;
+  const mapCenter = leafletMap.map.value.getBounds().getCenter();
 
   const lat = mapCenter?.lat.toString();
   const lng = mapCenter?.lng.toString();
-  const zoom = map.getZoom();
+  const zoom = leafletMap.map.value.getZoom();
 
   mapOptionsStore.setMapOptions({
     longitude: lng,
