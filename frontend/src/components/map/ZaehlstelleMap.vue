@@ -229,13 +229,20 @@ const newCoords = computed(() => {
   }
 });
 
+/**
+ * Schaltet den Anlegen-Modus und den Zielcursor um und entfernt einen
+ * eventuell neu hinzugefügten Marker.
+ */
 function addZaehlstellenMarker() {
   addMarker.value = !addMarker.value;
   useCustomCursor.value = !useCustomCursor.value;
   deleteNewMarkerIfExists();
 }
 
-// Klick-Event zum anlegen eines neuen Markers auf der Karte
+/**
+ * Setzt bei einem Kartenklick im Anlegen-Modus einen neuen Marker,
+ * sofern noch keiner vorhanden ist.
+ */
 function mouseUp(event: LeafletMouseEvent) {
   if (addMarker.value && !newMarker.value) {
     useCustomCursor.value = false;
@@ -243,14 +250,18 @@ function mouseUp(event: LeafletMouseEvent) {
   }
 }
 
-// Legt einen neuen Marker an der Position coords an
-// und fügt diesen der Karte hinzu
+/**
+ * Erstellt den vorläufigen Marker für eine neue Zählstelle und fügt ihn
+ * an den angegebenen Koordinaten zur Karte hinzu.
+ */
 function createMarkerForNewZaehlstelle(coords: LatLng) {
   newMarker.value = createNewMarker(coords);
   newMarker.value.addTo(leafletMap.map.value as L.Map);
 }
 
-// Erzeugt einen neuen roten Marker auf der Karte
+/**
+ * Erstellt einen verschiebbaren Marker an den angegebenen Koordinaten.
+ */
 function createNewMarker(coords: LatLng): Marker {
   const defaultIcon = new Icon.Default();
   defaultIcon.options.iconUrl = markerIconRed;
@@ -261,7 +272,10 @@ function createNewMarker(coords: LatLng): Marker {
   });
 }
 
-// Klick-Event zum Oeffnen des ZaehlstelleCreateDialog
+/**
+ * Öffnet den Dialog zum Anlegen einer Zählstelle oder zeigt eine Warnung,
+ * wenn noch kein neuer Marker gesetzt wurde.
+ */
 function createZaehlstelle() {
   if (newMarker.value) {
     showCreateZaehlstelleDialog.value = true;
@@ -273,8 +287,10 @@ function createZaehlstelle() {
   }
 }
 
-// Wenn ein neuer Marker existiert wird dieser gelöscht
-// und der Anlegen-Modus wird verlassen
+/**
+ * Entfernt einen vorhandenen neuen Marker und beendet in diesem Fall
+ * den Anlegen-Modus.
+ */
 function deleteNewMarkerIfExists() {
   if (newMarker.value) {
     newMarker.value.removeFrom(leafletMap.map.value as L.Map);
@@ -283,27 +299,44 @@ function deleteNewMarkerIfExists() {
   }
 }
 
+/**
+ * Deaktiviert den Anlegen-Modus und den benutzerdefinierten Cursor.
+ */
 function resetBooleans() {
   addMarker.value = false;
   useCustomCursor.value = false;
 }
 
+/**
+ * Beendet nach dem Speichern den Anlegen-Modus, schließt den Dialog
+ * und navigiert zur neu angelegten Zählstelle.
+ */
 function reloadDataAndCloseDialog(backendIdDTO: BackendIdDTO) {
   resetBooleans();
   closeDialog();
   routeToZaehlstelle(backendIdDTO.id);
 }
 
+/**
+ * Bricht das Anlegen ab, entfernt den vorläufigen Marker und schließt
+ * den Dialog.
+ */
 function cancelCreateZaehlstelleDialog() {
   deleteNewMarkerIfExists();
   resetBooleans();
   closeDialog();
 }
 
+/**
+ * Schließt den Dialog zum Anlegen einer Zählstelle.
+ */
 function closeDialog() {
   showCreateZaehlstelleDialog.value = false;
 }
 
+/**
+ * Wandelt Breiten- und Längengrad aus Strings in Leaflet-Koordinaten um.
+ */
 function createLatLngFromString(lat: string, lng: string): LatLng {
   return latLng(parseFloat(lat), parseFloat(lng));
 }
@@ -325,12 +358,21 @@ watch(
   }
 );
 
+/**
+ * Entfernt und leert die bisherige Markergruppe und baut die Marker
+ * anhand der aktuellen Suchergebnisse neu auf.
+ */
 function resetMarker(): void {
   mapMarkerClusterGroup.value?.removeFrom(leafletMap.map.value as L.Map);
   mapMarkerClusterGroup.value?.clearLayers();
   setMarkerToMap();
 }
 
+/**
+ * Zeigt die Suchergebnisse als gruppierte Zählstellen- und Messstellenmarker.
+ * Zentriert bei genau einem Ergebnis auf den Marker der gefundenen Zählstelle/
+ * Messstelle, sonst auf das konfigurierte Zentrum.
+ */
 function setMarkerToMap() {
   mapMarkerClusterGroup.value?.clearLayers();
   mapMarkerClusterGroup.value = L.markerClusterGroup({
@@ -367,6 +409,10 @@ function setMarkerToMap() {
   }
 }
 
+/**
+ * Sucht Erhebungsstellen mit der letzten Suchanfrage und den aktuellen Filtern.
+ * Speichert das Ergebnis, meldet API-Fehler und aktualisiert die Kartenmarker.
+ */
 function searchErhebungsstelle() {
   SucheService.searchErhebungsstelle(
     searchStore.getLastSearchQuery,
@@ -383,6 +429,9 @@ function searchErhebungsstelle() {
     });
 }
 
+/**
+ * Speichert das aktuelle Kartenzentrum und die Zoomstufe im MapOptions-Store.
+ */
 function saveMapPosition() {
   if (!leafletMap.map.value) return;
   const mapCenter = leafletMap.map.value.getBounds().getCenter();
@@ -398,20 +447,33 @@ function saveMapPosition() {
   });
 }
 
+/**
+ * Navigiert zur Zählstelle mit der angegebenen ID.
+ */
 function routeToZaehlstelle(id: string) {
   saveMapPosition();
   router.push("/zaehlstelle/" + id);
 }
 
+/**
+ * Navigiert zur Messstelle mit der angegebenen ID.
+ */
 function routeToMessstelle(id: string) {
   saveMapPosition();
   router.push(`/messstelle/${id}`);
 }
 
+/**
+ * Erstellt Leaflet-Koordinaten aus den Positionsdaten einer Erhebungsstelle.
+ */
 function createLatLng(anzeigeKarte: AnzeigeKarteDTO): LatLng {
   return latLng(anzeigeKarte.latitude, anzeigeKarte.longitude);
 }
 
+/**
+ * Erstellt einen Zählstellenmarker mit Tooltip und auswahlabhängiger Darstellung.
+ * Ein Klick öffnet die zugehörige Zählstelle.
+ */
 function createMarkerForZaehlstelle(
   zaehlstelleKarte: ZaehlstelleKarteDTO
 ): Marker {
@@ -431,6 +493,10 @@ function createMarkerForZaehlstelle(
   return marker;
 }
 
+/**
+ * Erstellt einen Messstellenmarker mit Tooltip sowie status- und auswahlabhängigem
+ * Icon. Ein Klick öffnet die zugehörige Messstelle.
+ */
 function createMarkerForMessstelle(
   messstelleKarteDto: MessstelleKarteDTO
 ): Marker {
@@ -514,6 +580,10 @@ function createTooltipZaehlstelle(
   return tooltip;
 }
 
+/**
+ * Erstellt den HTML-Tooltip mit Kennung, Verkehrsart, Lage und Betriebsdaten
+ * einer Messstelle.
+ */
 function createTooltipMessstelle(
   tooltipDto: TooltipMessstelleDTO
 ): HTMLElement {
