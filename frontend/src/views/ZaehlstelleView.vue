@@ -23,11 +23,11 @@
       </v-col>
       <v-col cols="9">
         <zaehlstelle-map
-          :z-id="zaehlstelleId"
+          :zaehlstelle-id="zaehlstelleId"
           :center="latLngCenter"
           :zoom="17"
           :height="headerHeightVh"
-          :minheight="headerHeightVh"
+          :min-height="headerHeightVh"
           :show-marker="true"
           width="100%"
         />

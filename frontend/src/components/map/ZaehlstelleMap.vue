@@ -1,7 +1,7 @@
 <template>
   <v-sheet
     :height="height"
-    :min-height="minheight"
+    :min-height="minHeight"
     :width="width"
   >
     <div
@@ -102,8 +102,8 @@ import { useDateUtils } from "@/util/DateUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
 interface Props {
-  minheight?: string;
-  zId?: string;
+  minHeight?: string;
+  zaehlstelleId?: string;
   center?: LatLng;
   height?: string;
   width?: string;
@@ -112,8 +112,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  minheight: "160px",
-  zId: "",
+  minHeight: "160px",
+  zaehlstelleId: "",
   center: undefined,
   height: "15vh",
   width: "100%",
@@ -364,7 +364,7 @@ function setMarkerToMap() {
      * Auf diese eine mit einem Icon angezeigte Zaehlstelle muss dann zentriert werden.
      */
     leafletMap.map.value?.setView(createLatLng(erhebungsstellenKarte[0]), 18);
-  } else if (props.zId && props.center) {
+  } else if (props.zaehlstelleId && props.center) {
     // Zaehlartenmarker erzeugen
     leafletMap.map.value?.setView(center.value, zoomValue.value);
   } else {
@@ -584,8 +584,8 @@ function createTooltipMessstelle(
  * Setzt die Optionen bezüglich verwendetes Icon für den Zaehlstellenmarker.
  */
 function markerOptionsZaehlstelle(zaehlstelleKarte: ZaehlstelleKarteDTO) {
-  if (props.zId) {
-    if (props.zId === zaehlstelleKarte.id) {
+  if (props.zaehlstelleId) {
+    if (props.zaehlstelleId === zaehlstelleKarte.id) {
       const defaultIcon = new Icon.Default();
       defaultIcon.options.iconUrl = markerIconRed;
       return { opacity: 1.0, icon: defaultIcon };
@@ -611,8 +611,8 @@ function markerOptionsMessstelle(messstelleKarte: MessstelleKarteDTO) {
     iconAnchor: [12, 41],
   });
 
-  if (props.zId) {
-    if (props.zId === messstelleKarte.id) {
+  if (props.zaehlstelleId) {
+    if (props.zaehlstelleId === messstelleKarte.id) {
       defaultIcon.options.iconUrl = markerIconDiamondRed;
       return { opacity: 1.0, icon: defaultIcon };
     } else {
