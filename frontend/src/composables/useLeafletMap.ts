@@ -42,6 +42,13 @@ export function useLeafletMap(
     createLayersAndAddToMap();
   });
 
+  /**
+   * Initialisiert die Leaflet-Karte im referenzierten HTML-Element mit den
+   * konfigurierten Kartenoptionen.
+   * Sobald die Karte bereit ist, wird nach einer Verzögerung von 10 ms ihre
+   * Größe aktualisiert, optional das Attribution-Control hinzugefügt und
+   * die konfigurierten Base- und Overlay-Layer geladen.
+   */
   function initMap(): void {
     map.value = L.map(mapRef.value as HTMLElement, {
       zoom: options.zoom,
@@ -74,6 +81,10 @@ export function useLeafletMap(
     });
   }
 
+  /**
+   * Fügt (falls aktiviert) ein LayerControl-Element zur Karte hinzu und ruft dann
+   * weitere Funktionen auf, um Base- und (falls aktiviert) Overlay-Layer hinzuzufügen.
+   */
   function createLayersAndAddToMap(): void {
     if (!map.value) return;
 
