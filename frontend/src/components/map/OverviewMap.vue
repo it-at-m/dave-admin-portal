@@ -184,6 +184,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   leafletMap.map.value?.remove();
+  leafletMap.map.value = undefined;
 });
 
 const showSpeedDial = computed(() => {
