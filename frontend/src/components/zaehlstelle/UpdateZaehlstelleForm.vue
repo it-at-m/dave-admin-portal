@@ -84,7 +84,7 @@
         cols="12"
         md="6"
       >
-        <my-map
+        <location-map
           width="100%"
           height="100%"
           :lat-lng-marker="coords"
@@ -107,7 +107,7 @@ import { computed, ref } from "vue";
 
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import LhmTextField from "@/components/common/LhmTextField.vue";
-import MyMap from "@/components/map/MyMap.vue";
+import LocationMap from "@/components/map/LocationMap.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { StadtbezirkToBeschreibung } from "@/types/enum/Stadtbezirk";
 import { StadtbezirksviertelToBeschreibung } from "@/types/enum/Stadtbezirksviertel";

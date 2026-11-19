@@ -21,7 +21,7 @@
     </v-banner>
     <v-card-text>
       <v-row dense>
-        <my-map
+        <location-map
           height="200px"
           width="100%"
           :lat-lng-marker="coordsZaehlung"
@@ -218,7 +218,7 @@ import { LatLng } from "leaflet";
 import { isEmpty, isNil } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
 
-import MyMap from "@/components/map/MyMap.vue";
+import LocationMap from "@/components/map/LocationMap.vue";
 import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
 import { useEventbus } from "@/store/Eventbus";
 import Zaehlart from "@/types/enum/Zaehlart";

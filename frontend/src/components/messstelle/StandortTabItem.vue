@@ -1,5 +1,5 @@
 <template>
-  <my-map
+  <location-map
     width="100%"
     :height="height"
     :lat-lng-marker="coords"
@@ -18,7 +18,7 @@ import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
 import { LatLng } from "leaflet";
 import { computed } from "vue";
 
-import MyMap from "@/components/map/MyMap.vue";
+import LocationMap from "@/components/map/LocationMap.vue";
 import { useEventbus } from "@/store/Eventbus";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 

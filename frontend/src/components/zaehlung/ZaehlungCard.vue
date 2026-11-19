@@ -3,7 +3,7 @@
     class="mx-auto mt-1 mb-4"
     max-width="374"
   >
-    <my-map
+    <location-map
       :lat-lng-marker="coordsZaehlung"
       :lat-lng-circle="coordsZaehlstelle"
       :zoom="16"
@@ -280,7 +280,7 @@ import QuelleIcon from "@/components/icons/QuelleIcon.vue";
 import WetterIcon from "@/components/icons/WetterIcon.vue";
 import ZaehlartIcon from "@/components/icons/ZaehlartIcon.vue";
 import ZaehldauerIcon from "@/components/icons/ZaehldauerIcon.vue";
-import MyMap from "@/components/map/MyMap.vue";
+import LocationMap from "@/components/map/LocationMap.vue";
 import BeauftrageZaehlungDialog from "@/components/zaehlung/BeauftrageZaehlungDialog.vue";
 import DeleteZaehlungDialog from "@/components/zaehlung/DeleteZaehlungDialog.vue";
 import ZaehlungGeometrie from "@/components/zaehlung/ZaehlungGeometrie.vue";
