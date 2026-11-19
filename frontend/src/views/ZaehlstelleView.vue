@@ -22,7 +22,7 @@
         </v-sheet>
       </v-col>
       <v-col cols="9">
-        <zaehlstelle-map
+        <overview-map
           :zaehlstelle-id="zaehlstelleId"
           :center="latLngCenter"
           :zoom="17"
@@ -201,7 +201,7 @@ import PkwEinheitenService from "@/api/service/PkwEinheitenService";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import ChatDialog from "@/components/chat/ChatDialog.vue";
-import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
+import OverviewMap from "@/components/map/OverviewMap.vue";
 import UpdateZaehlstelleDialog from "@/components/zaehlstelle/UpdateZaehlstelleDialog.vue";
 import ZaehlstelleInfo from "@/components/zaehlstelle/ZaehlstelleInfo.vue";
 import ZaehlungCard from "@/components/zaehlung/ZaehlungCard.vue";

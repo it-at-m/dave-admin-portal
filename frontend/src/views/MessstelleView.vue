@@ -17,7 +17,7 @@
         </v-sheet>
       </v-col>
       <v-col cols="9">
-        <zaehlstelle-map
+        <overview-map
           :zaehlstelle-id="messstelleId"
           :zoom="17"
           :center="latLngCenter"
@@ -56,7 +56,7 @@ import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import MessstelleService from "@/api/service/MessstelleService";
-import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
+import OverviewMap from "@/components/map/OverviewMap.vue";
 import MessstelleInfo from "@/components/messstelle/MessstelleInfo.vue";
 import UpdateMessstelleForm from "@/components/messstelle/UpdateMessstelleForm.vue";
 import { useEventbus } from "@/store/Eventbus";
