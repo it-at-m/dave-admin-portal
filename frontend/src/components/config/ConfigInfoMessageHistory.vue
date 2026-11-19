@@ -68,10 +68,10 @@ const daveUtils = useDaveUtils();
 function infoMessageToDateArray(infoMessage: InfoMessageDTO): Array<string> {
   const dates: Array<string> = [];
   if (infoMessage.gueltigVon) {
-    dates.push(infoMessage.gueltigVon.toISOString());
+    dates.push(dateUtils.getShortVersionOfDate(infoMessage.gueltigVon));
   }
   if (infoMessage.gueltigBis) {
-    dates.push(infoMessage.gueltigBis.toISOString());
+    dates.push(dateUtils.getShortVersionOfDate(infoMessage.gueltigBis));
   }
   return dates;
 }
@@ -86,12 +86,10 @@ function createComputedDateFormatted(dates: Array<string>): string {
     return "";
   }
   if (dates.length === 1) {
-    return `von: ${dateUtils.formatDate(dates[0])}`;
+    return `von: ${dates[0]}`;
   } else {
     dates = sortDates(dates);
-    return `von: ${dateUtils.formatDate(
-      dates[0]
-    )}, bis: ${dateUtils.formatDate(dates[1])}`;
+    return `von: ${dates[0]}, bis: ${dates[1]}`;
   }
 }
 
