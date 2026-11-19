@@ -1,6 +1,6 @@
 <template>
   <v-main class="dave-default">
-    <zaehlstelle-map
+    <overview-map
       height="100%"
       width="100%"
       :zoom="configurationStore.getTenantConfiguration.mapConfiguration.zoom"
@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
+import OverviewMap from "@/components/map/OverviewMap.vue";
 import { useConfigurationStore } from "@/store/ConfigurationStore";
 
 const configurationStore = useConfigurationStore();
