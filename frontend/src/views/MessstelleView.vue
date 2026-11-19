@@ -107,7 +107,10 @@ const messstelleId = computed(() => {
 });
 
 const latLngCenter = computed(() => {
-  if (messstelle.value.latitude && messstelle.value.longitude) {
+  if (
+    messstelle.value.latitude !== undefined &&
+    messstelle.value.longitude !== undefined
+  ) {
     return latLng(messstelle.value.latitude, messstelle.value.longitude);
   } else {
     return undefined;
