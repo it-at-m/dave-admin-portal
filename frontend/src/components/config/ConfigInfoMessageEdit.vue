@@ -160,6 +160,8 @@ function closeMenu(): void {
 function resetDatum(): void {
   datepickerModelVon.value = undefined;
   datepickerModelBis.value = undefined;
+  activeInfoMessage.value.gueltigVon = undefined;
+  activeInfoMessage.value.gueltigBis = undefined;
 }
 
 function saveDate(): void {
@@ -186,8 +188,8 @@ const disableSpeicherButton = computed(() => {
   return (
     isNil(activeInfoMessage.value.content) ||
     isEmpty(activeInfoMessage.value.content.trim()) ||
-    isEmpty(activeInfoMessage.value.gueltigVon) ||
-    isEmpty(activeInfoMessage.value.gueltigBis) ||
+    !activeInfoMessage.value.gueltigVon ||
+    !activeInfoMessage.value.gueltigBis ||
     datepickerMenuModel.value
   );
 });
