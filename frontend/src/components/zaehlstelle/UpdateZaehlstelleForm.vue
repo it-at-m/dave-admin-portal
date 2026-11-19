@@ -89,7 +89,6 @@
           height="100%"
           :lat-lng-marker="coords"
           :zoom="18"
-          :show-overlay-layers="false"
           @update-zaehlstellen-coords="updateZaehlstellenCoords"
         />
       </v-col>

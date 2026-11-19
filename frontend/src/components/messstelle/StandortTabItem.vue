@@ -7,7 +7,6 @@
     :is-messstelle="true"
     :draggable="draggable"
     :reset-marker="resetMarker"
-    :show-overlay-layers="false"
     @update-zaehlstellen-coords="updateZaehlstellenCoords"
   />
 </template>

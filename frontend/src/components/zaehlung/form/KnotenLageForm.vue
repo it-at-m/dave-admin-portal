@@ -27,11 +27,6 @@
           :lat-lng-marker="coordsZaehlung"
           :lat-lng-circle="coordsZaehlstelle"
           :draggable="true"
-          :zoom-control="false"
-          :fullscreen-control="false"
-          :attribution-control="false"
-          :layer-control="false"
-          :show-overlay-layers="false"
           @update-zaehlung-coords="updateZaehlungCoords"
         />
       </v-row>
