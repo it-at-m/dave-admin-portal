@@ -179,12 +179,12 @@ models/MessstelleAuswertungOptionsDTO.ts
 models/MessstelleDatatableAsset.ts
 models/MessstelleKarteDTO.ts
 models/MessstelleOptionsDTO.ts
-models/MessstelleOverview.ts
+models/MessstelleOverviewDTO.ts
 models/MessstelleRequestBody.ts
 models/MessstelleTooltipDTO.ts
 models/NewlineAsset.ts
 models/NextZaehlstellennummerDTO.ts
-models/OpenZaehlung.ts
+models/OpenZaehlungDTO.ts
 models/OptionsDTO.ts
 models/OptionsLaengsverkehrDTO.ts
 models/OptionsQuerungsverkehrDTO.ts
@@ -220,7 +220,7 @@ models/PagedModelEntityModelZaehlstelleEmbedded.ts
 models/PagedModelEntityModelZeitintervall.ts
 models/PagedModelEntityModelZeitintervallEmbedded.ts
 models/PkwEinheit.ts
-models/PkwEinheit.ts
+models/PkwEinheitDTO.ts
 models/PkwEinheitRequestBody.ts
 models/PositionUTM.ts
 models/QjsStrassenseiteValue.ts
@@ -246,7 +246,7 @@ models/TagesTyp.ts
 models/TenantConfigurationDTO.ts
 models/TextAsset.ts
 models/UnauffaelligerTagRequestBody.ts
-models/UpdateStatus.ts
+models/UpdateStatusDTO.ts
 models/ValidateZeitraumAndTagestypForMessstelleDTO.ts
 models/ValidatedZeitraumAndTagestypDTO.ts
 models/Verkehrsart.ts

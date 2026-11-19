@@ -49,7 +49,7 @@ export interface ChatMessageDTO {
    * @type {Date}
    * @memberof ChatMessageDTO
    */
-  timestamp: Date;
+  timestamp?: Date;
   /**
    *
    * @type {string}
@@ -81,7 +81,6 @@ export function instanceOfChatMessageDTO(
   if (!("content" in value) || value["content"] === undefined) return false;
   if (!("participantId" in value) || value["participantId"] === undefined)
     return false;
-  if (!("timestamp" in value) || value["timestamp"] === undefined) return false;
   if (!("type" in value) || value["type"] === undefined) return false;
   if (!("uploaded" in value) || value["uploaded"] === undefined) return false;
   if (!("viewed" in value) || value["viewed"] === undefined) return false;
@@ -104,7 +103,8 @@ export function ChatMessageDTOFromJSONTyped(
     zaehlungId: json["zaehlungId"],
     content: json["content"],
     participantId: json["participantId"],
-    timestamp: new Date(json["timestamp"]),
+    timestamp:
+      json["timestamp"] == null ? undefined : new Date(json["timestamp"]),
     type: json["type"],
     uploaded: json["uploaded"],
     viewed: json["viewed"],
@@ -128,7 +128,8 @@ export function ChatMessageDTOToJSONTyped(
     zaehlungId: value["zaehlungId"],
     content: value["content"],
     participantId: value["participantId"],
-    timestamp: value["timestamp"].toISOString(),
+    timestamp:
+      value["timestamp"] == null ? undefined : value["timestamp"].toISOString(),
     type: value["type"],
     uploaded: value["uploaded"],
     viewed: value["viewed"],
