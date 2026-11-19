@@ -434,9 +434,6 @@ function searchErhebungsstelle() {
     })
     .catch((error) => {
       snackbarStore.showApiError(error);
-    })
-    .finally(() => {
-      resetMarker();
     });
 }
 
