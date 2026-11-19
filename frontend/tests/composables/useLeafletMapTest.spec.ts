@@ -323,6 +323,72 @@ describe("useLeafletMap", () => {
     expect(L.control.attribution).toHaveBeenCalledOnce();
   });
 
+  it("entfernt bei Konfigurationsänderungen bisherige Layer und registriert die neuen", async () => {
+    setLayers();
+    const { initMap } = createComposable();
+    initMap();
+    finishInitialization();
+    const previousLayers = [...layers];
+    const newBaseLayer: LayerDTO = {
+      baseUrl: "https://example.com/new-base/wms",
+      layerName: "neuer-stadtplan",
+      layerNameToDisplay: "Neuer Stadtplan",
+      attribution: "Neue Stadtplan-Quelle",
+    };
+    const newOverlayLayer: LayerDTO = {
+      baseUrl: "https://example.com/new-overlay/wms",
+      layerName: "neue-stadtbezirke",
+      layerNameToDisplay: "Neue Stadtbezirke",
+      attribution: "Neue Stadtbezirke-Quelle",
+    };
+
+    setLayers([newBaseLayer], [newOverlayLayer]);
+    await nextTick();
+
+    expect(mapMock.removeLayer).toHaveBeenCalledTimes(3);
+    expect(layerControlMock.removeLayer).toHaveBeenCalledTimes(3);
+    previousLayers.forEach((layer, index) => {
+      expect(mapMock.removeLayer).toHaveBeenNthCalledWith(index + 1, layer);
+      expect(layerControlMock.removeLayer).toHaveBeenNthCalledWith(
+        index + 1,
+        layer
+      );
+    });
+    expect(mapMock.removeLayer.mock.invocationCallOrder[2]).toBeLessThan(
+      vi.mocked(L.tileLayer.wms).mock.invocationCallOrder[3]
+    );
+    expect(
+      layerControlMock.removeLayer.mock.invocationCallOrder[2]
+    ).toBeLessThan(vi.mocked(L.tileLayer.wms).mock.invocationCallOrder[3]);
+    expect(L.tileLayer.wms).toHaveBeenCalledTimes(5);
+    expect(layerControlMock.addBaseLayer).toHaveBeenLastCalledWith(
+      layers[3],
+      newBaseLayer.layerNameToDisplay
+    );
+    expect(layerControlMock.addOverlay).toHaveBeenLastCalledWith(
+      layers[4],
+      newOverlayLayer.layerNameToDisplay
+    );
+    expect(layers[3].addTo).toHaveBeenCalledExactlyOnceWith(mapMock);
+    expect(layers[4].addTo).not.toHaveBeenCalled();
+    expect(L.control.layers).toHaveBeenCalledOnce();
+    expect(layerControlMock.addTo).toHaveBeenCalledOnce();
+
+    setLayers([], []);
+    await nextTick();
+
+    expect(mapMock.removeLayer).toHaveBeenCalledTimes(5);
+    expect(layerControlMock.removeLayer).toHaveBeenCalledTimes(5);
+    [layers[3], layers[4]].forEach((layer, index) => {
+      expect(mapMock.removeLayer).toHaveBeenNthCalledWith(index + 4, layer);
+      expect(layerControlMock.removeLayer).toHaveBeenNthCalledWith(
+        index + 4,
+        layer
+      );
+    });
+    expect(L.tileLayer.wms).toHaveBeenCalledTimes(5);
+  });
+
   it("beachtet deaktivierte Layer-Optionen auch bei Konfigurationsänderungen", async () => {
     const { initMap } = createComposable({
       layerControl: false,

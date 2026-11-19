@@ -37,6 +37,7 @@ export function useLeafletMap(
   const map = ref<L.Map | undefined>(undefined);
   const layerControl = ref<L.Control.Layers | undefined>(undefined);
   const configurationStore = useConfigurationStore();
+  const appliedLayers = ref<L.TileLayer.WMS[]>([]);
 
   watch(configurationStore, () => {
     createLayersAndAddToMap();
@@ -88,6 +89,8 @@ export function useLeafletMap(
   function createLayersAndAddToMap(): void {
     if (!map.value) return;
 
+    removeAppliedLayers();
+
     if (options.layerControl && !layerControl.value) {
       layerControl.value = L.control.layers().addTo(map.value as L.Map);
     }
@@ -114,6 +117,7 @@ export function useLeafletMap(
         referrerPolicy: "strict-origin-when-cross-origin",
       });
       layerControl.value?.addBaseLayer(layer, layerConfig.layerNameToDisplay);
+      appliedLayers.value.push(layer);
       if (!firstLayerAddedToMap) {
         layer.addTo(map.value as L.Map);
         firstLayerAddedToMap = true;
@@ -138,7 +142,19 @@ export function useLeafletMap(
         referrerPolicy: "strict-origin-when-cross-origin",
       });
       layerControl.value?.addOverlay(layer, layerConfig.layerNameToDisplay);
+      appliedLayers.value.push(layer);
     });
+  }
+
+  /**
+   * Entfernt die aktuell vorhandenen Layer von LayerControl und Karte.
+   */
+  function removeAppliedLayers() {
+    appliedLayers.value.forEach((layer) => {
+      layerControl.value?.removeLayer(layer as L.TileLayer.WMS);
+      map.value?.removeLayer(layer as L.TileLayer.WMS);
+    });
+    appliedLayers.value = [];
   }
 
   return {
