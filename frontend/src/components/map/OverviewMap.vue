@@ -426,7 +426,7 @@ function searchErhebungsstelle() {
       snackbarStore.showApiError(error);
     })
     .finally(() => {
-      setMarkerToMap();
+      resetMarker();
     });
 }
 
