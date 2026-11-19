@@ -360,6 +360,15 @@ watch(
   }
 );
 
+watch(
+  () => props.center,
+  (newCenter) => {
+    if (newCenter) {
+      leafletMap.map.value?.setView(newCenter, zoomValue.value);
+    }
+  }
+);
+
 /**
  * Entfernt und leert die bisherige Markergruppe und baut die Marker
  * anhand der aktuellen Suchergebnisse neu auf.
