@@ -265,6 +265,7 @@ function createMarkerForNewZaehlstelle(coords: LatLng) {
 function createNewMarker(coords: LatLng): Marker {
   const defaultIcon = new Icon.Default();
   defaultIcon.options.iconUrl = markerIconRed;
+  defaultIcon.options.iconRetinaUrl = markerIconRed;
   return new Marker(coords, {
     icon: defaultIcon,
     opacity: 1.0,
@@ -653,6 +654,7 @@ function markerOptionsZaehlstelle(zaehlstelleKarte: ZaehlstelleKarteDTO) {
     if (props.zaehlstelleId === zaehlstelleKarte.id) {
       const defaultIcon = new Icon.Default();
       defaultIcon.options.iconUrl = markerIconRed;
+      defaultIcon.options.iconRetinaUrl = markerIconRed;
       return { opacity: 1.0, icon: defaultIcon };
     } else {
       return { opacity: 0.5 };

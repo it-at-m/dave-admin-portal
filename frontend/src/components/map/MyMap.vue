@@ -97,8 +97,10 @@ function createMarker(latLngMarker: LatLng): L.Marker {
   const defaultIcon = new Icon.Default();
   if (props.isMessstelle) {
     defaultIcon.options.iconUrl = markerIconDiamondRed;
+    defaultIcon.options.iconRetinaUrl = markerIconDiamondRed;
   } else {
     defaultIcon.options.iconUrl = markerIconRed;
+    defaultIcon.options.iconRetinaUrl = markerIconRed;
   }
 
   const marker = L.marker(latLngMarker, {
