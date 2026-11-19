@@ -168,8 +168,8 @@
 </template>
 
 <script setup lang="ts">
-import type ChatMessageDTO from "@/types/chat/ChatMessageDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type { ChatMessageDTO } from "@/api/client";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { isEmpty, isNil } from "lodash";
 import { computed, ref, watch } from "vue";
@@ -185,7 +185,7 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<Zaehlung>({
   required: true,
 });
 
@@ -222,7 +222,7 @@ function getTitle(item: ChatMessageDTO) {
     : "Mobilitätsreferat";
 }
 function getMessageTime(item: ChatMessageDTO) {
-  return dateUtils.getShortVersionOfDateWithTime(item.timestamp);
+  return dateUtils.getShortVersionOfDateWithTime(item.timestamp || "");
 }
 
 function loadMessages() {

@@ -1,4 +1,4 @@
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
+import type { Knotenarm } from "@/api/client";
 
 import { describe, expect, it } from "vitest";
 
@@ -22,11 +22,11 @@ describe("ValidationUtils.ts", () => {
     // Fall QJS
     zaehlung.zaehlart = Zaehlart.QJS;
 
-    const knotenarm1 = {} as KnotenarmDTO;
+    const knotenarm1 = {} as Knotenarm;
     knotenarm1.nummer = 1;
-    const knotenarm2 = {} as KnotenarmDTO;
+    const knotenarm2 = {} as Knotenarm;
     knotenarm2.nummer = 2;
-    const knotenarm3 = {} as KnotenarmDTO;
+    const knotenarm3 = {} as Knotenarm;
     knotenarm3.nummer = 3;
 
     zaehlung.knotenarme = [];

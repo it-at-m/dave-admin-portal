@@ -226,7 +226,7 @@
 </template>
 
 <script setup lang="ts">
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type { HochrechnungsfaktorDTO } from "@/api/client";
 
 import { cloneDeep, isEmpty, isNumber } from "lodash";
 import { computed, onMounted, ref, watch } from "vue";
@@ -367,8 +367,11 @@ const disableSpeicherButton = computed(() => {
   return (
     isEmpty(matrix) ||
     hofaMatrizen.value.has(matrix) ||
+    !editHochrechnungsfaktor.value.kfz ||
     mustBePositivNumber(editHochrechnungsfaktor.value.kfz) !== true ||
+    !editHochrechnungsfaktor.value.sv ||
     mustBePositivNumber(editHochrechnungsfaktor.value.sv) !== true ||
+    !editHochrechnungsfaktor.value.gv ||
     mustBePositivNumber(editHochrechnungsfaktor.value.gv) !== true ||
     !checkForValidDefaultFactor(editHochrechnungsfaktor.value.defaultFaktor)
   );

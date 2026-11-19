@@ -36,8 +36,8 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -50,7 +50,7 @@ const router = useRouter();
 const dateUtils = useDateUtils();
 const snackbarStore = useSnackbarStore();
 
-const items = ref<Array<ZaehlstelleDTO>>([]);
+const items = ref<Array<Zaehlstelle>>([]);
 
 onMounted(() => {
   loadZaehlstellenWithUnreadMessages();
@@ -68,15 +68,15 @@ function loadZaehlstellenWithUnreadMessages(): void {
     .catch((error) => snackbarStore.showApiError(error));
 }
 
-function selectItem(item: ZaehlstelleDTO): void {
+function selectItem(item: Zaehlstelle): void {
   router.push(`/zaehlstelle/${item.id}`);
 }
 
-function getTitle(item: ZaehlstelleDTO): string {
+function getTitle(item: Zaehlstelle): string {
   return `Zählstelle ${item.nummer}`;
 }
 
-function getSubTitle(item: ZaehlungDTO): string {
+function getSubTitle(item: Zaehlung): string {
   return `${dateUtils.getShortVersionOfDate(item.datum)} - ${item.projektName}`;
 }
 </script>

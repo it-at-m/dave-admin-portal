@@ -105,13 +105,13 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 
 import { onMounted, ref, watch } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import { useEventbus } from "@/store/Eventbus";
-import { himmelsRichtungenTextLong } from "@/types/enum/Himmelsrichtung";
+import { himmelsRichtungenTextLong } from "@/types/enum/HimmelsrichtungText";
 import { useValidationUtils } from "@/util/ValidationUtils";
 
 const validationUtils = useValidationUtils();
@@ -122,7 +122,7 @@ interface Props {
 }
 
 defineProps<Props>();
-const messstelle = defineModel<MessstelleEditDTO>({
+const messstelle = defineModel<MessstelleEdit>({
   required: true,
 });
 

@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import type InfoMessageDTO from "@/types/config/InfoMessageDTO";
+import type { InfoMessageDTO } from "@/api/client";
 
 import { isEmpty, isNil } from "lodash";
 import { computed, ref, watch } from "vue";
@@ -160,12 +160,14 @@ function closeMenu(): void {
 function resetDatum(): void {
   datepickerModelVon.value = undefined;
   datepickerModelBis.value = undefined;
+  activeInfoMessage.value.gueltigVon = undefined;
+  activeInfoMessage.value.gueltigBis = undefined;
 }
 
 function saveDate(): void {
   if (datepickerModelVon.value && datepickerModelBis.value) {
-    activeInfoMessage.value.gueltigVon = datepickerModelVon.value.toISOString();
-    activeInfoMessage.value.gueltigBis = datepickerModelBis.value.toISOString();
+    activeInfoMessage.value.gueltigVon = datepickerModelVon.value;
+    activeInfoMessage.value.gueltigBis = datepickerModelBis.value;
     datepickerMenuModel.value = false;
   }
 }
@@ -186,8 +188,8 @@ const disableSpeicherButton = computed(() => {
   return (
     isNil(activeInfoMessage.value.content) ||
     isEmpty(activeInfoMessage.value.content.trim()) ||
-    isEmpty(activeInfoMessage.value.gueltigVon) ||
-    isEmpty(activeInfoMessage.value.gueltigBis) ||
+    !activeInfoMessage.value.gueltigVon ||
+    !activeInfoMessage.value.gueltigBis ||
     datepickerMenuModel.value
   );
 });

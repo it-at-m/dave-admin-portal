@@ -69,8 +69,8 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlstelleDTO from "@/types/zaehlstelle/ZaehlstelleDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Zaehlstelle from "@/types/zaehlstelle/Zaehlstelle";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { computed, onMounted, ref, watch } from "vue";
 
@@ -83,11 +83,11 @@ import { useDaveUtils } from "@/util/DaveUtils";
 import { useValidationUtils } from "@/util/ValidationUtils";
 
 interface Props {
-  zaehlstelle: ZaehlstelleDTO;
+  zaehlstelle: Zaehlstelle;
 }
 defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>("zaehlung", {
+const zaehlung = defineModel<Zaehlung>("zaehlung", {
   required: true,
 });
 const isZaehlungValid = defineModel<boolean>("isValid", {

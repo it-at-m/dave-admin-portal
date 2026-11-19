@@ -252,16 +252,17 @@
 </template>
 
 <script setup lang="ts">
-import type BackendIdDTO from "@/types/common/BackendIdDTO";
-import type GeoPoint from "@/types/common/GeoPoint";
-import type DienstleisterDTO from "@/types/config/DienstleisterDTO";
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
-import type KnotenarmDTO from "@/types/zaehlung/KnotenarmDTO";
-import type LaengsverkehrDTO from "@/types/zaehlung/LaengsverkehrDTO";
-import type QuerungsverkehrDTO from "@/types/zaehlung/QuerungsverkehrDTO";
-import type UpdateStatusDTO from "@/types/zaehlung/UpdateStatusDTO";
-import type VerkehrsbeziehungDTO from "@/types/zaehlung/VerkehrsbeziehungDTO";
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type {
+  BackendIdDTO,
+  DienstleisterDTO,
+  GeoPoint,
+  HochrechnungsfaktorDTO,
+  UpdateStatusDTO,
+} from "@/api/client";
+import type Laengsverkehr from "@/types/zaehlung/Laengsverkehr";
+import type Querungsverkehr from "@/types/zaehlung/Querungsverkehr";
+import type Verkehrsbeziehung from "@/types/zaehlung/Verkehrsbeziehung";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { LatLng } from "leaflet";
 import { cloneDeep } from "lodash";
@@ -293,16 +294,16 @@ interface Props {
 
 const properties = defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<Zaehlung>({
   required: true,
 });
 
 const emits = defineEmits<{
   (e: "cancel"): void;
   (e: "deleted"): void;
-  (e: "openZaehlungDialog", zaehlung: ZaehlungDTO): void;
+  (e: "openZaehlungDialog", zaehlung: Zaehlung): void;
   (e: "openZaehlungDatenportal", zaehlungId: string): void;
-  (e: "openChatDialog", zaehlung: ZaehlungDTO): void;
+  (e: "openChatDialog", zaehlung: Zaehlung): void;
   (e: "saved", payload: BackendIdDTO): void;
 }>();
 
@@ -315,15 +316,15 @@ const isBeauftragen = ref(true);
 const showBeauftragenDialog = ref(false);
 
 const coordsZaehlstelle = computed(() => {
-  return createLatLngFromString(
-    properties.geoPointZaehlstelle.lat,
-    properties.geoPointZaehlstelle.lon
+  return new LatLng(
+    properties.geoPointZaehlstelle.lat || 0,
+    properties.geoPointZaehlstelle.lon || 0
   );
 });
 
 const coordsZaehlung = computed(() => {
   const geoPoint: GeoPoint = zaehlung.value.punkt;
-  return createLatLngFromString(geoPoint.lat, geoPoint.lon);
+  return new LatLng(geoPoint.lat || 0, geoPoint.lon || 0);
 });
 
 const datum = computed(() => {
@@ -393,11 +394,6 @@ const showButtonDienstleisterKorrigieren = computed(() => {
     zaehlung.value.status === Status.CORRECTION
   );
 });
-
-// Erzeugt aus den String Koordinaten ein Objekt von Typ LatLng
-function createLatLngFromString(lat: string, lng: string): LatLng {
-  return new LatLng(parseFloat(lat), parseFloat(lng));
-}
 
 function zaehlungBeauftragen(dienstleister: DienstleisterDTO) {
   loading.value = true;
@@ -492,7 +488,7 @@ function openZaehlungInDatenportal() {
 
 function zaehlungKopieren() {
   loading.value = true;
-  const zaehlungCopy: ZaehlungDTO = cloneDeep(zaehlung.value);
+  const zaehlungCopy: Zaehlung = cloneDeep(zaehlung.value);
   zaehlungCopy.id = "";
   zaehlungCopy.kommentar = "";
   zaehlungCopy.zaehlsituation = "";
@@ -501,15 +497,12 @@ function zaehlungKopieren() {
   zaehlungCopy.status = Status.CREATED;
   zaehlungCopy.dienstleisterkennung = "";
   zaehlungCopy.datum = new Date().toISOString().substring(0, 10);
-  zaehlungCopy.knotenarme.forEach((arm: KnotenarmDTO) => {
-    arm.id = "";
-  });
 
   try {
     if (!zaehlungCopy.verkehrsbeziehungen) {
       zaehlungCopy.verkehrsbeziehungen = [];
     } else {
-      zaehlungCopy.verkehrsbeziehungen.forEach((vz: VerkehrsbeziehungDTO) => {
+      zaehlungCopy.verkehrsbeziehungen.forEach((vz: Verkehrsbeziehung) => {
         vz.id = "";
         if (vz.hochrechnungsfaktor) {
           vz.hochrechnungsfaktor.id = "";
@@ -539,7 +532,7 @@ function zaehlungKopieren() {
     if (!zaehlungCopy.querungsverkehr) {
       zaehlungCopy.querungsverkehr = [];
     } else {
-      zaehlungCopy.querungsverkehr.forEach((qv: QuerungsverkehrDTO) => {
+      zaehlungCopy.querungsverkehr.forEach((qv: Querungsverkehr) => {
         qv.id = "";
       });
     }
@@ -554,7 +547,7 @@ function zaehlungKopieren() {
     if (!zaehlungCopy.laengsverkehr) {
       zaehlungCopy.laengsverkehr = [];
     } else {
-      zaehlungCopy.laengsverkehr.forEach((lv: LaengsverkehrDTO) => {
+      zaehlungCopy.laengsverkehr.forEach((lv: Laengsverkehr) => {
         lv.id = "";
       });
     }

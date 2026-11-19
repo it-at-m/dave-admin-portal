@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import type OpenZaehlungDTO from "@/types/zaehlung/OpenZaehlungDTO";
+import type OpenZaehlung from "@/types/zaehlung/OpenZaehlung";
 
 import { computed, onMounted, ref } from "vue";
 
@@ -62,11 +62,11 @@ const snackbarStore = useSnackbarStore();
 
 const hasOpenZaehlungen = ref(false);
 
-const createdZaehlungen = ref<Array<OpenZaehlungDTO>>([]);
-const instructedZaehlungen = ref<Array<OpenZaehlungDTO>>([]);
-const countingZaehlungen = ref<Array<OpenZaehlungDTO>>([]);
-const accomplishedZaehlungen = ref<Array<OpenZaehlungDTO>>([]);
-const correctionZaehlungen = ref<Array<OpenZaehlungDTO>>([]);
+const createdZaehlungen = ref<Array<OpenZaehlung>>([]);
+const instructedZaehlungen = ref<Array<OpenZaehlung>>([]);
+const countingZaehlungen = ref<Array<OpenZaehlung>>([]);
+const accomplishedZaehlungen = ref<Array<OpenZaehlung>>([]);
+const correctionZaehlungen = ref<Array<OpenZaehlung>>([]);
 
 const createdStatusDesign = computed(() => {
   return getStatusDesign(Status.CREATED);
@@ -108,8 +108,8 @@ onMounted(() => {
 function loadOpenZaehlungen(): void {
   hasOpenZaehlungen.value = false;
   ZaehlungService.getAllOpenZaehlungen()
-    .then((zaehlungen: Array<OpenZaehlungDTO>) => {
-      zaehlungen.forEach((zaehlung: OpenZaehlungDTO) => {
+    .then((zaehlungen: Array<OpenZaehlung>) => {
+      zaehlungen.forEach((zaehlung: OpenZaehlung) => {
         switch (zaehlung.status) {
           case Status.CREATED:
             createdZaehlungen.value.push(zaehlung);
@@ -142,9 +142,7 @@ function sortDataArraysZaehlstelle(): void {
   correctionZaehlungen.value = sortByDatumDesc(correctionZaehlungen.value);
 }
 
-function sortByDatumDesc(
-  toSort: Array<OpenZaehlungDTO>
-): Array<OpenZaehlungDTO> {
+function sortByDatumDesc(toSort: Array<OpenZaehlung>): Array<OpenZaehlung> {
   return toSort.sort(ZaehlungComparator.sortByDatumDesc);
 }
 

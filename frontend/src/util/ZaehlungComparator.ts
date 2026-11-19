@@ -1,4 +1,4 @@
-import type OpenZaehlungDTO from "@/types/zaehlung/OpenZaehlungDTO";
+import type OpenZaehlung from "@/types/zaehlung/OpenZaehlung";
 
 import Zaehlart from "@/types/enum/Zaehlart";
 
@@ -10,10 +10,7 @@ export default class ZaehlungComparator {
    * @param a
    * @param b
    */
-  public static sortByDatumDesc(
-    a: OpenZaehlungDTO,
-    b: OpenZaehlungDTO
-  ): number {
+  public static sortByDatumDesc(a: OpenZaehlung, b: OpenZaehlung): number {
     if (a.datum > b.datum) {
       return -1;
     }

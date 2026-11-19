@@ -76,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
+import type Zaehlung from "@/types/zaehlung/Zaehlung";
 
 import { computed, onMounted, ref, watch } from "vue";
 
@@ -90,7 +90,7 @@ interface Props {
 }
 defineProps<Props>();
 
-const zaehlung = defineModel<ZaehlungDTO>({
+const zaehlung = defineModel<Zaehlung>({
   required: true,
 });
 

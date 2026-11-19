@@ -203,14 +203,14 @@
 </template>
 
 <script setup lang="ts">
-import type MessstelleEditDTO from "@/types/messstelle/MessstelleEditDTO";
+import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 
 import { isEmpty, isNil } from "lodash";
 import { computed, ref } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
-import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
-import { messstelleStatusText } from "@/types/enum/MessstelleStatus";
+import { FahrzeugklasseToBeschreibung } from "@/domain/enums/FahrzeugklasseText";
+import { messstelleStatusText } from "@/types/enum/MessstelleStatusText";
 import { useDateUtils } from "@/util/DateUtils";
 import { useValidationUtils } from "@/util/ValidationUtils";
 
@@ -225,7 +225,7 @@ interface Props {
 }
 
 defineProps<Props>();
-const messstelle = defineModel<MessstelleEditDTO>({
+const messstelle = defineModel<MessstelleEdit>({
   required: true,
 });
 

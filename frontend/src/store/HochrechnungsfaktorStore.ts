@@ -1,4 +1,4 @@
-import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
+import type { HochrechnungsfaktorDTO } from "@/api/client";
 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";

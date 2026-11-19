@@ -11,12 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import type MessfaehigkeitEditDTO from "@/types/messstelle/MessfaehigkeitEditDTO";
+import type MessfaehigkeitEdit from "@/types/messstelle/MessfaehigkeitEdit";
 
 import { isNil } from "lodash";
 
-import { FahrzeugklasseToBeschreibung } from "@/domain/enums/Fahrzeugklasse";
-import { ZaehldatenIntervallToBeschreibung } from "@/domain/enums/ZaehldatenIntervall";
+import { FahrzeugklasseToBeschreibung } from "@/domain/enums/FahrzeugklasseText";
+import { ZaehldatenIntervallToBeschreibung } from "@/domain/enums/ZaehldatenIntervallText";
 
 interface Props {
   height: string;
@@ -24,7 +24,7 @@ interface Props {
 
 defineProps<Props>();
 
-const messfahigkeiten = defineModel<Array<MessfaehigkeitEditDTO>>({
+const messfahigkeiten = defineModel<Array<MessfaehigkeitEdit>>({
   required: true,
 });
 
@@ -46,7 +46,7 @@ const header = [
     align: "start",
     sortable: false,
     key: "fahrzeugklasse",
-    value: (messfaehigkeit: MessfaehigkeitEditDTO) =>
+    value: (messfaehigkeit: MessfaehigkeitEdit) =>
       getDescriptionFahrzeugklasse(messfaehigkeit.fahrzeugklasse),
     lastFixed: true,
   },
@@ -55,7 +55,7 @@ const header = [
     align: "start",
     sortable: false,
     key: "intervall",
-    value: (messfaehigkeit: MessfaehigkeitEditDTO) =>
+    value: (messfaehigkeit: MessfaehigkeitEdit) =>
       getDescriptionIntervall(messfaehigkeit.intervall),
     lastFixed: true,
   },
