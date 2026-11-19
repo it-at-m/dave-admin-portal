@@ -36,7 +36,7 @@ export default class EmailAddressService {
     );
   }
 
-  static delete(data: EmailAddressDTO): Promise<object> {
+  static delete(data: EmailAddressDTO): Promise<void> {
     if (!data.id) {
       throw new Error("Adresse mit leerer ID kann nicht gelöscht werden.");
     }

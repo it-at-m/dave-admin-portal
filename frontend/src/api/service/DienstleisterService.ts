@@ -43,7 +43,7 @@ export default class DienstleisterService {
     );
   }
 
-  static delete(data: DienstleisterDTO): Promise<object> {
+  static delete(data: DienstleisterDTO): Promise<void> {
     if (!data.id) {
       throw new Error(
         "Dienstleister mit leerer ID kann nicht gelöscht werden."

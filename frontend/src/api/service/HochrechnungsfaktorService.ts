@@ -58,7 +58,7 @@ export default class HochrechnungsfaktorService {
 
   static deleteHochrechnungsfaktor(
     data: HochrechnungsfaktorDTO
-  ): Promise<object> {
+  ): Promise<void> {
     if (!data.id) {
       throw new Error(
         "Hochrechnungsfaktor mit leerer ID kann nicht gelöscht werden."

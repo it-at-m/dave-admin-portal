@@ -27,7 +27,7 @@ export default class InfoMessageService {
     );
   }
 
-  static setAllInfoMessagesInactive(): Promise<object> {
+  static setAllInfoMessagesInactive(): Promise<void> {
     return handleOpenApiError(
       this.API.setAllInfoMessagesInactive().then((response) => response),
       "Beim deaktivieren der Infonachricht ist ein Fehler aufgetreten."

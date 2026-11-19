@@ -31,19 +31,19 @@ export interface InfoMessageDTO {
    * @type {string}
    * @memberof InfoMessageDTO
    */
-  content: string;
+  content?: string;
   /**
    *
    * @type {Date}
    * @memberof InfoMessageDTO
    */
-  gueltigVon: Date;
+  gueltigVon?: Date;
   /**
    *
    * @type {Date}
    * @memberof InfoMessageDTO
    */
-  gueltigBis: Date;
+  gueltigBis?: Date;
   /**
    *
    * @type {boolean}
@@ -64,11 +64,6 @@ export interface InfoMessageDTO {
 export function instanceOfInfoMessageDTO(
   value: object
 ): value is InfoMessageDTO {
-  if (!("content" in value) || value["content"] === undefined) return false;
-  if (!("gueltigVon" in value) || value["gueltigVon"] === undefined)
-    return false;
-  if (!("gueltigBis" in value) || value["gueltigBis"] === undefined)
-    return false;
   if (!("gueltig" in value) || value["gueltig"] === undefined) return false;
   if (!("aktiv" in value) || value["aktiv"] === undefined) return false;
   return true;
@@ -87,9 +82,11 @@ export function InfoMessageDTOFromJSONTyped(
   }
   return {
     id: json["id"] == null ? undefined : json["id"],
-    content: json["content"],
-    gueltigVon: new Date(json["gueltigVon"]),
-    gueltigBis: new Date(json["gueltigBis"]),
+    content: json["content"] == null ? undefined : json["content"],
+    gueltigVon:
+      json["gueltigVon"] == null ? undefined : new Date(json["gueltigVon"]),
+    gueltigBis:
+      json["gueltigBis"] == null ? undefined : new Date(json["gueltigBis"]),
     gueltig: json["gueltig"],
     aktiv: json["aktiv"],
   };
@@ -110,8 +107,14 @@ export function InfoMessageDTOToJSONTyped(
   return {
     id: value["id"],
     content: value["content"],
-    gueltigVon: value["gueltigVon"].toISOString().substring(0, 10),
-    gueltigBis: value["gueltigBis"].toISOString().substring(0, 10),
+    gueltigVon:
+      value["gueltigVon"] == null
+        ? undefined
+        : value["gueltigVon"].toISOString().substring(0, 10),
+    gueltigBis:
+      value["gueltigBis"] == null
+        ? undefined
+        : value["gueltigBis"].toISOString().substring(0, 10),
     gueltig: value["gueltig"],
     aktiv: value["aktiv"],
   };
