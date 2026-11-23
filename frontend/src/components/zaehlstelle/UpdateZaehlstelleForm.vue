@@ -84,10 +84,11 @@
         cols="12"
         md="6"
       >
-        <mini-map
-          :coords="coords"
-          height="100%"
+        <location-map
           width="100%"
+          height="100%"
+          :lat-lng-marker="coords"
+          :zoom="18"
           @update-zaehlstellen-coords="updateZaehlstellenCoords"
         />
       </v-col>
@@ -105,7 +106,7 @@ import { computed, ref } from "vue";
 
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import LhmTextField from "@/components/common/LhmTextField.vue";
-import MiniMap from "@/components/map/MiniMap.vue";
+import LocationMap from "@/components/map/LocationMap.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
 import { StadtbezirkToBeschreibung } from "@/types/enum/Stadtbezirk";
 import { StadtbezirksviertelToBeschreibung } from "@/types/enum/Stadtbezirksviertel";

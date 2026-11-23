@@ -22,13 +22,12 @@
         </v-sheet>
       </v-col>
       <v-col cols="9">
-        <zaehlstelle-map
-          :z-id="zaehlstelleId"
-          :latlng="latlng"
+        <overview-map
+          :zaehlstelle-id="zaehlstelleId"
+          :center="latLngCenter"
           :zoom="17"
           :height="headerHeightVh"
-          :minheight="headerHeightVh"
-          :show-marker="true"
+          :min-height="headerHeightVh"
           width="100%"
         />
       </v-col>
@@ -191,7 +190,8 @@ import type HochrechnungsfaktorDTO from "@/types/config/HochrechnungsfaktorDTO";
 import type ZaehlungCardObject from "@/types/zaehlung/ZaehlungCardObject";
 import type ZaehlungDTO from "@/types/zaehlung/ZaehlungDTO";
 
-import { cloneDeep } from "lodash";
+import { latLng } from "leaflet";
+import { cloneDeep, toNumber } from "lodash";
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
@@ -201,7 +201,7 @@ import PkwEinheitenService from "@/api/service/PkwEinheitenService";
 import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import ChatDialog from "@/components/chat/ChatDialog.vue";
-import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
+import OverviewMap from "@/components/map/OverviewMap.vue";
 import UpdateZaehlstelleDialog from "@/components/zaehlstelle/UpdateZaehlstelleDialog.vue";
 import ZaehlstelleInfo from "@/components/zaehlstelle/ZaehlstelleInfo.vue";
 import ZaehlungCard from "@/components/zaehlung/ZaehlungCard.vue";
@@ -294,13 +294,16 @@ const kreuzungsname = computed(() => {
 });
 
 /**
- * Erzeugt aus dem übergebenen Punkt ein Array aus lat und lon.
+ * Erzeugt aus dem übergebenen Punkt ein LatLng.
  */
-const latlng = computed(() => {
+const latLngCenter = computed(() => {
   if (zaehlstelle.value.punkt != null) {
-    return [zaehlstelle.value.punkt.lat, zaehlstelle.value.punkt.lon];
+    return latLng(
+      toNumber(zaehlstelle.value.punkt.lat),
+      toNumber(zaehlstelle.value.punkt.lon)
+    );
   } else {
-    return [];
+    return undefined;
   }
 });
 
