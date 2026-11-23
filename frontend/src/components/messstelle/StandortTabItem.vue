@@ -1,12 +1,12 @@
 <template>
-  <mini-map
-    :coords="coords"
-    :height="height"
+  <location-map
     width="100%"
+    :height="height"
+    :lat-lng-marker="coords"
+    :zoom="18"
     :is-messstelle="true"
-    :show-attribution="true"
-    :reset-marker="resetMarker"
     :draggable="draggable"
+    :reset-marker="resetMarker"
     @update-zaehlstellen-coords="updateZaehlstellenCoords"
   />
 </template>
@@ -17,7 +17,7 @@ import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 import { LatLng } from "leaflet";
 import { computed } from "vue";
 
-import MiniMap from "@/components/map/MiniMap.vue";
+import LocationMap from "@/components/map/LocationMap.vue";
 import { useEventbus } from "@/store/Eventbus";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 

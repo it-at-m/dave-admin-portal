@@ -17,13 +17,12 @@
         </v-sheet>
       </v-col>
       <v-col cols="9">
-        <zaehlstelle-map
-          :z-id="messstelleId"
+        <overview-map
+          :zaehlstelle-id="messstelleId"
           :zoom="17"
-          :latlng="latlng"
+          :center="latLngCenter"
           :height="headerHeightVh"
-          :minheight="headerHeightVh"
-          :show-marker="true"
+          :min-height="headerHeightVh"
           width="100%"
         />
       </v-col>
@@ -52,11 +51,12 @@
 <script setup lang="ts">
 import type MessstelleEdit from "@/types/messstelle/MessstelleEdit";
 
+import { latLng } from "leaflet";
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import MessstelleService from "@/api/service/MessstelleService";
-import ZaehlstelleMap from "@/components/map/ZaehlstelleMap.vue";
+import OverviewMap from "@/components/map/OverviewMap.vue";
 import MessstelleInfo from "@/components/messstelle/MessstelleInfo.vue";
 import UpdateMessstelleForm from "@/components/messstelle/UpdateMessstelleForm.vue";
 import { useEventbus } from "@/store/Eventbus";
@@ -106,17 +106,14 @@ const messstelleId = computed(() => {
   return messstelleId;
 });
 
-const latlng = computed(() => {
+const latLngCenter = computed(() => {
   if (
-    messstelle.value.longitude == undefined ||
-    messstelle.value.latitude == undefined
+    messstelle.value.latitude !== undefined &&
+    messstelle.value.longitude !== undefined
   ) {
-    return [];
+    return latLng(messstelle.value.latitude, messstelle.value.longitude);
   } else {
-    return [
-      messstelle.value.latitude.toString(),
-      messstelle.value.longitude.toString(),
-    ];
+    return undefined;
   }
 });
 
