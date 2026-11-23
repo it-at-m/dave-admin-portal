@@ -34,7 +34,7 @@ interface Props {
   fullscreenControl?: boolean;
   attributionControl?: boolean;
   layerControl?: boolean;
-  showOverlayLayers?: boolean;
+  activateOverlayLayers?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
   fullscreenControl: true,
   attributionControl: true,
   layerControl: true,
-  showOverlayLayers: true,
+  activateOverlayLayers: true,
 });
 
 const emit = defineEmits<{
@@ -69,7 +69,7 @@ const leafletMap = useLeafletMap(mapRef, {
   fullscreenControl: props.fullscreenControl,
   attributionControl: props.attributionControl,
   layerControl: props.layerControl,
-  showOverlayLayers: props.showOverlayLayers,
+  activateOverlayLayers: props.activateOverlayLayers,
 });
 
 const marker = ref<L.Marker | null>(null);

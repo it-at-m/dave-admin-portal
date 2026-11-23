@@ -15,7 +15,7 @@ export interface UseLeafletMapOptions {
   fullscreenControl?: boolean;
   attributionControl?: boolean;
   layerControl?: boolean;
-  showOverlayLayers?: boolean;
+  activateOverlayLayers?: boolean;
 }
 
 const defaultOptions = {
@@ -25,7 +25,7 @@ const defaultOptions = {
   fullscreenControl: true,
   attributionControl: true,
   layerControl: true,
-  showOverlayLayers: true,
+  activateOverlayLayers: true,
 };
 
 export function useLeafletMap(
@@ -95,7 +95,7 @@ export function useLeafletMap(
       layerControl.value = L.control.layers().addTo(map.value as L.Map);
     }
     addBaseLayers();
-    if (options.showOverlayLayers) {
+    if (options.activateOverlayLayers) {
       addOverlayLayers();
     }
   }

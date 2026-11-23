@@ -265,9 +265,9 @@ describe("useLeafletMap", () => {
     expect(layerControlMock.addBaseLayer).not.toHaveBeenCalled();
   });
 
-  it("erstellt bei showOverlayLayers=false ausschließlich Base-Layer", () => {
+  it("erstellt bei activateOverlayLayers=false ausschließlich Base-Layer", () => {
     setLayers();
-    const { initMap } = createComposable({ showOverlayLayers: false });
+    const { initMap } = createComposable({ activateOverlayLayers: false });
     initMap();
     finishInitialization();
 
@@ -392,7 +392,7 @@ describe("useLeafletMap", () => {
   it("beachtet deaktivierte Layer-Optionen auch bei Konfigurationsänderungen", async () => {
     const { initMap } = createComposable({
       layerControl: false,
-      showOverlayLayers: false,
+      activateOverlayLayers: false,
     });
     initMap();
     finishInitialization();

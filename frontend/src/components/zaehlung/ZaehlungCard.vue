@@ -12,7 +12,7 @@
       :fullscreen-control="false"
       :attribution-control="false"
       :layer-control="false"
-      :show-overlay-layers="false"
+      :activate-overlay-layers="false"
     />
 
     <v-btn
