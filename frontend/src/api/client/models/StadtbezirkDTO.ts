@@ -22,14 +22,10 @@ import { mapValues } from "../runtime";
 export interface StadtbezirkDTO {
   /**
    *
-   * @type {number}
-   * @memberof StadtbezirkDTO
    */
   nummer: number;
   /**
    *
-   * @type {string}
-   * @memberof StadtbezirkDTO
    */
   name: string;
 }

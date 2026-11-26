@@ -11,26 +11,34 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
-import type {
-  CollectionModelEntityModelStadtbezirkEntity,
-  EntityModelStadtbezirkEntity,
-} from "../models/index";
+import type { CollectionModelEntityModelStadtbezirkEntity } from "../models/CollectionModelEntityModelStadtbezirkEntity";
+import type { EntityModelStadtbezirkEntity } from "../models/EntityModelStadtbezirkEntity";
 
 import {
   CollectionModelEntityModelStadtbezirkEntityFromJSON,
   CollectionModelEntityModelStadtbezirkEntityToJSON,
+} from "../models/CollectionModelEntityModelStadtbezirkEntity";
+import {
   EntityModelStadtbezirkEntityFromJSON,
   EntityModelStadtbezirkEntityToJSON,
-} from "../models/index";
+} from "../models/EntityModelStadtbezirkEntity";
 import * as runtime from "../runtime";
 
 export interface ExecuteSearchStadtbezirkentityGetRequest {
+  /**
+   *
+   */
   stadt?: string;
 }
 
 export interface ExecuteSearchStadtbezirkentityGet1Request {
+  /**
+   *
+   */
   stadt?: string;
+  /**
+   *
+   */
   nummer?: number;
 }
 
@@ -39,11 +47,11 @@ export interface ExecuteSearchStadtbezirkentityGet1Request {
  */
 export class StadtbezirkEntitySearchControllerApi extends runtime.BaseAPI {
   /**
+   * Creates request options for executeSearchStadtbezirkentityGet without sending the request
    */
-  async executeSearchStadtbezirkentityGetRaw(
-    requestParameters: ExecuteSearchStadtbezirkentityGetRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<CollectionModelEntityModelStadtbezirkEntity>> {
+  async executeSearchStadtbezirkentityGetRequestOpts(
+    requestParameters: ExecuteSearchStadtbezirkentityGetRequest
+  ): Promise<runtime.RequestOpts> {
     const queryParameters: any = {};
 
     if (requestParameters["stadt"] != null) {
@@ -54,15 +62,25 @@ export class StadtbezirkEntitySearchControllerApi extends runtime.BaseAPI {
 
     let urlPath = `/stadtbezirkEntities/search/findByStadt`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "GET",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   */
+  async executeSearchStadtbezirkentityGetRaw(
+    requestParameters: ExecuteSearchStadtbezirkentityGetRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<CollectionModelEntityModelStadtbezirkEntity>> {
+    const requestOptions =
+      await this.executeSearchStadtbezirkentityGetRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       CollectionModelEntityModelStadtbezirkEntityFromJSON(jsonValue)
@@ -83,11 +101,11 @@ export class StadtbezirkEntitySearchControllerApi extends runtime.BaseAPI {
   }
 
   /**
+   * Creates request options for executeSearchStadtbezirkentityGet1 without sending the request
    */
-  async executeSearchStadtbezirkentityGet1Raw(
-    requestParameters: ExecuteSearchStadtbezirkentityGet1Request,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EntityModelStadtbezirkEntity>> {
+  async executeSearchStadtbezirkentityGet1RequestOpts(
+    requestParameters: ExecuteSearchStadtbezirkentityGet1Request
+  ): Promise<runtime.RequestOpts> {
     const queryParameters: any = {};
 
     if (requestParameters["stadt"] != null) {
@@ -102,15 +120,25 @@ export class StadtbezirkEntitySearchControllerApi extends runtime.BaseAPI {
 
     let urlPath = `/stadtbezirkEntities/search/findByStadtAndNummer`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "GET",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   */
+  async executeSearchStadtbezirkentityGet1Raw(
+    requestParameters: ExecuteSearchStadtbezirkentityGet1Request,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EntityModelStadtbezirkEntity>> {
+    const requestOptions =
+      await this.executeSearchStadtbezirkentityGet1RequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EntityModelStadtbezirkEntityFromJSON(jsonValue)

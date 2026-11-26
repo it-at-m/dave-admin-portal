@@ -22,32 +22,22 @@ import { mapValues } from "../runtime";
 export interface ZaehlstelleTooltipDTO {
   /**
    *
-   * @type {string}
-   * @memberof ZaehlstelleTooltipDTO
    */
   zaehlstellennnummer: string;
   /**
    *
-   * @type {number}
-   * @memberof ZaehlstelleTooltipDTO
    */
   stadtbezirknummer: number;
   /**
    *
-   * @type {number}
-   * @memberof ZaehlstelleTooltipDTO
    */
   anzahlZaehlungen: number;
   /**
    *
-   * @type {string}
-   * @memberof ZaehlstelleTooltipDTO
    */
   datumLetzteZaehlung: string;
   /**
    *
-   * @type {string}
-   * @memberof ZaehlstelleTooltipDTO
    */
   kreuzungsname: string;
 }

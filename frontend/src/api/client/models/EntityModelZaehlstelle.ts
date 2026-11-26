@@ -51,92 +51,62 @@ import {
 export interface EntityModelZaehlstelle {
   /**
    *
-   * @type {string}
-   * @memberof EntityModelZaehlstelle
    */
   nummer?: string;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelZaehlstelle
    */
   stadtbezirk?: string;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZaehlstelle
    */
   stadtbezirkNummer?: number;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelZaehlstelle
    */
   kommentar?: string;
   /**
    *
-   * @type {GeoPoint}
-   * @memberof EntityModelZaehlstelle
    */
   punkt?: GeoPoint;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZaehlstelle
    */
   letzteZaehlungMonatNummer?: number;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelZaehlstelle
    */
   letzteZaehlungMonat?: string;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZaehlstelle
    */
   letzteZaehlungJahr?: number;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelZaehlstelle
    */
   grundLetzteZaehlung?: string;
   /**
    *
-   * @type {Array<string>}
-   * @memberof EntityModelZaehlstelle
    */
   suchwoerter?: Array<string>;
   /**
    *
-   * @type {Array<string>}
-   * @memberof EntityModelZaehlstelle
    */
   customSuchwoerter?: Array<string>;
   /**
    *
-   * @type {Array<Zaehlung>}
-   * @memberof EntityModelZaehlstelle
    */
   zaehlungen?: Array<Zaehlung>;
   /**
    *
-   * @type {boolean}
-   * @memberof EntityModelZaehlstelle
    */
   sichtbarDatenportal?: boolean;
   /**
    *
-   * @type {PositionUTM}
-   * @memberof EntityModelZaehlstelle
    */
   punktUtm?: PositionUTM;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof EntityModelZaehlstelle
    */
   links?: { [key: string]: Link };
 }

@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelHochrechnungsfaktor {
   /**
    *
-   * @type {PagedModelEntityModelHochrechnungsfaktorEmbedded}
-   * @memberof PagedModelEntityModelHochrechnungsfaktor
    */
   embedded?: PagedModelEntityModelHochrechnungsfaktorEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelHochrechnungsfaktor
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelHochrechnungsfaktor
    */
   page?: PageMetadata;
 }

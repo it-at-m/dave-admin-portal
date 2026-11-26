@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelOptionsmenueSettings {
   /**
    *
-   * @type {PagedModelEntityModelOptionsmenueSettingsEmbedded}
-   * @memberof PagedModelEntityModelOptionsmenueSettings
    */
   embedded?: PagedModelEntityModelOptionsmenueSettingsEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelOptionsmenueSettings
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelOptionsmenueSettings
    */
   page?: PageMetadata;
 }

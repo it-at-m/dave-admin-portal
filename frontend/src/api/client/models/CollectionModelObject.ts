@@ -37,14 +37,10 @@ import {
 export interface CollectionModelObject {
   /**
    *
-   * @type {CollectionModelObjectEmbedded}
-   * @memberof CollectionModelObject
    */
   embedded?: CollectionModelObjectEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelObject
    */
   links?: { [key: string]: Link };
 }

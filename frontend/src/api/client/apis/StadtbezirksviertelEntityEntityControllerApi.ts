@@ -11,48 +11,79 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
-import type {
-  EntityModelStadtbezirksviertelEntity,
-  PagedModelEntityModelStadtbezirksviertelEntity,
-  StadtbezirksviertelEntityRequestBody,
-} from "../models/index";
+import type { EntityModelStadtbezirksviertelEntity } from "../models/EntityModelStadtbezirksviertelEntity";
+import type { PagedModelEntityModelStadtbezirksviertelEntity } from "../models/PagedModelEntityModelStadtbezirksviertelEntity";
+import type { StadtbezirksviertelEntityRequestBody } from "../models/StadtbezirksviertelEntityRequestBody";
 
 import {
   EntityModelStadtbezirksviertelEntityFromJSON,
   EntityModelStadtbezirksviertelEntityToJSON,
+} from "../models/EntityModelStadtbezirksviertelEntity";
+import {
   PagedModelEntityModelStadtbezirksviertelEntityFromJSON,
   PagedModelEntityModelStadtbezirksviertelEntityToJSON,
+} from "../models/PagedModelEntityModelStadtbezirksviertelEntity";
+import {
   StadtbezirksviertelEntityRequestBodyFromJSON,
   StadtbezirksviertelEntityRequestBodyToJSON,
-} from "../models/index";
+} from "../models/StadtbezirksviertelEntityRequestBody";
 import * as runtime from "../runtime";
 
 export interface DeleteItemResourceStadtbezirksviertelentityDeleteRequest {
+  /**
+   *
+   */
   id: string;
 }
 
 export interface GetCollectionResourceStadtbezirksviertelentityGetRequest {
+  /**
+   * Zero-based page index (0..N)
+   */
   page?: number;
+  /**
+   * The size of the page to be returned
+   */
   size?: number;
+  /**
+   * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+   */
   sort?: Array<string>;
 }
 
 export interface GetItemResourceStadtbezirksviertelentityGetRequest {
+  /**
+   *
+   */
   id: string;
 }
 
 export interface PatchItemResourceStadtbezirksviertelentityPatchRequest {
+  /**
+   *
+   */
   id: string;
+  /**
+   *
+   */
   stadtbezirksviertelEntityRequestBody: StadtbezirksviertelEntityRequestBody;
 }
 
 export interface PostCollectionResourceStadtbezirksviertelentityPostRequest {
+  /**
+   *
+   */
   stadtbezirksviertelEntityRequestBody: StadtbezirksviertelEntityRequestBody;
 }
 
 export interface PutItemResourceStadtbezirksviertelentityPutRequest {
+  /**
+   *
+   */
   id: string;
+  /**
+   *
+   */
   stadtbezirksviertelEntityRequestBody: StadtbezirksviertelEntityRequestBody;
 }
 
@@ -61,12 +92,11 @@ export interface PutItemResourceStadtbezirksviertelentityPutRequest {
  */
 export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAPI {
   /**
-   * delete-stadtbezirksviertelentity
+   * Creates request options for deleteItemResourceStadtbezirksviertelentityDelete without sending the request
    */
-  async deleteItemResourceStadtbezirksviertelentityDeleteRaw(
-    requestParameters: DeleteItemResourceStadtbezirksviertelentityDeleteRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<void>> {
+  async deleteItemResourceStadtbezirksviertelentityDeleteRequestOpts(
+    requestParameters: DeleteItemResourceStadtbezirksviertelentityDeleteRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -80,19 +110,30 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
 
     let urlPath = `/stadtbezirksviertelEntities/{id}`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "DELETE",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "DELETE",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   * delete-stadtbezirksviertelentity
+   */
+  async deleteItemResourceStadtbezirksviertelentityDeleteRaw(
+    requestParameters: DeleteItemResourceStadtbezirksviertelentityDeleteRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<void>> {
+    const requestOptions =
+      await this.deleteItemResourceStadtbezirksviertelentityDeleteRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.VoidApiResponse(response);
   }
@@ -111,14 +152,11 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
   }
 
   /**
-   * get-stadtbezirksviertelentity
+   * Creates request options for getCollectionResourceStadtbezirksviertelentityGet without sending the request
    */
-  async getCollectionResourceStadtbezirksviertelentityGetRaw(
-    requestParameters: GetCollectionResourceStadtbezirksviertelentityGetRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<
-    runtime.ApiResponse<PagedModelEntityModelStadtbezirksviertelEntity>
-  > {
+  async getCollectionResourceStadtbezirksviertelentityGetRequestOpts(
+    requestParameters: GetCollectionResourceStadtbezirksviertelentityGetRequest
+  ): Promise<runtime.RequestOpts> {
     const queryParameters: any = {};
 
     if (requestParameters["page"] != null) {
@@ -137,15 +175,28 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
 
     let urlPath = `/stadtbezirksviertelEntities`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "GET",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   * get-stadtbezirksviertelentity
+   */
+  async getCollectionResourceStadtbezirksviertelentityGetRaw(
+    requestParameters: GetCollectionResourceStadtbezirksviertelentityGetRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<
+    runtime.ApiResponse<PagedModelEntityModelStadtbezirksviertelEntity>
+  > {
+    const requestOptions =
+      await this.getCollectionResourceStadtbezirksviertelentityGetRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       PagedModelEntityModelStadtbezirksviertelEntityFromJSON(jsonValue)
@@ -168,12 +219,11 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
   }
 
   /**
-   * get-stadtbezirksviertelentity
+   * Creates request options for getItemResourceStadtbezirksviertelentityGet without sending the request
    */
-  async getItemResourceStadtbezirksviertelentityGetRaw(
-    requestParameters: GetItemResourceStadtbezirksviertelentityGetRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EntityModelStadtbezirksviertelEntity>> {
+  async getItemResourceStadtbezirksviertelentityGetRequestOpts(
+    requestParameters: GetItemResourceStadtbezirksviertelentityGetRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -187,19 +237,30 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
 
     let urlPath = `/stadtbezirksviertelEntities/{id}`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "GET",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   * get-stadtbezirksviertelentity
+   */
+  async getItemResourceStadtbezirksviertelentityGetRaw(
+    requestParameters: GetItemResourceStadtbezirksviertelentityGetRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EntityModelStadtbezirksviertelEntity>> {
+    const requestOptions =
+      await this.getItemResourceStadtbezirksviertelentityGetRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EntityModelStadtbezirksviertelEntityFromJSON(jsonValue)
@@ -221,12 +282,11 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
   }
 
   /**
-   * patch-stadtbezirksviertelentity
+   * Creates request options for patchItemResourceStadtbezirksviertelentityPatch without sending the request
    */
-  async patchItemResourceStadtbezirksviertelentityPatchRaw(
-    requestParameters: PatchItemResourceStadtbezirksviertelentityPatchRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EntityModelStadtbezirksviertelEntity>> {
+  async patchItemResourceStadtbezirksviertelentityPatchRequestOpts(
+    requestParameters: PatchItemResourceStadtbezirksviertelentityPatchRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -249,22 +309,33 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
 
     let urlPath = `/stadtbezirksviertelEntities/{id}`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "PATCH",
-        headers: headerParameters,
-        query: queryParameters,
-        body: StadtbezirksviertelEntityRequestBodyToJSON(
-          requestParameters["stadtbezirksviertelEntityRequestBody"]
-        ),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "PATCH",
+      headers: headerParameters,
+      query: queryParameters,
+      body: StadtbezirksviertelEntityRequestBodyToJSON(
+        requestParameters["stadtbezirksviertelEntityRequestBody"]
+      ),
+    };
+  }
+
+  /**
+   * patch-stadtbezirksviertelentity
+   */
+  async patchItemResourceStadtbezirksviertelentityPatchRaw(
+    requestParameters: PatchItemResourceStadtbezirksviertelentityPatchRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EntityModelStadtbezirksviertelEntity>> {
+    const requestOptions =
+      await this.patchItemResourceStadtbezirksviertelentityPatchRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EntityModelStadtbezirksviertelEntityFromJSON(jsonValue)
@@ -294,12 +365,11 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
   }
 
   /**
-   * create-stadtbezirksviertelentity
+   * Creates request options for postCollectionResourceStadtbezirksviertelentityPost without sending the request
    */
-  async postCollectionResourceStadtbezirksviertelentityPostRaw(
-    requestParameters: PostCollectionResourceStadtbezirksviertelentityPostRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EntityModelStadtbezirksviertelEntity>> {
+  async postCollectionResourceStadtbezirksviertelentityPostRequestOpts(
+    requestParameters: PostCollectionResourceStadtbezirksviertelentityPostRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["stadtbezirksviertelEntityRequestBody"] == null) {
       throw new runtime.RequiredError(
         "stadtbezirksviertelEntityRequestBody",
@@ -315,18 +385,29 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
 
     let urlPath = `/stadtbezirksviertelEntities`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "POST",
-        headers: headerParameters,
-        query: queryParameters,
-        body: StadtbezirksviertelEntityRequestBodyToJSON(
-          requestParameters["stadtbezirksviertelEntityRequestBody"]
-        ),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "POST",
+      headers: headerParameters,
+      query: queryParameters,
+      body: StadtbezirksviertelEntityRequestBodyToJSON(
+        requestParameters["stadtbezirksviertelEntityRequestBody"]
+      ),
+    };
+  }
+
+  /**
+   * create-stadtbezirksviertelentity
+   */
+  async postCollectionResourceStadtbezirksviertelentityPostRaw(
+    requestParameters: PostCollectionResourceStadtbezirksviertelentityPostRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EntityModelStadtbezirksviertelEntity>> {
+    const requestOptions =
+      await this.postCollectionResourceStadtbezirksviertelentityPostRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EntityModelStadtbezirksviertelEntityFromJSON(jsonValue)
@@ -349,12 +430,11 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
   }
 
   /**
-   * update-stadtbezirksviertelentity
+   * Creates request options for putItemResourceStadtbezirksviertelentityPut without sending the request
    */
-  async putItemResourceStadtbezirksviertelentityPutRaw(
-    requestParameters: PutItemResourceStadtbezirksviertelentityPutRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EntityModelStadtbezirksviertelEntity>> {
+  async putItemResourceStadtbezirksviertelentityPutRequestOpts(
+    requestParameters: PutItemResourceStadtbezirksviertelentityPutRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -377,22 +457,33 @@ export class StadtbezirksviertelEntityEntityControllerApi extends runtime.BaseAP
 
     let urlPath = `/stadtbezirksviertelEntities/{id}`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "PUT",
-        headers: headerParameters,
-        query: queryParameters,
-        body: StadtbezirksviertelEntityRequestBodyToJSON(
-          requestParameters["stadtbezirksviertelEntityRequestBody"]
-        ),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "PUT",
+      headers: headerParameters,
+      query: queryParameters,
+      body: StadtbezirksviertelEntityRequestBodyToJSON(
+        requestParameters["stadtbezirksviertelEntityRequestBody"]
+      ),
+    };
+  }
+
+  /**
+   * update-stadtbezirksviertelentity
+   */
+  async putItemResourceStadtbezirksviertelentityPutRaw(
+    requestParameters: PutItemResourceStadtbezirksviertelentityPutRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EntityModelStadtbezirksviertelEntity>> {
+    const requestOptions =
+      await this.putItemResourceStadtbezirksviertelentityPutRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EntityModelStadtbezirksviertelEntityFromJSON(jsonValue)

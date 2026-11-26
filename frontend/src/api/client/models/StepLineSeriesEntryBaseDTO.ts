@@ -34,32 +34,22 @@ import {
 export interface StepLineSeriesEntryBaseDTO {
   /**
    *
-   * @type {string}
-   * @memberof StepLineSeriesEntryBaseDTO
    */
   name: string;
   /**
    *
-   * @type {number}
-   * @memberof StepLineSeriesEntryBaseDTO
    */
   yaxisIndex: number;
   /**
    *
-   * @type {number}
-   * @memberof StepLineSeriesEntryBaseDTO
    */
   xaxisIndex: number;
   /**
    *
-   * @type {Array<number>}
-   * @memberof StepLineSeriesEntryBaseDTO
    */
   yAxisData?: Array<number>;
   /**
    *
-   * @type {string}
-   * @memberof StepLineSeriesEntryBaseDTO
    */
   type: string;
 }

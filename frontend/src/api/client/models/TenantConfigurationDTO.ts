@@ -30,20 +30,14 @@ import {
 export interface TenantConfigurationDTO {
   /**
    *
-   * @type {string}
-   * @memberof TenantConfigurationDTO
    */
   city?: string;
   /**
    *
-   * @type {string}
-   * @memberof TenantConfigurationDTO
    */
   datenportalHeader: string;
   /**
    *
-   * @type {MapConfigurationDTO}
-   * @memberof TenantConfigurationDTO
    */
   mapConfiguration: MapConfigurationDTO;
 }

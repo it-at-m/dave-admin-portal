@@ -11,16 +11,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
-import type { CollectionModelEntityModelStadtbezirksviertelEntity } from "../models/index";
+import type { CollectionModelEntityModelStadtbezirksviertelEntity } from "../models/CollectionModelEntityModelStadtbezirksviertelEntity";
 
 import {
   CollectionModelEntityModelStadtbezirksviertelEntityFromJSON,
   CollectionModelEntityModelStadtbezirksviertelEntityToJSON,
-} from "../models/index";
+} from "../models/CollectionModelEntityModelStadtbezirksviertelEntity";
 import * as runtime from "../runtime";
 
 export interface ExecuteSearchStadtbezirksviertelentityGetRequest {
+  /**
+   *
+   */
   stadt?: string;
 }
 
@@ -29,13 +31,11 @@ export interface ExecuteSearchStadtbezirksviertelentityGetRequest {
  */
 export class StadtbezirksviertelEntitySearchControllerApi extends runtime.BaseAPI {
   /**
+   * Creates request options for executeSearchStadtbezirksviertelentityGet without sending the request
    */
-  async executeSearchStadtbezirksviertelentityGetRaw(
-    requestParameters: ExecuteSearchStadtbezirksviertelentityGetRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<
-    runtime.ApiResponse<CollectionModelEntityModelStadtbezirksviertelEntity>
-  > {
+  async executeSearchStadtbezirksviertelentityGetRequestOpts(
+    requestParameters: ExecuteSearchStadtbezirksviertelentityGetRequest
+  ): Promise<runtime.RequestOpts> {
     const queryParameters: any = {};
 
     if (requestParameters["stadt"] != null) {
@@ -46,15 +46,27 @@ export class StadtbezirksviertelEntitySearchControllerApi extends runtime.BaseAP
 
     let urlPath = `/stadtbezirksviertelEntities/search/findAllByStadtbezirk_Stadt`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "GET",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   */
+  async executeSearchStadtbezirksviertelentityGetRaw(
+    requestParameters: ExecuteSearchStadtbezirksviertelentityGetRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<
+    runtime.ApiResponse<CollectionModelEntityModelStadtbezirksviertelEntity>
+  > {
+    const requestOptions =
+      await this.executeSearchStadtbezirksviertelentityGetRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       CollectionModelEntityModelStadtbezirksviertelEntityFromJSON(jsonValue)

@@ -44,32 +44,22 @@ import {
 export interface Laengsverkehr {
   /**
    *
-   * @type {string}
-   * @memberof Laengsverkehr
    */
   id?: string;
   /**
    *
-   * @type {Hochrechnungsfaktor}
-   * @memberof Laengsverkehr
    */
   hochrechnungsfaktor?: Hochrechnungsfaktor;
   /**
    *
-   * @type {number}
-   * @memberof Laengsverkehr
    */
   knotenarm: number;
   /**
    *
-   * @type {Bewegungsrichtung}
-   * @memberof Laengsverkehr
    */
   richtung: Bewegungsrichtung;
   /**
    *
-   * @type {Himmelsrichtung}
-   * @memberof Laengsverkehr
    */
   strassenseite: Himmelsrichtung;
 }

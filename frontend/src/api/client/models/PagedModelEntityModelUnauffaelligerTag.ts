@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelUnauffaelligerTag {
   /**
    *
-   * @type {PagedModelEntityModelUnauffaelligerTagEmbedded}
-   * @memberof PagedModelEntityModelUnauffaelligerTag
    */
   embedded?: PagedModelEntityModelUnauffaelligerTagEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelUnauffaelligerTag
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelUnauffaelligerTag
    */
   page?: PageMetadata;
 }

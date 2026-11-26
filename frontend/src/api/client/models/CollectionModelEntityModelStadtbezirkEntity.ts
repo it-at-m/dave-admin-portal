@@ -37,14 +37,10 @@ import {
 export interface CollectionModelEntityModelStadtbezirkEntity {
   /**
    *
-   * @type {PagedModelEntityModelStadtbezirkEntityEmbedded}
-   * @memberof CollectionModelEntityModelStadtbezirkEntity
    */
   embedded?: PagedModelEntityModelStadtbezirkEntityEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelEntityModelStadtbezirkEntity
    */
   links?: { [key: string]: Link };
 }

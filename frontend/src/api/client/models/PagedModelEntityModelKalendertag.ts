@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelKalendertag {
   /**
    *
-   * @type {PagedModelEntityModelKalendertagEmbedded}
-   * @memberof PagedModelEntityModelKalendertag
    */
   embedded?: PagedModelEntityModelKalendertagEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelKalendertag
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelKalendertag
    */
   page?: PageMetadata;
 }

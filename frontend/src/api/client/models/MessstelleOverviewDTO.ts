@@ -22,50 +22,34 @@ import { mapValues } from "../runtime";
 export interface MessstelleOverviewDTO {
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
    */
   id?: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
    */
   mstId: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
    */
   name?: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
    */
   status?: string;
   /**
    *
-   * @type {boolean}
-   * @memberof MessstelleOverviewDTO
    */
   sichtbarDatenportal?: boolean;
   /**
    *
-   * @type {boolean}
-   * @memberof MessstelleOverviewDTO
    */
   geprueft?: boolean;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
    */
   stadtbezirkNummer?: string;
   /**
    *
-   * @type {boolean}
-   * @memberof MessstelleOverviewDTO
    */
   lageplanVorhanden?: boolean;
 }

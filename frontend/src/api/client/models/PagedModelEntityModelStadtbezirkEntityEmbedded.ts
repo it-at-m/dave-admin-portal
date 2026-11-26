@@ -30,8 +30,6 @@ import {
 export interface PagedModelEntityModelStadtbezirkEntityEmbedded {
   /**
    *
-   * @type {Array<EntityModelStadtbezirkEntity>}
-   * @memberof PagedModelEntityModelStadtbezirkEntityEmbedded
    */
   stadtbezirkEntities?: Array<EntityModelStadtbezirkEntity>;
 }

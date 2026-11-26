@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelZeitintervall {
   /**
    *
-   * @type {PagedModelEntityModelZeitintervallEmbedded}
-   * @memberof PagedModelEntityModelZeitintervall
    */
   embedded?: PagedModelEntityModelZeitintervallEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelZeitintervall
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelZeitintervall
    */
   page?: PageMetadata;
 }

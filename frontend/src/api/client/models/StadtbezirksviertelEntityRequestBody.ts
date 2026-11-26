@@ -12,7 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 
 /**
  *
@@ -22,44 +28,30 @@ import { mapValues } from "../runtime";
 export interface StadtbezirksviertelEntityRequestBody {
   /**
    *
-   * @type {string}
-   * @memberof StadtbezirksviertelEntityRequestBody
    */
   id?: string;
   /**
    *
-   * @type {Date}
-   * @memberof StadtbezirksviertelEntityRequestBody
    */
   createdTime?: Date;
   /**
    *
-   * @type {number}
-   * @memberof StadtbezirksviertelEntityRequestBody
    */
   version?: number;
   /**
    *
-   * @type {string}
-   * @memberof StadtbezirksviertelEntityRequestBody
    */
   nummer?: string;
   /**
    *
-   * @type {string}
-   * @memberof StadtbezirksviertelEntityRequestBody
    */
   name?: string;
   /**
    *
-   * @type {string}
-   * @memberof StadtbezirksviertelEntityRequestBody
    */
   stadtbezirk?: string;
   /**
    *
-   * @type {number}
-   * @memberof StadtbezirksviertelEntityRequestBody
    */
   entityVersion?: number;
 }
@@ -89,7 +81,9 @@ export function StadtbezirksviertelEntityRequestBodyFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     createdTime:
-      json["createdTime"] == null ? undefined : new Date(json["createdTime"]),
+      json["createdTime"] == null
+        ? undefined
+        : parseDateTime(json["createdTime"]),
     version: json["version"] == null ? undefined : json["version"],
     nummer: json["nummer"] == null ? undefined : json["nummer"],
     name: json["name"] == null ? undefined : json["name"],
@@ -117,8 +111,8 @@ export function StadtbezirksviertelEntityRequestBodyToJSONTyped(
     id: value["id"],
     createdTime:
       value["createdTime"] == null
-        ? undefined
-        : value["createdTime"].toISOString(),
+        ? value["createdTime"]
+        : serializeDateTime(value["createdTime"]),
     version: value["version"],
     nummer: value["nummer"],
     name: value["name"],

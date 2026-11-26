@@ -37,26 +37,18 @@ import {
 export interface Querungsverkehr {
   /**
    *
-   * @type {string}
-   * @memberof Querungsverkehr
    */
   id?: string;
   /**
    *
-   * @type {Hochrechnungsfaktor}
-   * @memberof Querungsverkehr
    */
   hochrechnungsfaktor?: Hochrechnungsfaktor;
   /**
    *
-   * @type {number}
-   * @memberof Querungsverkehr
    */
   knotenarm: number;
   /**
    *
-   * @type {Himmelsrichtung}
-   * @memberof Querungsverkehr
    */
   richtung: Himmelsrichtung;
 }

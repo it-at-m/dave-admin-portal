@@ -22,32 +22,22 @@ import { mapValues } from "../runtime";
 export interface Hochrechnungsfaktor {
   /**
    *
-   * @type {string}
-   * @memberof Hochrechnungsfaktor
    */
   matrix?: string;
   /**
    *
-   * @type {number}
-   * @memberof Hochrechnungsfaktor
    */
   kfz?: number;
   /**
    *
-   * @type {number}
-   * @memberof Hochrechnungsfaktor
    */
   sv?: number;
   /**
    *
-   * @type {number}
-   * @memberof Hochrechnungsfaktor
    */
   gv?: number;
   /**
    *
-   * @type {boolean}
-   * @memberof Hochrechnungsfaktor
    */
   active?: boolean;
 }

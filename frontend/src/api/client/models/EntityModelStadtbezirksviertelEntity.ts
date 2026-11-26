@@ -14,7 +14,13 @@
 
 import type { Link } from "./Link";
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 import {
   LinkFromJSON,
   LinkFromJSONTyped,
@@ -30,44 +36,30 @@ import {
 export interface EntityModelStadtbezirksviertelEntity {
   /**
    *
-   * @type {string}
-   * @memberof EntityModelStadtbezirksviertelEntity
    */
   id?: string;
   /**
    *
-   * @type {Date}
-   * @memberof EntityModelStadtbezirksviertelEntity
    */
   createdTime?: Date;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelStadtbezirksviertelEntity
    */
   version?: number;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelStadtbezirksviertelEntity
    */
   nummer?: string;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelStadtbezirksviertelEntity
    */
   name?: string;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelStadtbezirksviertelEntity
    */
   entityVersion?: number;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof EntityModelStadtbezirksviertelEntity
    */
   links?: { [key: string]: Link };
 }
@@ -97,7 +89,9 @@ export function EntityModelStadtbezirksviertelEntityFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     createdTime:
-      json["createdTime"] == null ? undefined : new Date(json["createdTime"]),
+      json["createdTime"] == null
+        ? undefined
+        : parseDateTime(json["createdTime"]),
     version: json["version"] == null ? undefined : json["version"],
     nummer: json["nummer"] == null ? undefined : json["nummer"],
     name: json["name"] == null ? undefined : json["name"],
@@ -128,8 +122,8 @@ export function EntityModelStadtbezirksviertelEntityToJSONTyped(
     id: value["id"],
     createdTime:
       value["createdTime"] == null
-        ? undefined
-        : value["createdTime"].toISOString(),
+        ? value["createdTime"]
+        : serializeDateTime(value["createdTime"]),
     version: value["version"],
     nummer: value["nummer"],
     name: value["name"],

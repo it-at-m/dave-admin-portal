@@ -11,45 +11,74 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
-import type {
-  CollectionModelObject,
-  EntityModelStadtbezirkEntity,
-} from "../models/index";
+import type { CollectionModelObject } from "../models/CollectionModelObject";
+import type { EntityModelStadtbezirkEntity } from "../models/EntityModelStadtbezirkEntity";
 
 import {
   CollectionModelObjectFromJSON,
   CollectionModelObjectToJSON,
+} from "../models/CollectionModelObject";
+import {
   EntityModelStadtbezirkEntityFromJSON,
   EntityModelStadtbezirkEntityToJSON,
-} from "../models/index";
+} from "../models/EntityModelStadtbezirkEntity";
 import * as runtime from "../runtime";
 
 export interface CreatePropertyReferenceStadtbezirksviertelentityPatchRequest {
+  /**
+   *
+   */
   id: string;
+  /**
+   *
+   */
   collectionModelObject: CollectionModelObject;
 }
 
 export interface CreatePropertyReferenceStadtbezirksviertelentityPutRequest {
+  /**
+   *
+   */
   id: string;
+  /**
+   *
+   */
   collectionModelObject: CollectionModelObject;
 }
 
 export interface DeletePropertyReferenceIdStadtbezirksviertelentityDeleteRequest {
+  /**
+   *
+   */
   id: string;
+  /**
+   *
+   */
   propertyId: string;
 }
 
 export interface DeletePropertyReferenceStadtbezirksviertelentityDeleteRequest {
+  /**
+   *
+   */
   id: string;
 }
 
 export interface FollowPropertyReferenceStadtbezirksviertelentityGetRequest {
+  /**
+   *
+   */
   id: string;
 }
 
 export interface FollowPropertyReferenceStadtbezirksviertelentityGet1Request {
+  /**
+   *
+   */
   id: string;
+  /**
+   *
+   */
   propertyId: string;
 }
 
@@ -58,12 +87,11 @@ export interface FollowPropertyReferenceStadtbezirksviertelentityGet1Request {
  */
 export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends runtime.BaseAPI {
   /**
-   * patch-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   * Creates request options for createPropertyReferenceStadtbezirksviertelentityPatch without sending the request
    */
-  async createPropertyReferenceStadtbezirksviertelentityPatchRaw(
-    requestParameters: CreatePropertyReferenceStadtbezirksviertelentityPatchRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EntityModelStadtbezirkEntity>> {
+  async createPropertyReferenceStadtbezirksviertelentityPatchRequestOpts(
+    requestParameters: CreatePropertyReferenceStadtbezirksviertelentityPatchRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -86,22 +114,33 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
 
     let urlPath = `/stadtbezirksviertelEntities/{id}/stadtbezirk`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "PATCH",
-        headers: headerParameters,
-        query: queryParameters,
-        body: CollectionModelObjectToJSON(
-          requestParameters["collectionModelObject"]
-        ),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "PATCH",
+      headers: headerParameters,
+      query: queryParameters,
+      body: CollectionModelObjectToJSON(
+        requestParameters["collectionModelObject"]
+      ),
+    };
+  }
+
+  /**
+   * patch-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   */
+  async createPropertyReferenceStadtbezirksviertelentityPatchRaw(
+    requestParameters: CreatePropertyReferenceStadtbezirksviertelentityPatchRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EntityModelStadtbezirkEntity>> {
+    const requestOptions =
+      await this.createPropertyReferenceStadtbezirksviertelentityPatchRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EntityModelStadtbezirkEntityFromJSON(jsonValue)
@@ -131,12 +170,11 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
   }
 
   /**
-   * update-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   * Creates request options for createPropertyReferenceStadtbezirksviertelentityPut without sending the request
    */
-  async createPropertyReferenceStadtbezirksviertelentityPutRaw(
-    requestParameters: CreatePropertyReferenceStadtbezirksviertelentityPutRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EntityModelStadtbezirkEntity>> {
+  async createPropertyReferenceStadtbezirksviertelentityPutRequestOpts(
+    requestParameters: CreatePropertyReferenceStadtbezirksviertelentityPutRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -159,22 +197,33 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
 
     let urlPath = `/stadtbezirksviertelEntities/{id}/stadtbezirk`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "PUT",
-        headers: headerParameters,
-        query: queryParameters,
-        body: CollectionModelObjectToJSON(
-          requestParameters["collectionModelObject"]
-        ),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "PUT",
+      headers: headerParameters,
+      query: queryParameters,
+      body: CollectionModelObjectToJSON(
+        requestParameters["collectionModelObject"]
+      ),
+    };
+  }
+
+  /**
+   * update-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   */
+  async createPropertyReferenceStadtbezirksviertelentityPutRaw(
+    requestParameters: CreatePropertyReferenceStadtbezirksviertelentityPutRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EntityModelStadtbezirkEntity>> {
+    const requestOptions =
+      await this.createPropertyReferenceStadtbezirksviertelentityPutRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EntityModelStadtbezirkEntityFromJSON(jsonValue)
@@ -206,12 +255,11 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
   }
 
   /**
-   * delete-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   * Creates request options for deletePropertyReferenceIdStadtbezirksviertelentityDelete without sending the request
    */
-  async deletePropertyReferenceIdStadtbezirksviertelentityDeleteRaw(
-    requestParameters: DeletePropertyReferenceIdStadtbezirksviertelentityDeleteRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<void>> {
+  async deletePropertyReferenceIdStadtbezirksviertelentityDeleteRequestOpts(
+    requestParameters: DeletePropertyReferenceIdStadtbezirksviertelentityDeleteRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -232,23 +280,34 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
 
     let urlPath = `/stadtbezirksviertelEntities/{id}/stadtbezirk/{propertyId}`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
     urlPath = urlPath.replace(
-      `{${"propertyId"}}`,
+      "{propertyId}",
       encodeURIComponent(String(requestParameters["propertyId"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "DELETE",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "DELETE",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   * delete-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   */
+  async deletePropertyReferenceIdStadtbezirksviertelentityDeleteRaw(
+    requestParameters: DeletePropertyReferenceIdStadtbezirksviertelentityDeleteRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<void>> {
+    const requestOptions =
+      await this.deletePropertyReferenceIdStadtbezirksviertelentityDeleteRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.VoidApiResponse(response);
   }
@@ -267,12 +326,11 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
   }
 
   /**
-   * delete-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   * Creates request options for deletePropertyReferenceStadtbezirksviertelentityDelete without sending the request
    */
-  async deletePropertyReferenceStadtbezirksviertelentityDeleteRaw(
-    requestParameters: DeletePropertyReferenceStadtbezirksviertelentityDeleteRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<void>> {
+  async deletePropertyReferenceStadtbezirksviertelentityDeleteRequestOpts(
+    requestParameters: DeletePropertyReferenceStadtbezirksviertelentityDeleteRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -286,19 +344,30 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
 
     let urlPath = `/stadtbezirksviertelEntities/{id}/stadtbezirk`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "DELETE",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "DELETE",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   * delete-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   */
+  async deletePropertyReferenceStadtbezirksviertelentityDeleteRaw(
+    requestParameters: DeletePropertyReferenceStadtbezirksviertelentityDeleteRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<void>> {
+    const requestOptions =
+      await this.deletePropertyReferenceStadtbezirksviertelentityDeleteRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.VoidApiResponse(response);
   }
@@ -317,12 +386,11 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
   }
 
   /**
-   * get-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   * Creates request options for followPropertyReferenceStadtbezirksviertelentityGet without sending the request
    */
-  async followPropertyReferenceStadtbezirksviertelentityGetRaw(
-    requestParameters: FollowPropertyReferenceStadtbezirksviertelentityGetRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EntityModelStadtbezirkEntity>> {
+  async followPropertyReferenceStadtbezirksviertelentityGetRequestOpts(
+    requestParameters: FollowPropertyReferenceStadtbezirksviertelentityGetRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -336,19 +404,30 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
 
     let urlPath = `/stadtbezirksviertelEntities/{id}/stadtbezirk`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "GET",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   * get-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   */
+  async followPropertyReferenceStadtbezirksviertelentityGetRaw(
+    requestParameters: FollowPropertyReferenceStadtbezirksviertelentityGetRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EntityModelStadtbezirkEntity>> {
+    const requestOptions =
+      await this.followPropertyReferenceStadtbezirksviertelentityGetRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EntityModelStadtbezirkEntityFromJSON(jsonValue)
@@ -371,12 +450,11 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
   }
 
   /**
-   * get-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   * Creates request options for followPropertyReferenceStadtbezirksviertelentityGet1 without sending the request
    */
-  async followPropertyReferenceStadtbezirksviertelentityGet1Raw(
-    requestParameters: FollowPropertyReferenceStadtbezirksviertelentityGet1Request,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EntityModelStadtbezirkEntity>> {
+  async followPropertyReferenceStadtbezirksviertelentityGet1RequestOpts(
+    requestParameters: FollowPropertyReferenceStadtbezirksviertelentityGet1Request
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -397,23 +475,34 @@ export class StadtbezirksviertelEntityPropertyReferenceControllerApi extends run
 
     let urlPath = `/stadtbezirksviertelEntities/{id}/stadtbezirk/{propertyId}`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
     urlPath = urlPath.replace(
-      `{${"propertyId"}}`,
+      "{propertyId}",
       encodeURIComponent(String(requestParameters["propertyId"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "GET",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   * get-stadtbezirkentity-by-stadtbezirksviertelentity-Id
+   */
+  async followPropertyReferenceStadtbezirksviertelentityGet1Raw(
+    requestParameters: FollowPropertyReferenceStadtbezirksviertelentityGet1Request,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EntityModelStadtbezirkEntity>> {
+    const requestOptions =
+      await this.followPropertyReferenceStadtbezirksviertelentityGet1RequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EntityModelStadtbezirkEntityFromJSON(jsonValue)

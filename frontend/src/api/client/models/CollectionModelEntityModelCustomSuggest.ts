@@ -37,14 +37,10 @@ import {
 export interface CollectionModelEntityModelCustomSuggest {
   /**
    *
-   * @type {PagedModelEntityModelCustomSuggestEmbedded}
-   * @memberof CollectionModelEntityModelCustomSuggest
    */
   embedded?: PagedModelEntityModelCustomSuggestEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelEntityModelCustomSuggest
    */
   links?: { [key: string]: Link };
 }

@@ -14,7 +14,13 @@
 
 import type { Link } from "./Link";
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 import {
   LinkFromJSON,
   LinkFromJSONTyped,
@@ -30,74 +36,50 @@ import {
 export interface EntityModelPkwEinheit {
   /**
    *
-   * @type {string}
-   * @memberof EntityModelPkwEinheit
    */
   id?: string;
   /**
    *
-   * @type {Date}
-   * @memberof EntityModelPkwEinheit
    */
   createdTime?: Date;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelPkwEinheit
    */
   version?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelPkwEinheit
    */
   pkw?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelPkwEinheit
    */
   lkw?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelPkwEinheit
    */
   lastzuege?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelPkwEinheit
    */
   busse?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelPkwEinheit
    */
   kraftraeder?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelPkwEinheit
    */
   fahrradfahrer?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelPkwEinheit
    */
   fussgaenger?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelPkwEinheit
    */
   entityVersion?: number;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof EntityModelPkwEinheit
    */
   links?: { [key: string]: Link };
 }
@@ -127,7 +109,9 @@ export function EntityModelPkwEinheitFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     createdTime:
-      json["createdTime"] == null ? undefined : new Date(json["createdTime"]),
+      json["createdTime"] == null
+        ? undefined
+        : parseDateTime(json["createdTime"]),
     version: json["version"] == null ? undefined : json["version"],
     pkw: json["pkw"] == null ? undefined : json["pkw"],
     lkw: json["lkw"] == null ? undefined : json["lkw"],
@@ -162,8 +146,8 @@ export function EntityModelPkwEinheitToJSONTyped(
     id: value["id"],
     createdTime:
       value["createdTime"] == null
-        ? undefined
-        : value["createdTime"].toISOString(),
+        ? value["createdTime"]
+        : serializeDateTime(value["createdTime"]),
     version: value["version"],
     pkw: value["pkw"],
     lkw: value["lkw"],

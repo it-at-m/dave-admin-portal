@@ -22,104 +22,70 @@ import { mapValues } from "../runtime";
 export interface LadeZaehldatumDTO {
   /**
    *
-   * @type {string}
-   * @memberof LadeZaehldatumDTO
    */
   type?: string;
   /**
    *
-   * @type {string}
-   * @memberof LadeZaehldatumDTO
    */
   startUhrzeit: string;
   /**
    *
-   * @type {string}
-   * @memberof LadeZaehldatumDTO
    */
   endeUhrzeit: string;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   pkw: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   lkw: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   lastzuege: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   busse: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   kraftraeder: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   fahrradfahrer: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   fussgaenger: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   pkwEinheiten: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   schwerverkehr: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   gueterverkehr: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   anteilGueterverkehrAnKfzProzent: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   anteilSchwerverkehrAnKfzProzent: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   kfz: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeZaehldatumDTO
    */
   gesamt: number;
 }

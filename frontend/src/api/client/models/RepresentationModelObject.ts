@@ -30,8 +30,6 @@ import {
 export interface RepresentationModelObject {
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof RepresentationModelObject
    */
   links?: { [key: string]: Link };
 }

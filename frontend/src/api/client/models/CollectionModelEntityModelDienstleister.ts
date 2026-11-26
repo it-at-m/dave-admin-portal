@@ -37,14 +37,10 @@ import {
 export interface CollectionModelEntityModelDienstleister {
   /**
    *
-   * @type {PagedModelEntityModelDienstleisterEmbedded}
-   * @memberof CollectionModelEntityModelDienstleister
    */
   embedded?: PagedModelEntityModelDienstleisterEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelEntityModelDienstleister
    */
   links?: { [key: string]: Link };
 }

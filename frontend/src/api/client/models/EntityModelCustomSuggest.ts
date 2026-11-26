@@ -37,26 +37,18 @@ import {
 export interface EntityModelCustomSuggest {
   /**
    *
-   * @type {string}
-   * @memberof EntityModelCustomSuggest
    */
   name?: string;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelCustomSuggest
    */
   fkid?: string;
   /**
    *
-   * @type {Completion}
-   * @memberof EntityModelCustomSuggest
    */
   suggest?: Completion;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof EntityModelCustomSuggest
    */
   links?: { [key: string]: Link };
 }

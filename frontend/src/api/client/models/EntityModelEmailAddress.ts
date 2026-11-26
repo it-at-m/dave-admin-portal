@@ -14,7 +14,13 @@
 
 import type { Link } from "./Link";
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 import {
   LinkFromJSON,
   LinkFromJSONTyped,
@@ -30,44 +36,30 @@ import {
 export interface EntityModelEmailAddress {
   /**
    *
-   * @type {string}
-   * @memberof EntityModelEmailAddress
    */
   id?: string;
   /**
    *
-   * @type {Date}
-   * @memberof EntityModelEmailAddress
    */
   createdTime?: Date;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelEmailAddress
    */
   version?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelEmailAddress
    */
   participantId?: number;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelEmailAddress
    */
   emailAddress?: string;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelEmailAddress
    */
   entityVersion?: number;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof EntityModelEmailAddress
    */
   links?: { [key: string]: Link };
 }
@@ -97,7 +89,9 @@ export function EntityModelEmailAddressFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     createdTime:
-      json["createdTime"] == null ? undefined : new Date(json["createdTime"]),
+      json["createdTime"] == null
+        ? undefined
+        : parseDateTime(json["createdTime"]),
     version: json["version"] == null ? undefined : json["version"],
     participantId:
       json["participantId"] == null ? undefined : json["participantId"],
@@ -130,8 +124,8 @@ export function EntityModelEmailAddressToJSONTyped(
     id: value["id"],
     createdTime:
       value["createdTime"] == null
-        ? undefined
-        : value["createdTime"].toISOString(),
+        ? value["createdTime"]
+        : serializeDateTime(value["createdTime"]),
     version: value["version"],
     participantId: value["participantId"],
     emailAddress: value["emailAddress"],

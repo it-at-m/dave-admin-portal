@@ -37,14 +37,10 @@ import {
 export interface GebietseinheitenDTO {
   /**
    *
-   * @type {Array<StadtbezirkDTO>}
-   * @memberof GebietseinheitenDTO
    */
   stadtbezirke: Array<StadtbezirkDTO>;
   /**
    *
-   * @type {Array<StadtbezirksviertelDTO>}
-   * @memberof GebietseinheitenDTO
    */
   stadtbezirksviertel: Array<StadtbezirksviertelDTO>;
 }

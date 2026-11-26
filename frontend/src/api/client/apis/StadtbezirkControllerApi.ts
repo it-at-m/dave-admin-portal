@@ -11,13 +11,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
-import type { GebietseinheitenDTO } from "../models/index";
+import type { GebietseinheitenDTO } from "../models/GebietseinheitenDTO";
 
 import {
   GebietseinheitenDTOFromJSON,
   GebietseinheitenDTOToJSON,
-} from "../models/index";
+} from "../models/GebietseinheitenDTO";
 import * as runtime from "../runtime";
 
 /**
@@ -25,25 +24,30 @@ import * as runtime from "../runtime";
  */
 export class StadtbezirkControllerApi extends runtime.BaseAPI {
   /**
+   * Creates request options for getGebietseinheiten without sending the request
    */
-  async getGebietseinheitenRaw(
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<GebietseinheitenDTO>> {
+  async getGebietseinheitenRequestOpts(): Promise<runtime.RequestOpts> {
     const queryParameters: any = {};
 
     const headerParameters: runtime.HTTPHeaders = {};
 
     let urlPath = `/stadtbezirk`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "GET",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   */
+  async getGebietseinheitenRaw(
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<GebietseinheitenDTO>> {
+    const requestOptions = await this.getGebietseinheitenRequestOpts();
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       GebietseinheitenDTOFromJSON(jsonValue)

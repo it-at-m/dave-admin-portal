@@ -37,98 +37,66 @@ import {
 export interface Verkehrsbeziehung {
   /**
    *
-   * @type {string}
-   * @memberof Verkehrsbeziehung
    */
   id?: string;
   /**
    *
-   * @type {Hochrechnungsfaktor}
-   * @memberof Verkehrsbeziehung
    */
   hochrechnungsfaktor?: Hochrechnungsfaktor;
   /**
    *
-   * @type {boolean}
-   * @memberof Verkehrsbeziehung
    */
   isKreuzung?: boolean;
   /**
    *
-   * @type {number}
-   * @memberof Verkehrsbeziehung
    */
   von?: number;
   /**
    *
-   * @type {number}
-   * @memberof Verkehrsbeziehung
    */
   nach?: number;
   /**
    *
-   * @type {number}
-   * @memberof Verkehrsbeziehung
    */
   knotenarm?: number;
   /**
    *
-   * @type {boolean}
-   * @memberof Verkehrsbeziehung
    */
   hinein?: boolean;
   /**
    *
-   * @type {boolean}
-   * @memberof Verkehrsbeziehung
    */
   heraus?: boolean;
   /**
    *
-   * @type {boolean}
-   * @memberof Verkehrsbeziehung
    */
   vorbei?: boolean;
   /**
    *
-   * @type {Himmelsrichtung}
-   * @memberof Verkehrsbeziehung
    */
   strassenseite?: Himmelsrichtung;
   /**
    *
-   * @type {string}
-   * @memberof Verkehrsbeziehung
    */
   vonknotvonstrnr?: string;
   /**
    *
-   * @type {string}
-   * @memberof Verkehrsbeziehung
    */
   nachknotvonstrnr?: string;
   /**
    *
-   * @type {string}
-   * @memberof Verkehrsbeziehung
    */
   vonStrnr?: string;
   /**
    *
-   * @type {string}
-   * @memberof Verkehrsbeziehung
    */
   vonknotennachstrnr?: string;
   /**
    *
-   * @type {string}
-   * @memberof Verkehrsbeziehung
    */
   nachknotnachstrnr?: string;
   /**
    *
-   * @type {string}
-   * @memberof Verkehrsbeziehung
    */
   nachStrnr?: string;
 }

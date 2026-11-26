@@ -37,14 +37,10 @@ import {
 export interface CollectionModelEntityModelStadtbezirksviertelEntity {
   /**
    *
-   * @type {PagedModelEntityModelStadtbezirksviertelEntityEmbedded}
-   * @memberof CollectionModelEntityModelStadtbezirksviertelEntity
    */
   embedded?: PagedModelEntityModelStadtbezirksviertelEntityEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelEntityModelStadtbezirksviertelEntity
    */
   links?: { [key: string]: Link };
 }

@@ -12,6 +12,42 @@
  * Do not edit the class manually.
  */
 
+import type { LadeBelastungsplanDTO } from "./LadeBelastungsplanDTO";
+import type { LadeBelastungsplanFjsDTO } from "./LadeBelastungsplanFjsDTO";
+import type { LadeBelastungsplanQjsDTO } from "./LadeBelastungsplanQjsDTO";
+import type { LadeBelastungsplanQuDTO } from "./LadeBelastungsplanQuDTO";
+
+import {
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
+import {
+  instanceOfLadeBelastungsplanDTO,
+  LadeBelastungsplanDTOFromJSON,
+  LadeBelastungsplanDTOFromJSONTyped,
+  LadeBelastungsplanDTOToJSON,
+} from "./LadeBelastungsplanDTO";
+import {
+  instanceOfLadeBelastungsplanFjsDTO,
+  LadeBelastungsplanFjsDTOFromJSON,
+  LadeBelastungsplanFjsDTOFromJSONTyped,
+  LadeBelastungsplanFjsDTOToJSON,
+} from "./LadeBelastungsplanFjsDTO";
+import {
+  instanceOfLadeBelastungsplanQjsDTO,
+  LadeBelastungsplanQjsDTOFromJSON,
+  LadeBelastungsplanQjsDTOFromJSONTyped,
+  LadeBelastungsplanQjsDTOToJSON,
+} from "./LadeBelastungsplanQjsDTO";
+import {
+  instanceOfLadeBelastungsplanQuDTO,
+  LadeBelastungsplanQuDTOFromJSON,
+  LadeBelastungsplanQuDTOFromJSONTyped,
+  LadeBelastungsplanQuDTOToJSON,
+} from "./LadeBelastungsplanQuDTO";
+
 /**
  * @type LadeProcessedZaehldatenBelastungsplanDTO
  *
@@ -93,6 +129,6 @@ export function LadeProcessedZaehldatenBelastungsplanDTOToJSONTyped(
         belastungsplanTyp: "QU",
       } as const);
     default:
-      return json;
+      return value;
   }
 }

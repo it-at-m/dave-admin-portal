@@ -30,26 +30,18 @@ import {
 export interface GenerateZaehlungPdfRequest {
   /**
    *
-   * @type {string}
-   * @memberof GenerateZaehlungPdfRequest
    */
   department: string;
   /**
    *
-   * @type {OptionsDTO}
-   * @memberof GenerateZaehlungPdfRequest
    */
   options: OptionsDTO;
   /**
    *
-   * @type {string}
-   * @memberof GenerateZaehlungPdfRequest
    */
   chartAsBase64Png?: string;
   /**
    *
-   * @type {string}
-   * @memberof GenerateZaehlungPdfRequest
    */
   schematischeUebersichtAsBase64Png?: string;
 }

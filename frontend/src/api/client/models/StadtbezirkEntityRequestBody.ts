@@ -12,7 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 
 /**
  *
@@ -22,44 +28,30 @@ import { mapValues } from "../runtime";
 export interface StadtbezirkEntityRequestBody {
   /**
    *
-   * @type {string}
-   * @memberof StadtbezirkEntityRequestBody
    */
   id?: string;
   /**
    *
-   * @type {Date}
-   * @memberof StadtbezirkEntityRequestBody
    */
   createdTime?: Date;
   /**
    *
-   * @type {number}
-   * @memberof StadtbezirkEntityRequestBody
    */
   version?: number;
   /**
    *
-   * @type {number}
-   * @memberof StadtbezirkEntityRequestBody
    */
   nummer?: number;
   /**
    *
-   * @type {string}
-   * @memberof StadtbezirkEntityRequestBody
    */
   name?: string;
   /**
    *
-   * @type {string}
-   * @memberof StadtbezirkEntityRequestBody
    */
   stadt?: string;
   /**
    *
-   * @type {number}
-   * @memberof StadtbezirkEntityRequestBody
    */
   entityVersion?: number;
 }
@@ -89,7 +81,9 @@ export function StadtbezirkEntityRequestBodyFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     createdTime:
-      json["createdTime"] == null ? undefined : new Date(json["createdTime"]),
+      json["createdTime"] == null
+        ? undefined
+        : parseDateTime(json["createdTime"]),
     version: json["version"] == null ? undefined : json["version"],
     nummer: json["nummer"] == null ? undefined : json["nummer"],
     name: json["name"] == null ? undefined : json["name"],
@@ -117,8 +111,8 @@ export function StadtbezirkEntityRequestBodyToJSONTyped(
     id: value["id"],
     createdTime:
       value["createdTime"] == null
-        ? undefined
-        : value["createdTime"].toISOString(),
+        ? value["createdTime"]
+        : serializeDateTime(value["createdTime"]),
     version: value["version"],
     nummer: value["nummer"],
     name: value["name"],

@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelStadtbezirksviertelEntity {
   /**
    *
-   * @type {PagedModelEntityModelStadtbezirksviertelEntityEmbedded}
-   * @memberof PagedModelEntityModelStadtbezirksviertelEntity
    */
   embedded?: PagedModelEntityModelStadtbezirksviertelEntityEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelStadtbezirksviertelEntity
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelStadtbezirksviertelEntity
    */
   page?: PageMetadata;
 }

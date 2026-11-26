@@ -11,24 +11,32 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
-import type { EmailAddressDTO } from "../models/index";
+import type { EmailAddressDTO } from "../models/EmailAddressDTO";
 
 import {
   EmailAddressDTOFromJSON,
   EmailAddressDTOToJSON,
-} from "../models/index";
+} from "../models/EmailAddressDTO";
 import * as runtime from "../runtime";
 
 export interface DeleteEmailaddressRequest {
+  /**
+   *
+   */
   id: string;
 }
 
 export interface SaveEmailAddressRequest {
+  /**
+   *
+   */
   emailAddressDTO: EmailAddressDTO;
 }
 
 export interface SaveEmailAddress1Request {
+  /**
+   *
+   */
   emailAddressDTO: EmailAddressDTO;
 }
 
@@ -37,11 +45,11 @@ export interface SaveEmailAddress1Request {
  */
 export class EmailAddressControllerApi extends runtime.BaseAPI {
   /**
+   * Creates request options for deleteEmailaddress without sending the request
    */
-  async deleteEmailaddressRaw(
-    requestParameters: DeleteEmailaddressRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<void>> {
+  async deleteEmailaddressRequestOpts(
+    requestParameters: DeleteEmailaddressRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -55,19 +63,27 @@ export class EmailAddressControllerApi extends runtime.BaseAPI {
 
     let urlPath = `/email-address/delete/{id}`;
     urlPath = urlPath.replace(
-      `{${"id"}}`,
+      "{id}",
       encodeURIComponent(String(requestParameters["id"]))
     );
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "DELETE",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "DELETE",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   */
+  async deleteEmailaddressRaw(
+    requestParameters: DeleteEmailaddressRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<void>> {
+    const requestOptions =
+      await this.deleteEmailaddressRequestOpts(requestParameters);
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.VoidApiResponse(response);
   }
@@ -82,25 +98,30 @@ export class EmailAddressControllerApi extends runtime.BaseAPI {
   }
 
   /**
+   * Creates request options for getEmailAddresses without sending the request
    */
-  async getEmailAddressesRaw(
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<Array<EmailAddressDTO>>> {
+  async getEmailAddressesRequestOpts(): Promise<runtime.RequestOpts> {
     const queryParameters: any = {};
 
     const headerParameters: runtime.HTTPHeaders = {};
 
     let urlPath = `/email-address/emailAddresses`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "GET",
+      headers: headerParameters,
+      query: queryParameters,
+    };
+  }
+
+  /**
+   */
+  async getEmailAddressesRaw(
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<Array<EmailAddressDTO>>> {
+    const requestOptions = await this.getEmailAddressesRequestOpts();
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       jsonValue.map(EmailAddressDTOFromJSON)
@@ -117,11 +138,11 @@ export class EmailAddressControllerApi extends runtime.BaseAPI {
   }
 
   /**
+   * Creates request options for saveEmailAddress without sending the request
    */
-  async saveEmailAddressRaw(
-    requestParameters: SaveEmailAddressRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EmailAddressDTO>> {
+  async saveEmailAddressRequestOpts(
+    requestParameters: SaveEmailAddressRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["emailAddressDTO"] == null) {
       throw new runtime.RequiredError(
         "emailAddressDTO",
@@ -137,16 +158,24 @@ export class EmailAddressControllerApi extends runtime.BaseAPI {
 
     let urlPath = `/email-address/save`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "POST",
-        headers: headerParameters,
-        query: queryParameters,
-        body: EmailAddressDTOToJSON(requestParameters["emailAddressDTO"]),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "POST",
+      headers: headerParameters,
+      query: queryParameters,
+      body: EmailAddressDTOToJSON(requestParameters["emailAddressDTO"]),
+    };
+  }
+
+  /**
+   */
+  async saveEmailAddressRaw(
+    requestParameters: SaveEmailAddressRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EmailAddressDTO>> {
+    const requestOptions =
+      await this.saveEmailAddressRequestOpts(requestParameters);
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EmailAddressDTOFromJSON(jsonValue)
@@ -167,11 +196,11 @@ export class EmailAddressControllerApi extends runtime.BaseAPI {
   }
 
   /**
+   * Creates request options for saveEmailAddress1 without sending the request
    */
-  async saveEmailAddress1Raw(
-    requestParameters: SaveEmailAddress1Request,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<EmailAddressDTO>> {
+  async saveEmailAddress1RequestOpts(
+    requestParameters: SaveEmailAddress1Request
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["emailAddressDTO"] == null) {
       throw new runtime.RequiredError(
         "emailAddressDTO",
@@ -187,16 +216,24 @@ export class EmailAddressControllerApi extends runtime.BaseAPI {
 
     let urlPath = `/email-address/save`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "PUT",
-        headers: headerParameters,
-        query: queryParameters,
-        body: EmailAddressDTOToJSON(requestParameters["emailAddressDTO"]),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "PUT",
+      headers: headerParameters,
+      query: queryParameters,
+      body: EmailAddressDTOToJSON(requestParameters["emailAddressDTO"]),
+    };
+  }
+
+  /**
+   */
+  async saveEmailAddress1Raw(
+    requestParameters: SaveEmailAddress1Request,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<EmailAddressDTO>> {
+    const requestOptions =
+      await this.saveEmailAddress1RequestOpts(requestParameters);
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       EmailAddressDTOFromJSON(jsonValue)

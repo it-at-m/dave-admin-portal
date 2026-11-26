@@ -14,7 +14,13 @@
 
 import type { Link } from "./Link";
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 import {
   LinkFromJSON,
   LinkFromJSONTyped,
@@ -30,50 +36,34 @@ import {
 export interface EntityModelStadtbezirkEntity {
   /**
    *
-   * @type {string}
-   * @memberof EntityModelStadtbezirkEntity
    */
   id?: string;
   /**
    *
-   * @type {Date}
-   * @memberof EntityModelStadtbezirkEntity
    */
   createdTime?: Date;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelStadtbezirkEntity
    */
   version?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelStadtbezirkEntity
    */
   nummer?: number;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelStadtbezirkEntity
    */
   name?: string;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelStadtbezirkEntity
    */
   stadt?: string;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelStadtbezirkEntity
    */
   entityVersion?: number;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof EntityModelStadtbezirkEntity
    */
   links?: { [key: string]: Link };
 }
@@ -103,7 +93,9 @@ export function EntityModelStadtbezirkEntityFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     createdTime:
-      json["createdTime"] == null ? undefined : new Date(json["createdTime"]),
+      json["createdTime"] == null
+        ? undefined
+        : parseDateTime(json["createdTime"]),
     version: json["version"] == null ? undefined : json["version"],
     nummer: json["nummer"] == null ? undefined : json["nummer"],
     name: json["name"] == null ? undefined : json["name"],
@@ -135,8 +127,8 @@ export function EntityModelStadtbezirkEntityToJSONTyped(
     id: value["id"],
     createdTime:
       value["createdTime"] == null
-        ? undefined
-        : value["createdTime"].toISOString(),
+        ? value["createdTime"]
+        : serializeDateTime(value["createdTime"]),
     version: value["version"],
     nummer: value["nummer"],
     name: value["name"],
