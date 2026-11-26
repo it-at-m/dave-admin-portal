@@ -12,12 +12,20 @@
  * Do not edit the class manually.
  */
 
+import type { Fahrzeugklasse } from "./Fahrzeugklasse";
 import type { GeoPoint } from "./GeoPoint";
 import type { Link } from "./Link";
 import type { Messfaehigkeit } from "./Messfaehigkeit";
 import type { Messquerschnitt } from "./Messquerschnitt";
+import type { Verkehrsart } from "./Verkehrsart";
 
 import { mapValues } from "../runtime";
+import {
+  FahrzeugklasseFromJSON,
+  FahrzeugklasseFromJSONTyped,
+  FahrzeugklasseToJSON,
+  FahrzeugklasseToJSONTyped,
+} from "./Fahrzeugklasse";
 import {
   GeoPointFromJSON,
   GeoPointFromJSONTyped,
@@ -42,6 +50,12 @@ import {
   MessquerschnittToJSON,
   MessquerschnittToJSONTyped,
 } from "./Messquerschnitt";
+import {
+  VerkehrsartFromJSON,
+  VerkehrsartFromJSONTyped,
+  VerkehrsartToJSON,
+  VerkehrsartToJSONTyped,
+} from "./Verkehrsart";
 
 /**
  *
@@ -93,16 +107,16 @@ export interface EntityModelMessstelle {
   bemerkung?: string;
   /**
    *
-   * @type {string}
+   * @type {Fahrzeugklasse}
    * @memberof EntityModelMessstelle
    */
-  fahrzeugklasse?: EntityModelMessstelleFahrzeugklasseEnum;
+  fahrzeugklasse?: Fahrzeugklasse;
   /**
    *
-   * @type {string}
+   * @type {Verkehrsart}
    * @memberof EntityModelMessstelle
    */
-  detektierteVerkehrsart?: EntityModelMessstelleDetektierteVerkehrsartEnum;
+  detektierteVerkehrsart?: Verkehrsart;
   /**
    *
    * @type {string}
@@ -197,29 +211,6 @@ export type EntityModelMessstelleStatusEnum =
   (typeof EntityModelMessstelleStatusEnum)[keyof typeof EntityModelMessstelleStatusEnum];
 
 /**
- * @export
- */
-export const EntityModelMessstelleFahrzeugklasseEnum = {
-  Rad: "RAD",
-  SummeKfz: "SUMME_KFZ",
-  ZweiPlusEins: "ZWEI_PLUS_EINS",
-  AchtPlusEins: "ACHT_PLUS_EINS",
-} as const;
-export type EntityModelMessstelleFahrzeugklasseEnum =
-  (typeof EntityModelMessstelleFahrzeugklasseEnum)[keyof typeof EntityModelMessstelleFahrzeugklasseEnum];
-
-/**
- * @export
- */
-export const EntityModelMessstelleDetektierteVerkehrsartEnum = {
-  Kfz: "KFZ",
-  Rad: "RAD",
-  Unbekannt: "UNBEKANNT",
-} as const;
-export type EntityModelMessstelleDetektierteVerkehrsartEnum =
-  (typeof EntityModelMessstelleDetektierteVerkehrsartEnum)[keyof typeof EntityModelMessstelleDetektierteVerkehrsartEnum];
-
-/**
  * Check if a given object implements the EntityModelMessstelle interface.
  */
 export function instanceOfEntityModelMessstelle(
@@ -255,11 +246,13 @@ export function EntityModelMessstelleFromJSONTyped(
       json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     bemerkung: json["bemerkung"] == null ? undefined : json["bemerkung"],
     fahrzeugklasse:
-      json["fahrzeugklasse"] == null ? undefined : json["fahrzeugklasse"],
+      json["fahrzeugklasse"] == null
+        ? undefined
+        : FahrzeugklasseFromJSON(json["fahrzeugklasse"]),
     detektierteVerkehrsart:
       json["detektierteVerkehrsart"] == null
         ? undefined
-        : json["detektierteVerkehrsart"],
+        : VerkehrsartFromJSON(json["detektierteVerkehrsart"]),
     hersteller: json["hersteller"] == null ? undefined : json["hersteller"],
     datumLetztePlausibleMessung:
       json["datumLetztePlausibleMessung"] == null
@@ -319,8 +312,8 @@ export function EntityModelMessstelleToJSONTyped(
         : value["abbaudatum"].toISOString().substring(0, 10),
     stadtbezirkNummer: value["stadtbezirkNummer"],
     bemerkung: value["bemerkung"],
-    fahrzeugklasse: value["fahrzeugklasse"],
-    detektierteVerkehrsart: value["detektierteVerkehrsart"],
+    fahrzeugklasse: FahrzeugklasseToJSON(value["fahrzeugklasse"]),
+    detektierteVerkehrsart: VerkehrsartToJSON(value["detektierteVerkehrsart"]),
     hersteller: value["hersteller"],
     datumLetztePlausibleMessung:
       value["datumLetztePlausibleMessung"] == null

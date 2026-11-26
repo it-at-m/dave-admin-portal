@@ -41,7 +41,7 @@ export class EmailAddressControllerApi extends runtime.BaseAPI {
   async deleteEmailaddressRaw(
     requestParameters: DeleteEmailaddressRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<object>> {
+  ): Promise<runtime.ApiResponse<void>> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -69,7 +69,7 @@ export class EmailAddressControllerApi extends runtime.BaseAPI {
       initOverrides
     );
 
-    return new runtime.JSONApiResponse<any>(response);
+    return new runtime.VoidApiResponse(response);
   }
 
   /**
@@ -77,12 +77,8 @@ export class EmailAddressControllerApi extends runtime.BaseAPI {
   async deleteEmailaddress(
     requestParameters: DeleteEmailaddressRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<object> {
-    const response = await this.deleteEmailaddressRaw(
-      requestParameters,
-      initOverrides
-    );
-    return await response.value();
+  ): Promise<void> {
+    await this.deleteEmailaddressRaw(requestParameters, initOverrides);
   }
 
   /**

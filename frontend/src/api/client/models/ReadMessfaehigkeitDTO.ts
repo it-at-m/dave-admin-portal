@@ -12,7 +12,22 @@
  * Do not edit the class manually.
  */
 
+import type { Fahrzeugklasse } from "./Fahrzeugklasse";
+import type { ZaehldatenIntervall } from "./ZaehldatenIntervall";
+
 import { mapValues } from "../runtime";
+import {
+  FahrzeugklasseFromJSON,
+  FahrzeugklasseFromJSONTyped,
+  FahrzeugklasseToJSON,
+  FahrzeugklasseToJSONTyped,
+} from "./Fahrzeugklasse";
+import {
+  ZaehldatenIntervallFromJSON,
+  ZaehldatenIntervallFromJSONTyped,
+  ZaehldatenIntervallToJSON,
+  ZaehldatenIntervallToJSONTyped,
+} from "./ZaehldatenIntervall";
 
 /**
  *
@@ -25,50 +40,26 @@ export interface ReadMessfaehigkeitDTO {
    * @type {string}
    * @memberof ReadMessfaehigkeitDTO
    */
-  gueltigBis?: string;
+  gueltigBis: string;
   /**
    *
    * @type {string}
    * @memberof ReadMessfaehigkeitDTO
    */
-  gueltigAb?: string;
+  gueltigAb: string;
   /**
    *
-   * @type {string}
+   * @type {Fahrzeugklasse}
    * @memberof ReadMessfaehigkeitDTO
    */
-  fahrzeugklasse?: ReadMessfaehigkeitDTOFahrzeugklasseEnum;
+  fahrzeugklasse: Fahrzeugklasse;
   /**
    *
-   * @type {string}
+   * @type {ZaehldatenIntervall}
    * @memberof ReadMessfaehigkeitDTO
    */
-  intervall?: ReadMessfaehigkeitDTOIntervallEnum;
+  intervall: ZaehldatenIntervall;
 }
-
-/**
- * @export
- */
-export const ReadMessfaehigkeitDTOFahrzeugklasseEnum = {
-  Rad: "RAD",
-  SummeKfz: "SUMME_KFZ",
-  ZweiPlusEins: "ZWEI_PLUS_EINS",
-  AchtPlusEins: "ACHT_PLUS_EINS",
-} as const;
-export type ReadMessfaehigkeitDTOFahrzeugklasseEnum =
-  (typeof ReadMessfaehigkeitDTOFahrzeugklasseEnum)[keyof typeof ReadMessfaehigkeitDTOFahrzeugklasseEnum];
-
-/**
- * @export
- */
-export const ReadMessfaehigkeitDTOIntervallEnum = {
-  StundeViertel: "STUNDE_VIERTEL",
-  StundeViertelEingeschraenkt: "STUNDE_VIERTEL_EINGESCHRAENKT",
-  StundeHalb: "STUNDE_HALB",
-  StundeKomplett: "STUNDE_KOMPLETT",
-} as const;
-export type ReadMessfaehigkeitDTOIntervallEnum =
-  (typeof ReadMessfaehigkeitDTOIntervallEnum)[keyof typeof ReadMessfaehigkeitDTOIntervallEnum];
 
 /**
  * Check if a given object implements the ReadMessfaehigkeitDTO interface.
@@ -76,6 +67,12 @@ export type ReadMessfaehigkeitDTOIntervallEnum =
 export function instanceOfReadMessfaehigkeitDTO(
   value: object
 ): value is ReadMessfaehigkeitDTO {
+  if (!("gueltigBis" in value) || value["gueltigBis"] === undefined)
+    return false;
+  if (!("gueltigAb" in value) || value["gueltigAb"] === undefined) return false;
+  if (!("fahrzeugklasse" in value) || value["fahrzeugklasse"] === undefined)
+    return false;
+  if (!("intervall" in value) || value["intervall"] === undefined) return false;
   return true;
 }
 
@@ -93,11 +90,10 @@ export function ReadMessfaehigkeitDTOFromJSONTyped(
     return json;
   }
   return {
-    gueltigBis: json["gueltigBis"] == null ? undefined : json["gueltigBis"],
-    gueltigAb: json["gueltigAb"] == null ? undefined : json["gueltigAb"],
-    fahrzeugklasse:
-      json["fahrzeugklasse"] == null ? undefined : json["fahrzeugklasse"],
-    intervall: json["intervall"] == null ? undefined : json["intervall"],
+    gueltigBis: json["gueltigBis"],
+    gueltigAb: json["gueltigAb"],
+    fahrzeugklasse: FahrzeugklasseFromJSON(json["fahrzeugklasse"]),
+    intervall: ZaehldatenIntervallFromJSON(json["intervall"]),
   };
 }
 
@@ -116,7 +112,7 @@ export function ReadMessfaehigkeitDTOToJSONTyped(
   return {
     gueltigBis: value["gueltigBis"],
     gueltigAb: value["gueltigAb"],
-    fahrzeugklasse: value["fahrzeugklasse"],
-    intervall: value["intervall"],
+    fahrzeugklasse: FahrzeugklasseToJSON(value["fahrzeugklasse"]),
+    intervall: ZaehldatenIntervallToJSON(value["intervall"]),
   };
 }

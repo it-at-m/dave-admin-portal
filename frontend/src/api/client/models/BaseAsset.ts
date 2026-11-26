@@ -12,7 +12,11 @@
  * Do not edit the class manually.
  */
 import type { DatatableAsset } from "./DatatableAsset";
-import type { HeadingAsset } from "./HeadingAsset";
+import type { Heading1Asset } from "./Heading1Asset";
+import type { Heading2Asset } from "./Heading2Asset";
+import type { Heading3Asset } from "./Heading3Asset";
+import type { Heading4Asset } from "./Heading4Asset";
+import type { Heading5Asset } from "./Heading5Asset";
 import type { ImageAsset } from "./ImageAsset";
 import type { MessstelleDatatableAsset } from "./MessstelleDatatableAsset";
 import type { NewlineAsset } from "./NewlineAsset";
@@ -27,10 +31,30 @@ import {
   DatatableAssetToJSONTyped,
 } from "./DatatableAsset";
 import {
-  HeadingAssetFromJSONTyped,
-  HeadingAssetToJSON,
-  HeadingAssetToJSONTyped,
-} from "./HeadingAsset";
+  Heading1AssetFromJSONTyped,
+  Heading1AssetToJSON,
+  Heading1AssetToJSONTyped,
+} from "./Heading1Asset";
+import {
+  Heading2AssetFromJSONTyped,
+  Heading2AssetToJSON,
+  Heading2AssetToJSONTyped,
+} from "./Heading2Asset";
+import {
+  Heading3AssetFromJSONTyped,
+  Heading3AssetToJSON,
+  Heading3AssetToJSONTyped,
+} from "./Heading3Asset";
+import {
+  Heading4AssetFromJSONTyped,
+  Heading4AssetToJSON,
+  Heading4AssetToJSONTyped,
+} from "./Heading4Asset";
+import {
+  Heading5AssetFromJSONTyped,
+  Heading5AssetToJSON,
+  Heading5AssetToJSONTyped,
+} from "./Heading5Asset";
 import {
   ImageAssetFromJSONTyped,
   ImageAssetToJSON,
@@ -73,7 +97,13 @@ export interface BaseAsset {
    * @type {string}
    * @memberof BaseAsset
    */
-  type?: BaseAssetTypeEnum;
+  type: BaseAssetTypeEnum;
+  /**
+   *
+   * @type {number}
+   * @memberof BaseAsset
+   */
+  id: number;
 }
 
 /**
@@ -101,6 +131,8 @@ export type BaseAssetTypeEnum =
  * Check if a given object implements the BaseAsset interface.
  */
 export function instanceOfBaseAsset(value: object): value is BaseAsset {
+  if (!("type" in value) || value["type"] === undefined) return false;
+  if (!("id" in value) || value["id"] === undefined) return false;
   return true;
 }
 
@@ -116,33 +148,46 @@ export function BaseAssetFromJSONTyped(
     return json;
   }
   if (!ignoreDiscriminator) {
-    if (json["type"] === "DatatableAsset") {
+    if (json["type"] === "DATATABLE") {
       return DatatableAssetFromJSONTyped(json, ignoreDiscriminator);
     }
-    if (json["type"] === "HeadingAsset") {
-      return HeadingAssetFromJSONTyped(json, ignoreDiscriminator);
-    }
-    if (json["type"] === "ImageAsset") {
-      return ImageAssetFromJSONTyped(json, ignoreDiscriminator);
-    }
-    if (json["type"] === "MessstelleDatatableAsset") {
+    if (json["type"] === "DATATABLE_MESSSTELLE") {
       return MessstelleDatatableAssetFromJSONTyped(json, ignoreDiscriminator);
     }
-    if (json["type"] === "NewlineAsset") {
+    if (json["type"] === "HEADING1") {
+      return Heading1AssetFromJSONTyped(json, ignoreDiscriminator);
+    }
+    if (json["type"] === "HEADING2") {
+      return Heading2AssetFromJSONTyped(json, ignoreDiscriminator);
+    }
+    if (json["type"] === "HEADING3") {
+      return Heading3AssetFromJSONTyped(json, ignoreDiscriminator);
+    }
+    if (json["type"] === "HEADING4") {
+      return Heading4AssetFromJSONTyped(json, ignoreDiscriminator);
+    }
+    if (json["type"] === "HEADING5") {
+      return Heading5AssetFromJSONTyped(json, ignoreDiscriminator);
+    }
+    if (json["type"] === "IMAGE") {
+      return ImageAssetFromJSONTyped(json, ignoreDiscriminator);
+    }
+    if (json["type"] === "NEWLINE") {
       return NewlineAssetFromJSONTyped(json, ignoreDiscriminator);
     }
-    if (json["type"] === "PagebreakAsset") {
+    if (json["type"] === "PAGEBREAK") {
       return PagebreakAssetFromJSONTyped(json, ignoreDiscriminator);
     }
-    if (json["type"] === "TextAsset") {
+    if (json["type"] === "TEXT") {
       return TextAssetFromJSONTyped(json, ignoreDiscriminator);
     }
-    if (json["type"] === "ZaehlungskenngroessenAsset") {
+    if (json["type"] === "ZAEHLUNGSKENNGROESSEN") {
       return ZaehlungskenngroessenAssetFromJSONTyped(json, ignoreDiscriminator);
     }
   }
   return {
-    type: json["type"] == null ? undefined : json["type"],
+    type: json["type"],
+    id: json["id"],
   };
 }
 
@@ -160,36 +205,56 @@ export function BaseAssetToJSONTyped(
 
   if (!ignoreDiscriminator) {
     switch (value["type"]) {
-      case "DatatableAsset":
+      case "DATATABLE":
         return DatatableAssetToJSONTyped(
           value as DatatableAsset,
           ignoreDiscriminator
         );
-      case "HeadingAsset":
-        return HeadingAssetToJSONTyped(
-          value as HeadingAsset,
-          ignoreDiscriminator
-        );
-      case "ImageAsset":
-        return ImageAssetToJSONTyped(value as ImageAsset, ignoreDiscriminator);
-      case "MessstelleDatatableAsset":
+      case "DATATABLE_MESSSTELLE":
         return MessstelleDatatableAssetToJSONTyped(
           value as MessstelleDatatableAsset,
           ignoreDiscriminator
         );
-      case "NewlineAsset":
+      case "HEADING1":
+        return Heading1AssetToJSONTyped(
+          value as Heading1Asset,
+          ignoreDiscriminator
+        );
+      case "HEADING2":
+        return Heading2AssetToJSONTyped(
+          value as Heading2Asset,
+          ignoreDiscriminator
+        );
+      case "HEADING3":
+        return Heading3AssetToJSONTyped(
+          value as Heading3Asset,
+          ignoreDiscriminator
+        );
+      case "HEADING4":
+        return Heading4AssetToJSONTyped(
+          value as Heading4Asset,
+          ignoreDiscriminator
+        );
+      case "HEADING5":
+        return Heading5AssetToJSONTyped(
+          value as Heading5Asset,
+          ignoreDiscriminator
+        );
+      case "IMAGE":
+        return ImageAssetToJSONTyped(value as ImageAsset, ignoreDiscriminator);
+      case "NEWLINE":
         return NewlineAssetToJSONTyped(
           value as NewlineAsset,
           ignoreDiscriminator
         );
-      case "PagebreakAsset":
+      case "PAGEBREAK":
         return PagebreakAssetToJSONTyped(
           value as PagebreakAsset,
           ignoreDiscriminator
         );
-      case "TextAsset":
+      case "TEXT":
         return TextAssetToJSONTyped(value as TextAsset, ignoreDiscriminator);
-      case "ZaehlungskenngroessenAsset":
+      case "ZAEHLUNGSKENNGROESSEN":
         return ZaehlungskenngroessenAssetToJSONTyped(
           value as ZaehlungskenngroessenAsset,
           ignoreDiscriminator
@@ -201,5 +266,6 @@ export function BaseAssetToJSONTyped(
 
   return {
     type: value["type"],
+    id: value["id"],
   };
 }

@@ -25,19 +25,19 @@ export interface LadeZaehldatenZeitreiheDTO {
    * @type {Array<string>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  datum?: Array<string>;
+  datum: Array<string>;
   /**
    *
    * @type {Array<string>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  fehlendeWerteMeldung?: Array<string>;
+  fehlendeWerteMeldung: Array<string>;
   /**
    *
    * @type {Array<Array<string>>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  tageswertNichtVorhanden?: Array<
+  tageswertNichtVorhanden: Array<
     Array<LadeZaehldatenZeitreiheDTOTageswertNichtVorhandenEnum>
   >;
   /**
@@ -45,49 +45,49 @@ export interface LadeZaehldatenZeitreiheDTO {
    * @type {Array<number>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  kfz?: Array<number>;
+  kfz: Array<number>;
   /**
    *
    * @type {Array<number>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  sv?: Array<number>;
+  sv: Array<number>;
   /**
    *
    * @type {Array<number>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  gv?: Array<number>;
+  gv: Array<number>;
   /**
    *
    * @type {Array<number>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  rad?: Array<number>;
+  rad: Array<number>;
   /**
    *
    * @type {Array<number>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  fuss?: Array<number>;
+  fuss: Array<number>;
   /**
    *
    * @type {Array<number>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  svAnteilInProzent?: Array<number>;
+  svAnteilInProzent: Array<number>;
   /**
    *
    * @type {Array<number>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  gvAnteilInProzent?: Array<number>;
+  gvAnteilInProzent: Array<number>;
   /**
    *
    * @type {Array<number>}
    * @memberof LadeZaehldatenZeitreiheDTO
    */
-  gesamt?: Array<number>;
+  gesamt: Array<number>;
 }
 
 /**
@@ -117,6 +117,33 @@ export type LadeZaehldatenZeitreiheDTOTageswertNichtVorhandenEnum =
 export function instanceOfLadeZaehldatenZeitreiheDTO(
   value: object
 ): value is LadeZaehldatenZeitreiheDTO {
+  if (!("datum" in value) || value["datum"] === undefined) return false;
+  if (
+    !("fehlendeWerteMeldung" in value) ||
+    value["fehlendeWerteMeldung"] === undefined
+  )
+    return false;
+  if (
+    !("tageswertNichtVorhanden" in value) ||
+    value["tageswertNichtVorhanden"] === undefined
+  )
+    return false;
+  if (!("kfz" in value) || value["kfz"] === undefined) return false;
+  if (!("sv" in value) || value["sv"] === undefined) return false;
+  if (!("gv" in value) || value["gv"] === undefined) return false;
+  if (!("rad" in value) || value["rad"] === undefined) return false;
+  if (!("fuss" in value) || value["fuss"] === undefined) return false;
+  if (
+    !("svAnteilInProzent" in value) ||
+    value["svAnteilInProzent"] === undefined
+  )
+    return false;
+  if (
+    !("gvAnteilInProzent" in value) ||
+    value["gvAnteilInProzent"] === undefined
+  )
+    return false;
+  if (!("gesamt" in value) || value["gesamt"] === undefined) return false;
   return true;
 }
 
@@ -134,25 +161,17 @@ export function LadeZaehldatenZeitreiheDTOFromJSONTyped(
     return json;
   }
   return {
-    datum: json["datum"] == null ? undefined : json["datum"],
-    fehlendeWerteMeldung:
-      json["fehlendeWerteMeldung"] == null
-        ? undefined
-        : json["fehlendeWerteMeldung"],
-    tageswertNichtVorhanden:
-      json["tageswertNichtVorhanden"] == null
-        ? undefined
-        : json["tageswertNichtVorhanden"],
-    kfz: json["kfz"] == null ? undefined : json["kfz"],
-    sv: json["sv"] == null ? undefined : json["sv"],
-    gv: json["gv"] == null ? undefined : json["gv"],
-    rad: json["rad"] == null ? undefined : json["rad"],
-    fuss: json["fuss"] == null ? undefined : json["fuss"],
-    svAnteilInProzent:
-      json["svAnteilInProzent"] == null ? undefined : json["svAnteilInProzent"],
-    gvAnteilInProzent:
-      json["gvAnteilInProzent"] == null ? undefined : json["gvAnteilInProzent"],
-    gesamt: json["gesamt"] == null ? undefined : json["gesamt"],
+    datum: json["datum"],
+    fehlendeWerteMeldung: json["fehlendeWerteMeldung"],
+    tageswertNichtVorhanden: json["tageswertNichtVorhanden"],
+    kfz: json["kfz"],
+    sv: json["sv"],
+    gv: json["gv"],
+    rad: json["rad"],
+    fuss: json["fuss"],
+    svAnteilInProzent: json["svAnteilInProzent"],
+    gvAnteilInProzent: json["gvAnteilInProzent"],
+    gesamt: json["gesamt"],
   };
 }
 

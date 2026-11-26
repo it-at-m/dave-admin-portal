@@ -12,10 +12,18 @@
  * Do not edit the class manually.
  */
 
+import type { Fahrzeugklasse } from "./Fahrzeugklasse";
 import type { ReadMessfaehigkeitDTO } from "./ReadMessfaehigkeitDTO";
 import type { ReadMessquerschnittDTO } from "./ReadMessquerschnittDTO";
+import type { Verkehrsart } from "./Verkehrsart";
 
 import { mapValues } from "../runtime";
+import {
+  FahrzeugklasseFromJSON,
+  FahrzeugklasseFromJSONTyped,
+  FahrzeugklasseToJSON,
+  FahrzeugklasseToJSONTyped,
+} from "./Fahrzeugklasse";
 import {
   ReadMessfaehigkeitDTOFromJSON,
   ReadMessfaehigkeitDTOFromJSONTyped,
@@ -28,6 +36,12 @@ import {
   ReadMessquerschnittDTOToJSON,
   ReadMessquerschnittDTOToJSONTyped,
 } from "./ReadMessquerschnittDTO";
+import {
+  VerkehrsartFromJSON,
+  VerkehrsartFromJSONTyped,
+  VerkehrsartToJSON,
+  VerkehrsartToJSONTyped,
+} from "./Verkehrsart";
 
 /**
  *
@@ -40,121 +54,98 @@ export interface ReadMessstelleInfoDTO {
    * @type {string}
    * @memberof ReadMessstelleInfoDTO
    */
-  id?: string;
+  id: string;
   /**
    *
    * @type {string}
    * @memberof ReadMessstelleInfoDTO
    */
-  mstId?: string;
+  mstId: string;
   /**
    *
    * @type {string}
    * @memberof ReadMessstelleInfoDTO
    */
-  standort?: string;
+  standort: string;
   /**
    *
    * @type {number}
    * @memberof ReadMessstelleInfoDTO
    */
-  stadtbezirkNummer?: number;
+  stadtbezirkNummer: number;
+  /**
+   *
+   * @type {Fahrzeugklasse}
+   * @memberof ReadMessstelleInfoDTO
+   */
+  fahrzeugklasse: Fahrzeugklasse;
+  /**
+   *
+   * @type {Verkehrsart}
+   * @memberof ReadMessstelleInfoDTO
+   */
+  detektierteVerkehrsart: Verkehrsart;
   /**
    *
    * @type {string}
    * @memberof ReadMessstelleInfoDTO
    */
-  fahrzeugklasse?: ReadMessstelleInfoDTOFahrzeugklasseEnum;
-  /**
-   *
-   * @type {string}
-   * @memberof ReadMessstelleInfoDTO
-   */
-  detektierteVerkehrsart?: ReadMessstelleInfoDTODetektierteVerkehrsartEnum;
-  /**
-   *
-   * @type {string}
-   * @memberof ReadMessstelleInfoDTO
-   */
-  hersteller?: string;
+  hersteller: string;
   /**
    *
    * @type {number}
    * @memberof ReadMessstelleInfoDTO
    */
-  longitude?: number;
+  longitude: number;
   /**
    *
    * @type {number}
    * @memberof ReadMessstelleInfoDTO
    */
-  latitude?: number;
+  latitude: number;
   /**
    *
    * @type {Date}
    * @memberof ReadMessstelleInfoDTO
    */
-  datumLetztePlausibleMessung?: Date;
+  datumLetztePlausibleMessung: Date;
   /**
    *
    * @type {Date}
    * @memberof ReadMessstelleInfoDTO
    */
-  realisierungsdatum?: Date;
+  realisierungsdatum: Date;
   /**
    *
    * @type {Date}
    * @memberof ReadMessstelleInfoDTO
    */
-  abbaudatum?: Date;
+  abbaudatum: Date;
   /**
    *
    * @type {string}
    * @memberof ReadMessstelleInfoDTO
    */
-  kommentar?: string;
+  kommentar: string;
   /**
    *
    * @type {Array<ReadMessquerschnittDTO>}
    * @memberof ReadMessstelleInfoDTO
    */
-  messquerschnitte?: Array<ReadMessquerschnittDTO>;
+  messquerschnitte: Array<ReadMessquerschnittDTO>;
   /**
    *
    * @type {Array<ReadMessfaehigkeitDTO>}
    * @memberof ReadMessstelleInfoDTO
    */
-  messfaehigkeiten?: Array<ReadMessfaehigkeitDTO>;
+  messfaehigkeiten: Array<ReadMessfaehigkeitDTO>;
   /**
    *
    * @type {boolean}
    * @memberof ReadMessstelleInfoDTO
    */
-  lageplanVorhanden?: boolean;
+  lageplanVorhanden: boolean;
 }
-
-/**
- * @export
- */
-export const ReadMessstelleInfoDTOFahrzeugklasseEnum = {
-  Rad: "RAD",
-  SummeKfz: "SUMME_KFZ",
-  ZweiPlusEins: "ZWEI_PLUS_EINS",
-  AchtPlusEins: "ACHT_PLUS_EINS",
-} as const;
-export type ReadMessstelleInfoDTOFahrzeugklasseEnum =
-  (typeof ReadMessstelleInfoDTOFahrzeugklasseEnum)[keyof typeof ReadMessstelleInfoDTOFahrzeugklasseEnum];
-
-/**
- * @export
- */
-export const ReadMessstelleInfoDTODetektierteVerkehrsartEnum = {
-  Kfz: "KFZ",
-  Rad: "RAD",
-  Unbekannt: "UNBEKANNT",
-} as const;
-export type ReadMessstelleInfoDTODetektierteVerkehrsartEnum =
-  (typeof ReadMessstelleInfoDTODetektierteVerkehrsartEnum)[keyof typeof ReadMessstelleInfoDTODetektierteVerkehrsartEnum];
 
 /**
  * Check if a given object implements the ReadMessstelleInfoDTO interface.
@@ -162,6 +153,47 @@ export type ReadMessstelleInfoDTODetektierteVerkehrsartEnum =
 export function instanceOfReadMessstelleInfoDTO(
   value: object
 ): value is ReadMessstelleInfoDTO {
+  if (!("id" in value) || value["id"] === undefined) return false;
+  if (!("mstId" in value) || value["mstId"] === undefined) return false;
+  if (!("standort" in value) || value["standort"] === undefined) return false;
+  if (
+    !("stadtbezirkNummer" in value) ||
+    value["stadtbezirkNummer"] === undefined
+  )
+    return false;
+  if (!("fahrzeugklasse" in value) || value["fahrzeugklasse"] === undefined)
+    return false;
+  if (
+    !("detektierteVerkehrsart" in value) ||
+    value["detektierteVerkehrsart"] === undefined
+  )
+    return false;
+  if (!("hersteller" in value) || value["hersteller"] === undefined)
+    return false;
+  if (!("longitude" in value) || value["longitude"] === undefined) return false;
+  if (!("latitude" in value) || value["latitude"] === undefined) return false;
+  if (
+    !("datumLetztePlausibleMessung" in value) ||
+    value["datumLetztePlausibleMessung"] === undefined
+  )
+    return false;
+  if (
+    !("realisierungsdatum" in value) ||
+    value["realisierungsdatum"] === undefined
+  )
+    return false;
+  if (!("abbaudatum" in value) || value["abbaudatum"] === undefined)
+    return false;
+  if (!("kommentar" in value) || value["kommentar"] === undefined) return false;
+  if (!("messquerschnitte" in value) || value["messquerschnitte"] === undefined)
+    return false;
+  if (!("messfaehigkeiten" in value) || value["messfaehigkeiten"] === undefined)
+    return false;
+  if (
+    !("lageplanVorhanden" in value) ||
+    value["lageplanVorhanden"] === undefined
+  )
+    return false;
   return true;
 }
 
@@ -179,45 +211,26 @@ export function ReadMessstelleInfoDTOFromJSONTyped(
     return json;
   }
   return {
-    id: json["id"] == null ? undefined : json["id"],
-    mstId: json["mstId"] == null ? undefined : json["mstId"],
-    standort: json["standort"] == null ? undefined : json["standort"],
-    stadtbezirkNummer:
-      json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
-    fahrzeugklasse:
-      json["fahrzeugklasse"] == null ? undefined : json["fahrzeugklasse"],
-    detektierteVerkehrsart:
-      json["detektierteVerkehrsart"] == null
-        ? undefined
-        : json["detektierteVerkehrsart"],
-    hersteller: json["hersteller"] == null ? undefined : json["hersteller"],
-    longitude: json["longitude"] == null ? undefined : json["longitude"],
-    latitude: json["latitude"] == null ? undefined : json["latitude"],
-    datumLetztePlausibleMessung:
-      json["datumLetztePlausibleMessung"] == null
-        ? undefined
-        : new Date(json["datumLetztePlausibleMessung"]),
-    realisierungsdatum:
-      json["realisierungsdatum"] == null
-        ? undefined
-        : new Date(json["realisierungsdatum"]),
-    abbaudatum:
-      json["abbaudatum"] == null ? undefined : new Date(json["abbaudatum"]),
-    kommentar: json["kommentar"] == null ? undefined : json["kommentar"],
-    messquerschnitte:
-      json["messquerschnitte"] == null
-        ? undefined
-        : (json["messquerschnitte"] as Array<any>).map(
-            ReadMessquerschnittDTOFromJSON
-          ),
-    messfaehigkeiten:
-      json["messfaehigkeiten"] == null
-        ? undefined
-        : (json["messfaehigkeiten"] as Array<any>).map(
-            ReadMessfaehigkeitDTOFromJSON
-          ),
-    lageplanVorhanden:
-      json["lageplanVorhanden"] == null ? undefined : json["lageplanVorhanden"],
+    id: json["id"],
+    mstId: json["mstId"],
+    standort: json["standort"],
+    stadtbezirkNummer: json["stadtbezirkNummer"],
+    fahrzeugklasse: FahrzeugklasseFromJSON(json["fahrzeugklasse"]),
+    detektierteVerkehrsart: VerkehrsartFromJSON(json["detektierteVerkehrsart"]),
+    hersteller: json["hersteller"],
+    longitude: json["longitude"],
+    latitude: json["latitude"],
+    datumLetztePlausibleMessung: new Date(json["datumLetztePlausibleMessung"]),
+    realisierungsdatum: new Date(json["realisierungsdatum"]),
+    abbaudatum: new Date(json["abbaudatum"]),
+    kommentar: json["kommentar"],
+    messquerschnitte: (json["messquerschnitte"] as Array<any>).map(
+      ReadMessquerschnittDTOFromJSON
+    ),
+    messfaehigkeiten: (json["messfaehigkeiten"] as Array<any>).map(
+      ReadMessfaehigkeitDTOFromJSON
+    ),
+    lageplanVorhanden: json["lageplanVorhanden"],
   };
 }
 
@@ -238,36 +251,25 @@ export function ReadMessstelleInfoDTOToJSONTyped(
     mstId: value["mstId"],
     standort: value["standort"],
     stadtbezirkNummer: value["stadtbezirkNummer"],
-    fahrzeugklasse: value["fahrzeugklasse"],
-    detektierteVerkehrsart: value["detektierteVerkehrsart"],
+    fahrzeugklasse: FahrzeugklasseToJSON(value["fahrzeugklasse"]),
+    detektierteVerkehrsart: VerkehrsartToJSON(value["detektierteVerkehrsart"]),
     hersteller: value["hersteller"],
     longitude: value["longitude"],
     latitude: value["latitude"],
-    datumLetztePlausibleMessung:
-      value["datumLetztePlausibleMessung"] == null
-        ? undefined
-        : value["datumLetztePlausibleMessung"].toISOString().substring(0, 10),
-    realisierungsdatum:
-      value["realisierungsdatum"] == null
-        ? undefined
-        : value["realisierungsdatum"].toISOString().substring(0, 10),
-    abbaudatum:
-      value["abbaudatum"] == null
-        ? undefined
-        : value["abbaudatum"].toISOString().substring(0, 10),
+    datumLetztePlausibleMessung: value["datumLetztePlausibleMessung"]
+      .toISOString()
+      .substring(0, 10),
+    realisierungsdatum: value["realisierungsdatum"]
+      .toISOString()
+      .substring(0, 10),
+    abbaudatum: value["abbaudatum"].toISOString().substring(0, 10),
     kommentar: value["kommentar"],
-    messquerschnitte:
-      value["messquerschnitte"] == null
-        ? undefined
-        : (value["messquerschnitte"] as Array<any>).map(
-            ReadMessquerschnittDTOToJSON
-          ),
-    messfaehigkeiten:
-      value["messfaehigkeiten"] == null
-        ? undefined
-        : (value["messfaehigkeiten"] as Array<any>).map(
-            ReadMessfaehigkeitDTOToJSON
-          ),
+    messquerschnitte: (value["messquerschnitte"] as Array<any>).map(
+      ReadMessquerschnittDTOToJSON
+    ),
+    messfaehigkeiten: (value["messfaehigkeiten"] as Array<any>).map(
+      ReadMessfaehigkeitDTOToJSON
+    ),
     lageplanVorhanden: value["lageplanVorhanden"],
   };
 }

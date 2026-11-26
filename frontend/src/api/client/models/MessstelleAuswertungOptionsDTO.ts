@@ -12,10 +12,18 @@
  * Do not edit the class manually.
  */
 
+import type { AuswertungsZeitraum } from "./AuswertungsZeitraum";
 import type { FahrzeugOptionsDTO } from "./FahrzeugOptionsDTO";
 import type { MessstelleAuswertungIdDTO } from "./MessstelleAuswertungIdDTO";
+import type { TagesTyp } from "./TagesTyp";
 
 import { mapValues } from "../runtime";
+import {
+  AuswertungsZeitraumFromJSON,
+  AuswertungsZeitraumFromJSONTyped,
+  AuswertungsZeitraumToJSON,
+  AuswertungsZeitraumToJSONTyped,
+} from "./AuswertungsZeitraum";
 import {
   FahrzeugOptionsDTOFromJSON,
   FahrzeugOptionsDTOFromJSONTyped,
@@ -28,6 +36,12 @@ import {
   MessstelleAuswertungIdDTOToJSON,
   MessstelleAuswertungIdDTOToJSONTyped,
 } from "./MessstelleAuswertungIdDTO";
+import {
+  TagesTypFromJSON,
+  TagesTypFromJSONTyped,
+  TagesTypToJSON,
+  TagesTypToJSONTyped,
+} from "./TagesTyp";
 
 /**
  *
@@ -40,74 +54,32 @@ export interface MessstelleAuswertungOptionsDTO {
    * @type {Array<number>}
    * @memberof MessstelleAuswertungOptionsDTO
    */
-  jahre?: Array<number>;
+  jahre: Array<number>;
   /**
    *
-   * @type {string}
+   * @type {TagesTyp}
    * @memberof MessstelleAuswertungOptionsDTO
    */
-  tagesTyp?: MessstelleAuswertungOptionsDTOTagesTypEnum;
+  tagesTyp: TagesTyp;
   /**
    *
-   * @type {Array<string>}
+   * @type {Array<AuswertungsZeitraum>}
    * @memberof MessstelleAuswertungOptionsDTO
    */
-  zeitraum?: Array<MessstelleAuswertungOptionsDTOZeitraumEnum>;
+  zeitraum: Array<AuswertungsZeitraum>;
   /**
    *
    * @type {Set<MessstelleAuswertungIdDTO>}
    * @memberof MessstelleAuswertungOptionsDTO
    */
-  messstelleAuswertungIds?: Set<MessstelleAuswertungIdDTO>;
+  messstelleAuswertungIds: Set<MessstelleAuswertungIdDTO>;
   /**
    *
    * @type {FahrzeugOptionsDTO}
    * @memberof MessstelleAuswertungOptionsDTO
    */
-  fahrzeuge?: FahrzeugOptionsDTO;
+  fahrzeuge: FahrzeugOptionsDTO;
 }
-
-/**
- * @export
- */
-export const MessstelleAuswertungOptionsDTOTagesTypEnum = {
-  Unspecified: "UNSPECIFIED",
-  WerktagDiMiDo: "WERKTAG_DI_MI_DO",
-  WerktagMoFr: "WERKTAG_MO_FR",
-  Samstag: "SAMSTAG",
-  SonntagFeiertag: "SONNTAG_FEIERTAG",
-  WerktagFerien: "WERKTAG_FERIEN",
-  MoSo: "MO_SO",
-} as const;
-export type MessstelleAuswertungOptionsDTOTagesTypEnum =
-  (typeof MessstelleAuswertungOptionsDTOTagesTypEnum)[keyof typeof MessstelleAuswertungOptionsDTOTagesTypEnum];
-
-/**
- * @export
- */
-export const MessstelleAuswertungOptionsDTOZeitraumEnum = {
-  Januar: "JANUAR",
-  Februar: "FEBRUAR",
-  Maerz: "MAERZ",
-  April: "APRIL",
-  Mai: "MAI",
-  Juni: "JUNI",
-  Juli: "JULI",
-  August: "AUGUST",
-  September: "SEPTEMBER",
-  Oktober: "OKTOBER",
-  November: "NOVEMBER",
-  Dezember: "DEZEMBER",
-  Quartal1: "QUARTAL_1",
-  Quartal2: "QUARTAL_2",
-  Quartal3: "QUARTAL_3",
-  Quartal4: "QUARTAL_4",
-  Halbjahr1: "HALBJAHR_1",
-  Halbjahr2: "HALBJAHR_2",
-  Jahre: "JAHRE",
-} as const;
-export type MessstelleAuswertungOptionsDTOZeitraumEnum =
-  (typeof MessstelleAuswertungOptionsDTOZeitraumEnum)[keyof typeof MessstelleAuswertungOptionsDTOZeitraumEnum];
 
 /**
  * Check if a given object implements the MessstelleAuswertungOptionsDTO interface.
@@ -115,6 +87,15 @@ export type MessstelleAuswertungOptionsDTOZeitraumEnum =
 export function instanceOfMessstelleAuswertungOptionsDTO(
   value: object
 ): value is MessstelleAuswertungOptionsDTO {
+  if (!("jahre" in value) || value["jahre"] === undefined) return false;
+  if (!("tagesTyp" in value) || value["tagesTyp"] === undefined) return false;
+  if (!("zeitraum" in value) || value["zeitraum"] === undefined) return false;
+  if (
+    !("messstelleAuswertungIds" in value) ||
+    value["messstelleAuswertungIds"] === undefined
+  )
+    return false;
+  if (!("fahrzeuge" in value) || value["fahrzeuge"] === undefined) return false;
   return true;
 }
 
@@ -132,21 +113,15 @@ export function MessstelleAuswertungOptionsDTOFromJSONTyped(
     return json;
   }
   return {
-    jahre: json["jahre"] == null ? undefined : json["jahre"],
-    tagesTyp: json["tagesTyp"] == null ? undefined : json["tagesTyp"],
-    zeitraum: json["zeitraum"] == null ? undefined : json["zeitraum"],
-    messstelleAuswertungIds:
-      json["messstelleAuswertungIds"] == null
-        ? undefined
-        : new Set(
-            (json["messstelleAuswertungIds"] as Array<any>).map(
-              MessstelleAuswertungIdDTOFromJSON
-            )
-          ),
-    fahrzeuge:
-      json["fahrzeuge"] == null
-        ? undefined
-        : FahrzeugOptionsDTOFromJSON(json["fahrzeuge"]),
+    jahre: json["jahre"],
+    tagesTyp: TagesTypFromJSON(json["tagesTyp"]),
+    zeitraum: (json["zeitraum"] as Array<any>).map(AuswertungsZeitraumFromJSON),
+    messstelleAuswertungIds: new Set(
+      (json["messstelleAuswertungIds"] as Array<any>).map(
+        MessstelleAuswertungIdDTOFromJSON
+      )
+    ),
+    fahrzeuge: FahrzeugOptionsDTOFromJSON(json["fahrzeuge"]),
   };
 }
 
@@ -166,14 +141,11 @@ export function MessstelleAuswertungOptionsDTOToJSONTyped(
 
   return {
     jahre: value["jahre"],
-    tagesTyp: value["tagesTyp"],
-    zeitraum: value["zeitraum"],
-    messstelleAuswertungIds:
-      value["messstelleAuswertungIds"] == null
-        ? undefined
-        : Array.from(value["messstelleAuswertungIds"] as Set<any>).map(
-            MessstelleAuswertungIdDTOToJSON
-          ),
+    tagesTyp: TagesTypToJSON(value["tagesTyp"]),
+    zeitraum: (value["zeitraum"] as Array<any>).map(AuswertungsZeitraumToJSON),
+    messstelleAuswertungIds: Array.from(
+      value["messstelleAuswertungIds"] as Set<any>
+    ).map(MessstelleAuswertungIdDTOToJSON),
     fahrzeuge: FahrzeugOptionsDTOToJSON(value["fahrzeuge"]),
   };
 }

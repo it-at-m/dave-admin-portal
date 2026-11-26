@@ -25,43 +25,43 @@ export interface BelastungsplanDataDTO {
    * @type {string}
    * @memberof BelastungsplanDataDTO
    */
-  label?: string;
+  label: string;
   /**
    *
    * @type {boolean}
    * @memberof BelastungsplanDataDTO
    */
-  filled?: boolean;
+  filled: boolean;
   /**
    *
    * @type {Array<Array<number>>}
    * @memberof BelastungsplanDataDTO
    */
-  values?: Array<Array<number>>;
+  values: Array<Array<number>>;
   /**
    *
    * @type {boolean}
    * @memberof BelastungsplanDataDTO
    */
-  percent?: boolean;
+  percent: boolean;
   /**
    *
    * @type {Array<number>}
    * @memberof BelastungsplanDataDTO
    */
-  sumIn?: Array<number>;
+  sumIn: Array<number>;
   /**
    *
    * @type {Array<number>}
    * @memberof BelastungsplanDataDTO
    */
-  sumOut?: Array<number>;
+  sumOut: Array<number>;
   /**
    *
    * @type {Array<number>}
    * @memberof BelastungsplanDataDTO
    */
-  sum?: Array<number>;
+  sum: Array<number>;
 }
 
 /**
@@ -70,6 +70,13 @@ export interface BelastungsplanDataDTO {
 export function instanceOfBelastungsplanDataDTO(
   value: object
 ): value is BelastungsplanDataDTO {
+  if (!("label" in value) || value["label"] === undefined) return false;
+  if (!("filled" in value) || value["filled"] === undefined) return false;
+  if (!("values" in value) || value["values"] === undefined) return false;
+  if (!("percent" in value) || value["percent"] === undefined) return false;
+  if (!("sumIn" in value) || value["sumIn"] === undefined) return false;
+  if (!("sumOut" in value) || value["sumOut"] === undefined) return false;
+  if (!("sum" in value) || value["sum"] === undefined) return false;
   return true;
 }
 
@@ -87,13 +94,13 @@ export function BelastungsplanDataDTOFromJSONTyped(
     return json;
   }
   return {
-    label: json["label"] == null ? undefined : json["label"],
-    filled: json["filled"] == null ? undefined : json["filled"],
-    values: json["values"] == null ? undefined : json["values"],
-    percent: json["percent"] == null ? undefined : json["percent"],
-    sumIn: json["sumIn"] == null ? undefined : json["sumIn"],
-    sumOut: json["sumOut"] == null ? undefined : json["sumOut"],
-    sum: json["sum"] == null ? undefined : json["sum"],
+    label: json["label"],
+    filled: json["filled"],
+    values: json["values"],
+    percent: json["percent"],
+    sumIn: json["sumIn"],
+    sumOut: json["sumOut"],
+    sum: json["sum"],
   };
 }
 

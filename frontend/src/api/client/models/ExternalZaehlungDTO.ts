@@ -103,13 +103,13 @@ export interface ExternalZaehlungDTO {
    * @type {boolean}
    * @memberof ExternalZaehlungDTO
    */
-  sonderzaehlung?: boolean;
+  sonderzaehlung: boolean;
   /**
    *
    * @type {boolean}
    * @memberof ExternalZaehlungDTO
    */
-  kreisverkehr?: boolean;
+  kreisverkehr: boolean;
   /**
    *
    * @type {Array<string>}
@@ -133,7 +133,7 @@ export interface ExternalZaehlungDTO {
    * @type {number}
    * @memberof ExternalZaehlungDTO
    */
-  zaehlIntervall?: number;
+  zaehlIntervall: number;
   /**
    *
    * @type {string}
@@ -217,7 +217,7 @@ export interface ExternalZaehlungDTO {
    * @type {boolean}
    * @memberof ExternalZaehlungDTO
    */
-  unreadMessagesDienstleister?: boolean;
+  unreadMessagesDienstleister: boolean;
   /**
    *
    * @type {string}
@@ -253,6 +253,17 @@ export type ExternalZaehlungDTOKategorienEnum =
 export function instanceOfExternalZaehlungDTO(
   value: object
 ): value is ExternalZaehlungDTO {
+  if (!("sonderzaehlung" in value) || value["sonderzaehlung"] === undefined)
+    return false;
+  if (!("kreisverkehr" in value) || value["kreisverkehr"] === undefined)
+    return false;
+  if (!("zaehlIntervall" in value) || value["zaehlIntervall"] === undefined)
+    return false;
+  if (
+    !("unreadMessagesDienstleister" in value) ||
+    value["unreadMessagesDienstleister"] === undefined
+  )
+    return false;
   return true;
 }
 
@@ -277,10 +288,8 @@ export function ExternalZaehlungDTOFromJSONTyped(
     projektName: json["projektName"] == null ? undefined : json["projektName"],
     kreuzungsname:
       json["kreuzungsname"] == null ? undefined : json["kreuzungsname"],
-    sonderzaehlung:
-      json["sonderzaehlung"] == null ? undefined : json["sonderzaehlung"],
-    kreisverkehr:
-      json["kreisverkehr"] == null ? undefined : json["kreisverkehr"],
+    sonderzaehlung: json["sonderzaehlung"],
+    kreisverkehr: json["kreisverkehr"],
     kategorien: json["kategorien"] == null ? undefined : json["kategorien"],
     zaehlsituation:
       json["zaehlsituation"] == null ? undefined : json["zaehlsituation"],
@@ -288,8 +297,7 @@ export function ExternalZaehlungDTOFromJSONTyped(
       json["zaehlsituationErweitert"] == null
         ? undefined
         : json["zaehlsituationErweitert"],
-    zaehlIntervall:
-      json["zaehlIntervall"] == null ? undefined : json["zaehlIntervall"],
+    zaehlIntervall: json["zaehlIntervall"],
     wetter: json["wetter"] == null ? undefined : json["wetter"],
     status: json["status"] == null ? undefined : json["status"],
     quelle: json["quelle"] == null ? undefined : json["quelle"],
@@ -331,10 +339,7 @@ export function ExternalZaehlungDTOFromJSONTyped(
       json["zaehlstelleKommentar"] == null
         ? undefined
         : json["zaehlstelleKommentar"],
-    unreadMessagesDienstleister:
-      json["unreadMessagesDienstleister"] == null
-        ? undefined
-        : json["unreadMessagesDienstleister"],
+    unreadMessagesDienstleister: json["unreadMessagesDienstleister"],
     dienstleisterkennung:
       json["dienstleisterkennung"] == null
         ? undefined

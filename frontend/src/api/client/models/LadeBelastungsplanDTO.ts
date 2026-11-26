@@ -12,16 +12,9 @@
  * Do not edit the class manually.
  */
 
-import type { AbstractLadeBelastungsplanDTOObject } from "./AbstractLadeBelastungsplanDTOObject";
 import type { BelastungsplanDataDTO } from "./BelastungsplanDataDTO";
 
 import { mapValues } from "../runtime";
-import {
-  AbstractLadeBelastungsplanDTOObjectFromJSON,
-  AbstractLadeBelastungsplanDTOObjectFromJSONTyped,
-  AbstractLadeBelastungsplanDTOObjectToJSON,
-  AbstractLadeBelastungsplanDTOObjectToJSONTyped,
-} from "./AbstractLadeBelastungsplanDTOObject";
 import {
   BelastungsplanDataDTOFromJSON,
   BelastungsplanDataDTOFromJSONTyped,
@@ -34,27 +27,53 @@ import {
  * @export
  * @interface LadeBelastungsplanDTO
  */
-export interface LadeBelastungsplanDTO
-  extends AbstractLadeBelastungsplanDTOObject {
+export interface LadeBelastungsplanDTO {
+  /**
+   *
+   * @type {string}
+   * @memberof LadeBelastungsplanDTO
+   */
+  belastungsplanTyp: LadeBelastungsplanDTOBelastungsplanTypEnum;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof LadeBelastungsplanDTO
+   */
+  streets: Array<string>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof LadeBelastungsplanDTO
+   */
+  kreisverkehr: boolean;
   /**
    *
    * @type {BelastungsplanDataDTO}
    * @memberof LadeBelastungsplanDTO
    */
-  value1?: BelastungsplanDataDTO;
+  value1: BelastungsplanDataDTO;
   /**
    *
    * @type {BelastungsplanDataDTO}
    * @memberof LadeBelastungsplanDTO
    */
-  value2?: BelastungsplanDataDTO;
+  value2: BelastungsplanDataDTO;
   /**
    *
    * @type {BelastungsplanDataDTO}
    * @memberof LadeBelastungsplanDTO
    */
-  value3?: BelastungsplanDataDTO;
+  value3: BelastungsplanDataDTO;
 }
+
+/**
+ * @export
+ */
+export const LadeBelastungsplanDTOBelastungsplanTypEnum = {
+  Default: "DEFAULT",
+} as const;
+export type LadeBelastungsplanDTOBelastungsplanTypEnum =
+  (typeof LadeBelastungsplanDTOBelastungsplanTypEnum)[keyof typeof LadeBelastungsplanDTOBelastungsplanTypEnum];
 
 /**
  * Check if a given object implements the LadeBelastungsplanDTO interface.
@@ -62,6 +81,17 @@ export interface LadeBelastungsplanDTO
 export function instanceOfLadeBelastungsplanDTO(
   value: object
 ): value is LadeBelastungsplanDTO {
+  if (
+    !("belastungsplanTyp" in value) ||
+    value["belastungsplanTyp"] === undefined
+  )
+    return false;
+  if (!("streets" in value) || value["streets"] === undefined) return false;
+  if (!("kreisverkehr" in value) || value["kreisverkehr"] === undefined)
+    return false;
+  if (!("value1" in value) || value["value1"] === undefined) return false;
+  if (!("value2" in value) || value["value2"] === undefined) return false;
+  if (!("value3" in value) || value["value3"] === undefined) return false;
   return true;
 }
 
@@ -79,19 +109,12 @@ export function LadeBelastungsplanDTOFromJSONTyped(
     return json;
   }
   return {
-    ...AbstractLadeBelastungsplanDTOObjectFromJSONTyped(json, true),
-    value1:
-      json["value1"] == null
-        ? undefined
-        : BelastungsplanDataDTOFromJSON(json["value1"]),
-    value2:
-      json["value2"] == null
-        ? undefined
-        : BelastungsplanDataDTOFromJSON(json["value2"]),
-    value3:
-      json["value3"] == null
-        ? undefined
-        : BelastungsplanDataDTOFromJSON(json["value3"]),
+    belastungsplanTyp: json["belastungsplanTyp"],
+    streets: json["streets"],
+    kreisverkehr: json["kreisverkehr"],
+    value1: BelastungsplanDataDTOFromJSON(json["value1"]),
+    value2: BelastungsplanDataDTOFromJSON(json["value2"]),
+    value3: BelastungsplanDataDTOFromJSON(json["value3"]),
   };
 }
 
@@ -108,7 +131,9 @@ export function LadeBelastungsplanDTOToJSONTyped(
   }
 
   return {
-    ...AbstractLadeBelastungsplanDTOObjectToJSONTyped(value, true),
+    belastungsplanTyp: value["belastungsplanTyp"],
+    streets: value["streets"],
+    kreisverkehr: value["kreisverkehr"],
     value1: BelastungsplanDataDTOToJSON(value["value1"]),
     value2: BelastungsplanDataDTOToJSON(value["value2"]),
     value3: BelastungsplanDataDTOToJSON(value["value3"]),

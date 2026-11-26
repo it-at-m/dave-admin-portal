@@ -149,7 +149,7 @@ export class InfoMessageControllerApi extends runtime.BaseAPI {
    */
   async setAllInfoMessagesInactiveRaw(
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<object>> {
+  ): Promise<runtime.ApiResponse<void>> {
     const queryParameters: any = {};
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -166,15 +166,14 @@ export class InfoMessageControllerApi extends runtime.BaseAPI {
       initOverrides
     );
 
-    return new runtime.JSONApiResponse<any>(response);
+    return new runtime.VoidApiResponse(response);
   }
 
   /**
    */
   async setAllInfoMessagesInactive(
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<object> {
-    const response = await this.setAllInfoMessagesInactiveRaw(initOverrides);
-    return await response.value();
+  ): Promise<void> {
+    await this.setAllInfoMessagesInactiveRaw(initOverrides);
   }
 }

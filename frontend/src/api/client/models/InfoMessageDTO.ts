@@ -49,13 +49,13 @@ export interface InfoMessageDTO {
    * @type {boolean}
    * @memberof InfoMessageDTO
    */
-  gueltig?: boolean;
+  gueltig: boolean;
   /**
    *
    * @type {boolean}
    * @memberof InfoMessageDTO
    */
-  aktiv?: boolean;
+  aktiv: boolean;
 }
 
 /**
@@ -64,6 +64,8 @@ export interface InfoMessageDTO {
 export function instanceOfInfoMessageDTO(
   value: object
 ): value is InfoMessageDTO {
+  if (!("gueltig" in value) || value["gueltig"] === undefined) return false;
+  if (!("aktiv" in value) || value["aktiv"] === undefined) return false;
   return true;
 }
 
@@ -85,8 +87,8 @@ export function InfoMessageDTOFromJSONTyped(
       json["gueltigVon"] == null ? undefined : new Date(json["gueltigVon"]),
     gueltigBis:
       json["gueltigBis"] == null ? undefined : new Date(json["gueltigBis"]),
-    gueltig: json["gueltig"] == null ? undefined : json["gueltig"],
-    aktiv: json["aktiv"] == null ? undefined : json["aktiv"],
+    gueltig: json["gueltig"],
+    aktiv: json["aktiv"],
   };
 }
 

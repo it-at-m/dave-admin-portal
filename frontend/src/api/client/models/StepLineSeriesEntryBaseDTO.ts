@@ -37,19 +37,25 @@ export interface StepLineSeriesEntryBaseDTO {
    * @type {string}
    * @memberof StepLineSeriesEntryBaseDTO
    */
-  name?: string;
+  name: string;
   /**
    *
    * @type {number}
    * @memberof StepLineSeriesEntryBaseDTO
    */
-  yaxisIndex?: number;
+  yaxisIndex: number;
   /**
    *
    * @type {number}
    * @memberof StepLineSeriesEntryBaseDTO
    */
-  xaxisIndex?: number;
+  xaxisIndex: number;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof StepLineSeriesEntryBaseDTO
+   */
+  yAxisData?: Array<number>;
   /**
    *
    * @type {string}
@@ -64,6 +70,11 @@ export interface StepLineSeriesEntryBaseDTO {
 export function instanceOfStepLineSeriesEntryBaseDTO(
   value: object
 ): value is StepLineSeriesEntryBaseDTO {
+  if (!("name" in value) || value["name"] === undefined) return false;
+  if (!("yaxisIndex" in value) || value["yaxisIndex"] === undefined)
+    return false;
+  if (!("xaxisIndex" in value) || value["xaxisIndex"] === undefined)
+    return false;
   if (!("type" in value) || value["type"] === undefined) return false;
   return true;
 }
@@ -96,9 +107,10 @@ export function StepLineSeriesEntryBaseDTOFromJSONTyped(
     }
   }
   return {
-    name: json["name"] == null ? undefined : json["name"],
-    yaxisIndex: json["yaxisIndex"] == null ? undefined : json["yaxisIndex"],
-    xaxisIndex: json["xaxisIndex"] == null ? undefined : json["xaxisIndex"],
+    name: json["name"],
+    yaxisIndex: json["yaxisIndex"],
+    xaxisIndex: json["xaxisIndex"],
+    yAxisData: json["yAxisData"] == null ? undefined : json["yAxisData"],
     type: json["type"],
   };
 }
@@ -138,6 +150,7 @@ export function StepLineSeriesEntryBaseDTOToJSONTyped(
     name: value["name"],
     yaxisIndex: value["yaxisIndex"],
     xaxisIndex: value["xaxisIndex"],
+    yAxisData: value["yAxisData"],
     type: value["type"],
   };
 }

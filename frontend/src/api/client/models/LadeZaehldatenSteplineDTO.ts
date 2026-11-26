@@ -33,25 +33,25 @@ export interface LadeZaehldatenSteplineDTO {
    * @type {Array<string>}
    * @memberof LadeZaehldatenSteplineDTO
    */
-  legend?: Array<string>;
+  legend: Array<string>;
   /**
    *
    * @type {number}
    * @memberof LadeZaehldatenSteplineDTO
    */
-  rangeMax?: number;
+  rangeMax: number;
   /**
    *
    * @type {number}
    * @memberof LadeZaehldatenSteplineDTO
    */
-  rangeMaxPercent?: number;
+  rangeMaxPercent: number;
   /**
    *
    * @type {Array<LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInner>}
    * @memberof LadeZaehldatenSteplineDTO
    */
-  seriesEntriesFirstChart?: Array<LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInner>;
+  seriesEntriesFirstChart: Array<LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInner>;
   /**
    *
    * @type {Array<LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInner>}
@@ -63,7 +63,7 @@ export interface LadeZaehldatenSteplineDTO {
    * @type {Array<string>}
    * @memberof LadeZaehldatenSteplineDTO
    */
-  xaxisDataFirstChart?: Array<string>;
+  xaxisDataFirstChart: Array<string>;
   /**
    *
    * @type {Array<string>}
@@ -78,6 +78,20 @@ export interface LadeZaehldatenSteplineDTO {
 export function instanceOfLadeZaehldatenSteplineDTO(
   value: object
 ): value is LadeZaehldatenSteplineDTO {
+  if (!("legend" in value) || value["legend"] === undefined) return false;
+  if (!("rangeMax" in value) || value["rangeMax"] === undefined) return false;
+  if (!("rangeMaxPercent" in value) || value["rangeMaxPercent"] === undefined)
+    return false;
+  if (
+    !("seriesEntriesFirstChart" in value) ||
+    value["seriesEntriesFirstChart"] === undefined
+  )
+    return false;
+  if (
+    !("xaxisDataFirstChart" in value) ||
+    value["xaxisDataFirstChart"] === undefined
+  )
+    return false;
   return true;
 }
 
@@ -95,26 +109,19 @@ export function LadeZaehldatenSteplineDTOFromJSONTyped(
     return json;
   }
   return {
-    legend: json["legend"] == null ? undefined : json["legend"],
-    rangeMax: json["rangeMax"] == null ? undefined : json["rangeMax"],
-    rangeMaxPercent:
-      json["rangeMaxPercent"] == null ? undefined : json["rangeMaxPercent"],
-    seriesEntriesFirstChart:
-      json["seriesEntriesFirstChart"] == null
-        ? undefined
-        : (json["seriesEntriesFirstChart"] as Array<any>).map(
-            LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInnerFromJSON
-          ),
+    legend: json["legend"],
+    rangeMax: json["rangeMax"],
+    rangeMaxPercent: json["rangeMaxPercent"],
+    seriesEntriesFirstChart: (
+      json["seriesEntriesFirstChart"] as Array<any>
+    ).map(LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInnerFromJSON),
     seriesEntriesSecondChart:
       json["seriesEntriesSecondChart"] == null
         ? undefined
         : (json["seriesEntriesSecondChart"] as Array<any>).map(
             LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInnerFromJSON
           ),
-    xaxisDataFirstChart:
-      json["xaxisDataFirstChart"] == null
-        ? undefined
-        : json["xaxisDataFirstChart"],
+    xaxisDataFirstChart: json["xaxisDataFirstChart"],
     xaxisDataSecondChart:
       json["xaxisDataSecondChart"] == null
         ? undefined
@@ -140,12 +147,9 @@ export function LadeZaehldatenSteplineDTOToJSONTyped(
     legend: value["legend"],
     rangeMax: value["rangeMax"],
     rangeMaxPercent: value["rangeMaxPercent"],
-    seriesEntriesFirstChart:
-      value["seriesEntriesFirstChart"] == null
-        ? undefined
-        : (value["seriesEntriesFirstChart"] as Array<any>).map(
-            LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInnerToJSON
-          ),
+    seriesEntriesFirstChart: (
+      value["seriesEntriesFirstChart"] as Array<any>
+    ).map(LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInnerToJSON),
     seriesEntriesSecondChart:
       value["seriesEntriesSecondChart"] == null
         ? undefined

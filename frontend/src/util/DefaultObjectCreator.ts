@@ -144,4 +144,11 @@ export default class DefaultObjectCreator {
       mapConfiguration: this.createDefaultMapConfigurationDTO(),
     };
   }
+
+  public static createDefaultGebietseinheitenDTO(): GebietseinheitenDTO {
+    return {
+      stadtbezirke: [],
+      stadtbezirksviertel: [],
+    };
+  }
 }
