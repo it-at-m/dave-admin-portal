@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import type { Fahrzeug } from "./Fahrzeug";
 import type { Knotenarm } from "./Knotenarm";
 import type { Laengsverkehr } from "./Laengsverkehr";
 import type { PkwEinheit } from "./PkwEinheit";
@@ -20,6 +21,12 @@ import type { Verkehrsbeziehung } from "./Verkehrsbeziehung";
 import type { ZeitauswahlDTO } from "./ZeitauswahlDTO";
 
 import { mapValues } from "../runtime";
+import {
+  FahrzeugFromJSON,
+  FahrzeugFromJSONTyped,
+  FahrzeugToJSON,
+  FahrzeugToJSONTyped,
+} from "./Fahrzeug";
 import {
   KnotenarmFromJSON,
   KnotenarmFromJSONTyped,
@@ -209,10 +216,10 @@ export interface LeseZaehlungDTO {
   pkwEinheit?: PkwEinheit;
   /**
    *
-   * @type {Array<string>}
+   * @type {Array<Fahrzeug>}
    * @memberof LeseZaehlungDTO
    */
-  kategorien?: Array<LeseZaehlungDTOKategorienEnum>;
+  kategorien?: Array<Fahrzeug>;
   /**
    *
    * @type {Array<Knotenarm>}
@@ -262,27 +269,6 @@ export interface LeseZaehlungDTO {
    */
   dienstleisterkennung?: string;
 }
-
-/**
- * @export
- */
-export const LeseZaehlungDTOKategorienEnum = {
-  Kfz: "KFZ",
-  Sv: "SV",
-  Gv: "GV",
-  SvP: "SV_P",
-  GvP: "GV_P",
-  Pkw: "PKW",
-  Lkw: "LKW",
-  Lz: "LZ",
-  Bus: "BUS",
-  Krad: "KRAD",
-  Rad: "RAD",
-  Fuss: "FUSS",
-  PkwEinheit: "PKW_EINHEIT",
-} as const;
-export type LeseZaehlungDTOKategorienEnum =
-  (typeof LeseZaehlungDTOKategorienEnum)[keyof typeof LeseZaehlungDTOKategorienEnum];
 
 /**
  * Check if a given object implements the LeseZaehlungDTO interface.
@@ -343,7 +329,10 @@ export function LeseZaehlungDTOFromJSONTyped(
       json["pkwEinheit"] == null
         ? undefined
         : PkwEinheitFromJSON(json["pkwEinheit"]),
-    kategorien: json["kategorien"] == null ? undefined : json["kategorien"],
+    kategorien:
+      json["kategorien"] == null
+        ? undefined
+        : (json["kategorien"] as Array<any>).map(FahrzeugFromJSON),
     knotenarme:
       json["knotenarme"] == null
         ? undefined
@@ -418,7 +407,10 @@ export function LeseZaehlungDTOToJSONTyped(
     kommentar: value["kommentar"],
     schulZeiten: value["schulZeiten"],
     pkwEinheit: PkwEinheitToJSON(value["pkwEinheit"]),
-    kategorien: value["kategorien"],
+    kategorien:
+      value["kategorien"] == null
+        ? undefined
+        : (value["kategorien"] as Array<any>).map(FahrzeugToJSON),
     knotenarme:
       value["knotenarme"] == null
         ? undefined

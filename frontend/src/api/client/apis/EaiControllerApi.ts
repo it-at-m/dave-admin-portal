@@ -16,6 +16,7 @@ import type {
   LadeAuswertungSpitzenstundeDTO,
   LadeAuswertungVisumDTO,
   LadeAuswertungZaehlstelleKoordinateDTO,
+  Zaehlart,
   Zeitblock,
 } from "../models/index";
 
@@ -26,6 +27,8 @@ import {
   LadeAuswertungVisumDTOToJSON,
   LadeAuswertungZaehlstelleKoordinateDTOFromJSON,
   LadeAuswertungZaehlstelleKoordinateDTOToJSON,
+  ZaehlartFromJSON,
+  ZaehlartToJSON,
   ZeitblockFromJSON,
   ZeitblockToJSON,
 } from "../models/index";
@@ -33,7 +36,7 @@ import * as runtime from "../runtime";
 
 export interface LadeAuswertungSpitzenstundeRequest {
   zaehlstelleNummer: string;
-  zaehlart: LadeAuswertungSpitzenstundeZaehlartEnum;
+  zaehlart: Zaehlart;
   zaehldatum: Date;
   zeitblock: Zeitblock;
   zeitauswahl: string;
@@ -246,27 +249,3 @@ export class EaiControllerApi extends runtime.BaseAPI {
     return await response.value();
   }
 }
-
-/**
- * @export
- */
-export const LadeAuswertungSpitzenstundeZaehlartEnum = {
-  N: "N",
-  H: "H",
-  Q: "Q",
-  Q2: "Q_",
-  Qb: "QB",
-  Qh: "QH",
-  Qi: "QI",
-  Qs: "QS",
-  Qt: "QT",
-  Qr: "QR",
-  R: "R",
-  Qjs: "QJS",
-  Fjs: "FJS",
-  Qu: "QU",
-  T: "T",
-  Tk: "TK",
-} as const;
-export type LadeAuswertungSpitzenstundeZaehlartEnum =
-  (typeof LadeAuswertungSpitzenstundeZaehlartEnum)[keyof typeof LadeAuswertungSpitzenstundeZaehlartEnum];

@@ -1,21 +1,3 @@
-import type {
-  LadeBelastungsplanDTO,
-  LadeBelastungsplanFjsDTO,
-  LadeBelastungsplanQjsDTO,
-  LadeBelastungsplanQuDTO,
-} from "@/api/client";
-
-import {
-  LadeBelastungsplanDTOFromJSONTyped,
-  LadeBelastungsplanDTOToJSON,
-  LadeBelastungsplanFjsDTOFromJSONTyped,
-  LadeBelastungsplanFjsDTOToJSON,
-  LadeBelastungsplanQjsDTOFromJSONTyped,
-  LadeBelastungsplanQjsDTOToJSON,
-  LadeBelastungsplanQuDTOFromJSONTyped,
-  LadeBelastungsplanQuDTOToJSON,
-} from "@/api/client";
-
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -111,6 +93,6 @@ export function LadeProcessedZaehldatenBelastungsplanDTOToJSONTyped(
         belastungsplanTyp: "QU",
       } as const);
     default:
-      return value;
+      return json;
   }
 }
