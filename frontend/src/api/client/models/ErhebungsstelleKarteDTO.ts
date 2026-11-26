@@ -12,28 +12,66 @@
  * Do not edit the class manually.
  */
 
-import type { MessstelleKarteDTO } from "./MessstelleKarteDTO";
-import type { ZaehlstelleKarteDTO } from "./ZaehlstelleKarteDTO";
-
-import {
-  instanceOfMessstelleKarteDTO,
-  MessstelleKarteDTOFromJSON,
-  MessstelleKarteDTOFromJSONTyped,
-  MessstelleKarteDTOToJSON,
-} from "./MessstelleKarteDTO";
-import {
-  instanceOfZaehlstelleKarteDTO,
-  ZaehlstelleKarteDTOFromJSON,
-  ZaehlstelleKarteDTOFromJSONTyped,
-  ZaehlstelleKarteDTOToJSON,
-} from "./ZaehlstelleKarteDTO";
+import { mapValues } from "../runtime";
 
 /**
- * @type ErhebungsstelleKarteDTO
  *
  * @export
+ * @interface ErhebungsstelleKarteDTO
  */
-export type ErhebungsstelleKarteDTO = MessstelleKarteDTO | ZaehlstelleKarteDTO;
+export interface ErhebungsstelleKarteDTO {
+  /**
+   *
+   * @type {string}
+   * @memberof ErhebungsstelleKarteDTO
+   */
+  id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ErhebungsstelleKarteDTO
+   */
+  fachId?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ErhebungsstelleKarteDTO
+   */
+  type?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ErhebungsstelleKarteDTO
+   */
+  longitude?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ErhebungsstelleKarteDTO
+   */
+  latitude?: number;
+  /**
+   *
+   * @type {object}
+   * @memberof ErhebungsstelleKarteDTO
+   */
+  tooltip?: object;
+  /**
+   *
+   * @type {boolean}
+   * @memberof ErhebungsstelleKarteDTO
+   */
+  sichtbarDatenportal?: boolean;
+}
+
+/**
+ * Check if a given object implements the ErhebungsstelleKarteDTO interface.
+ */
+export function instanceOfErhebungsstelleKarteDTO(
+  value: object
+): value is ErhebungsstelleKarteDTO {
+  return true;
+}
 
 export function ErhebungsstelleKarteDTOFromJSON(
   json: any
@@ -48,20 +86,23 @@ export function ErhebungsstelleKarteDTOFromJSONTyped(
   if (json == null) {
     return json;
   }
-  if (typeof json !== "object") {
-    return json;
-  }
-  if (instanceOfMessstelleKarteDTO(json)) {
-    return MessstelleKarteDTOFromJSONTyped(json, true);
-  }
-  if (instanceOfZaehlstelleKarteDTO(json)) {
-    return ZaehlstelleKarteDTOFromJSONTyped(json, true);
-  }
-
-  return {} as any;
+  return {
+    id: json["id"] == null ? undefined : json["id"],
+    fachId: json["fachId"] == null ? undefined : json["fachId"],
+    type: json["type"] == null ? undefined : json["type"],
+    longitude: json["longitude"] == null ? undefined : json["longitude"],
+    latitude: json["latitude"] == null ? undefined : json["latitude"],
+    tooltip: json["tooltip"] == null ? undefined : json["tooltip"],
+    sichtbarDatenportal:
+      json["sichtbarDatenportal"] == null
+        ? undefined
+        : json["sichtbarDatenportal"],
+  };
 }
 
-export function ErhebungsstelleKarteDTOToJSON(json: any): any {
+export function ErhebungsstelleKarteDTOToJSON(
+  json: any
+): ErhebungsstelleKarteDTO {
   return ErhebungsstelleKarteDTOToJSONTyped(json, false);
 }
 
@@ -72,15 +113,14 @@ export function ErhebungsstelleKarteDTOToJSONTyped(
   if (value == null) {
     return value;
   }
-  if (typeof value !== "object") {
-    return value;
-  }
-  if (instanceOfMessstelleKarteDTO(value)) {
-    return MessstelleKarteDTOToJSON(value as MessstelleKarteDTO);
-  }
-  if (instanceOfZaehlstelleKarteDTO(value)) {
-    return ZaehlstelleKarteDTOToJSON(value as ZaehlstelleKarteDTO);
-  }
 
-  return {};
+  return {
+    id: value["id"],
+    fachId: value["fachId"],
+    type: value["type"],
+    longitude: value["longitude"],
+    latitude: value["latitude"],
+    tooltip: value["tooltip"],
+    sichtbarDatenportal: value["sichtbarDatenportal"],
+  };
 }

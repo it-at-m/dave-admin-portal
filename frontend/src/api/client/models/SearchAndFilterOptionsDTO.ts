@@ -12,15 +12,7 @@
  * Do not edit the class manually.
  */
 
-import type { Verkehrsart } from "./Verkehrsart";
-
 import { mapValues } from "../runtime";
-import {
-  VerkehrsartFromJSON,
-  VerkehrsartFromJSONTyped,
-  VerkehrsartToJSON,
-  VerkehrsartToJSONTyped,
-} from "./Verkehrsart";
 
 /**
  *
@@ -33,20 +25,31 @@ export interface SearchAndFilterOptionsDTO {
    * @type {boolean}
    * @memberof SearchAndFilterOptionsDTO
    */
-  searchInMessstellen: boolean;
+  searchInMessstellen?: boolean;
   /**
    *
    * @type {boolean}
    * @memberof SearchAndFilterOptionsDTO
    */
-  searchInZaehlstellen: boolean;
+  searchInZaehlstellen?: boolean;
   /**
    *
-   * @type {Array<Verkehrsart>}
+   * @type {Array<string>}
    * @memberof SearchAndFilterOptionsDTO
    */
-  messstelleVerkehrsart: Array<Verkehrsart>;
+  messstelleVerkehrsart: Array<SearchAndFilterOptionsDTOMessstelleVerkehrsartEnum>;
 }
+
+/**
+ * @export
+ */
+export const SearchAndFilterOptionsDTOMessstelleVerkehrsartEnum = {
+  Kfz: "KFZ",
+  Rad: "RAD",
+  Unbekannt: "UNBEKANNT",
+} as const;
+export type SearchAndFilterOptionsDTOMessstelleVerkehrsartEnum =
+  (typeof SearchAndFilterOptionsDTOMessstelleVerkehrsartEnum)[keyof typeof SearchAndFilterOptionsDTOMessstelleVerkehrsartEnum];
 
 /**
  * Check if a given object implements the SearchAndFilterOptionsDTO interface.
@@ -54,16 +57,6 @@ export interface SearchAndFilterOptionsDTO {
 export function instanceOfSearchAndFilterOptionsDTO(
   value: object
 ): value is SearchAndFilterOptionsDTO {
-  if (
-    !("searchInMessstellen" in value) ||
-    value["searchInMessstellen"] === undefined
-  )
-    return false;
-  if (
-    !("searchInZaehlstellen" in value) ||
-    value["searchInZaehlstellen"] === undefined
-  )
-    return false;
   if (
     !("messstelleVerkehrsart" in value) ||
     value["messstelleVerkehrsart"] === undefined
@@ -86,11 +79,15 @@ export function SearchAndFilterOptionsDTOFromJSONTyped(
     return json;
   }
   return {
-    searchInMessstellen: json["searchInMessstellen"],
-    searchInZaehlstellen: json["searchInZaehlstellen"],
-    messstelleVerkehrsart: (json["messstelleVerkehrsart"] as Array<any>).map(
-      VerkehrsartFromJSON
-    ),
+    searchInMessstellen:
+      json["searchInMessstellen"] == null
+        ? undefined
+        : json["searchInMessstellen"],
+    searchInZaehlstellen:
+      json["searchInZaehlstellen"] == null
+        ? undefined
+        : json["searchInZaehlstellen"],
+    messstelleVerkehrsart: json["messstelleVerkehrsart"],
   };
 }
 
@@ -111,8 +108,6 @@ export function SearchAndFilterOptionsDTOToJSONTyped(
   return {
     searchInMessstellen: value["searchInMessstellen"],
     searchInZaehlstellen: value["searchInZaehlstellen"],
-    messstelleVerkehrsart: (value["messstelleVerkehrsart"] as Array<any>).map(
-      VerkehrsartToJSON
-    ),
+    messstelleVerkehrsart: value["messstelleVerkehrsart"],
   };
 }

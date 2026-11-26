@@ -25,7 +25,7 @@ export interface SucheWordSuggestDTO {
    * @type {string}
    * @memberof SucheWordSuggestDTO
    */
-  text: string;
+  text?: string;
 }
 
 /**
@@ -34,7 +34,6 @@ export interface SucheWordSuggestDTO {
 export function instanceOfSucheWordSuggestDTO(
   value: object
 ): value is SucheWordSuggestDTO {
-  if (!("text" in value) || value["text"] === undefined) return false;
   return true;
 }
 
@@ -50,7 +49,7 @@ export function SucheWordSuggestDTOFromJSONTyped(
     return json;
   }
   return {
-    text: json["text"],
+    text: json["text"] == null ? undefined : json["text"],
   };
 }
 

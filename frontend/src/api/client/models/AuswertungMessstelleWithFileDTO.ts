@@ -33,13 +33,13 @@ export interface AuswertungMessstelleWithFileDTO {
    * @type {LadeZaehldatenSteplineDTO}
    * @memberof AuswertungMessstelleWithFileDTO
    */
-  zaehldatenMessstellen: LadeZaehldatenSteplineDTO;
+  zaehldatenMessstellen?: LadeZaehldatenSteplineDTO;
   /**
    *
    * @type {string}
    * @memberof AuswertungMessstelleWithFileDTO
    */
-  spreadsheetBase64Encoded: string;
+  spreadsheetBase64Encoded?: string;
 }
 
 /**
@@ -48,16 +48,6 @@ export interface AuswertungMessstelleWithFileDTO {
 export function instanceOfAuswertungMessstelleWithFileDTO(
   value: object
 ): value is AuswertungMessstelleWithFileDTO {
-  if (
-    !("zaehldatenMessstellen" in value) ||
-    value["zaehldatenMessstellen"] === undefined
-  )
-    return false;
-  if (
-    !("spreadsheetBase64Encoded" in value) ||
-    value["spreadsheetBase64Encoded"] === undefined
-  )
-    return false;
   return true;
 }
 
@@ -75,10 +65,14 @@ export function AuswertungMessstelleWithFileDTOFromJSONTyped(
     return json;
   }
   return {
-    zaehldatenMessstellen: LadeZaehldatenSteplineDTOFromJSON(
-      json["zaehldatenMessstellen"]
-    ),
-    spreadsheetBase64Encoded: json["spreadsheetBase64Encoded"],
+    zaehldatenMessstellen:
+      json["zaehldatenMessstellen"] == null
+        ? undefined
+        : LadeZaehldatenSteplineDTOFromJSON(json["zaehldatenMessstellen"]),
+    spreadsheetBase64Encoded:
+      json["spreadsheetBase64Encoded"] == null
+        ? undefined
+        : json["spreadsheetBase64Encoded"],
   };
 }
 

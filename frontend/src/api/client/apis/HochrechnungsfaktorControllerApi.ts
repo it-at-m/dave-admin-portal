@@ -41,7 +41,7 @@ export class HochrechnungsfaktorControllerApi extends runtime.BaseAPI {
   async deleteHochrechnungsfaktorRaw(
     requestParameters: DeleteHochrechnungsfaktorRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<void>> {
+  ): Promise<runtime.ApiResponse<object>> {
     if (requestParameters["id"] == null) {
       throw new runtime.RequiredError(
         "id",
@@ -69,7 +69,7 @@ export class HochrechnungsfaktorControllerApi extends runtime.BaseAPI {
       initOverrides
     );
 
-    return new runtime.VoidApiResponse(response);
+    return new runtime.JSONApiResponse<any>(response);
   }
 
   /**
@@ -77,8 +77,12 @@ export class HochrechnungsfaktorControllerApi extends runtime.BaseAPI {
   async deleteHochrechnungsfaktor(
     requestParameters: DeleteHochrechnungsfaktorRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<void> {
-    await this.deleteHochrechnungsfaktorRaw(requestParameters, initOverrides);
+  ): Promise<object> {
+    const response = await this.deleteHochrechnungsfaktorRaw(
+      requestParameters,
+      initOverrides
+    );
+    return await response.value();
   }
 
   /**

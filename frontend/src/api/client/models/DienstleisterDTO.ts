@@ -37,37 +37,37 @@ export interface DienstleisterDTO {
    * @type {string}
    * @memberof DienstleisterDTO
    */
-  name: string;
+  name?: string;
   /**
    *
    * @type {string}
    * @memberof DienstleisterDTO
    */
-  kennung: string;
+  kennung?: string;
   /**
    *
    * @type {Array<string>}
    * @memberof DienstleisterDTO
    */
-  emailAddresses: Array<string>;
+  emailAddresses?: Array<string>;
   /**
    *
    * @type {boolean}
    * @memberof DienstleisterDTO
    */
-  active: boolean;
+  active?: boolean;
   /**
    *
    * @type {boolean}
    * @memberof DienstleisterDTO
    */
-  erasable: boolean;
+  erasable?: boolean;
   /**
    *
    * @type {string}
    * @memberof DienstleisterDTO
    */
-  emailAddressesAsString: string;
+  emailAddressesAsString?: string;
 }
 
 /**
@@ -76,17 +76,6 @@ export interface DienstleisterDTO {
 export function instanceOfDienstleisterDTO(
   value: object
 ): value is DienstleisterDTO {
-  if (!("name" in value) || value["name"] === undefined) return false;
-  if (!("kennung" in value) || value["kennung"] === undefined) return false;
-  if (!("emailAddresses" in value) || value["emailAddresses"] === undefined)
-    return false;
-  if (!("active" in value) || value["active"] === undefined) return false;
-  if (!("erasable" in value) || value["erasable"] === undefined) return false;
-  if (
-    !("emailAddressesAsString" in value) ||
-    value["emailAddressesAsString"] === undefined
-  )
-    return false;
   return true;
 }
 
@@ -105,12 +94,16 @@ export function DienstleisterDTOFromJSONTyped(
     id: json["id"] == null ? undefined : json["id"],
     entityVersion:
       json["entityVersion"] == null ? undefined : json["entityVersion"],
-    name: json["name"],
-    kennung: json["kennung"],
-    emailAddresses: json["emailAddresses"],
-    active: json["active"],
-    erasable: json["erasable"],
-    emailAddressesAsString: json["emailAddressesAsString"],
+    name: json["name"] == null ? undefined : json["name"],
+    kennung: json["kennung"] == null ? undefined : json["kennung"],
+    emailAddresses:
+      json["emailAddresses"] == null ? undefined : json["emailAddresses"],
+    active: json["active"] == null ? undefined : json["active"],
+    erasable: json["erasable"] == null ? undefined : json["erasable"],
+    emailAddressesAsString:
+      json["emailAddressesAsString"] == null
+        ? undefined
+        : json["emailAddressesAsString"],
   };
 }
 

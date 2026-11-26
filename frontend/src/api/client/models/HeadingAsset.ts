@@ -25,32 +25,32 @@ import {
 /**
  *
  * @export
- * @interface Heading1Asset
+ * @interface HeadingAsset
  */
-export interface Heading1Asset extends BaseAsset {
+export interface HeadingAsset extends BaseAsset {
   /**
    *
    * @type {string}
-   * @memberof Heading1Asset
+   * @memberof HeadingAsset
    */
   text?: string;
 }
 
 /**
- * Check if a given object implements the Heading1Asset interface.
+ * Check if a given object implements the HeadingAsset interface.
  */
-export function instanceOfHeading1Asset(value: object): value is Heading1Asset {
+export function instanceOfHeadingAsset(value: object): value is HeadingAsset {
   return true;
 }
 
-export function Heading1AssetFromJSON(json: any): Heading1Asset {
-  return Heading1AssetFromJSONTyped(json, false);
+export function HeadingAssetFromJSON(json: any): HeadingAsset {
+  return HeadingAssetFromJSONTyped(json, false);
 }
 
-export function Heading1AssetFromJSONTyped(
+export function HeadingAssetFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean
-): Heading1Asset {
+): HeadingAsset {
   if (json == null) {
     return json;
   }
@@ -60,12 +60,12 @@ export function Heading1AssetFromJSONTyped(
   };
 }
 
-export function Heading1AssetToJSON(json: any): Heading1Asset {
-  return Heading1AssetToJSONTyped(json, false);
+export function HeadingAssetToJSON(json: any): HeadingAsset {
+  return HeadingAssetToJSONTyped(json, false);
 }
 
-export function Heading1AssetToJSONTyped(
-  value?: Heading1Asset | null,
+export function HeadingAssetToJSONTyped(
+  value?: HeadingAsset | null,
   ignoreDiscriminator: boolean = false
 ): any {
   if (value == null) {

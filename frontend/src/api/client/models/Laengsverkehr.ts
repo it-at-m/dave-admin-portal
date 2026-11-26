@@ -12,22 +12,15 @@
  * Do not edit the class manually.
  */
 
-import type { Bewegungsrichtung } from "./Bewegungsrichtung";
-import type { Himmelsrichtung } from "./Himmelsrichtung";
+import type { Hochrechnungsfaktor } from "./Hochrechnungsfaktor";
 
 import { mapValues } from "../runtime";
 import {
-  BewegungsrichtungFromJSON,
-  BewegungsrichtungFromJSONTyped,
-  BewegungsrichtungToJSON,
-  BewegungsrichtungToJSONTyped,
-} from "./Bewegungsrichtung";
-import {
-  HimmelsrichtungFromJSON,
-  HimmelsrichtungFromJSONTyped,
-  HimmelsrichtungToJSON,
-  HimmelsrichtungToJSONTyped,
-} from "./Himmelsrichtung";
+  HochrechnungsfaktorFromJSON,
+  HochrechnungsfaktorFromJSONTyped,
+  HochrechnungsfaktorToJSON,
+  HochrechnungsfaktorToJSONTyped,
+} from "./Hochrechnungsfaktor";
 
 /**
  *
@@ -37,23 +30,61 @@ import {
 export interface Laengsverkehr {
   /**
    *
+   * @type {string}
+   * @memberof Laengsverkehr
+   */
+  id?: string;
+  /**
+   *
+   * @type {Hochrechnungsfaktor}
+   * @memberof Laengsverkehr
+   */
+  hochrechnungsfaktor?: Hochrechnungsfaktor;
+  /**
+   *
    * @type {number}
    * @memberof Laengsverkehr
    */
   knotenarm?: number;
   /**
    *
-   * @type {Bewegungsrichtung}
+   * @type {string}
    * @memberof Laengsverkehr
    */
-  richtung?: Bewegungsrichtung;
+  richtung?: LaengsverkehrRichtungEnum;
   /**
    *
-   * @type {Himmelsrichtung}
+   * @type {string}
    * @memberof Laengsverkehr
    */
-  strassenseite?: Himmelsrichtung;
+  strassenseite?: LaengsverkehrStrassenseiteEnum;
 }
+
+/**
+ * @export
+ */
+export const LaengsverkehrRichtungEnum = {
+  Ein: "EIN",
+  Aus: "AUS",
+} as const;
+export type LaengsverkehrRichtungEnum =
+  (typeof LaengsverkehrRichtungEnum)[keyof typeof LaengsverkehrRichtungEnum];
+
+/**
+ * @export
+ */
+export const LaengsverkehrStrassenseiteEnum = {
+  N: "N",
+  No: "NO",
+  O: "O",
+  So: "SO",
+  S: "S",
+  Sw: "SW",
+  W: "W",
+  Nw: "NW",
+} as const;
+export type LaengsverkehrStrassenseiteEnum =
+  (typeof LaengsverkehrStrassenseiteEnum)[keyof typeof LaengsverkehrStrassenseiteEnum];
 
 /**
  * Check if a given object implements the Laengsverkehr interface.
@@ -74,15 +105,15 @@ export function LaengsverkehrFromJSONTyped(
     return json;
   }
   return {
+    id: json["id"] == null ? undefined : json["id"],
+    hochrechnungsfaktor:
+      json["hochrechnungsfaktor"] == null
+        ? undefined
+        : HochrechnungsfaktorFromJSON(json["hochrechnungsfaktor"]),
     knotenarm: json["knotenarm"] == null ? undefined : json["knotenarm"],
-    richtung:
-      json["richtung"] == null
-        ? undefined
-        : BewegungsrichtungFromJSON(json["richtung"]),
+    richtung: json["richtung"] == null ? undefined : json["richtung"],
     strassenseite:
-      json["strassenseite"] == null
-        ? undefined
-        : HimmelsrichtungFromJSON(json["strassenseite"]),
+      json["strassenseite"] == null ? undefined : json["strassenseite"],
   };
 }
 
@@ -99,8 +130,12 @@ export function LaengsverkehrToJSONTyped(
   }
 
   return {
+    id: value["id"],
+    hochrechnungsfaktor: HochrechnungsfaktorToJSON(
+      value["hochrechnungsfaktor"]
+    ),
     knotenarm: value["knotenarm"],
-    richtung: BewegungsrichtungToJSON(value["richtung"]),
-    strassenseite: HimmelsrichtungToJSON(value["strassenseite"]),
+    richtung: value["richtung"],
+    strassenseite: value["strassenseite"],
   };
 }

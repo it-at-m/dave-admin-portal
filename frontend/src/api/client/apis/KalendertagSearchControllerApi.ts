@@ -15,7 +15,6 @@
 import type {
   CollectionModelEntityModelKalendertag,
   EntityModelKalendertag,
-  TagesTyp,
 } from "../models/index";
 
 import {
@@ -23,15 +22,13 @@ import {
   CollectionModelEntityModelKalendertagToJSON,
   EntityModelKalendertagFromJSON,
   EntityModelKalendertagToJSON,
-  TagesTypFromJSON,
-  TagesTypToJSON,
 } from "../models/index";
 import * as runtime from "../runtime";
 
 export interface ExecuteSearchKalendertagGetRequest {
   startDateIncluded?: Date;
   endDateIncluded?: Date;
-  tagestypen?: Array<TagesTyp>;
+  tagestypen?: Array<ExecuteSearchKalendertagGetTagestypenEnum>;
 }
 
 export interface ExecuteSearchKalendertagGet1Request {
@@ -240,3 +237,18 @@ export class KalendertagSearchControllerApi extends runtime.BaseAPI {
     return await response.value();
   }
 }
+
+/**
+ * @export
+ */
+export const ExecuteSearchKalendertagGetTagestypenEnum = {
+  Unspecified: "UNSPECIFIED",
+  WerktagDiMiDo: "WERKTAG_DI_MI_DO",
+  WerktagMoFr: "WERKTAG_MO_FR",
+  Samstag: "SAMSTAG",
+  SonntagFeiertag: "SONNTAG_FEIERTAG",
+  WerktagFerien: "WERKTAG_FERIEN",
+  MoSo: "MO_SO",
+} as const;
+export type ExecuteSearchKalendertagGetTagestypenEnum =
+  (typeof ExecuteSearchKalendertagGetTagestypenEnum)[keyof typeof ExecuteSearchKalendertagGetTagestypenEnum];

@@ -109,7 +109,7 @@ export class ProfileControllerApi extends runtime.BaseAPI {
 
     const headerParameters: runtime.HTTPHeaders = {};
 
-    let urlPath = `/profile/unauffaelligerTags`;
+    let urlPath = `/profile/stadtbezirkEntities`;
 
     const response = await this.request(
       {
@@ -146,7 +146,7 @@ export class ProfileControllerApi extends runtime.BaseAPI {
 
     const headerParameters: runtime.HTTPHeaders = {};
 
-    let urlPath = `/profile/zaehlstelles`;
+    let urlPath = `/profile/stadtbezirksviertelEntities`;
 
     const response = await this.request(
       {
@@ -183,7 +183,7 @@ export class ProfileControllerApi extends runtime.BaseAPI {
 
     const headerParameters: runtime.HTTPHeaders = {};
 
-    let urlPath = `/profile/zeitintervalls`;
+    let urlPath = `/profile/unauffaelligerTags`;
 
     const response = await this.request(
       {
@@ -208,6 +208,80 @@ export class ProfileControllerApi extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction
   ): Promise<string> {
     const response = await this.descriptor12Raw(initOverrides);
+    return await response.value();
+  }
+
+  /**
+   */
+  async descriptor13Raw(
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<string>> {
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    let urlPath = `/profile/zaehlstelles`;
+
+    const response = await this.request(
+      {
+        path: urlPath,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides
+    );
+
+    if (this.isJsonMime(response.headers.get("content-type"))) {
+      return new runtime.JSONApiResponse<string>(response);
+    } else {
+      return new runtime.TextApiResponse(response) as any;
+    }
+  }
+
+  /**
+   */
+  async descriptor13(
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<string> {
+    const response = await this.descriptor13Raw(initOverrides);
+    return await response.value();
+  }
+
+  /**
+   */
+  async descriptor14Raw(
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<string>> {
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    let urlPath = `/profile/zeitintervalls`;
+
+    const response = await this.request(
+      {
+        path: urlPath,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides
+    );
+
+    if (this.isJsonMime(response.headers.get("content-type"))) {
+      return new runtime.JSONApiResponse<string>(response);
+    } else {
+      return new runtime.TextApiResponse(response) as any;
+    }
+  }
+
+  /**
+   */
+  async descriptor14(
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<string> {
+    const response = await this.descriptor14Raw(initOverrides);
     return await response.value();
   }
 

@@ -25,14 +25,13 @@ export interface BackendIdDTO {
    * @type {string}
    * @memberof BackendIdDTO
    */
-  id: string;
+  id?: string;
 }
 
 /**
  * Check if a given object implements the BackendIdDTO interface.
  */
 export function instanceOfBackendIdDTO(value: object): value is BackendIdDTO {
-  if (!("id" in value) || value["id"] === undefined) return false;
   return true;
 }
 
@@ -48,7 +47,7 @@ export function BackendIdDTOFromJSONTyped(
     return json;
   }
   return {
-    id: json["id"],
+    id: json["id"] == null ? undefined : json["id"],
   };
 }
 

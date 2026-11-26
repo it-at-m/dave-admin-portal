@@ -33,7 +33,7 @@ export interface LadeMesswerteListenausgabeDTO {
    * @type {Array<LadeMesswerteDTO>}
    * @memberof LadeMesswerteListenausgabeDTO
    */
-  zaehldaten: Array<LadeMesswerteDTO>;
+  zaehldaten?: Array<LadeMesswerteDTO>;
 }
 
 /**
@@ -42,8 +42,6 @@ export interface LadeMesswerteListenausgabeDTO {
 export function instanceOfLadeMesswerteListenausgabeDTO(
   value: object
 ): value is LadeMesswerteListenausgabeDTO {
-  if (!("zaehldaten" in value) || value["zaehldaten"] === undefined)
-    return false;
   return true;
 }
 
@@ -61,9 +59,10 @@ export function LadeMesswerteListenausgabeDTOFromJSONTyped(
     return json;
   }
   return {
-    zaehldaten: (json["zaehldaten"] as Array<any>).map(
-      LadeMesswerteDTOFromJSON
-    ),
+    zaehldaten:
+      json["zaehldaten"] == null
+        ? undefined
+        : (json["zaehldaten"] as Array<any>).map(LadeMesswerteDTOFromJSON),
   };
 }
 
@@ -82,6 +81,9 @@ export function LadeMesswerteListenausgabeDTOToJSONTyped(
   }
 
   return {
-    zaehldaten: (value["zaehldaten"] as Array<any>).map(LadeMesswerteDTOToJSON),
+    zaehldaten:
+      value["zaehldaten"] == null
+        ? undefined
+        : (value["zaehldaten"] as Array<any>).map(LadeMesswerteDTOToJSON),
   };
 }

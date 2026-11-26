@@ -12,17 +12,10 @@
  * Do not edit the class manually.
  */
 
-import type { Himmelsrichtung } from "./Himmelsrichtung";
 import type { HochrechnungsfaktorDTO } from "./HochrechnungsfaktorDTO";
 import type { ZeitintervallDTO } from "./ZeitintervallDTO";
 
 import { mapValues } from "../runtime";
-import {
-  HimmelsrichtungFromJSON,
-  HimmelsrichtungFromJSONTyped,
-  HimmelsrichtungToJSON,
-  HimmelsrichtungToJSONTyped,
-} from "./Himmelsrichtung";
 import {
   HochrechnungsfaktorDTOFromJSON,
   HochrechnungsfaktorDTOFromJSONTyped,
@@ -104,11 +97,27 @@ export interface ExternalVerkehrsbeziehungDTO {
   vorbei?: boolean;
   /**
    *
-   * @type {Himmelsrichtung}
+   * @type {string}
    * @memberof ExternalVerkehrsbeziehungDTO
    */
-  strassenseite?: Himmelsrichtung;
+  strassenseite?: ExternalVerkehrsbeziehungDTOStrassenseiteEnum;
 }
+
+/**
+ * @export
+ */
+export const ExternalVerkehrsbeziehungDTOStrassenseiteEnum = {
+  N: "N",
+  No: "NO",
+  O: "O",
+  So: "SO",
+  S: "S",
+  Sw: "SW",
+  W: "W",
+  Nw: "NW",
+} as const;
+export type ExternalVerkehrsbeziehungDTOStrassenseiteEnum =
+  (typeof ExternalVerkehrsbeziehungDTOStrassenseiteEnum)[keyof typeof ExternalVerkehrsbeziehungDTOStrassenseiteEnum];
 
 /**
  * Check if a given object implements the ExternalVerkehrsbeziehungDTO interface.
@@ -150,9 +159,7 @@ export function ExternalVerkehrsbeziehungDTOFromJSONTyped(
     heraus: json["heraus"] == null ? undefined : json["heraus"],
     vorbei: json["vorbei"] == null ? undefined : json["vorbei"],
     strassenseite:
-      json["strassenseite"] == null
-        ? undefined
-        : HimmelsrichtungFromJSON(json["strassenseite"]),
+      json["strassenseite"] == null ? undefined : json["strassenseite"],
   };
 }
 
@@ -186,6 +193,6 @@ export function ExternalVerkehrsbeziehungDTOToJSONTyped(
     hinein: value["hinein"],
     heraus: value["heraus"],
     vorbei: value["vorbei"],
-    strassenseite: HimmelsrichtungToJSON(value["strassenseite"]),
+    strassenseite: value["strassenseite"],
   };
 }

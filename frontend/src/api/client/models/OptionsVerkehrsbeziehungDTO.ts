@@ -12,15 +12,7 @@
  * Do not edit the class manually.
  */
 
-import type { Himmelsrichtung } from "./Himmelsrichtung";
-
 import { mapValues } from "../runtime";
-import {
-  HimmelsrichtungFromJSON,
-  HimmelsrichtungFromJSONTyped,
-  HimmelsrichtungToJSON,
-  HimmelsrichtungToJSONTyped,
-} from "./Himmelsrichtung";
 
 /**
  *
@@ -42,11 +34,27 @@ export interface OptionsVerkehrsbeziehungDTO {
   nach?: number;
   /**
    *
-   * @type {Himmelsrichtung}
+   * @type {string}
    * @memberof OptionsVerkehrsbeziehungDTO
    */
-  strassenseite?: Himmelsrichtung;
+  strassenseite?: OptionsVerkehrsbeziehungDTOStrassenseiteEnum;
 }
+
+/**
+ * @export
+ */
+export const OptionsVerkehrsbeziehungDTOStrassenseiteEnum = {
+  N: "N",
+  No: "NO",
+  O: "O",
+  So: "SO",
+  S: "S",
+  Sw: "SW",
+  W: "W",
+  Nw: "NW",
+} as const;
+export type OptionsVerkehrsbeziehungDTOStrassenseiteEnum =
+  (typeof OptionsVerkehrsbeziehungDTOStrassenseiteEnum)[keyof typeof OptionsVerkehrsbeziehungDTOStrassenseiteEnum];
 
 /**
  * Check if a given object implements the OptionsVerkehrsbeziehungDTO interface.
@@ -74,9 +82,7 @@ export function OptionsVerkehrsbeziehungDTOFromJSONTyped(
     von: json["von"] == null ? undefined : json["von"],
     nach: json["nach"] == null ? undefined : json["nach"],
     strassenseite:
-      json["strassenseite"] == null
-        ? undefined
-        : HimmelsrichtungFromJSON(json["strassenseite"]),
+      json["strassenseite"] == null ? undefined : json["strassenseite"],
   };
 }
 
@@ -97,6 +103,6 @@ export function OptionsVerkehrsbeziehungDTOToJSONTyped(
   return {
     von: value["von"],
     nach: value["nach"],
-    strassenseite: HimmelsrichtungToJSON(value["strassenseite"]),
+    strassenseite: value["strassenseite"],
   };
 }

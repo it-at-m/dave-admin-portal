@@ -13,7 +13,6 @@
  */
 
 import type { Link } from "./Link";
-import type { TagesTyp } from "./TagesTyp";
 
 import { mapValues } from "../runtime";
 import {
@@ -22,12 +21,6 @@ import {
   LinkToJSON,
   LinkToJSONTyped,
 } from "./Link";
-import {
-  TagesTypFromJSON,
-  TagesTypFromJSONTyped,
-  TagesTypToJSON,
-  TagesTypToJSONTyped,
-} from "./TagesTyp";
 
 /**
  *
@@ -61,10 +54,10 @@ export interface EntityModelKalendertag {
   datum?: Date;
   /**
    *
-   * @type {TagesTyp}
+   * @type {string}
    * @memberof EntityModelKalendertag
    */
-  tagestyp?: TagesTyp;
+  tagestyp?: EntityModelKalendertagTagestypEnum;
   /**
    *
    * @type {boolean}
@@ -84,6 +77,21 @@ export interface EntityModelKalendertag {
    */
   links?: { [key: string]: Link };
 }
+
+/**
+ * @export
+ */
+export const EntityModelKalendertagTagestypEnum = {
+  Unspecified: "UNSPECIFIED",
+  WerktagDiMiDo: "WERKTAG_DI_MI_DO",
+  WerktagMoFr: "WERKTAG_MO_FR",
+  Samstag: "SAMSTAG",
+  SonntagFeiertag: "SONNTAG_FEIERTAG",
+  WerktagFerien: "WERKTAG_FERIEN",
+  MoSo: "MO_SO",
+} as const;
+export type EntityModelKalendertagTagestypEnum =
+  (typeof EntityModelKalendertagTagestypEnum)[keyof typeof EntityModelKalendertagTagestypEnum];
 
 /**
  * Check if a given object implements the EntityModelKalendertag interface.
@@ -113,8 +121,7 @@ export function EntityModelKalendertagFromJSONTyped(
       json["createdTime"] == null ? undefined : new Date(json["createdTime"]),
     version: json["version"] == null ? undefined : json["version"],
     datum: json["datum"] == null ? undefined : new Date(json["datum"]),
-    tagestyp:
-      json["tagestyp"] == null ? undefined : TagesTypFromJSON(json["tagestyp"]),
+    tagestyp: json["tagestyp"] == null ? undefined : json["tagestyp"],
     nextStartDateToLoadUnauffaelligeTage:
       json["nextStartDateToLoadUnauffaelligeTage"] == null
         ? undefined
@@ -153,7 +160,7 @@ export function EntityModelKalendertagToJSONTyped(
       value["datum"] == null
         ? undefined
         : value["datum"].toISOString().substring(0, 10),
-    tagestyp: TagesTypToJSON(value["tagestyp"]),
+    tagestyp: value["tagestyp"],
     nextStartDateToLoadUnauffaelligeTage:
       value["nextStartDateToLoadUnauffaelligeTage"],
     entityVersion: value["entityVersion"],

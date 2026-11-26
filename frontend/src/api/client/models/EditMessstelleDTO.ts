@@ -14,8 +14,6 @@
 
 import type { EditMessfaehigkeitDTO } from "./EditMessfaehigkeitDTO";
 import type { EditMessquerschnittDTO } from "./EditMessquerschnittDTO";
-import type { Fahrzeugklasse } from "./Fahrzeugklasse";
-import type { Verkehrsart } from "./Verkehrsart";
 
 import { mapValues } from "../runtime";
 import {
@@ -30,18 +28,6 @@ import {
   EditMessquerschnittDTOToJSON,
   EditMessquerschnittDTOToJSONTyped,
 } from "./EditMessquerschnittDTO";
-import {
-  FahrzeugklasseFromJSON,
-  FahrzeugklasseFromJSONTyped,
-  FahrzeugklasseToJSON,
-  FahrzeugklasseToJSONTyped,
-} from "./Fahrzeugklasse";
-import {
-  VerkehrsartFromJSON,
-  VerkehrsartFromJSONTyped,
-  VerkehrsartToJSON,
-  VerkehrsartToJSONTyped,
-} from "./Verkehrsart";
 
 /**
  *
@@ -60,7 +46,7 @@ export interface EditMessstelleDTO {
    * @type {string}
    * @memberof EditMessstelleDTO
    */
-  mstId: string;
+  mstId?: string;
   /**
    *
    * @type {string}
@@ -72,19 +58,13 @@ export interface EditMessstelleDTO {
    * @type {string}
    * @memberof EditMessstelleDTO
    */
-  status: string;
+  status?: string;
   /**
    *
    * @type {string}
    * @memberof EditMessstelleDTO
    */
   bemerkung?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof EditMessstelleDTO
-   */
-  stadtbezirk?: string;
   /**
    *
    * @type {number}
@@ -111,16 +91,16 @@ export interface EditMessstelleDTO {
   datumLetztePlausibleMessung?: string;
   /**
    *
-   * @type {Fahrzeugklasse}
+   * @type {string}
    * @memberof EditMessstelleDTO
    */
-  fahrzeugklasse?: Fahrzeugklasse;
+  fahrzeugklasse?: EditMessstelleDTOFahrzeugklasseEnum;
   /**
    *
-   * @type {Verkehrsart}
+   * @type {string}
    * @memberof EditMessstelleDTO
    */
-  detektierteVerkehrsart?: Verkehrsart;
+  detektierteVerkehrsart?: EditMessstelleDTODetektierteVerkehrsartEnum;
   /**
    *
    * @type {string}
@@ -190,13 +170,34 @@ export interface EditMessstelleDTO {
 }
 
 /**
+ * @export
+ */
+export const EditMessstelleDTOFahrzeugklasseEnum = {
+  Rad: "RAD",
+  SummeKfz: "SUMME_KFZ",
+  ZweiPlusEins: "ZWEI_PLUS_EINS",
+  AchtPlusEins: "ACHT_PLUS_EINS",
+} as const;
+export type EditMessstelleDTOFahrzeugklasseEnum =
+  (typeof EditMessstelleDTOFahrzeugklasseEnum)[keyof typeof EditMessstelleDTOFahrzeugklasseEnum];
+
+/**
+ * @export
+ */
+export const EditMessstelleDTODetektierteVerkehrsartEnum = {
+  Kfz: "KFZ",
+  Rad: "RAD",
+  Unbekannt: "UNBEKANNT",
+} as const;
+export type EditMessstelleDTODetektierteVerkehrsartEnum =
+  (typeof EditMessstelleDTODetektierteVerkehrsartEnum)[keyof typeof EditMessstelleDTODetektierteVerkehrsartEnum];
+
+/**
  * Check if a given object implements the EditMessstelleDTO interface.
  */
 export function instanceOfEditMessstelleDTO(
   value: object
 ): value is EditMessstelleDTO {
-  if (!("mstId" in value) || value["mstId"] === undefined) return false;
-  if (!("status" in value) || value["status"] === undefined) return false;
   return true;
 }
 
@@ -213,11 +214,10 @@ export function EditMessstelleDTOFromJSONTyped(
   }
   return {
     id: json["id"] == null ? undefined : json["id"],
-    mstId: json["mstId"],
+    mstId: json["mstId"] == null ? undefined : json["mstId"],
     name: json["name"] == null ? undefined : json["name"],
-    status: json["status"],
+    status: json["status"] == null ? undefined : json["status"],
     bemerkung: json["bemerkung"] == null ? undefined : json["bemerkung"],
-    stadtbezirk: json["stadtbezirk"] == null ? undefined : json["stadtbezirk"],
     stadtbezirkNummer:
       json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     realisierungsdatum:
@@ -230,13 +230,11 @@ export function EditMessstelleDTOFromJSONTyped(
         ? undefined
         : json["datumLetztePlausibleMessung"],
     fahrzeugklasse:
-      json["fahrzeugklasse"] == null
-        ? undefined
-        : FahrzeugklasseFromJSON(json["fahrzeugklasse"]),
+      json["fahrzeugklasse"] == null ? undefined : json["fahrzeugklasse"],
     detektierteVerkehrsart:
       json["detektierteVerkehrsart"] == null
         ? undefined
-        : VerkehrsartFromJSON(json["detektierteVerkehrsart"]),
+        : json["detektierteVerkehrsart"],
     hersteller: json["hersteller"] == null ? undefined : json["hersteller"],
     longitude: json["longitude"] == null ? undefined : json["longitude"],
     latitude: json["latitude"] == null ? undefined : json["latitude"],
@@ -284,13 +282,12 @@ export function EditMessstelleDTOToJSONTyped(
     name: value["name"],
     status: value["status"],
     bemerkung: value["bemerkung"],
-    stadtbezirk: value["stadtbezirk"],
     stadtbezirkNummer: value["stadtbezirkNummer"],
     realisierungsdatum: value["realisierungsdatum"],
     abbaudatum: value["abbaudatum"],
     datumLetztePlausibleMessung: value["datumLetztePlausibleMessung"],
-    fahrzeugklasse: FahrzeugklasseToJSON(value["fahrzeugklasse"]),
-    detektierteVerkehrsart: VerkehrsartToJSON(value["detektierteVerkehrsart"]),
+    fahrzeugklasse: value["fahrzeugklasse"],
+    detektierteVerkehrsart: value["detektierteVerkehrsart"],
     hersteller: value["hersteller"],
     longitude: value["longitude"],
     latitude: value["latitude"],

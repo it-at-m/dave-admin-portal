@@ -28,7 +28,14 @@ import {
  * @interface StepLineSeriesEntryBigDecimalDTO
  */
 export interface StepLineSeriesEntryBigDecimalDTO
-  extends StepLineSeriesEntryBaseDTO {}
+  extends StepLineSeriesEntryBaseDTO {
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof StepLineSeriesEntryBigDecimalDTO
+   */
+  yaxisData?: Array<number>;
+}
 
 /**
  * Check if a given object implements the StepLineSeriesEntryBigDecimalDTO interface.
@@ -49,7 +56,13 @@ export function StepLineSeriesEntryBigDecimalDTOFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean
 ): StepLineSeriesEntryBigDecimalDTO {
-  return json;
+  if (json == null) {
+    return json;
+  }
+  return {
+    ...StepLineSeriesEntryBaseDTOFromJSONTyped(json, true),
+    yaxisData: json["yaxisData"] == null ? undefined : json["yaxisData"],
+  };
 }
 
 export function StepLineSeriesEntryBigDecimalDTOToJSON(
@@ -62,5 +75,12 @@ export function StepLineSeriesEntryBigDecimalDTOToJSONTyped(
   value?: StepLineSeriesEntryBigDecimalDTO | null,
   ignoreDiscriminator: boolean = false
 ): any {
-  return value;
+  if (value == null) {
+    return value;
+  }
+
+  return {
+    ...StepLineSeriesEntryBaseDTOToJSONTyped(value, true),
+    yaxisData: value["yaxisData"],
+  };
 }

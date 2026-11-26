@@ -25,15 +25,13 @@ export interface CsvDTO {
    * @type {string}
    * @memberof CsvDTO
    */
-  csvAsString: string;
+  csvAsString?: string;
 }
 
 /**
  * Check if a given object implements the CsvDTO interface.
  */
 export function instanceOfCsvDTO(value: object): value is CsvDTO {
-  if (!("csvAsString" in value) || value["csvAsString"] === undefined)
-    return false;
   return true;
 }
 
@@ -49,7 +47,7 @@ export function CsvDTOFromJSONTyped(
     return json;
   }
   return {
-    csvAsString: json["csvAsString"],
+    csvAsString: json["csvAsString"] == null ? undefined : json["csvAsString"],
   };
 }
 

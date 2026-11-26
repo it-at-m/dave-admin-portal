@@ -31,7 +31,7 @@ export interface MessstelleOverviewDTO {
    * @type {string}
    * @memberof MessstelleOverviewDTO
    */
-  mstId: string;
+  mstId?: string;
   /**
    *
    * @type {string}
@@ -61,12 +61,6 @@ export interface MessstelleOverviewDTO {
    * @type {string}
    * @memberof MessstelleOverviewDTO
    */
-  stadtbezirk?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
-   */
   stadtbezirkNummer?: string;
   /**
    *
@@ -77,12 +71,11 @@ export interface MessstelleOverviewDTO {
 }
 
 /**
- * Check if a given object implements the MessstelleOverview interface.
+ * Check if a given object implements the MessstelleOverviewDTO interface.
  */
 export function instanceOfMessstelleOverviewDTO(
   value: object
 ): value is MessstelleOverviewDTO {
-  if (!("mstId" in value) || value["mstId"] === undefined) return false;
   return true;
 }
 
@@ -101,7 +94,7 @@ export function MessstelleOverviewDTOFromJSONTyped(
   }
   return {
     id: json["id"] == null ? undefined : json["id"],
-    mstId: json["mstId"],
+    mstId: json["mstId"] == null ? undefined : json["mstId"],
     name: json["name"] == null ? undefined : json["name"],
     status: json["status"] == null ? undefined : json["status"],
     sichtbarDatenportal:
@@ -109,7 +102,6 @@ export function MessstelleOverviewDTOFromJSONTyped(
         ? undefined
         : json["sichtbarDatenportal"],
     geprueft: json["geprueft"] == null ? undefined : json["geprueft"],
-    stadtbezirk: json["stadtbezirk"] == null ? undefined : json["stadtbezirk"],
     stadtbezirkNummer:
       json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     lageplanVorhanden:
@@ -136,7 +128,6 @@ export function MessstelleOverviewDTOToJSONTyped(
     status: value["status"],
     sichtbarDatenportal: value["sichtbarDatenportal"],
     geprueft: value["geprueft"],
-    stadtbezirk: value["stadtbezirk"],
     stadtbezirkNummer: value["stadtbezirkNummer"],
     lageplanVorhanden: value["lageplanVorhanden"],
   };

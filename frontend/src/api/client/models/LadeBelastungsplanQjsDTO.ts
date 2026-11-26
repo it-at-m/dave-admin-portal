@@ -12,9 +12,16 @@
  * Do not edit the class manually.
  */
 
+import type { AbstractLadeBelastungsplanDTOObject } from "./AbstractLadeBelastungsplanDTOObject";
 import type { BelastungsplanQjsDataDTO } from "./BelastungsplanQjsDataDTO";
 
 import { mapValues } from "../runtime";
+import {
+  AbstractLadeBelastungsplanDTOObjectFromJSON,
+  AbstractLadeBelastungsplanDTOObjectFromJSONTyped,
+  AbstractLadeBelastungsplanDTOObjectToJSON,
+  AbstractLadeBelastungsplanDTOObjectToJSONTyped,
+} from "./AbstractLadeBelastungsplanDTOObject";
 import {
   BelastungsplanQjsDataDTOFromJSON,
   BelastungsplanQjsDataDTOFromJSONTyped,
@@ -27,53 +34,27 @@ import {
  * @export
  * @interface LadeBelastungsplanQjsDTO
  */
-export interface LadeBelastungsplanQjsDTO {
-  /**
-   *
-   * @type {string}
-   * @memberof LadeBelastungsplanQjsDTO
-   */
-  belastungsplanTyp: LadeBelastungsplanQjsDTOBelastungsplanTypEnum;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof LadeBelastungsplanQjsDTO
-   */
-  streets: Array<string>;
-  /**
-   *
-   * @type {boolean}
-   * @memberof LadeBelastungsplanQjsDTO
-   */
-  kreisverkehr: boolean;
+export interface LadeBelastungsplanQjsDTO
+  extends AbstractLadeBelastungsplanDTOObject {
   /**
    *
    * @type {BelastungsplanQjsDataDTO}
    * @memberof LadeBelastungsplanQjsDTO
    */
-  value1: BelastungsplanQjsDataDTO;
+  value1?: BelastungsplanQjsDataDTO;
   /**
    *
    * @type {BelastungsplanQjsDataDTO}
    * @memberof LadeBelastungsplanQjsDTO
    */
-  value2: BelastungsplanQjsDataDTO;
+  value2?: BelastungsplanQjsDataDTO;
   /**
    *
    * @type {BelastungsplanQjsDataDTO}
    * @memberof LadeBelastungsplanQjsDTO
    */
-  value3: BelastungsplanQjsDataDTO;
+  value3?: BelastungsplanQjsDataDTO;
 }
-
-/**
- * @export
- */
-export const LadeBelastungsplanQjsDTOBelastungsplanTypEnum = {
-  Qjs: "QJS",
-} as const;
-export type LadeBelastungsplanQjsDTOBelastungsplanTypEnum =
-  (typeof LadeBelastungsplanQjsDTOBelastungsplanTypEnum)[keyof typeof LadeBelastungsplanQjsDTOBelastungsplanTypEnum];
 
 /**
  * Check if a given object implements the LadeBelastungsplanQjsDTO interface.
@@ -81,17 +62,6 @@ export type LadeBelastungsplanQjsDTOBelastungsplanTypEnum =
 export function instanceOfLadeBelastungsplanQjsDTO(
   value: object
 ): value is LadeBelastungsplanQjsDTO {
-  if (
-    !("belastungsplanTyp" in value) ||
-    value["belastungsplanTyp"] === undefined
-  )
-    return false;
-  if (!("streets" in value) || value["streets"] === undefined) return false;
-  if (!("kreisverkehr" in value) || value["kreisverkehr"] === undefined)
-    return false;
-  if (!("value1" in value) || value["value1"] === undefined) return false;
-  if (!("value2" in value) || value["value2"] === undefined) return false;
-  if (!("value3" in value) || value["value3"] === undefined) return false;
   return true;
 }
 
@@ -109,12 +79,19 @@ export function LadeBelastungsplanQjsDTOFromJSONTyped(
     return json;
   }
   return {
-    belastungsplanTyp: json["belastungsplanTyp"],
-    streets: json["streets"],
-    kreisverkehr: json["kreisverkehr"],
-    value1: BelastungsplanQjsDataDTOFromJSON(json["value1"]),
-    value2: BelastungsplanQjsDataDTOFromJSON(json["value2"]),
-    value3: BelastungsplanQjsDataDTOFromJSON(json["value3"]),
+    ...AbstractLadeBelastungsplanDTOObjectFromJSONTyped(json, true),
+    value1:
+      json["value1"] == null
+        ? undefined
+        : BelastungsplanQjsDataDTOFromJSON(json["value1"]),
+    value2:
+      json["value2"] == null
+        ? undefined
+        : BelastungsplanQjsDataDTOFromJSON(json["value2"]),
+    value3:
+      json["value3"] == null
+        ? undefined
+        : BelastungsplanQjsDataDTOFromJSON(json["value3"]),
   };
 }
 
@@ -133,9 +110,7 @@ export function LadeBelastungsplanQjsDTOToJSONTyped(
   }
 
   return {
-    belastungsplanTyp: value["belastungsplanTyp"],
-    streets: value["streets"],
-    kreisverkehr: value["kreisverkehr"],
+    ...AbstractLadeBelastungsplanDTOObjectToJSONTyped(value, true),
     value1: BelastungsplanQjsDataDTOToJSON(value["value1"]),
     value2: BelastungsplanQjsDataDTOToJSON(value["value2"]),
     value3: BelastungsplanQjsDataDTOToJSON(value["value3"]),

@@ -12,15 +12,15 @@
  * Do not edit the class manually.
  */
 
-import type { FjsKnotenarmValue } from "./FjsKnotenarmValue";
+import type { KnotenarmValue } from "./KnotenarmValue";
 
 import { mapValues } from "../runtime";
 import {
-  FjsKnotenarmValueFromJSON,
-  FjsKnotenarmValueFromJSONTyped,
-  FjsKnotenarmValueToJSON,
-  FjsKnotenarmValueToJSONTyped,
-} from "./FjsKnotenarmValue";
+  KnotenarmValueFromJSON,
+  KnotenarmValueFromJSONTyped,
+  KnotenarmValueToJSON,
+  KnotenarmValueToJSONTyped,
+} from "./KnotenarmValue";
 
 /**
  *
@@ -33,19 +33,19 @@ export interface BelastungsplanFjsDataDTO {
    * @type {string}
    * @memberof BelastungsplanFjsDataDTO
    */
-  label: string;
+  label?: string;
   /**
    *
    * @type {boolean}
    * @memberof BelastungsplanFjsDataDTO
    */
-  filled: boolean;
+  filled?: boolean;
   /**
    *
-   * @type {Array<FjsKnotenarmValue>}
+   * @type {Array<KnotenarmValue>}
    * @memberof BelastungsplanFjsDataDTO
    */
-  valuesKnotenarme: Array<FjsKnotenarmValue>;
+  valuesKnotenarme?: Array<KnotenarmValue>;
 }
 
 /**
@@ -54,10 +54,6 @@ export interface BelastungsplanFjsDataDTO {
 export function instanceOfBelastungsplanFjsDataDTO(
   value: object
 ): value is BelastungsplanFjsDataDTO {
-  if (!("label" in value) || value["label"] === undefined) return false;
-  if (!("filled" in value) || value["filled"] === undefined) return false;
-  if (!("valuesKnotenarme" in value) || value["valuesKnotenarme"] === undefined)
-    return false;
   return true;
 }
 
@@ -75,11 +71,12 @@ export function BelastungsplanFjsDataDTOFromJSONTyped(
     return json;
   }
   return {
-    label: json["label"],
-    filled: json["filled"],
-    valuesKnotenarme: (json["valuesKnotenarme"] as Array<any>).map(
-      FjsKnotenarmValueFromJSON
-    ),
+    label: json["label"] == null ? undefined : json["label"],
+    filled: json["filled"] == null ? undefined : json["filled"],
+    valuesKnotenarme:
+      json["valuesKnotenarme"] == null
+        ? undefined
+        : (json["valuesKnotenarme"] as Array<any>).map(KnotenarmValueFromJSON),
   };
 }
 
@@ -100,8 +97,9 @@ export function BelastungsplanFjsDataDTOToJSONTyped(
   return {
     label: value["label"],
     filled: value["filled"],
-    valuesKnotenarme: (value["valuesKnotenarme"] as Array<any>).map(
-      FjsKnotenarmValueToJSON
-    ),
+    valuesKnotenarme:
+      value["valuesKnotenarme"] == null
+        ? undefined
+        : (value["valuesKnotenarme"] as Array<any>).map(KnotenarmValueToJSON),
   };
 }

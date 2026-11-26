@@ -25,13 +25,13 @@ export interface MessstelleAuswertungIdDTO {
    * @type {string}
    * @memberof MessstelleAuswertungIdDTO
    */
-  mstId: string;
+  mstId?: string;
   /**
    *
    * @type {Set<string>}
    * @memberof MessstelleAuswertungIdDTO
    */
-  mqIds: Set<string>;
+  mqIds?: Set<string>;
 }
 
 /**
@@ -40,8 +40,6 @@ export interface MessstelleAuswertungIdDTO {
 export function instanceOfMessstelleAuswertungIdDTO(
   value: object
 ): value is MessstelleAuswertungIdDTO {
-  if (!("mstId" in value) || value["mstId"] === undefined) return false;
-  if (!("mqIds" in value) || value["mqIds"] === undefined) return false;
   return true;
 }
 
@@ -59,8 +57,8 @@ export function MessstelleAuswertungIdDTOFromJSONTyped(
     return json;
   }
   return {
-    mstId: json["mstId"],
-    mqIds: new Set(json["mqIds"]),
+    mstId: json["mstId"] == null ? undefined : json["mstId"],
+    mqIds: json["mqIds"] == null ? undefined : new Set(json["mqIds"]),
   };
 }
 
@@ -80,6 +78,9 @@ export function MessstelleAuswertungIdDTOToJSONTyped(
 
   return {
     mstId: value["mstId"],
-    mqIds: Array.from(value["mqIds"] as Set<any>),
+    mqIds:
+      value["mqIds"] == null
+        ? undefined
+        : Array.from(value["mqIds"] as Set<any>),
   };
 }

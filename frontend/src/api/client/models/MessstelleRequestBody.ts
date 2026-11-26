@@ -12,19 +12,11 @@
  * Do not edit the class manually.
  */
 
-import type { Fahrzeugklasse } from "./Fahrzeugklasse";
 import type { GeoPoint } from "./GeoPoint";
 import type { Messfaehigkeit } from "./Messfaehigkeit";
 import type { Messquerschnitt } from "./Messquerschnitt";
-import type { Verkehrsart } from "./Verkehrsart";
 
 import { mapValues } from "../runtime";
-import {
-  FahrzeugklasseFromJSON,
-  FahrzeugklasseFromJSONTyped,
-  FahrzeugklasseToJSON,
-  FahrzeugklasseToJSONTyped,
-} from "./Fahrzeugklasse";
 import {
   GeoPointFromJSON,
   GeoPointFromJSONTyped,
@@ -43,12 +35,6 @@ import {
   MessquerschnittToJSON,
   MessquerschnittToJSONTyped,
 } from "./Messquerschnitt";
-import {
-  VerkehrsartFromJSON,
-  VerkehrsartFromJSONTyped,
-  VerkehrsartToJSON,
-  VerkehrsartToJSONTyped,
-} from "./Verkehrsart";
 
 /**
  *
@@ -106,16 +92,16 @@ export interface MessstelleRequestBody {
   bemerkung?: string;
   /**
    *
-   * @type {Fahrzeugklasse}
+   * @type {string}
    * @memberof MessstelleRequestBody
    */
-  fahrzeugklasse?: Fahrzeugklasse;
+  fahrzeugklasse?: MessstelleRequestBodyFahrzeugklasseEnum;
   /**
    *
-   * @type {Verkehrsart}
+   * @type {string}
    * @memberof MessstelleRequestBody
    */
-  detektierteVerkehrsart?: Verkehrsart;
+  detektierteVerkehrsart?: MessstelleRequestBodyDetektierteVerkehrsartEnum;
   /**
    *
    * @type {string}
@@ -204,6 +190,29 @@ export type MessstelleRequestBodyStatusEnum =
   (typeof MessstelleRequestBodyStatusEnum)[keyof typeof MessstelleRequestBodyStatusEnum];
 
 /**
+ * @export
+ */
+export const MessstelleRequestBodyFahrzeugklasseEnum = {
+  Rad: "RAD",
+  SummeKfz: "SUMME_KFZ",
+  ZweiPlusEins: "ZWEI_PLUS_EINS",
+  AchtPlusEins: "ACHT_PLUS_EINS",
+} as const;
+export type MessstelleRequestBodyFahrzeugklasseEnum =
+  (typeof MessstelleRequestBodyFahrzeugklasseEnum)[keyof typeof MessstelleRequestBodyFahrzeugklasseEnum];
+
+/**
+ * @export
+ */
+export const MessstelleRequestBodyDetektierteVerkehrsartEnum = {
+  Kfz: "KFZ",
+  Rad: "RAD",
+  Unbekannt: "UNBEKANNT",
+} as const;
+export type MessstelleRequestBodyDetektierteVerkehrsartEnum =
+  (typeof MessstelleRequestBodyDetektierteVerkehrsartEnum)[keyof typeof MessstelleRequestBodyDetektierteVerkehrsartEnum];
+
+/**
  * Check if a given object implements the MessstelleRequestBody interface.
  */
 export function instanceOfMessstelleRequestBody(
@@ -240,13 +249,11 @@ export function MessstelleRequestBodyFromJSONTyped(
       json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     bemerkung: json["bemerkung"] == null ? undefined : json["bemerkung"],
     fahrzeugklasse:
-      json["fahrzeugklasse"] == null
-        ? undefined
-        : FahrzeugklasseFromJSON(json["fahrzeugklasse"]),
+      json["fahrzeugklasse"] == null ? undefined : json["fahrzeugklasse"],
     detektierteVerkehrsart:
       json["detektierteVerkehrsart"] == null
         ? undefined
-        : VerkehrsartFromJSON(json["detektierteVerkehrsart"]),
+        : json["detektierteVerkehrsart"],
     hersteller: json["hersteller"] == null ? undefined : json["hersteller"],
     datumLetztePlausibleMessung:
       json["datumLetztePlausibleMessung"] == null
@@ -303,8 +310,8 @@ export function MessstelleRequestBodyToJSONTyped(
         : value["abbaudatum"].toISOString().substring(0, 10),
     stadtbezirkNummer: value["stadtbezirkNummer"],
     bemerkung: value["bemerkung"],
-    fahrzeugklasse: FahrzeugklasseToJSON(value["fahrzeugklasse"]),
-    detektierteVerkehrsart: VerkehrsartToJSON(value["detektierteVerkehrsart"]),
+    fahrzeugklasse: value["fahrzeugklasse"],
+    detektierteVerkehrsart: value["detektierteVerkehrsart"],
     hersteller: value["hersteller"],
     datumLetztePlausibleMessung:
       value["datumLetztePlausibleMessung"] == null

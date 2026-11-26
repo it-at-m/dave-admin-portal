@@ -12,16 +12,16 @@
  * Do not edit the class manually.
  */
 
-import type { QjsStrassenseiteValue } from "./QjsStrassenseiteValue";
+import type { StrassenseiteValue } from "./StrassenseiteValue";
 import type { VerkehrsbeziehungValue } from "./VerkehrsbeziehungValue";
 
 import { mapValues } from "../runtime";
 import {
-  QjsStrassenseiteValueFromJSON,
-  QjsStrassenseiteValueFromJSONTyped,
-  QjsStrassenseiteValueToJSON,
-  QjsStrassenseiteValueToJSONTyped,
-} from "./QjsStrassenseiteValue";
+  StrassenseiteValueFromJSON,
+  StrassenseiteValueFromJSONTyped,
+  StrassenseiteValueToJSON,
+  StrassenseiteValueToJSONTyped,
+} from "./StrassenseiteValue";
 import {
   VerkehrsbeziehungValueFromJSON,
   VerkehrsbeziehungValueFromJSONTyped,
@@ -40,31 +40,31 @@ export interface BelastungsplanQjsDataDTO {
    * @type {string}
    * @memberof BelastungsplanQjsDataDTO
    */
-  label: string;
+  label?: string;
   /**
    *
    * @type {boolean}
    * @memberof BelastungsplanQjsDataDTO
    */
-  filled: boolean;
+  filled?: boolean;
   /**
    *
    * @type {number}
    * @memberof BelastungsplanQjsDataDTO
    */
-  sumAll: number;
+  sumAll?: number;
   /**
    *
-   * @type {Array<QjsStrassenseiteValue>}
+   * @type {Array<StrassenseiteValue>}
    * @memberof BelastungsplanQjsDataDTO
    */
-  valuesStrassenseite: Array<QjsStrassenseiteValue>;
+  valuesStrassenseite?: Array<StrassenseiteValue>;
   /**
    *
    * @type {Array<VerkehrsbeziehungValue>}
    * @memberof BelastungsplanQjsDataDTO
    */
-  valuesVerkehrsbeziehungen: Array<VerkehrsbeziehungValue>;
+  valuesVerkehrsbeziehungen?: Array<VerkehrsbeziehungValue>;
 }
 
 /**
@@ -73,19 +73,6 @@ export interface BelastungsplanQjsDataDTO {
 export function instanceOfBelastungsplanQjsDataDTO(
   value: object
 ): value is BelastungsplanQjsDataDTO {
-  if (!("label" in value) || value["label"] === undefined) return false;
-  if (!("filled" in value) || value["filled"] === undefined) return false;
-  if (!("sumAll" in value) || value["sumAll"] === undefined) return false;
-  if (
-    !("valuesStrassenseite" in value) ||
-    value["valuesStrassenseite"] === undefined
-  )
-    return false;
-  if (
-    !("valuesVerkehrsbeziehungen" in value) ||
-    value["valuesVerkehrsbeziehungen"] === undefined
-  )
-    return false;
   return true;
 }
 
@@ -103,15 +90,21 @@ export function BelastungsplanQjsDataDTOFromJSONTyped(
     return json;
   }
   return {
-    label: json["label"],
-    filled: json["filled"],
-    sumAll: json["sumAll"],
-    valuesStrassenseite: (json["valuesStrassenseite"] as Array<any>).map(
-      QjsStrassenseiteValueFromJSON
-    ),
-    valuesVerkehrsbeziehungen: (
-      json["valuesVerkehrsbeziehungen"] as Array<any>
-    ).map(VerkehrsbeziehungValueFromJSON),
+    label: json["label"] == null ? undefined : json["label"],
+    filled: json["filled"] == null ? undefined : json["filled"],
+    sumAll: json["sumAll"] == null ? undefined : json["sumAll"],
+    valuesStrassenseite:
+      json["valuesStrassenseite"] == null
+        ? undefined
+        : (json["valuesStrassenseite"] as Array<any>).map(
+            StrassenseiteValueFromJSON
+          ),
+    valuesVerkehrsbeziehungen:
+      json["valuesVerkehrsbeziehungen"] == null
+        ? undefined
+        : (json["valuesVerkehrsbeziehungen"] as Array<any>).map(
+            VerkehrsbeziehungValueFromJSON
+          ),
   };
 }
 
@@ -133,11 +126,17 @@ export function BelastungsplanQjsDataDTOToJSONTyped(
     label: value["label"],
     filled: value["filled"],
     sumAll: value["sumAll"],
-    valuesStrassenseite: (value["valuesStrassenseite"] as Array<any>).map(
-      QjsStrassenseiteValueToJSON
-    ),
-    valuesVerkehrsbeziehungen: (
-      value["valuesVerkehrsbeziehungen"] as Array<any>
-    ).map(VerkehrsbeziehungValueToJSON),
+    valuesStrassenseite:
+      value["valuesStrassenseite"] == null
+        ? undefined
+        : (value["valuesStrassenseite"] as Array<any>).map(
+            StrassenseiteValueToJSON
+          ),
+    valuesVerkehrsbeziehungen:
+      value["valuesVerkehrsbeziehungen"] == null
+        ? undefined
+        : (value["valuesVerkehrsbeziehungen"] as Array<any>).map(
+            VerkehrsbeziehungValueToJSON
+          ),
   };
 }

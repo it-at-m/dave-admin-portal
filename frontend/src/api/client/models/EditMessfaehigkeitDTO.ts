@@ -12,22 +12,7 @@
  * Do not edit the class manually.
  */
 
-import type { Fahrzeugklasse } from "./Fahrzeugklasse";
-import type { ZaehldatenIntervall } from "./ZaehldatenIntervall";
-
 import { mapValues } from "../runtime";
-import {
-  FahrzeugklasseFromJSON,
-  FahrzeugklasseFromJSONTyped,
-  FahrzeugklasseToJSON,
-  FahrzeugklasseToJSONTyped,
-} from "./Fahrzeugklasse";
-import {
-  ZaehldatenIntervallFromJSON,
-  ZaehldatenIntervallFromJSONTyped,
-  ZaehldatenIntervallToJSON,
-  ZaehldatenIntervallToJSONTyped,
-} from "./ZaehldatenIntervall";
 
 /**
  *
@@ -49,17 +34,41 @@ export interface EditMessfaehigkeitDTO {
   gueltigAb?: string;
   /**
    *
-   * @type {Fahrzeugklasse}
+   * @type {string}
    * @memberof EditMessfaehigkeitDTO
    */
-  fahrzeugklasse?: Fahrzeugklasse;
+  fahrzeugklasse?: EditMessfaehigkeitDTOFahrzeugklasseEnum;
   /**
    *
-   * @type {ZaehldatenIntervall}
+   * @type {string}
    * @memberof EditMessfaehigkeitDTO
    */
-  intervall?: ZaehldatenIntervall;
+  intervall?: EditMessfaehigkeitDTOIntervallEnum;
 }
+
+/**
+ * @export
+ */
+export const EditMessfaehigkeitDTOFahrzeugklasseEnum = {
+  Rad: "RAD",
+  SummeKfz: "SUMME_KFZ",
+  ZweiPlusEins: "ZWEI_PLUS_EINS",
+  AchtPlusEins: "ACHT_PLUS_EINS",
+} as const;
+export type EditMessfaehigkeitDTOFahrzeugklasseEnum =
+  (typeof EditMessfaehigkeitDTOFahrzeugklasseEnum)[keyof typeof EditMessfaehigkeitDTOFahrzeugklasseEnum];
+
+/**
+ * @export
+ */
+export const EditMessfaehigkeitDTOIntervallEnum = {
+  StundeViertel: "STUNDE_VIERTEL",
+  StundeViertelEingeschraenkt: "STUNDE_VIERTEL_EINGESCHRAENKT",
+  StundeHalb: "STUNDE_HALB",
+  StundeKomplett: "STUNDE_KOMPLETT",
+} as const;
+export type EditMessfaehigkeitDTOIntervallEnum =
+  (typeof EditMessfaehigkeitDTOIntervallEnum)[keyof typeof EditMessfaehigkeitDTOIntervallEnum];
 
 /**
  * Check if a given object implements the EditMessfaehigkeitDTO interface.
@@ -87,13 +96,8 @@ export function EditMessfaehigkeitDTOFromJSONTyped(
     gueltigBis: json["gueltigBis"] == null ? undefined : json["gueltigBis"],
     gueltigAb: json["gueltigAb"] == null ? undefined : json["gueltigAb"],
     fahrzeugklasse:
-      json["fahrzeugklasse"] == null
-        ? undefined
-        : FahrzeugklasseFromJSON(json["fahrzeugklasse"]),
-    intervall:
-      json["intervall"] == null
-        ? undefined
-        : ZaehldatenIntervallFromJSON(json["intervall"]),
+      json["fahrzeugklasse"] == null ? undefined : json["fahrzeugklasse"],
+    intervall: json["intervall"] == null ? undefined : json["intervall"],
   };
 }
 
@@ -112,7 +116,7 @@ export function EditMessfaehigkeitDTOToJSONTyped(
   return {
     gueltigBis: value["gueltigBis"],
     gueltigAb: value["gueltigAb"],
-    fahrzeugklasse: FahrzeugklasseToJSON(value["fahrzeugklasse"]),
-    intervall: ZaehldatenIntervallToJSON(value["intervall"]),
+    fahrzeugklasse: value["fahrzeugklasse"],
+    intervall: value["intervall"],
   };
 }

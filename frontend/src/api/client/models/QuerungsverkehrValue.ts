@@ -12,15 +12,7 @@
  * Do not edit the class manually.
  */
 
-import type { Himmelsrichtung } from "./Himmelsrichtung";
-
 import { mapValues } from "../runtime";
-import {
-  HimmelsrichtungFromJSON,
-  HimmelsrichtungFromJSONTyped,
-  HimmelsrichtungToJSON,
-  HimmelsrichtungToJSONTyped,
-} from "./Himmelsrichtung";
 
 /**
  *
@@ -30,17 +22,33 @@ import {
 export interface QuerungsverkehrValue {
   /**
    *
-   * @type {Himmelsrichtung}
+   * @type {string}
    * @memberof QuerungsverkehrValue
    */
-  richtung: Himmelsrichtung;
+  richtung?: QuerungsverkehrValueRichtungEnum;
   /**
    *
    * @type {number}
    * @memberof QuerungsverkehrValue
    */
-  value: number;
+  value?: number;
 }
+
+/**
+ * @export
+ */
+export const QuerungsverkehrValueRichtungEnum = {
+  N: "N",
+  No: "NO",
+  O: "O",
+  So: "SO",
+  S: "S",
+  Sw: "SW",
+  W: "W",
+  Nw: "NW",
+} as const;
+export type QuerungsverkehrValueRichtungEnum =
+  (typeof QuerungsverkehrValueRichtungEnum)[keyof typeof QuerungsverkehrValueRichtungEnum];
 
 /**
  * Check if a given object implements the QuerungsverkehrValue interface.
@@ -48,8 +56,6 @@ export interface QuerungsverkehrValue {
 export function instanceOfQuerungsverkehrValue(
   value: object
 ): value is QuerungsverkehrValue {
-  if (!("richtung" in value) || value["richtung"] === undefined) return false;
-  if (!("value" in value) || value["value"] === undefined) return false;
   return true;
 }
 
@@ -65,8 +71,8 @@ export function QuerungsverkehrValueFromJSONTyped(
     return json;
   }
   return {
-    richtung: HimmelsrichtungFromJSON(json["richtung"]),
-    value: json["value"],
+    richtung: json["richtung"] == null ? undefined : json["richtung"],
+    value: json["value"] == null ? undefined : json["value"],
   };
 }
 
@@ -83,7 +89,7 @@ export function QuerungsverkehrValueToJSONTyped(
   }
 
   return {
-    richtung: HimmelsrichtungToJSON(value["richtung"]),
+    richtung: value["richtung"],
     value: value["value"],
   };
 }

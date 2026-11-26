@@ -25,57 +25,55 @@ import {
 /**
  *
  * @export
- * @interface GenerateZaehlungPdfRequest
+ * @interface GeneratePdfRequest
  */
-export interface GenerateZaehlungPdfRequest {
+export interface GeneratePdfRequest {
   /**
    *
    * @type {string}
-   * @memberof GenerateZaehlungPdfRequest
+   * @memberof GeneratePdfRequest
    */
   department: string;
   /**
    *
    * @type {OptionsDTO}
-   * @memberof GenerateZaehlungPdfRequest
+   * @memberof GeneratePdfRequest
    */
   options: OptionsDTO;
   /**
    *
    * @type {string}
-   * @memberof GenerateZaehlungPdfRequest
+   * @memberof GeneratePdfRequest
    */
   chartAsBase64Png?: string;
   /**
    *
    * @type {string}
-   * @memberof GenerateZaehlungPdfRequest
+   * @memberof GeneratePdfRequest
    */
   schematischeUebersichtAsBase64Png?: string;
 }
 
 /**
- * Check if a given object implements the GenerateZaehlungPdfRequest interface.
+ * Check if a given object implements the GeneratePdfRequest interface.
  */
-export function instanceOfGenerateZaehlungPdfRequest(
+export function instanceOfGeneratePdfRequest(
   value: object
-): value is GenerateZaehlungPdfRequest {
+): value is GeneratePdfRequest {
   if (!("department" in value) || value["department"] === undefined)
     return false;
   if (!("options" in value) || value["options"] === undefined) return false;
   return true;
 }
 
-export function GenerateZaehlungPdfRequestFromJSON(
-  json: any
-): GenerateZaehlungPdfRequest {
-  return GenerateZaehlungPdfRequestFromJSONTyped(json, false);
+export function GeneratePdfRequestFromJSON(json: any): GeneratePdfRequest {
+  return GeneratePdfRequestFromJSONTyped(json, false);
 }
 
-export function GenerateZaehlungPdfRequestFromJSONTyped(
+export function GeneratePdfRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean
-): GenerateZaehlungPdfRequest {
+): GeneratePdfRequest {
   if (json == null) {
     return json;
   }
@@ -91,14 +89,12 @@ export function GenerateZaehlungPdfRequestFromJSONTyped(
   };
 }
 
-export function GenerateZaehlungPdfRequestToJSON(
-  json: any
-): GenerateZaehlungPdfRequest {
-  return GenerateZaehlungPdfRequestToJSONTyped(json, false);
+export function GeneratePdfRequestToJSON(json: any): GeneratePdfRequest {
+  return GeneratePdfRequestToJSONTyped(json, false);
 }
 
-export function GenerateZaehlungPdfRequestToJSONTyped(
-  value?: GenerateZaehlungPdfRequest | null,
+export function GeneratePdfRequestToJSONTyped(
+  value?: GeneratePdfRequest | null,
   ignoreDiscriminator: boolean = false
 ): any {
   if (value == null) {

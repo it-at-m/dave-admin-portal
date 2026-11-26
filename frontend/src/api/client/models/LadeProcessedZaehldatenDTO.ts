@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import type { LadeProcessedZaehldatenBelastungsplanDTO } from "./LadeProcessedZaehldatenBelastungsplanDTO";
+import type { LadeProcessedZaehldatenDTOZaehldatenBelastungsplan } from "./LadeProcessedZaehldatenDTOZaehldatenBelastungsplan";
 import type { LadeZaehldatenHeatmapDTO } from "./LadeZaehldatenHeatmapDTO";
 import type { LadeZaehldatenSteplineDTO } from "./LadeZaehldatenSteplineDTO";
 import type { LadeZaehldatenTableDTO } from "./LadeZaehldatenTableDTO";
@@ -20,11 +20,11 @@ import type { LadeZaehldatenZeitreiheDTO } from "./LadeZaehldatenZeitreiheDTO";
 
 import { mapValues } from "../runtime";
 import {
-  LadeProcessedZaehldatenBelastungsplanDTOFromJSON,
-  LadeProcessedZaehldatenBelastungsplanDTOFromJSONTyped,
-  LadeProcessedZaehldatenBelastungsplanDTOToJSON,
-  LadeProcessedZaehldatenBelastungsplanDTOToJSONTyped,
-} from "./LadeProcessedZaehldatenBelastungsplanDTO";
+  LadeProcessedZaehldatenDTOZaehldatenBelastungsplanFromJSON,
+  LadeProcessedZaehldatenDTOZaehldatenBelastungsplanFromJSONTyped,
+  LadeProcessedZaehldatenDTOZaehldatenBelastungsplanToJSON,
+  LadeProcessedZaehldatenDTOZaehldatenBelastungsplanToJSONTyped,
+} from "./LadeProcessedZaehldatenDTOZaehldatenBelastungsplan";
 import {
   LadeZaehldatenHeatmapDTOFromJSON,
   LadeZaehldatenHeatmapDTOFromJSONTyped,
@@ -61,31 +61,31 @@ export interface LadeProcessedZaehldatenDTO {
    * @type {LadeZaehldatenTableDTO}
    * @memberof LadeProcessedZaehldatenDTO
    */
-  zaehldatenTable: LadeZaehldatenTableDTO;
+  zaehldatenTable?: LadeZaehldatenTableDTO;
   /**
    *
    * @type {LadeZaehldatenSteplineDTO}
    * @memberof LadeProcessedZaehldatenDTO
    */
-  zaehldatenStepline: LadeZaehldatenSteplineDTO;
+  zaehldatenStepline?: LadeZaehldatenSteplineDTO;
   /**
    *
    * @type {LadeZaehldatenHeatmapDTO}
    * @memberof LadeProcessedZaehldatenDTO
    */
-  zaehldatenHeatmap: LadeZaehldatenHeatmapDTO;
+  zaehldatenHeatmap?: LadeZaehldatenHeatmapDTO;
   /**
    *
-   * @type {LadeProcessedZaehldatenBelastungsplanDTO}
+   * @type {LadeProcessedZaehldatenDTOZaehldatenBelastungsplan}
    * @memberof LadeProcessedZaehldatenDTO
    */
-  zaehldatenBelastungsplan: LadeProcessedZaehldatenBelastungsplanDTO;
+  zaehldatenBelastungsplan?: LadeProcessedZaehldatenDTOZaehldatenBelastungsplan;
   /**
    *
    * @type {LadeZaehldatenZeitreiheDTO}
    * @memberof LadeProcessedZaehldatenDTO
    */
-  zaehldatenZeitreihe: LadeZaehldatenZeitreiheDTO;
+  zaehldatenZeitreihe?: LadeZaehldatenZeitreiheDTO;
 }
 
 /**
@@ -94,28 +94,6 @@ export interface LadeProcessedZaehldatenDTO {
 export function instanceOfLadeProcessedZaehldatenDTO(
   value: object
 ): value is LadeProcessedZaehldatenDTO {
-  if (!("zaehldatenTable" in value) || value["zaehldatenTable"] === undefined)
-    return false;
-  if (
-    !("zaehldatenStepline" in value) ||
-    value["zaehldatenStepline"] === undefined
-  )
-    return false;
-  if (
-    !("zaehldatenHeatmap" in value) ||
-    value["zaehldatenHeatmap"] === undefined
-  )
-    return false;
-  if (
-    !("zaehldatenBelastungsplan" in value) ||
-    value["zaehldatenBelastungsplan"] === undefined
-  )
-    return false;
-  if (
-    !("zaehldatenZeitreihe" in value) ||
-    value["zaehldatenZeitreihe"] === undefined
-  )
-    return false;
   return true;
 }
 
@@ -133,19 +111,28 @@ export function LadeProcessedZaehldatenDTOFromJSONTyped(
     return json;
   }
   return {
-    zaehldatenTable: LadeZaehldatenTableDTOFromJSON(json["zaehldatenTable"]),
-    zaehldatenStepline: LadeZaehldatenSteplineDTOFromJSON(
-      json["zaehldatenStepline"]
-    ),
-    zaehldatenHeatmap: LadeZaehldatenHeatmapDTOFromJSON(
-      json["zaehldatenHeatmap"]
-    ),
-    zaehldatenBelastungsplan: LadeProcessedZaehldatenBelastungsplanDTOFromJSON(
-      json["zaehldatenBelastungsplan"]
-    ),
-    zaehldatenZeitreihe: LadeZaehldatenZeitreiheDTOFromJSON(
-      json["zaehldatenZeitreihe"]
-    ),
+    zaehldatenTable:
+      json["zaehldatenTable"] == null
+        ? undefined
+        : LadeZaehldatenTableDTOFromJSON(json["zaehldatenTable"]),
+    zaehldatenStepline:
+      json["zaehldatenStepline"] == null
+        ? undefined
+        : LadeZaehldatenSteplineDTOFromJSON(json["zaehldatenStepline"]),
+    zaehldatenHeatmap:
+      json["zaehldatenHeatmap"] == null
+        ? undefined
+        : LadeZaehldatenHeatmapDTOFromJSON(json["zaehldatenHeatmap"]),
+    zaehldatenBelastungsplan:
+      json["zaehldatenBelastungsplan"] == null
+        ? undefined
+        : LadeProcessedZaehldatenDTOZaehldatenBelastungsplanFromJSON(
+            json["zaehldatenBelastungsplan"]
+          ),
+    zaehldatenZeitreihe:
+      json["zaehldatenZeitreihe"] == null
+        ? undefined
+        : LadeZaehldatenZeitreiheDTOFromJSON(json["zaehldatenZeitreihe"]),
   };
 }
 
@@ -171,9 +158,10 @@ export function LadeProcessedZaehldatenDTOToJSONTyped(
     zaehldatenHeatmap: LadeZaehldatenHeatmapDTOToJSON(
       value["zaehldatenHeatmap"]
     ),
-    zaehldatenBelastungsplan: LadeProcessedZaehldatenBelastungsplanDTOToJSON(
-      value["zaehldatenBelastungsplan"]
-    ),
+    zaehldatenBelastungsplan:
+      LadeProcessedZaehldatenDTOZaehldatenBelastungsplanToJSON(
+        value["zaehldatenBelastungsplan"]
+      ),
     zaehldatenZeitreihe: LadeZaehldatenZeitreiheDTOToJSON(
       value["zaehldatenZeitreihe"]
     ),

@@ -12,17 +12,10 @@
  * Do not edit the class manually.
  */
 
-import type { Himmelsrichtung } from "./Himmelsrichtung";
 import type { HochrechnungsfaktorDTO } from "./HochrechnungsfaktorDTO";
 import type { ZeitintervallDTO } from "./ZeitintervallDTO";
 
 import { mapValues } from "../runtime";
-import {
-  HimmelsrichtungFromJSON,
-  HimmelsrichtungFromJSONTyped,
-  HimmelsrichtungToJSON,
-  HimmelsrichtungToJSONTyped,
-} from "./Himmelsrichtung";
 import {
   HochrechnungsfaktorDTOFromJSON,
   HochrechnungsfaktorDTOFromJSONTyped,
@@ -104,10 +97,10 @@ export interface BearbeiteVerkehrsbeziehungDTO {
   vorbei?: boolean;
   /**
    *
-   * @type {Himmelsrichtung}
+   * @type {string}
    * @memberof BearbeiteVerkehrsbeziehungDTO
    */
-  strassenseite?: Himmelsrichtung;
+  strassenseite?: BearbeiteVerkehrsbeziehungDTOStrassenseiteEnum;
   /**
    *
    * @type {string}
@@ -145,6 +138,22 @@ export interface BearbeiteVerkehrsbeziehungDTO {
    */
   nachStrnr?: string;
 }
+
+/**
+ * @export
+ */
+export const BearbeiteVerkehrsbeziehungDTOStrassenseiteEnum = {
+  N: "N",
+  No: "NO",
+  O: "O",
+  So: "SO",
+  S: "S",
+  Sw: "SW",
+  W: "W",
+  Nw: "NW",
+} as const;
+export type BearbeiteVerkehrsbeziehungDTOStrassenseiteEnum =
+  (typeof BearbeiteVerkehrsbeziehungDTOStrassenseiteEnum)[keyof typeof BearbeiteVerkehrsbeziehungDTOStrassenseiteEnum];
 
 /**
  * Check if a given object implements the BearbeiteVerkehrsbeziehungDTO interface.
@@ -186,9 +195,7 @@ export function BearbeiteVerkehrsbeziehungDTOFromJSONTyped(
     heraus: json["heraus"] == null ? undefined : json["heraus"],
     vorbei: json["vorbei"] == null ? undefined : json["vorbei"],
     strassenseite:
-      json["strassenseite"] == null
-        ? undefined
-        : HimmelsrichtungFromJSON(json["strassenseite"]),
+      json["strassenseite"] == null ? undefined : json["strassenseite"],
     vonknotvonstrnr:
       json["vonknotvonstrnr"] == null ? undefined : json["vonknotvonstrnr"],
     nachknotvonstrnr:
@@ -234,7 +241,7 @@ export function BearbeiteVerkehrsbeziehungDTOToJSONTyped(
     hinein: value["hinein"],
     heraus: value["heraus"],
     vorbei: value["vorbei"],
-    strassenseite: HimmelsrichtungToJSON(value["strassenseite"]),
+    strassenseite: value["strassenseite"],
     vonknotvonstrnr: value["vonknotvonstrnr"],
     nachknotvonstrnr: value["nachknotvonstrnr"],
     von_strnr: value["vonStrnr"],

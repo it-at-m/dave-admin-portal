@@ -33,13 +33,19 @@ export interface TenantConfigurationDTO {
    * @type {string}
    * @memberof TenantConfigurationDTO
    */
-  datenportalHeader: string;
+  city?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TenantConfigurationDTO
+   */
+  datenportalHeader?: string;
   /**
    *
    * @type {MapConfigurationDTO}
    * @memberof TenantConfigurationDTO
    */
-  mapConfiguration: MapConfigurationDTO;
+  mapConfiguration?: MapConfigurationDTO;
 }
 
 /**
@@ -48,13 +54,6 @@ export interface TenantConfigurationDTO {
 export function instanceOfTenantConfigurationDTO(
   value: object
 ): value is TenantConfigurationDTO {
-  if (
-    !("datenportalHeader" in value) ||
-    value["datenportalHeader"] === undefined
-  )
-    return false;
-  if (!("mapConfiguration" in value) || value["mapConfiguration"] === undefined)
-    return false;
   return true;
 }
 
@@ -72,8 +71,13 @@ export function TenantConfigurationDTOFromJSONTyped(
     return json;
   }
   return {
-    datenportalHeader: json["datenportalHeader"],
-    mapConfiguration: MapConfigurationDTOFromJSON(json["mapConfiguration"]),
+    city: json["city"] == null ? undefined : json["city"],
+    datenportalHeader:
+      json["datenportalHeader"] == null ? undefined : json["datenportalHeader"],
+    mapConfiguration:
+      json["mapConfiguration"] == null
+        ? undefined
+        : MapConfigurationDTOFromJSON(json["mapConfiguration"]),
   };
 }
 
@@ -92,6 +96,7 @@ export function TenantConfigurationDTOToJSONTyped(
   }
 
   return {
+    city: value["city"],
     datenportalHeader: value["datenportalHeader"],
     mapConfiguration: MapConfigurationDTOToJSON(value["mapConfiguration"]),
   };

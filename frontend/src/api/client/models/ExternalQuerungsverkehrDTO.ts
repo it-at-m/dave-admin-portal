@@ -12,17 +12,10 @@
  * Do not edit the class manually.
  */
 
-import type { Himmelsrichtung } from "./Himmelsrichtung";
 import type { HochrechnungsfaktorDTO } from "./HochrechnungsfaktorDTO";
 import type { ZeitintervallDTO } from "./ZeitintervallDTO";
 
 import { mapValues } from "../runtime";
-import {
-  HimmelsrichtungFromJSON,
-  HimmelsrichtungFromJSONTyped,
-  HimmelsrichtungToJSON,
-  HimmelsrichtungToJSONTyped,
-} from "./Himmelsrichtung";
 import {
   HochrechnungsfaktorDTOFromJSON,
   HochrechnungsfaktorDTOFromJSONTyped,
@@ -68,11 +61,27 @@ export interface ExternalQuerungsverkehrDTO {
   knotenarm?: number;
   /**
    *
-   * @type {Himmelsrichtung}
+   * @type {string}
    * @memberof ExternalQuerungsverkehrDTO
    */
-  richtung?: Himmelsrichtung;
+  richtung?: ExternalQuerungsverkehrDTORichtungEnum;
 }
+
+/**
+ * @export
+ */
+export const ExternalQuerungsverkehrDTORichtungEnum = {
+  N: "N",
+  No: "NO",
+  O: "O",
+  So: "SO",
+  S: "S",
+  Sw: "SW",
+  W: "W",
+  Nw: "NW",
+} as const;
+export type ExternalQuerungsverkehrDTORichtungEnum =
+  (typeof ExternalQuerungsverkehrDTORichtungEnum)[keyof typeof ExternalQuerungsverkehrDTORichtungEnum];
 
 /**
  * Check if a given object implements the ExternalQuerungsverkehrDTO interface.
@@ -107,10 +116,7 @@ export function ExternalQuerungsverkehrDTOFromJSONTyped(
         ? undefined
         : HochrechnungsfaktorDTOFromJSON(json["hochrechnungsfaktor"]),
     knotenarm: json["knotenarm"] == null ? undefined : json["knotenarm"],
-    richtung:
-      json["richtung"] == null
-        ? undefined
-        : HimmelsrichtungFromJSON(json["richtung"]),
+    richtung: json["richtung"] == null ? undefined : json["richtung"],
   };
 }
 
@@ -138,6 +144,6 @@ export function ExternalQuerungsverkehrDTOToJSONTyped(
       value["hochrechnungsfaktor"]
     ),
     knotenarm: value["knotenarm"],
-    richtung: HimmelsrichtungToJSON(value["richtung"]),
+    richtung: value["richtung"],
   };
 }

@@ -92,13 +92,13 @@ export interface BearbeiteZaehlungDTO {
    * @type {number}
    * @memberof BearbeiteZaehlungDTO
    */
-  lat: number;
+  lat?: number;
   /**
    *
    * @type {number}
    * @memberof BearbeiteZaehlungDTO
    */
-  lng: number;
+  lng?: number;
   /**
    *
    * @type {string}
@@ -140,13 +140,13 @@ export interface BearbeiteZaehlungDTO {
    * @type {boolean}
    * @memberof BearbeiteZaehlungDTO
    */
-  sonderzaehlung: boolean;
+  sonderzaehlung?: boolean;
   /**
    *
    * @type {boolean}
    * @memberof BearbeiteZaehlungDTO
    */
-  kreisverkehr: boolean;
+  kreisverkehr?: boolean;
   /**
    *
    * @type {Array<string>}
@@ -170,7 +170,7 @@ export interface BearbeiteZaehlungDTO {
    * @type {number}
    * @memberof BearbeiteZaehlungDTO
    */
-  zaehlIntervall: number;
+  zaehlIntervall?: number;
   /**
    *
    * @type {string}
@@ -248,7 +248,7 @@ export interface BearbeiteZaehlungDTO {
    * @type {boolean}
    * @memberof BearbeiteZaehlungDTO
    */
-  unreadMessagesMobilitaetsreferat: boolean;
+  unreadMessagesMobilitaetsreferat?: boolean;
   /**
    *
    * @type {string}
@@ -284,19 +284,6 @@ export type BearbeiteZaehlungDTOKategorienEnum =
 export function instanceOfBearbeiteZaehlungDTO(
   value: object
 ): value is BearbeiteZaehlungDTO {
-  if (!("lat" in value) || value["lat"] === undefined) return false;
-  if (!("lng" in value) || value["lng"] === undefined) return false;
-  if (!("sonderzaehlung" in value) || value["sonderzaehlung"] === undefined)
-    return false;
-  if (!("kreisverkehr" in value) || value["kreisverkehr"] === undefined)
-    return false;
-  if (!("zaehlIntervall" in value) || value["zaehlIntervall"] === undefined)
-    return false;
-  if (
-    !("unreadMessagesMobilitaetsreferat" in value) ||
-    value["unreadMessagesMobilitaetsreferat"] === undefined
-  )
-    return false;
   return true;
 }
 
@@ -316,8 +303,8 @@ export function BearbeiteZaehlungDTOFromJSONTyped(
     datum: json["datum"] == null ? undefined : new Date(json["datum"]),
     zaehlart: json["zaehlart"] == null ? undefined : json["zaehlart"],
     punkt: json["punkt"] == null ? undefined : GeoPointFromJSON(json["punkt"]),
-    lat: json["lat"],
-    lng: json["lng"],
+    lat: json["lat"] == null ? undefined : json["lat"],
+    lng: json["lng"] == null ? undefined : json["lng"],
     tagesTyp: json["tagesTyp"] == null ? undefined : json["tagesTyp"],
     monat: json["monat"] == null ? undefined : json["monat"],
     jahreszeit: json["jahreszeit"] == null ? undefined : json["jahreszeit"],
@@ -326,8 +313,10 @@ export function BearbeiteZaehlungDTOFromJSONTyped(
     projektName: json["projektName"] == null ? undefined : json["projektName"],
     kreuzungsname:
       json["kreuzungsname"] == null ? undefined : json["kreuzungsname"],
-    sonderzaehlung: json["sonderzaehlung"],
-    kreisverkehr: json["kreisverkehr"],
+    sonderzaehlung:
+      json["sonderzaehlung"] == null ? undefined : json["sonderzaehlung"],
+    kreisverkehr:
+      json["kreisverkehr"] == null ? undefined : json["kreisverkehr"],
     kategorien: json["kategorien"] == null ? undefined : json["kategorien"],
     zaehlsituation:
       json["zaehlsituation"] == null ? undefined : json["zaehlsituation"],
@@ -335,7 +324,8 @@ export function BearbeiteZaehlungDTOFromJSONTyped(
       json["zaehlsituationErweitert"] == null
         ? undefined
         : json["zaehlsituationErweitert"],
-    zaehlIntervall: json["zaehlIntervall"],
+    zaehlIntervall:
+      json["zaehlIntervall"] == null ? undefined : json["zaehlIntervall"],
     wetter: json["wetter"] == null ? undefined : json["wetter"],
     status: json["status"] == null ? undefined : json["status"],
     quelle: json["quelle"] == null ? undefined : json["quelle"],
@@ -370,7 +360,10 @@ export function BearbeiteZaehlungDTOFromJSONTyped(
         : (json["verkehrsbeziehungen"] as Array<any>).map(
             BearbeiteVerkehrsbeziehungDTOFromJSON
           ),
-    unreadMessagesMobilitaetsreferat: json["unreadMessagesMobilitaetsreferat"],
+    unreadMessagesMobilitaetsreferat:
+      json["unreadMessagesMobilitaetsreferat"] == null
+        ? undefined
+        : json["unreadMessagesMobilitaetsreferat"],
     dienstleisterkennung:
       json["dienstleisterkennung"] == null
         ? undefined

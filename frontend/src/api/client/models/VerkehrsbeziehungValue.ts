@@ -12,15 +12,7 @@
  * Do not edit the class manually.
  */
 
-import type { Himmelsrichtung } from "./Himmelsrichtung";
-
 import { mapValues } from "../runtime";
-import {
-  HimmelsrichtungFromJSON,
-  HimmelsrichtungFromJSONTyped,
-  HimmelsrichtungToJSON,
-  HimmelsrichtungToJSONTyped,
-} from "./Himmelsrichtung";
 
 /**
  *
@@ -33,26 +25,42 @@ export interface VerkehrsbeziehungValue {
    * @type {number}
    * @memberof VerkehrsbeziehungValue
    */
-  von: number;
+  von?: number;
   /**
    *
    * @type {number}
    * @memberof VerkehrsbeziehungValue
    */
-  nach: number;
+  nach?: number;
   /**
    *
-   * @type {Himmelsrichtung}
+   * @type {string}
    * @memberof VerkehrsbeziehungValue
    */
-  strassenseite: Himmelsrichtung;
+  strassenseite?: VerkehrsbeziehungValueStrassenseiteEnum;
   /**
    *
    * @type {number}
    * @memberof VerkehrsbeziehungValue
    */
-  value: number;
+  value?: number;
 }
+
+/**
+ * @export
+ */
+export const VerkehrsbeziehungValueStrassenseiteEnum = {
+  N: "N",
+  No: "NO",
+  O: "O",
+  So: "SO",
+  S: "S",
+  Sw: "SW",
+  W: "W",
+  Nw: "NW",
+} as const;
+export type VerkehrsbeziehungValueStrassenseiteEnum =
+  (typeof VerkehrsbeziehungValueStrassenseiteEnum)[keyof typeof VerkehrsbeziehungValueStrassenseiteEnum];
 
 /**
  * Check if a given object implements the VerkehrsbeziehungValue interface.
@@ -60,11 +68,6 @@ export interface VerkehrsbeziehungValue {
 export function instanceOfVerkehrsbeziehungValue(
   value: object
 ): value is VerkehrsbeziehungValue {
-  if (!("von" in value) || value["von"] === undefined) return false;
-  if (!("nach" in value) || value["nach"] === undefined) return false;
-  if (!("strassenseite" in value) || value["strassenseite"] === undefined)
-    return false;
-  if (!("value" in value) || value["value"] === undefined) return false;
   return true;
 }
 
@@ -82,10 +85,11 @@ export function VerkehrsbeziehungValueFromJSONTyped(
     return json;
   }
   return {
-    von: json["von"],
-    nach: json["nach"],
-    strassenseite: HimmelsrichtungFromJSON(json["strassenseite"]),
-    value: json["value"],
+    von: json["von"] == null ? undefined : json["von"],
+    nach: json["nach"] == null ? undefined : json["nach"],
+    strassenseite:
+      json["strassenseite"] == null ? undefined : json["strassenseite"],
+    value: json["value"] == null ? undefined : json["value"],
   };
 }
 
@@ -106,7 +110,7 @@ export function VerkehrsbeziehungValueToJSONTyped(
   return {
     von: value["von"],
     nach: value["nach"],
-    strassenseite: HimmelsrichtungToJSON(value["strassenseite"]),
+    strassenseite: value["strassenseite"],
     value: value["value"],
   };
 }

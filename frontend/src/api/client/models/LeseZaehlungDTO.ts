@@ -80,7 +80,7 @@ export interface LeseZaehlungDTO {
    * @type {number}
    * @memberof LeseZaehlungDTO
    */
-  jahr: number;
+  jahr?: number;
   /**
    *
    * @type {string}
@@ -170,7 +170,7 @@ export interface LeseZaehlungDTO {
    * @type {number}
    * @memberof LeseZaehlungDTO
    */
-  zaehlIntervall: number;
+  zaehlIntervall?: number;
   /**
    *
    * @type {string}
@@ -290,9 +290,6 @@ export type LeseZaehlungDTOKategorienEnum =
 export function instanceOfLeseZaehlungDTO(
   value: object
 ): value is LeseZaehlungDTO {
-  if (!("jahr" in value) || value["jahr"] === undefined) return false;
-  if (!("zaehlIntervall" in value) || value["zaehlIntervall"] === undefined)
-    return false;
   return true;
 }
 
@@ -310,7 +307,7 @@ export function LeseZaehlungDTOFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     datum: json["datum"] == null ? undefined : new Date(json["datum"]),
-    jahr: json["jahr"],
+    jahr: json["jahr"] == null ? undefined : json["jahr"],
     monat: json["monat"] == null ? undefined : json["monat"],
     jahreszeit: json["jahreszeit"] == null ? undefined : json["jahreszeit"],
     zaehlart: json["zaehlart"] == null ? undefined : json["zaehlart"],
@@ -333,7 +330,8 @@ export function LeseZaehlungDTOFromJSONTyped(
       json["zaehlsituationErweitert"] == null
         ? undefined
         : json["zaehlsituationErweitert"],
-    zaehlIntervall: json["zaehlIntervall"],
+    zaehlIntervall:
+      json["zaehlIntervall"] == null ? undefined : json["zaehlIntervall"],
     wetter: json["wetter"] == null ? undefined : json["wetter"],
     zaehldauer: json["zaehldauer"] == null ? undefined : json["zaehldauer"],
     quelle: json["quelle"] == null ? undefined : json["quelle"],

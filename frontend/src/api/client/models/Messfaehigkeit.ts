@@ -12,22 +12,7 @@
  * Do not edit the class manually.
  */
 
-import type { Fahrzeugklasse } from "./Fahrzeugklasse";
-import type { ZaehldatenIntervall } from "./ZaehldatenIntervall";
-
 import { mapValues } from "../runtime";
-import {
-  FahrzeugklasseFromJSON,
-  FahrzeugklasseFromJSONTyped,
-  FahrzeugklasseToJSON,
-  FahrzeugklasseToJSONTyped,
-} from "./Fahrzeugklasse";
-import {
-  ZaehldatenIntervallFromJSON,
-  ZaehldatenIntervallFromJSONTyped,
-  ZaehldatenIntervallToJSON,
-  ZaehldatenIntervallToJSONTyped,
-} from "./ZaehldatenIntervall";
 
 /**
  *
@@ -49,17 +34,41 @@ export interface Messfaehigkeit {
   gueltigBis?: Date;
   /**
    *
-   * @type {Fahrzeugklasse}
+   * @type {string}
    * @memberof Messfaehigkeit
    */
-  fahrzeugklasse?: Fahrzeugklasse;
+  fahrzeugklasse?: MessfaehigkeitFahrzeugklasseEnum;
   /**
    *
-   * @type {ZaehldatenIntervall}
+   * @type {string}
    * @memberof Messfaehigkeit
    */
-  intervall?: ZaehldatenIntervall;
+  intervall?: MessfaehigkeitIntervallEnum;
 }
+
+/**
+ * @export
+ */
+export const MessfaehigkeitFahrzeugklasseEnum = {
+  Rad: "RAD",
+  SummeKfz: "SUMME_KFZ",
+  ZweiPlusEins: "ZWEI_PLUS_EINS",
+  AchtPlusEins: "ACHT_PLUS_EINS",
+} as const;
+export type MessfaehigkeitFahrzeugklasseEnum =
+  (typeof MessfaehigkeitFahrzeugklasseEnum)[keyof typeof MessfaehigkeitFahrzeugklasseEnum];
+
+/**
+ * @export
+ */
+export const MessfaehigkeitIntervallEnum = {
+  StundeViertel: "STUNDE_VIERTEL",
+  StundeViertelEingeschraenkt: "STUNDE_VIERTEL_EINGESCHRAENKT",
+  StundeHalb: "STUNDE_HALB",
+  StundeKomplett: "STUNDE_KOMPLETT",
+} as const;
+export type MessfaehigkeitIntervallEnum =
+  (typeof MessfaehigkeitIntervallEnum)[keyof typeof MessfaehigkeitIntervallEnum];
 
 /**
  * Check if a given object implements the Messfaehigkeit interface.
@@ -87,13 +96,8 @@ export function MessfaehigkeitFromJSONTyped(
     gueltigBis:
       json["gueltigBis"] == null ? undefined : new Date(json["gueltigBis"]),
     fahrzeugklasse:
-      json["fahrzeugklasse"] == null
-        ? undefined
-        : FahrzeugklasseFromJSON(json["fahrzeugklasse"]),
-    intervall:
-      json["intervall"] == null
-        ? undefined
-        : ZaehldatenIntervallFromJSON(json["intervall"]),
+      json["fahrzeugklasse"] == null ? undefined : json["fahrzeugklasse"],
+    intervall: json["intervall"] == null ? undefined : json["intervall"],
   };
 }
 
@@ -118,7 +122,7 @@ export function MessfaehigkeitToJSONTyped(
       value["gueltigBis"] == null
         ? undefined
         : value["gueltigBis"].toISOString().substring(0, 10),
-    fahrzeugklasse: FahrzeugklasseToJSON(value["fahrzeugklasse"]),
-    intervall: ZaehldatenIntervallToJSON(value["intervall"]),
+    fahrzeugklasse: value["fahrzeugklasse"],
+    intervall: value["intervall"],
   };
 }

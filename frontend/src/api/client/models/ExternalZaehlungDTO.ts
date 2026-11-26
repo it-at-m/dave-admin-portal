@@ -103,13 +103,13 @@ export interface ExternalZaehlungDTO {
    * @type {boolean}
    * @memberof ExternalZaehlungDTO
    */
-  sonderzaehlung: boolean;
+  sonderzaehlung?: boolean;
   /**
    *
    * @type {boolean}
    * @memberof ExternalZaehlungDTO
    */
-  kreisverkehr: boolean;
+  kreisverkehr?: boolean;
   /**
    *
    * @type {Array<string>}
@@ -133,7 +133,7 @@ export interface ExternalZaehlungDTO {
    * @type {number}
    * @memberof ExternalZaehlungDTO
    */
-  zaehlIntervall: number;
+  zaehlIntervall?: number;
   /**
    *
    * @type {string}
@@ -196,10 +196,10 @@ export interface ExternalZaehlungDTO {
   zaehlstelleNummer?: string;
   /**
    *
-   * @type {string}
+   * @type {number}
    * @memberof ExternalZaehlungDTO
    */
-  zaehlstelleStadtbezirk?: string;
+  zaehlstelleStadtbezirkNummer?: number;
   /**
    *
    * @type {GeoPoint}
@@ -217,7 +217,7 @@ export interface ExternalZaehlungDTO {
    * @type {boolean}
    * @memberof ExternalZaehlungDTO
    */
-  unreadMessagesDienstleister: boolean;
+  unreadMessagesDienstleister?: boolean;
   /**
    *
    * @type {string}
@@ -253,17 +253,6 @@ export type ExternalZaehlungDTOKategorienEnum =
 export function instanceOfExternalZaehlungDTO(
   value: object
 ): value is ExternalZaehlungDTO {
-  if (!("sonderzaehlung" in value) || value["sonderzaehlung"] === undefined)
-    return false;
-  if (!("kreisverkehr" in value) || value["kreisverkehr"] === undefined)
-    return false;
-  if (!("zaehlIntervall" in value) || value["zaehlIntervall"] === undefined)
-    return false;
-  if (
-    !("unreadMessagesDienstleister" in value) ||
-    value["unreadMessagesDienstleister"] === undefined
-  )
-    return false;
   return true;
 }
 
@@ -288,8 +277,10 @@ export function ExternalZaehlungDTOFromJSONTyped(
     projektName: json["projektName"] == null ? undefined : json["projektName"],
     kreuzungsname:
       json["kreuzungsname"] == null ? undefined : json["kreuzungsname"],
-    sonderzaehlung: json["sonderzaehlung"],
-    kreisverkehr: json["kreisverkehr"],
+    sonderzaehlung:
+      json["sonderzaehlung"] == null ? undefined : json["sonderzaehlung"],
+    kreisverkehr:
+      json["kreisverkehr"] == null ? undefined : json["kreisverkehr"],
     kategorien: json["kategorien"] == null ? undefined : json["kategorien"],
     zaehlsituation:
       json["zaehlsituation"] == null ? undefined : json["zaehlsituation"],
@@ -297,7 +288,8 @@ export function ExternalZaehlungDTOFromJSONTyped(
       json["zaehlsituationErweitert"] == null
         ? undefined
         : json["zaehlsituationErweitert"],
-    zaehlIntervall: json["zaehlIntervall"],
+    zaehlIntervall:
+      json["zaehlIntervall"] == null ? undefined : json["zaehlIntervall"],
     wetter: json["wetter"] == null ? undefined : json["wetter"],
     status: json["status"] == null ? undefined : json["status"],
     quelle: json["quelle"] == null ? undefined : json["quelle"],
@@ -327,10 +319,10 @@ export function ExternalZaehlungDTOFromJSONTyped(
           ),
     zaehlstelleNummer:
       json["zaehlstelleNummer"] == null ? undefined : json["zaehlstelleNummer"],
-    zaehlstelleStadtbezirk:
-      json["zaehlstelleStadtbezirk"] == null
+    zaehlstelleStadtbezirkNummer:
+      json["zaehlstelleStadtbezirkNummer"] == null
         ? undefined
-        : json["zaehlstelleStadtbezirk"],
+        : json["zaehlstelleStadtbezirkNummer"],
     zaehlstellePunkt:
       json["zaehlstellePunkt"] == null
         ? undefined
@@ -339,7 +331,10 @@ export function ExternalZaehlungDTOFromJSONTyped(
       json["zaehlstelleKommentar"] == null
         ? undefined
         : json["zaehlstelleKommentar"],
-    unreadMessagesDienstleister: json["unreadMessagesDienstleister"],
+    unreadMessagesDienstleister:
+      json["unreadMessagesDienstleister"] == null
+        ? undefined
+        : json["unreadMessagesDienstleister"],
     dienstleisterkennung:
       json["dienstleisterkennung"] == null
         ? undefined
@@ -404,7 +399,7 @@ export function ExternalZaehlungDTOToJSONTyped(
             ExternalVerkehrsbeziehungDTOToJSON
           ),
     zaehlstelleNummer: value["zaehlstelleNummer"],
-    zaehlstelleStadtbezirk: value["zaehlstelleStadtbezirk"],
+    zaehlstelleStadtbezirkNummer: value["zaehlstelleStadtbezirkNummer"],
     zaehlstellePunkt: GeoPointToJSON(value["zaehlstellePunkt"]),
     zaehlstelleKommentar: value["zaehlstelleKommentar"],
     unreadMessagesDienstleister: value["unreadMessagesDienstleister"],

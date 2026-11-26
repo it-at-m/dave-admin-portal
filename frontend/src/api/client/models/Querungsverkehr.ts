@@ -12,15 +12,15 @@
  * Do not edit the class manually.
  */
 
-import type { Himmelsrichtung } from "./Himmelsrichtung";
+import type { Hochrechnungsfaktor } from "./Hochrechnungsfaktor";
 
 import { mapValues } from "../runtime";
 import {
-  HimmelsrichtungFromJSON,
-  HimmelsrichtungFromJSONTyped,
-  HimmelsrichtungToJSON,
-  HimmelsrichtungToJSONTyped,
-} from "./Himmelsrichtung";
+  HochrechnungsfaktorFromJSON,
+  HochrechnungsfaktorFromJSONTyped,
+  HochrechnungsfaktorToJSON,
+  HochrechnungsfaktorToJSONTyped,
+} from "./Hochrechnungsfaktor";
 
 /**
  *
@@ -30,17 +30,45 @@ import {
 export interface Querungsverkehr {
   /**
    *
+   * @type {string}
+   * @memberof Querungsverkehr
+   */
+  id?: string;
+  /**
+   *
+   * @type {Hochrechnungsfaktor}
+   * @memberof Querungsverkehr
+   */
+  hochrechnungsfaktor?: Hochrechnungsfaktor;
+  /**
+   *
    * @type {number}
    * @memberof Querungsverkehr
    */
   knotenarm?: number;
   /**
    *
-   * @type {Himmelsrichtung}
+   * @type {string}
    * @memberof Querungsverkehr
    */
-  richtung?: Himmelsrichtung;
+  richtung?: QuerungsverkehrRichtungEnum;
 }
+
+/**
+ * @export
+ */
+export const QuerungsverkehrRichtungEnum = {
+  N: "N",
+  No: "NO",
+  O: "O",
+  So: "SO",
+  S: "S",
+  Sw: "SW",
+  W: "W",
+  Nw: "NW",
+} as const;
+export type QuerungsverkehrRichtungEnum =
+  (typeof QuerungsverkehrRichtungEnum)[keyof typeof QuerungsverkehrRichtungEnum];
 
 /**
  * Check if a given object implements the Querungsverkehr interface.
@@ -63,11 +91,13 @@ export function QuerungsverkehrFromJSONTyped(
     return json;
   }
   return {
-    knotenarm: json["knotenarm"] == null ? undefined : json["knotenarm"],
-    richtung:
-      json["richtung"] == null
+    id: json["id"] == null ? undefined : json["id"],
+    hochrechnungsfaktor:
+      json["hochrechnungsfaktor"] == null
         ? undefined
-        : HimmelsrichtungFromJSON(json["richtung"]),
+        : HochrechnungsfaktorFromJSON(json["hochrechnungsfaktor"]),
+    knotenarm: json["knotenarm"] == null ? undefined : json["knotenarm"],
+    richtung: json["richtung"] == null ? undefined : json["richtung"],
   };
 }
 
@@ -84,7 +114,11 @@ export function QuerungsverkehrToJSONTyped(
   }
 
   return {
+    id: value["id"],
+    hochrechnungsfaktor: HochrechnungsfaktorToJSON(
+      value["hochrechnungsfaktor"]
+    ),
     knotenarm: value["knotenarm"],
-    richtung: HimmelsrichtungToJSON(value["richtung"]),
+    richtung: value["richtung"],
   };
 }

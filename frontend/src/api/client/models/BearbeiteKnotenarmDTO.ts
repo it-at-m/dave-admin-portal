@@ -25,7 +25,7 @@ export interface BearbeiteKnotenarmDTO {
    * @type {number}
    * @memberof BearbeiteKnotenarmDTO
    */
-  nummer: number;
+  nummer?: number;
   /**
    *
    * @type {string}
@@ -40,7 +40,6 @@ export interface BearbeiteKnotenarmDTO {
 export function instanceOfBearbeiteKnotenarmDTO(
   value: object
 ): value is BearbeiteKnotenarmDTO {
-  if (!("nummer" in value) || value["nummer"] === undefined) return false;
   return true;
 }
 
@@ -58,7 +57,7 @@ export function BearbeiteKnotenarmDTOFromJSONTyped(
     return json;
   }
   return {
-    nummer: json["nummer"],
+    nummer: json["nummer"] == null ? undefined : json["nummer"],
     strassenname:
       json["strassenname"] == null ? undefined : json["strassenname"],
   };

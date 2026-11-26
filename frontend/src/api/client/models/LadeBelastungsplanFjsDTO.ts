@@ -12,9 +12,16 @@
  * Do not edit the class manually.
  */
 
+import type { AbstractLadeBelastungsplanDTOObject } from "./AbstractLadeBelastungsplanDTOObject";
 import type { BelastungsplanFjsDataDTO } from "./BelastungsplanFjsDataDTO";
 
 import { mapValues } from "../runtime";
+import {
+  AbstractLadeBelastungsplanDTOObjectFromJSON,
+  AbstractLadeBelastungsplanDTOObjectFromJSONTyped,
+  AbstractLadeBelastungsplanDTOObjectToJSON,
+  AbstractLadeBelastungsplanDTOObjectToJSONTyped,
+} from "./AbstractLadeBelastungsplanDTOObject";
 import {
   BelastungsplanFjsDataDTOFromJSON,
   BelastungsplanFjsDataDTOFromJSONTyped,
@@ -27,53 +34,27 @@ import {
  * @export
  * @interface LadeBelastungsplanFjsDTO
  */
-export interface LadeBelastungsplanFjsDTO {
-  /**
-   *
-   * @type {string}
-   * @memberof LadeBelastungsplanFjsDTO
-   */
-  belastungsplanTyp: LadeBelastungsplanFjsDTOBelastungsplanTypEnum;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof LadeBelastungsplanFjsDTO
-   */
-  streets: Array<string>;
-  /**
-   *
-   * @type {boolean}
-   * @memberof LadeBelastungsplanFjsDTO
-   */
-  kreisverkehr: boolean;
+export interface LadeBelastungsplanFjsDTO
+  extends AbstractLadeBelastungsplanDTOObject {
   /**
    *
    * @type {BelastungsplanFjsDataDTO}
    * @memberof LadeBelastungsplanFjsDTO
    */
-  value1: BelastungsplanFjsDataDTO;
+  value1?: BelastungsplanFjsDataDTO;
   /**
    *
    * @type {BelastungsplanFjsDataDTO}
    * @memberof LadeBelastungsplanFjsDTO
    */
-  value2: BelastungsplanFjsDataDTO;
+  value2?: BelastungsplanFjsDataDTO;
   /**
    *
    * @type {BelastungsplanFjsDataDTO}
    * @memberof LadeBelastungsplanFjsDTO
    */
-  value3: BelastungsplanFjsDataDTO;
+  value3?: BelastungsplanFjsDataDTO;
 }
-
-/**
- * @export
- */
-export const LadeBelastungsplanFjsDTOBelastungsplanTypEnum = {
-  Fjs: "FJS",
-} as const;
-export type LadeBelastungsplanFjsDTOBelastungsplanTypEnum =
-  (typeof LadeBelastungsplanFjsDTOBelastungsplanTypEnum)[keyof typeof LadeBelastungsplanFjsDTOBelastungsplanTypEnum];
 
 /**
  * Check if a given object implements the LadeBelastungsplanFjsDTO interface.
@@ -81,17 +62,6 @@ export type LadeBelastungsplanFjsDTOBelastungsplanTypEnum =
 export function instanceOfLadeBelastungsplanFjsDTO(
   value: object
 ): value is LadeBelastungsplanFjsDTO {
-  if (
-    !("belastungsplanTyp" in value) ||
-    value["belastungsplanTyp"] === undefined
-  )
-    return false;
-  if (!("streets" in value) || value["streets"] === undefined) return false;
-  if (!("kreisverkehr" in value) || value["kreisverkehr"] === undefined)
-    return false;
-  if (!("value1" in value) || value["value1"] === undefined) return false;
-  if (!("value2" in value) || value["value2"] === undefined) return false;
-  if (!("value3" in value) || value["value3"] === undefined) return false;
   return true;
 }
 
@@ -109,12 +79,19 @@ export function LadeBelastungsplanFjsDTOFromJSONTyped(
     return json;
   }
   return {
-    belastungsplanTyp: json["belastungsplanTyp"],
-    streets: json["streets"],
-    kreisverkehr: json["kreisverkehr"],
-    value1: BelastungsplanFjsDataDTOFromJSON(json["value1"]),
-    value2: BelastungsplanFjsDataDTOFromJSON(json["value2"]),
-    value3: BelastungsplanFjsDataDTOFromJSON(json["value3"]),
+    ...AbstractLadeBelastungsplanDTOObjectFromJSONTyped(json, true),
+    value1:
+      json["value1"] == null
+        ? undefined
+        : BelastungsplanFjsDataDTOFromJSON(json["value1"]),
+    value2:
+      json["value2"] == null
+        ? undefined
+        : BelastungsplanFjsDataDTOFromJSON(json["value2"]),
+    value3:
+      json["value3"] == null
+        ? undefined
+        : BelastungsplanFjsDataDTOFromJSON(json["value3"]),
   };
 }
 
@@ -133,9 +110,7 @@ export function LadeBelastungsplanFjsDTOToJSONTyped(
   }
 
   return {
-    belastungsplanTyp: value["belastungsplanTyp"],
-    streets: value["streets"],
-    kreisverkehr: value["kreisverkehr"],
+    ...AbstractLadeBelastungsplanDTOObjectToJSONTyped(value, true),
     value1: BelastungsplanFjsDataDTOToJSON(value["value1"]),
     value2: BelastungsplanFjsDataDTOToJSON(value["value2"]),
     value3: BelastungsplanFjsDataDTOToJSON(value["value3"]),

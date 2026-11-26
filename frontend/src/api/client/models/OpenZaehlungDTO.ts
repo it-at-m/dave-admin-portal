@@ -40,10 +40,10 @@ export interface OpenZaehlungDTO {
   zaehlstellenId?: string;
   /**
    *
-   * @type {string}
+   * @type {number}
    * @memberof OpenZaehlungDTO
    */
-  stadtbezirk?: string;
+  stadtbezirkNummer?: number;
   /**
    *
    * @type {Date}
@@ -77,7 +77,7 @@ export interface OpenZaehlungDTO {
 }
 
 /**
- * Check if a given object implements the OpenZaehlung interface.
+ * Check if a given object implements the OpenZaehlungDTO interface.
  */
 export function instanceOfOpenZaehlungDTO(
   value: object
@@ -104,7 +104,8 @@ export function OpenZaehlungDTOFromJSONTyped(
         : json["zaehlstellenNummer"],
     zaehlstellenId:
       json["zaehlstellenId"] == null ? undefined : json["zaehlstellenId"],
-    stadtbezirk: json["stadtbezirk"] == null ? undefined : json["stadtbezirk"],
+    stadtbezirkNummer:
+      json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     datum: json["datum"] == null ? undefined : new Date(json["datum"]),
     zaehlart: json["zaehlart"] == null ? undefined : json["zaehlart"],
     projektNummer:
@@ -130,7 +131,7 @@ export function OpenZaehlungDTOToJSONTyped(
     id: value["id"],
     zaehlstellenNummer: value["zaehlstellenNummer"],
     zaehlstellenId: value["zaehlstellenId"],
-    stadtbezirk: value["stadtbezirk"],
+    stadtbezirkNummer: value["stadtbezirkNummer"],
     datum: value["datum"] == null ? undefined : value["datum"].toISOString(),
     zaehlart: value["zaehlart"],
     projektNummer: value["projektNummer"],

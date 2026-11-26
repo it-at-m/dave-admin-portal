@@ -34,7 +34,7 @@ export interface StepLineSeriesEntryIntegerDTO
    * @type {Array<number>}
    * @memberof StepLineSeriesEntryIntegerDTO
    */
-  yAxisData?: Array<number>;
+  yaxisData?: Array<number>;
 }
 
 /**
@@ -61,7 +61,7 @@ export function StepLineSeriesEntryIntegerDTOFromJSONTyped(
   }
   return {
     ...StepLineSeriesEntryBaseDTOFromJSONTyped(json, true),
-    yAxisData: json["yAxisData"] == null ? undefined : json["yAxisData"],
+    yaxisData: json["yaxisData"] == null ? undefined : json["yaxisData"],
   };
 }
 
@@ -81,6 +81,6 @@ export function StepLineSeriesEntryIntegerDTOToJSONTyped(
 
   return {
     ...StepLineSeriesEntryBaseDTOToJSONTyped(value, true),
-    yAxisData: value["yAxisData"],
+    yaxisData: value["yaxisData"],
   };
 }

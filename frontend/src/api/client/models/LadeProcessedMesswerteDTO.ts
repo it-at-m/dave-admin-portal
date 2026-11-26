@@ -16,7 +16,6 @@ import type { BelastungsplanMessquerschnitteDTO } from "./BelastungsplanMessquer
 import type { LadeMesswerteListenausgabeDTO } from "./LadeMesswerteListenausgabeDTO";
 import type { LadeZaehldatenHeatmapDTO } from "./LadeZaehldatenHeatmapDTO";
 import type { LadeZaehldatenSteplineDTO } from "./LadeZaehldatenSteplineDTO";
-import type { TagesTyp } from "./TagesTyp";
 
 import { mapValues } from "../runtime";
 import {
@@ -43,12 +42,6 @@ import {
   LadeZaehldatenSteplineDTOToJSON,
   LadeZaehldatenSteplineDTOToJSONTyped,
 } from "./LadeZaehldatenSteplineDTO";
-import {
-  TagesTypFromJSON,
-  TagesTypFromJSONTyped,
-  TagesTypToJSON,
-  TagesTypToJSONTyped,
-} from "./TagesTyp";
 
 /**
  *
@@ -58,34 +51,34 @@ import {
 export interface LadeProcessedMesswerteDTO {
   /**
    *
-   * @type {TagesTyp}
+   * @type {string}
    * @memberof LadeProcessedMesswerteDTO
    */
-  tagesTyp?: TagesTyp;
+  tagesTyp?: LadeProcessedMesswerteDTOTagesTypEnum;
   /**
    *
    * @type {LadeMesswerteListenausgabeDTO}
    * @memberof LadeProcessedMesswerteDTO
    */
-  zaehldatenTable: LadeMesswerteListenausgabeDTO;
+  zaehldatenTable?: LadeMesswerteListenausgabeDTO;
   /**
    *
    * @type {LadeZaehldatenSteplineDTO}
    * @memberof LadeProcessedMesswerteDTO
    */
-  zaehldatenStepline: LadeZaehldatenSteplineDTO;
+  zaehldatenStepline?: LadeZaehldatenSteplineDTO;
   /**
    *
    * @type {LadeZaehldatenHeatmapDTO}
    * @memberof LadeProcessedMesswerteDTO
    */
-  zaehldatenHeatmap: LadeZaehldatenHeatmapDTO;
+  zaehldatenHeatmap?: LadeZaehldatenHeatmapDTO;
   /**
    *
    * @type {BelastungsplanMessquerschnitteDTO}
    * @memberof LadeProcessedMesswerteDTO
    */
-  belastungsplanMessquerschnitte: BelastungsplanMessquerschnitteDTO;
+  belastungsplanMessquerschnitte?: BelastungsplanMessquerschnitteDTO;
   /**
    *
    * @type {number}
@@ -101,28 +94,26 @@ export interface LadeProcessedMesswerteDTO {
 }
 
 /**
+ * @export
+ */
+export const LadeProcessedMesswerteDTOTagesTypEnum = {
+  Unspecified: "UNSPECIFIED",
+  WerktagDiMiDo: "WERKTAG_DI_MI_DO",
+  WerktagMoFr: "WERKTAG_MO_FR",
+  Samstag: "SAMSTAG",
+  SonntagFeiertag: "SONNTAG_FEIERTAG",
+  WerktagFerien: "WERKTAG_FERIEN",
+  MoSo: "MO_SO",
+} as const;
+export type LadeProcessedMesswerteDTOTagesTypEnum =
+  (typeof LadeProcessedMesswerteDTOTagesTypEnum)[keyof typeof LadeProcessedMesswerteDTOTagesTypEnum];
+
+/**
  * Check if a given object implements the LadeProcessedMesswerteDTO interface.
  */
 export function instanceOfLadeProcessedMesswerteDTO(
   value: object
 ): value is LadeProcessedMesswerteDTO {
-  if (!("zaehldatenTable" in value) || value["zaehldatenTable"] === undefined)
-    return false;
-  if (
-    !("zaehldatenStepline" in value) ||
-    value["zaehldatenStepline"] === undefined
-  )
-    return false;
-  if (
-    !("zaehldatenHeatmap" in value) ||
-    value["zaehldatenHeatmap"] === undefined
-  )
-    return false;
-  if (
-    !("belastungsplanMessquerschnitte" in value) ||
-    value["belastungsplanMessquerschnitte"] === undefined
-  )
-    return false;
   return true;
 }
 
@@ -140,20 +131,25 @@ export function LadeProcessedMesswerteDTOFromJSONTyped(
     return json;
   }
   return {
-    tagesTyp:
-      json["tagesTyp"] == null ? undefined : TagesTypFromJSON(json["tagesTyp"]),
-    zaehldatenTable: LadeMesswerteListenausgabeDTOFromJSON(
-      json["zaehldatenTable"]
-    ),
-    zaehldatenStepline: LadeZaehldatenSteplineDTOFromJSON(
-      json["zaehldatenStepline"]
-    ),
-    zaehldatenHeatmap: LadeZaehldatenHeatmapDTOFromJSON(
-      json["zaehldatenHeatmap"]
-    ),
-    belastungsplanMessquerschnitte: BelastungsplanMessquerschnitteDTOFromJSON(
-      json["belastungsplanMessquerschnitte"]
-    ),
+    tagesTyp: json["tagesTyp"] == null ? undefined : json["tagesTyp"],
+    zaehldatenTable:
+      json["zaehldatenTable"] == null
+        ? undefined
+        : LadeMesswerteListenausgabeDTOFromJSON(json["zaehldatenTable"]),
+    zaehldatenStepline:
+      json["zaehldatenStepline"] == null
+        ? undefined
+        : LadeZaehldatenSteplineDTOFromJSON(json["zaehldatenStepline"]),
+    zaehldatenHeatmap:
+      json["zaehldatenHeatmap"] == null
+        ? undefined
+        : LadeZaehldatenHeatmapDTOFromJSON(json["zaehldatenHeatmap"]),
+    belastungsplanMessquerschnitte:
+      json["belastungsplanMessquerschnitte"] == null
+        ? undefined
+        : BelastungsplanMessquerschnitteDTOFromJSON(
+            json["belastungsplanMessquerschnitte"]
+          ),
     requestedMeasuringDays:
       json["requestedMeasuringDays"] == null
         ? undefined
@@ -180,7 +176,7 @@ export function LadeProcessedMesswerteDTOToJSONTyped(
   }
 
   return {
-    tagesTyp: TagesTypToJSON(value["tagesTyp"]),
+    tagesTyp: value["tagesTyp"],
     zaehldatenTable: LadeMesswerteListenausgabeDTOToJSON(
       value["zaehldatenTable"]
     ),

@@ -12,9 +12,16 @@
  * Do not edit the class manually.
  */
 
+import type { StepLineSeriesEntryBaseDTO } from "./StepLineSeriesEntryBaseDTO";
 import type { StepLineSeriesEntryBigDecimalDTO } from "./StepLineSeriesEntryBigDecimalDTO";
 import type { StepLineSeriesEntryIntegerDTO } from "./StepLineSeriesEntryIntegerDTO";
 
+import {
+  instanceOfStepLineSeriesEntryBaseDTO,
+  StepLineSeriesEntryBaseDTOFromJSON,
+  StepLineSeriesEntryBaseDTOFromJSONTyped,
+  StepLineSeriesEntryBaseDTOToJSON,
+} from "./StepLineSeriesEntryBaseDTO";
 import {
   instanceOfStepLineSeriesEntryBigDecimalDTO,
   StepLineSeriesEntryBigDecimalDTOFromJSON,
@@ -34,6 +41,7 @@ import {
  * @export
  */
 export type LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInner =
+  | StepLineSeriesEntryBaseDTO
   | StepLineSeriesEntryBigDecimalDTO
   | StepLineSeriesEntryIntegerDTO;
 
@@ -55,6 +63,9 @@ export function LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInnerFromJSONTyp
   }
   if (typeof json !== "object") {
     return json;
+  }
+  if (instanceOfStepLineSeriesEntryBaseDTO(json)) {
+    return StepLineSeriesEntryBaseDTOFromJSONTyped(json, true);
   }
   if (instanceOfStepLineSeriesEntryBigDecimalDTO(json)) {
     return StepLineSeriesEntryBigDecimalDTOFromJSONTyped(json, true);
@@ -84,6 +95,11 @@ export function LadeZaehldatenSteplineDTOSeriesEntriesFirstChartInnerToJSONTyped
   }
   if (typeof value !== "object") {
     return value;
+  }
+  if (instanceOfStepLineSeriesEntryBaseDTO(value)) {
+    return StepLineSeriesEntryBaseDTOToJSON(
+      value as StepLineSeriesEntryBaseDTO
+    );
   }
   if (instanceOfStepLineSeriesEntryBigDecimalDTO(value)) {
     return StepLineSeriesEntryBigDecimalDTOToJSON(

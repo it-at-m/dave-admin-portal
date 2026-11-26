@@ -12,24 +12,10 @@
  * Do not edit the class manually.
  */
 
-import type { Bewegungsrichtung } from "./Bewegungsrichtung";
-import type { Himmelsrichtung } from "./Himmelsrichtung";
 import type { HochrechnungsfaktorDTO } from "./HochrechnungsfaktorDTO";
 import type { ZeitintervallDTO } from "./ZeitintervallDTO";
 
 import { mapValues } from "../runtime";
-import {
-  BewegungsrichtungFromJSON,
-  BewegungsrichtungFromJSONTyped,
-  BewegungsrichtungToJSON,
-  BewegungsrichtungToJSONTyped,
-} from "./Bewegungsrichtung";
-import {
-  HimmelsrichtungFromJSON,
-  HimmelsrichtungFromJSONTyped,
-  HimmelsrichtungToJSON,
-  HimmelsrichtungToJSONTyped,
-} from "./Himmelsrichtung";
 import {
   HochrechnungsfaktorDTOFromJSON,
   HochrechnungsfaktorDTOFromJSONTyped,
@@ -75,17 +61,43 @@ export interface BearbeiteLaengsverkehrDTO {
   knotenarm?: number;
   /**
    *
-   * @type {Bewegungsrichtung}
+   * @type {string}
    * @memberof BearbeiteLaengsverkehrDTO
    */
-  richtung?: Bewegungsrichtung;
+  richtung?: BearbeiteLaengsverkehrDTORichtungEnum;
   /**
    *
-   * @type {Himmelsrichtung}
+   * @type {string}
    * @memberof BearbeiteLaengsverkehrDTO
    */
-  strassenseite?: Himmelsrichtung;
+  strassenseite?: BearbeiteLaengsverkehrDTOStrassenseiteEnum;
 }
+
+/**
+ * @export
+ */
+export const BearbeiteLaengsverkehrDTORichtungEnum = {
+  Ein: "EIN",
+  Aus: "AUS",
+} as const;
+export type BearbeiteLaengsverkehrDTORichtungEnum =
+  (typeof BearbeiteLaengsverkehrDTORichtungEnum)[keyof typeof BearbeiteLaengsverkehrDTORichtungEnum];
+
+/**
+ * @export
+ */
+export const BearbeiteLaengsverkehrDTOStrassenseiteEnum = {
+  N: "N",
+  No: "NO",
+  O: "O",
+  So: "SO",
+  S: "S",
+  Sw: "SW",
+  W: "W",
+  Nw: "NW",
+} as const;
+export type BearbeiteLaengsverkehrDTOStrassenseiteEnum =
+  (typeof BearbeiteLaengsverkehrDTOStrassenseiteEnum)[keyof typeof BearbeiteLaengsverkehrDTOStrassenseiteEnum];
 
 /**
  * Check if a given object implements the BearbeiteLaengsverkehrDTO interface.
@@ -120,14 +132,9 @@ export function BearbeiteLaengsverkehrDTOFromJSONTyped(
         ? undefined
         : HochrechnungsfaktorDTOFromJSON(json["hochrechnungsfaktor"]),
     knotenarm: json["knotenarm"] == null ? undefined : json["knotenarm"],
-    richtung:
-      json["richtung"] == null
-        ? undefined
-        : BewegungsrichtungFromJSON(json["richtung"]),
+    richtung: json["richtung"] == null ? undefined : json["richtung"],
     strassenseite:
-      json["strassenseite"] == null
-        ? undefined
-        : HimmelsrichtungFromJSON(json["strassenseite"]),
+      json["strassenseite"] == null ? undefined : json["strassenseite"],
   };
 }
 
@@ -155,7 +162,7 @@ export function BearbeiteLaengsverkehrDTOToJSONTyped(
       value["hochrechnungsfaktor"]
     ),
     knotenarm: value["knotenarm"],
-    richtung: BewegungsrichtungToJSON(value["richtung"]),
-    strassenseite: HimmelsrichtungToJSON(value["strassenseite"]),
+    richtung: value["richtung"],
+    strassenseite: value["strassenseite"],
   };
 }

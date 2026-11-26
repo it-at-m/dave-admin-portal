@@ -12,15 +12,15 @@
  * Do not edit the class manually.
  */
 
-import type { QuKnotenarmValue } from "./QuKnotenarmValue";
+import type { KnotenarmValue } from "./KnotenarmValue";
 
 import { mapValues } from "../runtime";
 import {
-  QuKnotenarmValueFromJSON,
-  QuKnotenarmValueFromJSONTyped,
-  QuKnotenarmValueToJSON,
-  QuKnotenarmValueToJSONTyped,
-} from "./QuKnotenarmValue";
+  KnotenarmValueFromJSON,
+  KnotenarmValueFromJSONTyped,
+  KnotenarmValueToJSON,
+  KnotenarmValueToJSONTyped,
+} from "./KnotenarmValue";
 
 /**
  *
@@ -33,19 +33,19 @@ export interface BelastungsplanQuDataDTO {
    * @type {string}
    * @memberof BelastungsplanQuDataDTO
    */
-  label: string;
+  label?: string;
   /**
    *
    * @type {boolean}
    * @memberof BelastungsplanQuDataDTO
    */
-  filled: boolean;
+  filled?: boolean;
   /**
    *
-   * @type {Array<QuKnotenarmValue>}
+   * @type {Array<KnotenarmValue>}
    * @memberof BelastungsplanQuDataDTO
    */
-  valuesKnotenarme: Array<QuKnotenarmValue>;
+  valuesKnotenarme?: Array<KnotenarmValue>;
 }
 
 /**
@@ -54,10 +54,6 @@ export interface BelastungsplanQuDataDTO {
 export function instanceOfBelastungsplanQuDataDTO(
   value: object
 ): value is BelastungsplanQuDataDTO {
-  if (!("label" in value) || value["label"] === undefined) return false;
-  if (!("filled" in value) || value["filled"] === undefined) return false;
-  if (!("valuesKnotenarme" in value) || value["valuesKnotenarme"] === undefined)
-    return false;
   return true;
 }
 
@@ -75,11 +71,12 @@ export function BelastungsplanQuDataDTOFromJSONTyped(
     return json;
   }
   return {
-    label: json["label"],
-    filled: json["filled"],
-    valuesKnotenarme: (json["valuesKnotenarme"] as Array<any>).map(
-      QuKnotenarmValueFromJSON
-    ),
+    label: json["label"] == null ? undefined : json["label"],
+    filled: json["filled"] == null ? undefined : json["filled"],
+    valuesKnotenarme:
+      json["valuesKnotenarme"] == null
+        ? undefined
+        : (json["valuesKnotenarme"] as Array<any>).map(KnotenarmValueFromJSON),
   };
 }
 
@@ -100,8 +97,9 @@ export function BelastungsplanQuDataDTOToJSONTyped(
   return {
     label: value["label"],
     filled: value["filled"],
-    valuesKnotenarme: (value["valuesKnotenarme"] as Array<any>).map(
-      QuKnotenarmValueToJSON
-    ),
+    valuesKnotenarme:
+      value["valuesKnotenarme"] == null
+        ? undefined
+        : (value["valuesKnotenarme"] as Array<any>).map(KnotenarmValueToJSON),
   };
 }
