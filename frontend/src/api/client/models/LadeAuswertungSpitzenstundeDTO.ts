@@ -157,7 +157,7 @@ export interface LadeAuswertungSpitzenstundeDTO {
    * @type {number}
    * @memberof LadeAuswertungSpitzenstundeDTO
    */
-  schwerverkehr: number;
+  anteilGueterverkehrAnKfzProzent: number;
   /**
    *
    * @type {number}
@@ -169,7 +169,7 @@ export interface LadeAuswertungSpitzenstundeDTO {
    * @type {number}
    * @memberof LadeAuswertungSpitzenstundeDTO
    */
-  anteilGueterverkehrAnKfzProzent: number;
+  gesamt: number;
   /**
    *
    * @type {number}
@@ -181,13 +181,13 @@ export interface LadeAuswertungSpitzenstundeDTO {
    * @type {number}
    * @memberof LadeAuswertungSpitzenstundeDTO
    */
-  gesamt: number;
+  gueterverkehr: number;
   /**
    *
    * @type {number}
    * @memberof LadeAuswertungSpitzenstundeDTO
    */
-  gueterverkehr: number;
+  schwerverkehr: number;
 }
 
 /**
@@ -212,21 +212,21 @@ export function instanceOfLadeAuswertungSpitzenstundeDTO(
     return false;
   if (!("pkwEinheiten" in value) || value["pkwEinheiten"] === undefined)
     return false;
-  if (!("schwerverkehr" in value) || value["schwerverkehr"] === undefined)
+  if (
+    !("anteilGueterverkehrAnKfzProzent" in value) ||
+    value["anteilGueterverkehrAnKfzProzent"] === undefined
+  )
     return false;
   if (
     !("anteilSchwerverkehrAnKfzProzent" in value) ||
     value["anteilSchwerverkehrAnKfzProzent"] === undefined
   )
     return false;
-  if (
-    !("anteilGueterverkehrAnKfzProzent" in value) ||
-    value["anteilGueterverkehrAnKfzProzent"] === undefined
-  )
-    return false;
-  if (!("kfz" in value) || value["kfz"] === undefined) return false;
   if (!("gesamt" in value) || value["gesamt"] === undefined) return false;
+  if (!("kfz" in value) || value["kfz"] === undefined) return false;
   if (!("gueterverkehr" in value) || value["gueterverkehr"] === undefined)
+    return false;
+  if (!("schwerverkehr" in value) || value["schwerverkehr"] === undefined)
     return false;
   return true;
 }
@@ -275,12 +275,12 @@ export function LadeAuswertungSpitzenstundeDTOFromJSONTyped(
       json["zaehlsituationErweitert"] == null
         ? undefined
         : json["zaehlsituationErweitert"],
-    schwerverkehr: json["schwerverkehr"],
-    anteilSchwerverkehrAnKfzProzent: json["anteilSchwerverkehrAnKfzProzent"],
     anteilGueterverkehrAnKfzProzent: json["anteilGueterverkehrAnKfzProzent"],
-    kfz: json["kfz"],
+    anteilSchwerverkehrAnKfzProzent: json["anteilSchwerverkehrAnKfzProzent"],
     gesamt: json["gesamt"],
+    kfz: json["kfz"],
     gueterverkehr: json["gueterverkehr"],
+    schwerverkehr: json["schwerverkehr"],
   };
 }
 
@@ -324,11 +324,11 @@ export function LadeAuswertungSpitzenstundeDTOToJSONTyped(
     sonderzaehlung: value["sonderzaehlung"],
     zaehlsituation: value["zaehlsituation"],
     zaehlsituationErweitert: value["zaehlsituationErweitert"],
-    schwerverkehr: value["schwerverkehr"],
-    anteilSchwerverkehrAnKfzProzent: value["anteilSchwerverkehrAnKfzProzent"],
     anteilGueterverkehrAnKfzProzent: value["anteilGueterverkehrAnKfzProzent"],
-    kfz: value["kfz"],
+    anteilSchwerverkehrAnKfzProzent: value["anteilSchwerverkehrAnKfzProzent"],
     gesamt: value["gesamt"],
+    kfz: value["kfz"],
     gueterverkehr: value["gueterverkehr"],
+    schwerverkehr: value["schwerverkehr"],
   };
 }

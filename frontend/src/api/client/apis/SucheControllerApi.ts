@@ -28,12 +28,12 @@ import {
 } from "../models/index";
 import * as runtime from "../runtime";
 
-export interface SearchErhebungsstelleForMapRequest {
+export interface SearchErhebungsstelleForKarteRequest {
   query: string;
   searchAndFilterOptionsDTO: SearchAndFilterOptionsDTO;
 }
 
-export interface SearchErhebungsstelleForMapDatenportalRequest {
+export interface SearchErhebungsstellenForKarteDatenportalRequest {
   query: string;
   searchAndFilterOptionsDTO: SearchAndFilterOptionsDTO;
 }
@@ -54,21 +54,21 @@ export interface SuggestDatenportalRequest {
 export class SucheControllerApi extends runtime.BaseAPI {
   /**
    */
-  async searchErhebungsstelleForMapRaw(
-    requestParameters: SearchErhebungsstelleForMapRequest,
+  async searchErhebungsstelleForKarteRaw(
+    requestParameters: SearchErhebungsstelleForKarteRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
   ): Promise<runtime.ApiResponse<Set<ErhebungsstelleKarteDTO>>> {
     if (requestParameters["query"] == null) {
       throw new runtime.RequiredError(
         "query",
-        'Required parameter "query" was null or undefined when calling searchErhebungsstelleForMap().'
+        'Required parameter "query" was null or undefined when calling searchErhebungsstelleForKarte().'
       );
     }
 
     if (requestParameters["searchAndFilterOptionsDTO"] == null) {
       throw new runtime.RequiredError(
         "searchAndFilterOptionsDTO",
-        'Required parameter "searchAndFilterOptionsDTO" was null or undefined when calling searchErhebungsstelleForMap().'
+        'Required parameter "searchAndFilterOptionsDTO" was null or undefined when calling searchErhebungsstelleForKarte().'
       );
     }
 
@@ -105,11 +105,11 @@ export class SucheControllerApi extends runtime.BaseAPI {
 
   /**
    */
-  async searchErhebungsstelleForMap(
-    requestParameters: SearchErhebungsstelleForMapRequest,
+  async searchErhebungsstelleForKarte(
+    requestParameters: SearchErhebungsstelleForKarteRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
   ): Promise<Set<ErhebungsstelleKarteDTO>> {
-    const response = await this.searchErhebungsstelleForMapRaw(
+    const response = await this.searchErhebungsstelleForKarteRaw(
       requestParameters,
       initOverrides
     );
@@ -118,21 +118,21 @@ export class SucheControllerApi extends runtime.BaseAPI {
 
   /**
    */
-  async searchErhebungsstelleForMapDatenportalRaw(
-    requestParameters: SearchErhebungsstelleForMapDatenportalRequest,
+  async searchErhebungsstellenForKarteDatenportalRaw(
+    requestParameters: SearchErhebungsstellenForKarteDatenportalRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
   ): Promise<runtime.ApiResponse<Set<ErhebungsstelleKarteDTO>>> {
     if (requestParameters["query"] == null) {
       throw new runtime.RequiredError(
         "query",
-        'Required parameter "query" was null or undefined when calling searchErhebungsstelleForMapDatenportal().'
+        'Required parameter "query" was null or undefined when calling searchErhebungsstellenForKarteDatenportal().'
       );
     }
 
     if (requestParameters["searchAndFilterOptionsDTO"] == null) {
       throw new runtime.RequiredError(
         "searchAndFilterOptionsDTO",
-        'Required parameter "searchAndFilterOptionsDTO" was null or undefined when calling searchErhebungsstelleForMapDatenportal().'
+        'Required parameter "searchAndFilterOptionsDTO" was null or undefined when calling searchErhebungsstellenForKarteDatenportal().'
       );
     }
 
@@ -169,11 +169,11 @@ export class SucheControllerApi extends runtime.BaseAPI {
 
   /**
    */
-  async searchErhebungsstelleForMapDatenportal(
-    requestParameters: SearchErhebungsstelleForMapDatenportalRequest,
+  async searchErhebungsstellenForKarteDatenportal(
+    requestParameters: SearchErhebungsstellenForKarteDatenportalRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
   ): Promise<Set<ErhebungsstelleKarteDTO>> {
-    const response = await this.searchErhebungsstelleForMapDatenportalRaw(
+    const response = await this.searchErhebungsstellenForKarteDatenportalRaw(
       requestParameters,
       initOverrides
     );

@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import type { Fahrzeug } from "./Fahrzeug";
 import type { GeoPoint } from "./GeoPoint";
 import type { Knotenarm } from "./Knotenarm";
 import type { Laengsverkehr } from "./Laengsverkehr";
@@ -21,6 +22,12 @@ import type { Querungsverkehr } from "./Querungsverkehr";
 import type { Verkehrsbeziehung } from "./Verkehrsbeziehung";
 
 import { mapValues } from "../runtime";
+import {
+  FahrzeugFromJSON,
+  FahrzeugFromJSONTyped,
+  FahrzeugToJSON,
+  FahrzeugToJSONTyped,
+} from "./Fahrzeug";
 import {
   GeoPointFromJSON,
   GeoPointFromJSONTyped,
@@ -150,10 +157,10 @@ export interface Zaehlung {
   kreisverkehr?: boolean;
   /**
    *
-   * @type {Array<string>}
+   * @type {Array<Fahrzeug>}
    * @memberof Zaehlung
    */
-  kategorien?: Array<ZaehlungKategorienEnum>;
+  kategorien?: Array<Fahrzeug>;
   /**
    *
    * @type {string}
@@ -283,27 +290,6 @@ export interface Zaehlung {
 }
 
 /**
- * @export
- */
-export const ZaehlungKategorienEnum = {
-  Kfz: "KFZ",
-  Sv: "SV",
-  Gv: "GV",
-  SvP: "SV_P",
-  GvP: "GV_P",
-  Pkw: "PKW",
-  Lkw: "LKW",
-  Lz: "LZ",
-  Bus: "BUS",
-  Krad: "KRAD",
-  Rad: "RAD",
-  Fuss: "FUSS",
-  PkwEinheit: "PKW_EINHEIT",
-} as const;
-export type ZaehlungKategorienEnum =
-  (typeof ZaehlungKategorienEnum)[keyof typeof ZaehlungKategorienEnum];
-
-/**
  * Check if a given object implements the Zaehlung interface.
  */
 export function instanceOfZaehlung(value: object): value is Zaehlung {
@@ -339,7 +325,10 @@ export function ZaehlungFromJSONTyped(
       json["sonderzaehlung"] == null ? undefined : json["sonderzaehlung"],
     kreisverkehr:
       json["kreisverkehr"] == null ? undefined : json["kreisverkehr"],
-    kategorien: json["kategorien"] == null ? undefined : json["kategorien"],
+    kategorien:
+      json["kategorien"] == null
+        ? undefined
+        : (json["kategorien"] as Array<any>).map(FahrzeugFromJSON),
     status: json["status"] == null ? undefined : json["status"],
     zaehlsituation:
       json["zaehlsituation"] == null ? undefined : json["zaehlsituation"],
@@ -428,7 +417,10 @@ export function ZaehlungToJSONTyped(
     kreuzungsname: value["kreuzungsname"],
     sonderzaehlung: value["sonderzaehlung"],
     kreisverkehr: value["kreisverkehr"],
-    kategorien: value["kategorien"],
+    kategorien:
+      value["kategorien"] == null
+        ? undefined
+        : (value["kategorien"] as Array<any>).map(FahrzeugToJSON),
     status: value["status"],
     zaehlsituation: value["zaehlsituation"],
     zaehlsituationErweitert: value["zaehlsituationErweitert"],

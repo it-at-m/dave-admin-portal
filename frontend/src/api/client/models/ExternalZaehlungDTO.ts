@@ -16,7 +16,13 @@ import type { ExternalKnotenarmDTO } from "./ExternalKnotenarmDTO";
 import type { ExternalLaengsverkehrDTO } from "./ExternalLaengsverkehrDTO";
 import type { ExternalQuerungsverkehrDTO } from "./ExternalQuerungsverkehrDTO";
 import type { ExternalVerkehrsbeziehungDTO } from "./ExternalVerkehrsbeziehungDTO";
+import type { Fahrzeug } from "./Fahrzeug";
 import type { GeoPoint } from "./GeoPoint";
+import type { Quelle } from "./Quelle";
+import type { Status } from "./Status";
+import type { Wetter } from "./Wetter";
+import type { Zaehlart } from "./Zaehlart";
+import type { Zaehldauer } from "./Zaehldauer";
 
 import { mapValues } from "../runtime";
 import {
@@ -44,11 +50,47 @@ import {
   ExternalVerkehrsbeziehungDTOToJSONTyped,
 } from "./ExternalVerkehrsbeziehungDTO";
 import {
+  FahrzeugFromJSON,
+  FahrzeugFromJSONTyped,
+  FahrzeugToJSON,
+  FahrzeugToJSONTyped,
+} from "./Fahrzeug";
+import {
   GeoPointFromJSON,
   GeoPointFromJSONTyped,
   GeoPointToJSON,
   GeoPointToJSONTyped,
 } from "./GeoPoint";
+import {
+  QuelleFromJSON,
+  QuelleFromJSONTyped,
+  QuelleToJSON,
+  QuelleToJSONTyped,
+} from "./Quelle";
+import {
+  StatusFromJSON,
+  StatusFromJSONTyped,
+  StatusToJSON,
+  StatusToJSONTyped,
+} from "./Status";
+import {
+  WetterFromJSON,
+  WetterFromJSONTyped,
+  WetterToJSON,
+  WetterToJSONTyped,
+} from "./Wetter";
+import {
+  ZaehlartFromJSON,
+  ZaehlartFromJSONTyped,
+  ZaehlartToJSON,
+  ZaehlartToJSONTyped,
+} from "./Zaehlart";
+import {
+  ZaehldauerFromJSON,
+  ZaehldauerFromJSONTyped,
+  ZaehldauerToJSON,
+  ZaehldauerToJSONTyped,
+} from "./Zaehldauer";
 
 /**
  *
@@ -70,10 +112,10 @@ export interface ExternalZaehlungDTO {
   datum?: Date;
   /**
    *
-   * @type {string}
+   * @type {Zaehlart}
    * @memberof ExternalZaehlungDTO
    */
-  zaehlart?: string;
+  zaehlart?: Zaehlart;
   /**
    *
    * @type {GeoPoint}
@@ -112,10 +154,10 @@ export interface ExternalZaehlungDTO {
   kreisverkehr: boolean;
   /**
    *
-   * @type {Array<string>}
+   * @type {Array<Fahrzeug>}
    * @memberof ExternalZaehlungDTO
    */
-  kategorien?: Array<ExternalZaehlungDTOKategorienEnum>;
+  kategorien?: Array<Fahrzeug>;
   /**
    *
    * @type {string}
@@ -136,28 +178,28 @@ export interface ExternalZaehlungDTO {
   zaehlIntervall: number;
   /**
    *
-   * @type {string}
+   * @type {Wetter}
    * @memberof ExternalZaehlungDTO
    */
-  wetter?: string;
+  wetter?: Wetter;
   /**
    *
-   * @type {string}
+   * @type {Status}
    * @memberof ExternalZaehlungDTO
    */
-  status?: string;
+  status?: Status;
   /**
    *
-   * @type {string}
+   * @type {Quelle}
    * @memberof ExternalZaehlungDTO
    */
-  quelle?: string;
+  quelle?: Quelle;
   /**
    *
-   * @type {string}
+   * @type {Zaehldauer}
    * @memberof ExternalZaehlungDTO
    */
-  zaehldauer?: string;
+  zaehldauer?: Zaehldauer;
   /**
    *
    * @type {string}
@@ -227,27 +269,6 @@ export interface ExternalZaehlungDTO {
 }
 
 /**
- * @export
- */
-export const ExternalZaehlungDTOKategorienEnum = {
-  Kfz: "KFZ",
-  Sv: "SV",
-  Gv: "GV",
-  SvP: "SV_P",
-  GvP: "GV_P",
-  Pkw: "PKW",
-  Lkw: "LKW",
-  Lz: "LZ",
-  Bus: "BUS",
-  Krad: "KRAD",
-  Rad: "RAD",
-  Fuss: "FUSS",
-  PkwEinheit: "PKW_EINHEIT",
-} as const;
-export type ExternalZaehlungDTOKategorienEnum =
-  (typeof ExternalZaehlungDTOKategorienEnum)[keyof typeof ExternalZaehlungDTOKategorienEnum];
-
-/**
  * Check if a given object implements the ExternalZaehlungDTO interface.
  */
 export function instanceOfExternalZaehlungDTO(
@@ -281,7 +302,8 @@ export function ExternalZaehlungDTOFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     datum: json["datum"] == null ? undefined : new Date(json["datum"]),
-    zaehlart: json["zaehlart"] == null ? undefined : json["zaehlart"],
+    zaehlart:
+      json["zaehlart"] == null ? undefined : ZaehlartFromJSON(json["zaehlart"]),
     punkt: json["punkt"] == null ? undefined : GeoPointFromJSON(json["punkt"]),
     projektNummer:
       json["projektNummer"] == null ? undefined : json["projektNummer"],
@@ -290,7 +312,10 @@ export function ExternalZaehlungDTOFromJSONTyped(
       json["kreuzungsname"] == null ? undefined : json["kreuzungsname"],
     sonderzaehlung: json["sonderzaehlung"],
     kreisverkehr: json["kreisverkehr"],
-    kategorien: json["kategorien"] == null ? undefined : json["kategorien"],
+    kategorien:
+      json["kategorien"] == null
+        ? undefined
+        : (json["kategorien"] as Array<any>).map(FahrzeugFromJSON),
     zaehlsituation:
       json["zaehlsituation"] == null ? undefined : json["zaehlsituation"],
     zaehlsituationErweitert:
@@ -298,10 +323,13 @@ export function ExternalZaehlungDTOFromJSONTyped(
         ? undefined
         : json["zaehlsituationErweitert"],
     zaehlIntervall: json["zaehlIntervall"],
-    wetter: json["wetter"] == null ? undefined : json["wetter"],
-    status: json["status"] == null ? undefined : json["status"],
-    quelle: json["quelle"] == null ? undefined : json["quelle"],
-    zaehldauer: json["zaehldauer"] == null ? undefined : json["zaehldauer"],
+    wetter: json["wetter"] == null ? undefined : WetterFromJSON(json["wetter"]),
+    status: json["status"] == null ? undefined : StatusFromJSON(json["status"]),
+    quelle: json["quelle"] == null ? undefined : QuelleFromJSON(json["quelle"]),
+    zaehldauer:
+      json["zaehldauer"] == null
+        ? undefined
+        : ZaehldauerFromJSON(json["zaehldauer"]),
     kommentar: json["kommentar"] == null ? undefined : json["kommentar"],
     knotenarme:
       json["knotenarme"] == null
@@ -365,21 +393,24 @@ export function ExternalZaehlungDTOToJSONTyped(
       value["datum"] == null
         ? undefined
         : value["datum"].toISOString().substring(0, 10),
-    zaehlart: value["zaehlart"],
+    zaehlart: ZaehlartToJSON(value["zaehlart"]),
     punkt: GeoPointToJSON(value["punkt"]),
     projektNummer: value["projektNummer"],
     projektName: value["projektName"],
     kreuzungsname: value["kreuzungsname"],
     sonderzaehlung: value["sonderzaehlung"],
     kreisverkehr: value["kreisverkehr"],
-    kategorien: value["kategorien"],
+    kategorien:
+      value["kategorien"] == null
+        ? undefined
+        : (value["kategorien"] as Array<any>).map(FahrzeugToJSON),
     zaehlsituation: value["zaehlsituation"],
     zaehlsituationErweitert: value["zaehlsituationErweitert"],
     zaehlIntervall: value["zaehlIntervall"],
-    wetter: value["wetter"],
-    status: value["status"],
-    quelle: value["quelle"],
-    zaehldauer: value["zaehldauer"],
+    wetter: WetterToJSON(value["wetter"]),
+    status: StatusToJSON(value["status"]),
+    quelle: QuelleToJSON(value["quelle"]),
+    zaehldauer: ZaehldauerToJSON(value["zaehldauer"]),
     kommentar: value["kommentar"],
     knotenarme:
       value["knotenarme"] == null
