@@ -100,6 +100,7 @@ import { useEventbus } from "@/store/Eventbus";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useStadtbezirkStore } from "@/store/StadtbezirkStore";
 import { useDateUtils } from "@/util/DateUtils";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
 
@@ -127,6 +128,7 @@ const router = useRouter();
 const dateUtils = useDateUtils();
 const mapOptionsStore = useMapOptionsStore();
 const configurationStore = useConfigurationStore();
+const stadtbezirkStore = useStadtbezirkStore();
 const eventbus = useEventbus();
 
 /**
@@ -562,19 +564,8 @@ function createTooltipZaehlstelle(
   }
   tooltip.appendChild(document.createElement("br"));
 
-  if (!tooltipDto.stadtbezirk) {
-    const t = document.createTextNode("Stadtbezirk: Keine Angabe");
-    tooltip.appendChild(t);
-    tooltip.appendChild(document.createElement("br"));
-  } else {
-    let label = "Stadtbezirk: ";
-    if (tooltipDto.stadtbezirknummer) {
-      label += `${tooltipDto.stadtbezirknummer} - `;
-    }
-    const t = document.createTextNode(label + tooltipDto.stadtbezirk);
-    tooltip.appendChild(t);
-    tooltip.appendChild(document.createElement("br"));
-  }
+  appendStadtbezirk(tooltip, tooltipDto.stadtbezirknummer);
+
   if (tooltipDto.anzahlZaehlungen) {
     const t = document.createTextNode(
       `Anzahl der Zählungen: ${tooltipDto.anzahlZaehlungen}`
@@ -595,6 +586,23 @@ function createTooltipZaehlstelle(
   }
 
   return tooltip;
+}
+
+/**
+ * Fügt falls vorhanden Stadtbezirknummer und -name an den Tooltip an.
+ */
+function appendStadtbezirk(
+  tooltip: HTMLDivElement,
+  stadtbezirkNummer: number | undefined
+) {
+  if (stadtbezirkNummer) {
+    let label = `Stadtbezirk: ${stadtbezirkNummer}`;
+    const bezname = stadtbezirkStore.getStadtbezirkName(stadtbezirkNummer);
+    if (bezname) label += ` - ${bezname}`;
+    const t = document.createTextNode(label);
+    tooltip.appendChild(t);
+    tooltip.appendChild(document.createElement("br"));
+  }
 }
 
 /**
@@ -626,19 +634,7 @@ function createTooltipMessstelle(
   }
   tooltip.appendChild(document.createElement("br"));
 
-  if (!tooltipDto.stadtbezirk) {
-    const t = document.createTextNode("Stadtbezirk: Keine Angabe");
-    tooltip.appendChild(t);
-    tooltip.appendChild(document.createElement("br"));
-  } else {
-    let label = "Stadtbezirk: ";
-    if (tooltipDto.stadtbezirknummer) {
-      label += `${tooltipDto.stadtbezirknummer} - `;
-    }
-    const t = document.createTextNode(label + tooltipDto.stadtbezirk);
-    tooltip.appendChild(t);
-    tooltip.appendChild(document.createElement("br"));
-  }
+  appendStadtbezirk(tooltip, tooltipDto.stadtbezirknummer);
 
   const aufbau = document.createTextNode(
     `Aufbau: ${dateUtils.formatDate(tooltipDto.realisierungsdatum)}`

@@ -45,6 +45,7 @@ import type OpenZaehlung from "@/types/zaehlung/OpenZaehlung";
 import { useRouter } from "vue-router";
 
 import IconOptions from "@/components/icons/IconOptions";
+import { useStadtbezirkStore } from "@/store/StadtbezirkStore";
 import { zaehlartText } from "@/types/enum/Zaehlart";
 import { useDateUtils } from "@/util/DateUtils";
 
@@ -58,9 +59,17 @@ defineProps<Props>();
 
 const router = useRouter();
 const dateUtils = useDateUtils();
+const stadtbezirkStore = useStadtbezirkStore();
 
 function getItemTitle(zaehlung: OpenZaehlung) {
-  return `Zählung vom ${dateUtils.getShortVersionOfDate(zaehlung.datum)} an Zählstelle ${zaehlung.zaehlstellenNummer} in ${zaehlung.stadtbezirk}`;
+  let title = `Zählung vom ${dateUtils.getShortVersionOfDate(zaehlung.datum)} an Zählstelle ${zaehlung.zaehlstellenNummer}`;
+  const stadtbezirkName = stadtbezirkStore.getStadtbezirkName(
+    zaehlung.stadtbezirkNummer
+  );
+  if (stadtbezirkName) {
+    title += ` in ${stadtbezirkName}`;
+  }
+  return title;
 }
 
 function getItemSubtitle(zaehlung: OpenZaehlung) {

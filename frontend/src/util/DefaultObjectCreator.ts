@@ -2,6 +2,7 @@ import type {
   ConfigurationDTO,
   DienstleisterDTO,
   EmailAddressDTO,
+  GebietseinheitenDTO,
   HochrechnungsfaktorDTO,
   MapConfigurationDTO,
   SearchAndFilterOptionsDTO,

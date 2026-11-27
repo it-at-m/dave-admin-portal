@@ -43,6 +43,8 @@ import type { MessstelleOverviewDTO } from "@/api/client";
 
 import { useRouter } from "vue-router";
 
+import { useStadtbezirkStore } from "@/store/StadtbezirkStore";
+
 interface Props {
   header: string;
   icon: string;
@@ -53,8 +55,19 @@ interface Props {
 defineProps<Props>();
 const router = useRouter();
 
+const stadtbezirkStore = useStadtbezirkStore();
+
 function getItemTitle(messstelle: MessstelleOverviewDTO): string {
-  return `${messstelle.mstId}, ${messstelle.name}, Stadtbezirk ${messstelle.stadtbezirkNummer}, ${messstelle.stadtbezirk}`;
+  let title = `${messstelle.mstId}, ${messstelle.name}`;
+  if (messstelle.stadtbezirkNummer)
+    title += `, Stadtbezirk ${messstelle.stadtbezirkNummer}`;
+  const stadtbezirkName = stadtbezirkStore.getStadtbezirkName(
+    messstelle.stadtbezirkNummer
+  );
+  if (stadtbezirkName) {
+    title += `, ${stadtbezirkName}`;
+  }
+  return title;
 }
 
 function openMessstelle(messstelle: MessstelleOverviewDTO): void {

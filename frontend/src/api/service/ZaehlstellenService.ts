@@ -177,7 +177,6 @@ export default class ZaehlstellenService {
       ...this.mapToBaseEntity(dto.id),
       nummer: dto.nummer ?? "",
       name: "",
-      stadtbezirkNummer: 0,
       punkt: { lat: dto.lat, lon: dto.lng },
       lat: dto.lat ?? 0,
       lng: dto.lng ?? 0,

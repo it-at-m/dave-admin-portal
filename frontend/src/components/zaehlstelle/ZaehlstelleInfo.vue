@@ -1,36 +1,46 @@
 <template>
   <v-sheet
     width="100%"
-    :height="height"
-    :min-height="minheight"
+    :height="props.height"
+    :min-height="props.minheight"
     color="transparent"
     class="pa-4"
     @click="editZaehlstelle"
   >
     <span class="text-caption">Zählstelle</span><br />
-    <span class="text-h5">{{ nummer }}</span
+    <span class="text-h5">{{ props.nummer }}</span
     ><br /><br />
-    <div class="text-caption text-truncate">{{ kreuzungsname }}</div>
-    <span class="text-caption"
-      >Stadtbezirk {{ stadtbezirkNummer }}, {{ stadtbezirk }}</span
-    >
+    <div class="text-caption text-truncate">{{ props.kreuzungsname }}</div>
+    <span class="text-caption">Stadtbezirk{{ stadtbezirkInfo }} </span>
   </v-sheet>
 </template>
 <script setup lang="ts">
+import { computed } from "vue";
+
+import { useStadtbezirkStore } from "@/store/StadtbezirkStore";
+
 interface Props {
   height: string;
   minheight: string;
   nummer?: string;
   kreuzungsname?: string;
-  stadtbezirkNummer: string;
-  stadtbezirk?: string;
+  stadtbezirkNummer: number | undefined;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   minheight: "160px",
   nummer: "",
   kreuzungsname: "",
-  stadtbezirk: "",
+});
+
+const stadtbezirkStore = useStadtbezirkStore();
+const stadtbezirkInfo = computed(() => {
+  const stadtbezirkName = stadtbezirkStore.getStadtbezirkName(
+    props.stadtbezirkNummer
+  );
+  return props.stadtbezirkNummer !== undefined
+    ? ` ${props.stadtbezirkNummer} ${stadtbezirkName || ""}`
+    : ": keine Angabe";
 });
 
 const emits = defineEmits<{

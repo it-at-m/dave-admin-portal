@@ -44,6 +44,7 @@
             <lhm-text-field
               :text="stadtbezirk"
               caption="Stadtbezirk"
+              :disabled="isEmpty(stadtbezirkStore.getStadtbezirke)"
             />
           </v-col>
           <v-col
@@ -210,12 +211,14 @@ import { computed, ref } from "vue";
 
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import { FahrzeugklasseToBeschreibung } from "@/domain/enums/FahrzeugklasseText";
+import { useStadtbezirkStore } from "@/store/StadtbezirkStore";
 import { messstelleStatusText } from "@/types/enum/MessstelleStatusText";
 import { useDateUtils } from "@/util/DateUtils";
 import { useValidationUtils } from "@/util/ValidationUtils";
 
 const validationUtils = useValidationUtils();
 const dateUtils = useDateUtils();
+const stadtbezirkStore = useStadtbezirkStore();
 
 const newSuchwort = ref("");
 
@@ -230,7 +233,13 @@ const messstelle = defineModel<MessstelleEdit>({
 });
 
 const stadtbezirk = computed(() => {
-  return `${messstelle.value.stadtbezirkNummer} - ${messstelle.value.stadtbezirk}`;
+  const stadtbezirkName = stadtbezirkStore.getStadtbezirkName(
+    messstelle.value.stadtbezirkNummer
+  );
+  if (!messstelle.value.stadtbezirkNummer) return "Keine Angabe";
+  let label = messstelle.value.stadtbezirkNummer.toString();
+  if (stadtbezirkName) label += ` - ${stadtbezirkName}`;
+  return label;
 });
 
 const fahrzeugklasse = computed(() => {

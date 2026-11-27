@@ -20,7 +20,8 @@
               <lhm-text-field
                 v-if="
                   configurationStore.getZaehlstelleConfiguration
-                    .automaticNumberAssignment
+                    .automaticNumberAssignment &&
+                  !isEmpty(stadtbezirkStore.getStadtbezirke)
                 "
                 caption="Zählstellennummer"
                 :text="zaehlstellenummer"
@@ -47,13 +48,19 @@
               <v-autocomplete
                 v-model="zaehlstelle.stadtbezirkNummer"
                 :items="getStadtbezirke"
+                item-title="title"
+                item-value="nummer"
+                :disabled="isEmpty(getStadtbezirke)"
                 variant="outlined"
                 density="compact"
                 label="Stadtbezirk"
                 :rules="[
-                  () => !!zaehlstelle.stadtbezirkNummer || pflichtfeldText,
+                  () =>
+                    isEmpty(stadtbezirkStore.getStadtbezirke) ||
+                    !!zaehlstelle.stadtbezirkNummer ||
+                    pflichtfeldText,
                 ]"
-                required
+                :required="!isEmpty(stadtbezirkStore.getStadtbezirke)"
               ></v-autocomplete>
             </v-col>
           </v-row>
@@ -68,8 +75,13 @@
                 :items="getStadtbezirksviertel"
                 density="compact"
                 label="Stadtbezirksviertel"
-                :rules="[() => !!stadtbezirksviertelModel || pflichtfeldText]"
-                required
+                :rules="[
+                  () =>
+                    isEmpty(stadtbezirkStore.getStadtbezirke) ||
+                    !!stadtbezirksviertelModel ||
+                    pflichtfeldText,
+                ]"
+                :required="!isEmpty(stadtbezirkStore.getStadtbezirke)"
                 :disabled="!zaehlstelle.stadtbezirkNummer"
               />
             </v-col>
@@ -154,6 +166,7 @@ import type {
   GeoPoint,
   NextZaehlstellennummerDTO,
 } from "@/api/client";
+import type KeyVal from "@/types/common/KeyVal";
 
 import { LatLng } from "leaflet";
 import { isEmpty, isEqual, isNil } from "lodash";
@@ -164,14 +177,15 @@ import LhmTextField from "@/components/common/LhmTextField.vue";
 import LocationMap from "@/components/map/LocationMap.vue";
 import { useConfigurationStore } from "@/store/ConfigurationStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import { stadtbezirke } from "@/types/enum/Stadtbezirk";
-import { stadtbezirksviertel } from "@/types/enum/Stadtbezirksviertel";
+import { useStadtbezirkStore } from "@/store/StadtbezirkStore";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import StadtbezirksviertelUtils from "@/util/StadtbezirksviertelUtils";
 import { useValidationUtils } from "@/util/ValidationUtils";
 
 const snackbarStore = useSnackbarStore();
 const configurationStore = useConfigurationStore();
 const validationUtils = useValidationUtils();
+const stadtbezirkStore = useStadtbezirkStore();
 const validZaehlstelle = ref(false);
 
 const zaehlstelle = ref(DefaultObjectCreator.createDefaultZaehlstelleDTO());
@@ -200,16 +214,31 @@ onMounted(() => {
   validZaehlstelle.value = false;
 });
 
-const getStadtbezirke = computed(() => {
-  return stadtbezirke;
-});
+const getStadtbezirke = computed(() =>
+  stadtbezirkStore.getStadtbezirke.map((bezirk) => ({
+    nummer: bezirk.nummer,
+    name: bezirk.name,
+    title: `${bezirk.nummer} ${bezirk.name}`,
+  }))
+);
 
 const getStadtbezirksviertel = computed(() => {
-  return stadtbezirksviertel(
-    zaehlstelle.value.stadtbezirkNummer
-      ? zaehlstelle.value.stadtbezirkNummer.toString()
-      : ""
-  );
+  const stadtbezirkNummer = zaehlstelle.value.stadtbezirkNummer;
+  if (!stadtbezirkNummer) return [];
+
+  const result: KeyVal[] = [];
+  for (const viertel of stadtbezirkStore.getStadtbezirksviertel) {
+    if (viertel.stadtbezirkNummer !== stadtbezirkNummer) continue;
+
+    result.push({
+      value: StadtbezirksviertelUtils.convertToSequentialNumber(
+        viertel.nummer
+      ).toString(),
+      title: `${viertel.nummer} ${viertel.name ?? ""}`,
+    });
+  }
+
+  return result;
 });
 
 const zaehlstellenummer = computed(() => {
@@ -221,10 +250,14 @@ const pflichtfeldText = computed(() => {
 });
 
 const isZaehlstellePersistable = computed(() => {
+  const stadtbezirkIsRequired = !isEmpty(stadtbezirkStore.getStadtbezirke);
+  const hasZaehlstellennummer = !isEmpty(zaehlstelle.value.nummer?.trim());
+  const hasStadtbezirk = Boolean(zaehlstelle.value.stadtbezirkNummer);
+  const hasStadtbezirksviertel = !isEmpty(stadtbezirksviertelModel.value);
+
   return (
-    !isEmpty(zaehlstelle.value.nummer) &&
-    !isEmpty(stadtbezirksviertelModel.value) &&
-    !isEmpty(zaehlstelle.value.stadtbezirkNummer)
+    hasZaehlstellennummer &&
+    (!stadtbezirkIsRequired || (hasStadtbezirk && hasStadtbezirksviertel))
   );
 });
 
