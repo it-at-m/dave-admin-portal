@@ -31,7 +31,7 @@ export interface MessstelleTooltipDTO {
   /**
    *
    */
-  stadtbezirknummer: number;
+  stadtbezirknummer?: number;
   /**
    *
    */
@@ -58,11 +58,6 @@ export function instanceOfMessstelleTooltipDTO(
 ): value is MessstelleTooltipDTO {
   if (!("mstId" in value) || value["mstId"] === undefined) return false;
   if (!("standort" in value) || value["standort"] === undefined) return false;
-  if (
-    !("stadtbezirknummer" in value) ||
-    value["stadtbezirknummer"] === undefined
-  )
-    return false;
   if (
     !("realisierungsdatum" in value) ||
     value["realisierungsdatum"] === undefined
@@ -97,7 +92,8 @@ export function MessstelleTooltipDTOFromJSONTyped(
   return {
     mstId: json["mstId"],
     standort: json["standort"],
-    stadtbezirknummer: json["stadtbezirknummer"],
+    stadtbezirknummer:
+      json["stadtbezirknummer"] == null ? undefined : json["stadtbezirknummer"],
     realisierungsdatum: json["realisierungsdatum"],
     abbaudatum: json["abbaudatum"],
     datumLetztePlausibleMessung: json["datumLetztePlausibleMessung"],

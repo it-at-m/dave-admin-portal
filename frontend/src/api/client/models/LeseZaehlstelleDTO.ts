@@ -43,7 +43,7 @@ export interface LeseZaehlstelleDTO {
   /**
    *
    */
-  stadtbezirkNummer: number;
+  stadtbezirkNummer?: number;
   /**
    *
    */
@@ -79,11 +79,6 @@ export function instanceOfLeseZaehlstelleDTO(
   if (!("id" in value) || value["id"] === undefined) return false;
   if (!("nummer" in value) || value["nummer"] === undefined) return false;
   if (!("name" in value) || value["name"] === undefined) return false;
-  if (
-    !("stadtbezirkNummer" in value) ||
-    value["stadtbezirkNummer"] === undefined
-  )
-    return false;
   if (!("lat" in value) || value["lat"] === undefined) return false;
   if (!("lng" in value) || value["lng"] === undefined) return false;
   if (!("kommentar" in value) || value["kommentar"] === undefined) return false;
@@ -107,7 +102,8 @@ export function LeseZaehlstelleDTOFromJSONTyped(
     id: json["id"],
     nummer: json["nummer"],
     name: json["name"],
-    stadtbezirkNummer: json["stadtbezirkNummer"],
+    stadtbezirkNummer:
+      json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     lat: json["lat"],
     lng: json["lng"],
     kommentar: json["kommentar"],

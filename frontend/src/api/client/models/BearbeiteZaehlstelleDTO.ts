@@ -46,7 +46,7 @@ export interface BearbeiteZaehlstelleDTO {
   /**
    *
    */
-  stadtbezirkNummer: number;
+  stadtbezirkNummer?: number;
   /**
    *
    */
@@ -83,11 +83,6 @@ export interface BearbeiteZaehlstelleDTO {
 export function instanceOfBearbeiteZaehlstelleDTO(
   value: object
 ): value is BearbeiteZaehlstelleDTO {
-  if (
-    !("stadtbezirkNummer" in value) ||
-    value["stadtbezirkNummer"] === undefined
-  )
-    return false;
   if (!("lat" in value) || value["lat"] === undefined) return false;
   if (!("lng" in value) || value["lng"] === undefined) return false;
   return true;
@@ -109,7 +104,8 @@ export function BearbeiteZaehlstelleDTOFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     nummer: json["nummer"] == null ? undefined : json["nummer"],
-    stadtbezirkNummer: json["stadtbezirkNummer"],
+    stadtbezirkNummer:
+      json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     punkt: json["punkt"] == null ? undefined : GeoPointFromJSON(json["punkt"]),
     lat: json["lat"],
     lng: json["lng"],

@@ -103,14 +103,6 @@ export interface DatentabellePdfZaehldaten {
   /**
    *
    */
-  rightBorderFahrzeugtypen?: string;
-  /**
-   *
-   */
-  rightBorderFahrzeugklassen?: string;
-  /**
-   *
-   */
   colWidthAnteile?: number;
   /**
    *
@@ -119,11 +111,11 @@ export interface DatentabellePdfZaehldaten {
   /**
    *
    */
-  rightBorderAnteile?: string;
+  colWidthFahrzeugtypen?: number;
   /**
    *
    */
-  colWidthFahrzeugtypen?: number;
+  colWidthFahrzeugklassen?: number;
   /**
    *
    */
@@ -135,7 +127,15 @@ export interface DatentabellePdfZaehldaten {
   /**
    *
    */
-  colWidthFahrzeugklassen?: number;
+  rightBorderAnteile?: string;
+  /**
+   *
+   */
+  rightBorderFahrzeugtypen?: string;
+  /**
+   *
+   */
+  rightBorderFahrzeugklassen?: string;
 }
 
 /**
@@ -214,26 +214,18 @@ export function DatentabellePdfZaehldatenFromJSONTyped(
         : json["showGueterverkehrsanteilProzent"],
     showPkwEinheiten:
       json["showPkwEinheiten"] == null ? undefined : json["showPkwEinheiten"],
-    rightBorderFahrzeugtypen:
-      json["rightBorderFahrzeugtypen"] == null
-        ? undefined
-        : json["rightBorderFahrzeugtypen"],
-    rightBorderFahrzeugklassen:
-      json["rightBorderFahrzeugklassen"] == null
-        ? undefined
-        : json["rightBorderFahrzeugklassen"],
     colWidthAnteile:
       json["colWidthAnteile"] == null ? undefined : json["colWidthAnteile"],
     showTabsAnteile:
       json["showTabsAnteile"] == null ? undefined : json["showTabsAnteile"],
-    rightBorderAnteile:
-      json["rightBorderAnteile"] == null
-        ? undefined
-        : json["rightBorderAnteile"],
     colWidthFahrzeugtypen:
       json["colWidthFahrzeugtypen"] == null
         ? undefined
         : json["colWidthFahrzeugtypen"],
+    colWidthFahrzeugklassen:
+      json["colWidthFahrzeugklassen"] == null
+        ? undefined
+        : json["colWidthFahrzeugklassen"],
     showTabsFahrzeugtypen:
       json["showTabsFahrzeugtypen"] == null
         ? undefined
@@ -242,10 +234,18 @@ export function DatentabellePdfZaehldatenFromJSONTyped(
       json["showTabsFahrzeugklassen"] == null
         ? undefined
         : json["showTabsFahrzeugklassen"],
-    colWidthFahrzeugklassen:
-      json["colWidthFahrzeugklassen"] == null
+    rightBorderAnteile:
+      json["rightBorderAnteile"] == null
         ? undefined
-        : json["colWidthFahrzeugklassen"],
+        : json["rightBorderAnteile"],
+    rightBorderFahrzeugtypen:
+      json["rightBorderFahrzeugtypen"] == null
+        ? undefined
+        : json["rightBorderFahrzeugtypen"],
+    rightBorderFahrzeugklassen:
+      json["rightBorderFahrzeugklassen"] == null
+        ? undefined
+        : json["rightBorderFahrzeugklassen"],
   };
 }
 
@@ -287,14 +287,14 @@ export function DatentabellePdfZaehldatenToJSONTyped(
     showSchwerverkehrsanteilProzent: value["showSchwerverkehrsanteilProzent"],
     showGueterverkehrsanteilProzent: value["showGueterverkehrsanteilProzent"],
     showPkwEinheiten: value["showPkwEinheiten"],
-    rightBorderFahrzeugtypen: value["rightBorderFahrzeugtypen"],
-    rightBorderFahrzeugklassen: value["rightBorderFahrzeugklassen"],
     colWidthAnteile: value["colWidthAnteile"],
     showTabsAnteile: value["showTabsAnteile"],
-    rightBorderAnteile: value["rightBorderAnteile"],
     colWidthFahrzeugtypen: value["colWidthFahrzeugtypen"],
+    colWidthFahrzeugklassen: value["colWidthFahrzeugklassen"],
     showTabsFahrzeugtypen: value["showTabsFahrzeugtypen"],
     showTabsFahrzeugklassen: value["showTabsFahrzeugklassen"],
-    colWidthFahrzeugklassen: value["colWidthFahrzeugklassen"],
+    rightBorderAnteile: value["rightBorderAnteile"],
+    rightBorderFahrzeugtypen: value["rightBorderFahrzeugtypen"],
+    rightBorderFahrzeugklassen: value["rightBorderFahrzeugklassen"],
   };
 }

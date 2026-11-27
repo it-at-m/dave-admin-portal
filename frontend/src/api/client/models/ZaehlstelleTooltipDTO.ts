@@ -27,7 +27,7 @@ export interface ZaehlstelleTooltipDTO {
   /**
    *
    */
-  stadtbezirknummer: number;
+  stadtbezirknummer?: number;
   /**
    *
    */
@@ -51,11 +51,6 @@ export function instanceOfZaehlstelleTooltipDTO(
   if (
     !("zaehlstellennnummer" in value) ||
     value["zaehlstellennnummer"] === undefined
-  )
-    return false;
-  if (
-    !("stadtbezirknummer" in value) ||
-    value["stadtbezirknummer"] === undefined
   )
     return false;
   if (!("anzahlZaehlungen" in value) || value["anzahlZaehlungen"] === undefined)
@@ -85,7 +80,8 @@ export function ZaehlstelleTooltipDTOFromJSONTyped(
   }
   return {
     zaehlstellennnummer: json["zaehlstellennnummer"],
-    stadtbezirknummer: json["stadtbezirknummer"],
+    stadtbezirknummer:
+      json["stadtbezirknummer"] == null ? undefined : json["stadtbezirknummer"],
     anzahlZaehlungen: json["anzahlZaehlungen"],
     datumLetzteZaehlung: json["datumLetzteZaehlung"],
     kreuzungsname: json["kreuzungsname"],

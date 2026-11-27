@@ -70,7 +70,7 @@ export interface ReadMessstelleInfoDTO {
   /**
    *
    */
-  stadtbezirkNummer: number;
+  stadtbezirkNummer?: number;
   /**
    *
    */
@@ -130,11 +130,6 @@ export function instanceOfReadMessstelleInfoDTO(
   if (!("id" in value) || value["id"] === undefined) return false;
   if (!("mstId" in value) || value["mstId"] === undefined) return false;
   if (!("standort" in value) || value["standort"] === undefined) return false;
-  if (
-    !("stadtbezirkNummer" in value) ||
-    value["stadtbezirkNummer"] === undefined
-  )
-    return false;
   if (!("fahrzeugklasse" in value) || value["fahrzeugklasse"] === undefined)
     return false;
   if (
@@ -188,7 +183,8 @@ export function ReadMessstelleInfoDTOFromJSONTyped(
     id: json["id"],
     mstId: json["mstId"],
     standort: json["standort"],
-    stadtbezirkNummer: json["stadtbezirkNummer"],
+    stadtbezirkNummer:
+      json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     fahrzeugklasse: FahrzeugklasseFromJSON(json["fahrzeugklasse"]),
     detektierteVerkehrsart: VerkehrsartFromJSON(json["detektierteVerkehrsart"]),
     hersteller: json["hersteller"],
