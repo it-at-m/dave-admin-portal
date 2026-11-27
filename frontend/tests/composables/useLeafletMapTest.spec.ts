@@ -1,5 +1,5 @@
+import type { LayerDTO } from "@/api/client";
 import type { UseLeafletMapOptions } from "@/composables/useLeafletMap";
-import type LayerDTO from "@/types/karte/LayerDTO";
 
 import L from "leaflet";
 import { createPinia, setActivePinia } from "pinia";

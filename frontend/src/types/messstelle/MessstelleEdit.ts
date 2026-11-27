@@ -7,8 +7,7 @@ export default interface MessstelleEdit extends BaseEntity {
   mstId: string;
   name: string;
   status: MessstelleKarteDTOStatusEnum;
-  stadtbezirk: string;
-  stadtbezirkNummer: string;
+  stadtbezirkNummer: number | undefined;
   bemerkung: string;
   latitude: number;
   longitude: number;

@@ -15,12 +15,14 @@
           />
           <lhm-text-field
             caption="Stadtbezirk"
-            :text="getStadtbezirksnummer"
+            :text="getStadtbezirkText"
+            :disabled="isEmpty(stadtbezirkStore.getStadtbezirke)"
           />
           <lhm-text-field
             caption="Stadtbezirksviertel"
-            :text="getStadtbezirksviertel"
+            :text="getStadtbezirksviertelText"
             add-extra-br
+            :disabled="isEmpty(stadtbezirkStore.getStadtbezirksviertel)"
           />
           <v-textarea
             v-model="zaehlstelle.kommentar"
@@ -108,9 +110,9 @@ import ZaehlstellenService from "@/api/service/ZaehlstellenService";
 import LhmTextField from "@/components/common/LhmTextField.vue";
 import LocationMap from "@/components/map/LocationMap.vue";
 import { useSnackbarStore } from "@/store/SnackbarStore";
-import { StadtbezirkToBeschreibung } from "@/types/enum/Stadtbezirk";
-import { StadtbezirksviertelToBeschreibung } from "@/types/enum/Stadtbezirksviertel";
+import { useStadtbezirkStore } from "@/store/StadtbezirkStore";
 import DefaultObjectCreator from "@/util/DefaultObjectCreator";
+import StadtbezirksviertelUtils from "@/util/StadtbezirksviertelUtils";
 
 const zaehlstelle = defineModel<Zaehlstelle>({
   required: true,
@@ -122,6 +124,7 @@ const emits = defineEmits<{
 }>();
 
 const snackbarStore = useSnackbarStore();
+const stadtbezirkStore = useStadtbezirkStore();
 
 const newSuchwort = ref("");
 
@@ -131,27 +134,30 @@ const coords = computed(() => {
   else return DefaultObjectCreator.createCenterOfMunichLatLng();
 });
 
-const getStadtbezirksnummer = computed(() => {
-  const stadtbezirksnummer: string | undefined = StadtbezirkToBeschreibung.get(
+const getStadtbezirkText = computed(() => {
+  if (!zaehlstelle.value.stadtbezirkNummer) return "Keine Angabe";
+  const stadtbezirkName = stadtbezirkStore.getStadtbezirkName(
     zaehlstelle.value.stadtbezirkNummer
   );
-  if (!isNil(stadtbezirksnummer)) {
-    return stadtbezirksnummer;
-  }
-  return "Der Stadtbezirk konnte nicht ermittelt werden.";
+  return !isNil(stadtbezirkName)
+    ? `${zaehlstelle.value.stadtbezirkNummer} ${stadtbezirkName}`
+    : zaehlstelle.value.stadtbezirkNummer.toString();
 });
 
-const getStadtbezirksviertel = computed(() => {
-  const stadtbezirksviertelMap: Map<number, string> | undefined =
-    StadtbezirksviertelToBeschreibung.get(zaehlstelle.value.stadtbezirkNummer);
-  if (!isNil(stadtbezirksviertelMap)) {
-    const stadtbezirksviertelnummer: string | undefined =
-      stadtbezirksviertelMap.get(getStadtbezirksviertelNummer.value);
-    if (!isNil(stadtbezirksviertelnummer)) {
-      return stadtbezirksviertelnummer;
-    }
-  }
-  return "Das Stadtbezirksviertel konnte nicht ermittelt werden.";
+const getStadtbezirksviertelText = computed(() => {
+  if (!zaehlstelle.value.stadtbezirkNummer) return "Keine Angabe";
+  const stadtbezirksviertel = stadtbezirkStore.getStadtbezirksviertel.find(
+    (viertel) =>
+      viertel.stadtbezirkNummer === zaehlstelle.value.stadtbezirkNummer &&
+      StadtbezirksviertelUtils.convertToSequentialNumber(viertel.nummer) ===
+        getStadtbezirksviertelNummer.value
+  );
+  if (!stadtbezirksviertel)
+    return "Das Stadtbezirksviertel konnte nicht ermittelt werden.";
+  else
+    return stadtbezirksviertel.name
+      ? `${stadtbezirksviertel.nummer} ${stadtbezirksviertel.name}`
+      : stadtbezirksviertel.nummer;
 });
 
 const getStadtbezirksviertelNummer = computed(() => {

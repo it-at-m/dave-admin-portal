@@ -93,13 +93,14 @@
 </template>
 
 <script setup lang="ts">
-import type { ConfigurationDTO } from "@/api/client";
+import type { ConfigurationDTO, GebietseinheitenDTO } from "@/api/client";
 
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import ConfigurationService from "@/api/service/ConfigurationService";
 import SsoUserInfoService from "@/api/service/SsoUserInfoService";
+import StadtbezirkService from "@/api/service/StadtbezirkService";
 import VersionInfoService from "@/api/service/VersionInfoService";
 import BaseUrlProvider from "@/api/util/BaseUrlProvider";
 import UnreadMessages from "@/components/app/UnreadMessages.vue";
@@ -109,6 +110,7 @@ import { useConfigurationStore } from "@/store/ConfigurationStore";
 import { useMapOptionsStore } from "@/store/MapOptionsStore";
 import { useSearchStore } from "@/store/SearchStore";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useStadtbezirkStore } from "@/store/StadtbezirkStore";
 import { useUserStore } from "@/store/UserStore";
 import SsoUserInfoResponse from "@/types/app/SsoUserInfoResponse";
 import VersionInfoResponse from "@/types/app/VersionInfoResponse";
@@ -126,6 +128,7 @@ const searchStore = useSearchStore();
 const route = useRoute();
 const mapOptionsStore = useMapOptionsStore();
 const configurationStore = useConfigurationStore();
+const stadtbezirkStore = useStadtbezirkStore();
 
 created();
 
@@ -157,6 +160,11 @@ function created() {
   ConfigurationService.getConfiguration().then(
     (configuration: ConfigurationDTO) => {
       configurationStore.setConfiguration(configuration);
+    }
+  );
+  StadtbezirkService.getGebietseinheiten().then(
+    (gebietseinheiten: GebietseinheitenDTO) => {
+      stadtbezirkStore.setGebietseinheiten(gebietseinheiten);
     }
   );
 }

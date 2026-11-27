@@ -5,8 +5,7 @@ import type Zaehlung from "@/types/zaehlung/Zaehlung";
 export default interface Zaehlstelle extends BaseEntity {
   nummer: string;
   name: string;
-  stadtbezirk: string;
-  stadtbezirkNummer: number;
+  stadtbezirkNummer?: number;
   punkt: GeoPoint;
   lat: number;
   lng: number;

@@ -27,6 +27,12 @@ import type { TextAsset } from "./TextAsset";
 import type { ZaehlungskenngroessenAsset } from "./ZaehlungskenngroessenAsset";
 
 import {
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
+import {
   BaseAssetFromJSON,
   BaseAssetFromJSONTyped,
   BaseAssetToJSON,
@@ -180,7 +186,6 @@ export function GeneratePdfReportRequestAssetsInnerFromJSONTyped(
   if (instanceOfZaehlungskenngroessenAsset(json)) {
     return ZaehlungskenngroessenAssetFromJSONTyped(json, true);
   }
-
   return {} as any;
 }
 
@@ -239,6 +244,5 @@ export function GeneratePdfReportRequestAssetsInnerToJSONTyped(
       value as ZaehlungskenngroessenAsset
     );
   }
-
   return {};
 }

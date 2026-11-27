@@ -30,74 +30,50 @@ import {
 export interface BelastungsplanMessquerschnitteDTO {
   /**
    *
-   * @type {Array<LadeBelastungsplanMessquerschnittDataDTO>}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   ladeBelastungsplanMessquerschnittDataDTOList: Array<LadeBelastungsplanMessquerschnittDataDTO>;
   /**
    *
-   * @type {string}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   strassenname: string;
   /**
    *
-   * @type {string}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   mstId: string;
   /**
    *
-   * @type {number}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
-  stadtbezirkNummer: number;
+  stadtbezirkNummer?: number;
   /**
    *
-   * @type {number}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   totalKfz: number;
   /**
    *
-   * @type {number}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   totalSv: number;
   /**
    *
-   * @type {number}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   totalGv: number;
   /**
    *
-   * @type {number}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   totalRad: number;
   /**
    *
-   * @type {number}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   totalPercentSv: number;
   /**
    *
-   * @type {number}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   totalPercentGv: number;
   /**
    *
-   * @type {string}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   startUhrzeitSpitzenstunde: string;
   /**
    *
-   * @type {string}
-   * @memberof BelastungsplanMessquerschnitteDTO
    */
   endeUhrzeitSpitzenstunde: string;
 }
@@ -116,11 +92,6 @@ export function instanceOfBelastungsplanMessquerschnitteDTO(
   if (!("strassenname" in value) || value["strassenname"] === undefined)
     return false;
   if (!("mstId" in value) || value["mstId"] === undefined) return false;
-  if (
-    !("stadtbezirkNummer" in value) ||
-    value["stadtbezirkNummer"] === undefined
-  )
-    return false;
   if (!("totalKfz" in value) || value["totalKfz"] === undefined) return false;
   if (!("totalSv" in value) || value["totalSv"] === undefined) return false;
   if (!("totalGv" in value) || value["totalGv"] === undefined) return false;
@@ -161,7 +132,8 @@ export function BelastungsplanMessquerschnitteDTOFromJSONTyped(
     ).map(LadeBelastungsplanMessquerschnittDataDTOFromJSON),
     strassenname: json["strassenname"],
     mstId: json["mstId"],
-    stadtbezirkNummer: json["stadtbezirkNummer"],
+    stadtbezirkNummer:
+      json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     totalKfz: json["totalKfz"],
     totalSv: json["totalSv"],
     totalGv: json["totalGv"],

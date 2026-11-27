@@ -30,68 +30,42 @@ import {
 export interface LeseZaehlstelleDTO {
   /**
    *
-   * @type {string}
-   * @memberof LeseZaehlstelleDTO
    */
   id: string;
   /**
    *
-   * @type {string}
-   * @memberof LeseZaehlstelleDTO
    */
   nummer: string;
   /**
    *
-   * @type {string}
-   * @memberof LeseZaehlstelleDTO
    */
   name: string;
   /**
    *
-   * @type {string}
-   * @memberof LeseZaehlstelleDTO
    */
-  stadtbezirk: string;
+  stadtbezirkNummer?: number;
   /**
    *
-   * @type {number}
-   * @memberof LeseZaehlstelleDTO
-   */
-  stadtbezirkNummer: number;
-  /**
-   *
-   * @type {number}
-   * @memberof LeseZaehlstelleDTO
    */
   lat: number;
   /**
    *
-   * @type {number}
-   * @memberof LeseZaehlstelleDTO
    */
   lng: number;
   /**
    *
-   * @type {string}
-   * @memberof LeseZaehlstelleDTO
    */
   kommentar: string;
   /**
    *
-   * @type {Array<string>}
-   * @memberof LeseZaehlstelleDTO
    */
   suchwoerter?: Array<string>;
   /**
    *
-   * @type {Array<LeseZaehlungDTO>}
-   * @memberof LeseZaehlstelleDTO
    */
   zaehlungen: Array<LeseZaehlungDTO>;
   /**
    *
-   * @type {boolean}
-   * @memberof LeseZaehlstelleDTO
    */
   sichtbarDatenportal?: boolean;
 }
@@ -105,13 +79,6 @@ export function instanceOfLeseZaehlstelleDTO(
   if (!("id" in value) || value["id"] === undefined) return false;
   if (!("nummer" in value) || value["nummer"] === undefined) return false;
   if (!("name" in value) || value["name"] === undefined) return false;
-  if (!("stadtbezirk" in value) || value["stadtbezirk"] === undefined)
-    return false;
-  if (
-    !("stadtbezirkNummer" in value) ||
-    value["stadtbezirkNummer"] === undefined
-  )
-    return false;
   if (!("lat" in value) || value["lat"] === undefined) return false;
   if (!("lng" in value) || value["lng"] === undefined) return false;
   if (!("kommentar" in value) || value["kommentar"] === undefined) return false;
@@ -135,8 +102,8 @@ export function LeseZaehlstelleDTOFromJSONTyped(
     id: json["id"],
     nummer: json["nummer"],
     name: json["name"],
-    stadtbezirk: json["stadtbezirk"],
-    stadtbezirkNummer: json["stadtbezirkNummer"],
+    stadtbezirkNummer:
+      json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     lat: json["lat"],
     lng: json["lng"],
     kommentar: json["kommentar"],
@@ -165,7 +132,6 @@ export function LeseZaehlstelleDTOToJSONTyped(
     id: value["id"],
     nummer: value["nummer"],
     name: value["name"],
-    stadtbezirk: value["stadtbezirk"],
     stadtbezirkNummer: value["stadtbezirkNummer"],
     lat: value["lat"],
     lng: value["lng"],

@@ -12,7 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 
 /**
  *
@@ -22,50 +28,34 @@ import { mapValues } from "../runtime";
 export interface ChatMessageDTO {
   /**
    *
-   * @type {string}
-   * @memberof ChatMessageDTO
    */
   id?: string;
   /**
    *
-   * @type {string}
-   * @memberof ChatMessageDTO
    */
   zaehlungId: string;
   /**
    *
-   * @type {string}
-   * @memberof ChatMessageDTO
    */
   content: string;
   /**
    *
-   * @type {number}
-   * @memberof ChatMessageDTO
    */
   participantId: number;
   /**
    *
-   * @type {Date}
-   * @memberof ChatMessageDTO
    */
   timestamp?: Date;
   /**
    *
-   * @type {string}
-   * @memberof ChatMessageDTO
    */
   type: string;
   /**
    *
-   * @type {boolean}
-   * @memberof ChatMessageDTO
    */
   uploaded: boolean;
   /**
    *
-   * @type {boolean}
-   * @memberof ChatMessageDTO
    */
   viewed: boolean;
 }
@@ -104,7 +94,7 @@ export function ChatMessageDTOFromJSONTyped(
     content: json["content"],
     participantId: json["participantId"],
     timestamp:
-      json["timestamp"] == null ? undefined : new Date(json["timestamp"]),
+      json["timestamp"] == null ? undefined : parseDateTime(json["timestamp"]),
     type: json["type"],
     uploaded: json["uploaded"],
     viewed: json["viewed"],
@@ -129,7 +119,9 @@ export function ChatMessageDTOToJSONTyped(
     content: value["content"],
     participantId: value["participantId"],
     timestamp:
-      value["timestamp"] == null ? undefined : value["timestamp"].toISOString(),
+      value["timestamp"] == null
+        ? value["timestamp"]
+        : serializeDateTime(value["timestamp"]),
     type: value["type"],
     uploaded: value["uploaded"],
     viewed: value["viewed"],

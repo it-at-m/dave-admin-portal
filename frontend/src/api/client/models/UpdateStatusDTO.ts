@@ -22,26 +22,20 @@ import { mapValues } from "../runtime";
 export interface UpdateStatusDTO {
   /**
    *
-   * @type {string}
-   * @memberof UpdateStatusDTO
    */
   zaehlungId?: string;
   /**
    *
-   * @type {string}
-   * @memberof UpdateStatusDTO
    */
   status?: string;
   /**
    *
-   * @type {string}
-   * @memberof UpdateStatusDTO
    */
   dienstleisterkennung?: string;
 }
 
 /**
- * Check if a given object implements the UpdateStatus interface.
+ * Check if a given object implements the UpdateStatusDTO interface.
  */
 export function instanceOfUpdateStatusDTO(
   value: object

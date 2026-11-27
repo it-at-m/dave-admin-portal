@@ -84,7 +84,7 @@ export default class ZaehlungService {
       createdTime: "",
       zaehlstellenNummer: dto.zaehlstellenNummer ?? "",
       zaehlstellenId: dto.zaehlstellenId ?? "",
-      stadtbezirk: dto.stadtbezirk ?? "",
+      stadtbezirkNummer: dto.stadtbezirkNummer,
       datum: dto.datum?.toISOString().substring(0, 10) ?? "",
       zaehlart: dto.zaehlart as OpenZaehlung["zaehlart"],
       projektNummer: dto.projektNummer ?? "",

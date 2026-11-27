@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelCustomSuggest {
   /**
    *
-   * @type {PagedModelEntityModelCustomSuggestEmbedded}
-   * @memberof PagedModelEntityModelCustomSuggest
    */
   embedded?: PagedModelEntityModelCustomSuggestEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelCustomSuggest
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelCustomSuggest
    */
   page?: PageMetadata;
 }

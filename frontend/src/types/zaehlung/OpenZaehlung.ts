@@ -7,7 +7,7 @@ export default interface OpenZaehlung extends BaseEntity {
   // ZaehlstellenInfos
   zaehlstellenNummer: string;
   zaehlstellenId: string;
-  stadtbezirk: string;
+  stadtbezirkNummer: number | undefined;
   // ZaehlungsInfos
   datum: string;
   zaehlart: Zaehlart;

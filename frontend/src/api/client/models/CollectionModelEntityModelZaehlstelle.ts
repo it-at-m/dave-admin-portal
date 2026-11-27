@@ -37,14 +37,10 @@ import {
 export interface CollectionModelEntityModelZaehlstelle {
   /**
    *
-   * @type {PagedModelEntityModelZaehlstelleEmbedded}
-   * @memberof CollectionModelEntityModelZaehlstelle
    */
   embedded?: PagedModelEntityModelZaehlstelleEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelEntityModelZaehlstelle
    */
   links?: { [key: string]: Link };
 }

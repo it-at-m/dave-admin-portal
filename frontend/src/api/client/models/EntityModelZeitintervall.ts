@@ -18,7 +18,13 @@ import type { Link } from "./Link";
 import type { Querungsverkehr } from "./Querungsverkehr";
 import type { Verkehrsbeziehung } from "./Verkehrsbeziehung";
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 import {
   HochrechnungFromJSON,
   HochrechnungFromJSONTyped,
@@ -58,134 +64,90 @@ import {
 export interface EntityModelZeitintervall {
   /**
    *
-   * @type {string}
-   * @memberof EntityModelZeitintervall
    */
   id?: string;
   /**
    *
-   * @type {Date}
-   * @memberof EntityModelZeitintervall
    */
   createdTime?: Date;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZeitintervall
    */
   version?: number;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelZeitintervall
    */
   zaehlungId?: string;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelZeitintervall
    */
   bewegungsbeziehungId?: string;
   /**
    *
-   * @type {Date}
-   * @memberof EntityModelZeitintervall
    */
   startUhrzeit: Date;
   /**
    *
-   * @type {Date}
-   * @memberof EntityModelZeitintervall
    */
   endeUhrzeit: Date;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZeitintervall
    */
   sortingIndex?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZeitintervall
    */
   pkw?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZeitintervall
    */
   lkw?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZeitintervall
    */
   lastzuege?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZeitintervall
    */
   busse?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZeitintervall
    */
   kraftraeder?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZeitintervall
    */
   fahrradfahrer?: number;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZeitintervall
    */
   fussgaenger?: number;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelZeitintervall
    */
   type?: EntityModelZeitintervallTypeEnum;
   /**
    *
-   * @type {Hochrechnung}
-   * @memberof EntityModelZeitintervall
    */
   hochrechnung?: Hochrechnung;
   /**
    *
-   * @type {Querungsverkehr}
-   * @memberof EntityModelZeitintervall
    */
   querungsverkehr?: Querungsverkehr;
   /**
    *
-   * @type {Laengsverkehr}
-   * @memberof EntityModelZeitintervall
    */
   laengsverkehr?: Laengsverkehr;
   /**
    *
-   * @type {Verkehrsbeziehung}
-   * @memberof EntityModelZeitintervall
    */
   verkehrsbeziehung?: Verkehrsbeziehung;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelZeitintervall
    */
   entityVersion?: number;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof EntityModelZeitintervall
    */
   links?: { [key: string]: Link };
 }
@@ -237,15 +199,23 @@ export function EntityModelZeitintervallFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     createdTime:
-      json["createdTime"] == null ? undefined : new Date(json["createdTime"]),
+      json["createdTime"] == null
+        ? undefined
+        : parseDateTime(json["createdTime"]),
     version: json["version"] == null ? undefined : json["version"],
     zaehlungId: json["zaehlungId"] == null ? undefined : json["zaehlungId"],
     bewegungsbeziehungId:
       json["bewegungsbeziehungId"] == null
         ? undefined
         : json["bewegungsbeziehungId"],
-    startUhrzeit: new Date(json["startUhrzeit"]),
-    endeUhrzeit: new Date(json["endeUhrzeit"]),
+    startUhrzeit:
+      json["startUhrzeit"] == null
+        ? json["startUhrzeit"]
+        : parseDateTime(json["startUhrzeit"]),
+    endeUhrzeit:
+      json["endeUhrzeit"] == null
+        ? json["endeUhrzeit"]
+        : parseDateTime(json["endeUhrzeit"]),
     sortingIndex:
       json["sortingIndex"] == null ? undefined : json["sortingIndex"],
     pkw: json["pkw"] == null ? undefined : json["pkw"],
@@ -300,13 +270,19 @@ export function EntityModelZeitintervallToJSONTyped(
     id: value["id"],
     createdTime:
       value["createdTime"] == null
-        ? undefined
-        : value["createdTime"].toISOString(),
+        ? value["createdTime"]
+        : serializeDateTime(value["createdTime"]),
     version: value["version"],
     zaehlungId: value["zaehlungId"],
     bewegungsbeziehungId: value["bewegungsbeziehungId"],
-    startUhrzeit: value["startUhrzeit"].toISOString(),
-    endeUhrzeit: value["endeUhrzeit"].toISOString(),
+    startUhrzeit:
+      value["startUhrzeit"] == null
+        ? value["startUhrzeit"]
+        : serializeDateTime(value["startUhrzeit"]),
+    endeUhrzeit:
+      value["endeUhrzeit"] == null
+        ? value["endeUhrzeit"]
+        : serializeDateTime(value["endeUhrzeit"]),
     sortingIndex: value["sortingIndex"],
     pkw: value["pkw"],
     lkw: value["lkw"],

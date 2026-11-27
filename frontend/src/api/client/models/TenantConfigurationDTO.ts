@@ -30,14 +30,14 @@ import {
 export interface TenantConfigurationDTO {
   /**
    *
-   * @type {string}
-   * @memberof TenantConfigurationDTO
+   */
+  city?: string;
+  /**
+   *
    */
   datenportalHeader: string;
   /**
    *
-   * @type {MapConfigurationDTO}
-   * @memberof TenantConfigurationDTO
    */
   mapConfiguration: MapConfigurationDTO;
 }
@@ -72,6 +72,7 @@ export function TenantConfigurationDTOFromJSONTyped(
     return json;
   }
   return {
+    city: json["city"] == null ? undefined : json["city"],
     datenportalHeader: json["datenportalHeader"],
     mapConfiguration: MapConfigurationDTOFromJSON(json["mapConfiguration"]),
   };
@@ -92,6 +93,7 @@ export function TenantConfigurationDTOToJSONTyped(
   }
 
   return {
+    city: value["city"],
     datenportalHeader: value["datenportalHeader"],
     mapConfiguration: MapConfigurationDTOToJSON(value["mapConfiguration"]),
   };

@@ -51,140 +51,90 @@ import {
 export interface EditMessstelleDTO {
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   id?: string;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   mstId: string;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   name?: string;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   status: string;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   bemerkung?: string;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
-   */
-  stadtbezirk?: string;
-  /**
-   *
-   * @type {number}
-   * @memberof EditMessstelleDTO
    */
   stadtbezirkNummer?: number;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   realisierungsdatum?: string;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   abbaudatum?: string;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   datumLetztePlausibleMessung?: string;
   /**
    *
-   * @type {Fahrzeugklasse}
-   * @memberof EditMessstelleDTO
    */
   fahrzeugklasse?: Fahrzeugklasse;
   /**
    *
-   * @type {Verkehrsart}
-   * @memberof EditMessstelleDTO
    */
   detektierteVerkehrsart?: Verkehrsart;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   hersteller?: string;
   /**
    *
-   * @type {number}
-   * @memberof EditMessstelleDTO
    */
   longitude?: number;
   /**
    *
-   * @type {number}
-   * @memberof EditMessstelleDTO
    */
   latitude?: number;
   /**
    *
-   * @type {boolean}
-   * @memberof EditMessstelleDTO
    */
   sichtbarDatenportal?: boolean;
   /**
    *
-   * @type {boolean}
-   * @memberof EditMessstelleDTO
    */
   geprueft?: boolean;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   kommentar?: string;
   /**
    *
-   * @type {string}
-   * @memberof EditMessstelleDTO
    */
   standort?: string;
   /**
    *
-   * @type {Array<string>}
-   * @memberof EditMessstelleDTO
    */
   customSuchwoerter?: Array<string>;
   /**
    *
-   * @type {Array<EditMessquerschnittDTO>}
-   * @memberof EditMessstelleDTO
    */
   messquerschnitte?: Array<EditMessquerschnittDTO>;
   /**
    *
-   * @type {Array<EditMessfaehigkeitDTO>}
-   * @memberof EditMessstelleDTO
    */
   messfaehigkeiten?: Array<EditMessfaehigkeitDTO>;
   /**
    *
-   * @type {boolean}
-   * @memberof EditMessstelleDTO
    */
   lageplanVorhanden?: boolean;
 }
@@ -217,7 +167,6 @@ export function EditMessstelleDTOFromJSONTyped(
     name: json["name"] == null ? undefined : json["name"],
     status: json["status"],
     bemerkung: json["bemerkung"] == null ? undefined : json["bemerkung"],
-    stadtbezirk: json["stadtbezirk"] == null ? undefined : json["stadtbezirk"],
     stadtbezirkNummer:
       json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     realisierungsdatum:
@@ -284,7 +233,6 @@ export function EditMessstelleDTOToJSONTyped(
     name: value["name"],
     status: value["status"],
     bemerkung: value["bemerkung"],
-    stadtbezirk: value["stadtbezirk"],
     stadtbezirkNummer: value["stadtbezirkNummer"],
     realisierungsdatum: value["realisierungsdatum"],
     abbaudatum: value["abbaudatum"],

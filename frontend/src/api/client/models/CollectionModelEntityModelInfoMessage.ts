@@ -37,14 +37,10 @@ import {
 export interface CollectionModelEntityModelInfoMessage {
   /**
    *
-   * @type {PagedModelEntityModelInfoMessageEmbedded}
-   * @memberof CollectionModelEntityModelInfoMessage
    */
   embedded?: PagedModelEntityModelInfoMessageEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelEntityModelInfoMessage
    */
   links?: { [key: string]: Link };
 }

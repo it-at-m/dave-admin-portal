@@ -12,7 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 
 /**
  *
@@ -22,38 +28,26 @@ import { mapValues } from "../runtime";
 export interface InfoMessageDTO {
   /**
    *
-   * @type {string}
-   * @memberof InfoMessageDTO
    */
   id?: string;
   /**
    *
-   * @type {string}
-   * @memberof InfoMessageDTO
    */
   content?: string;
   /**
    *
-   * @type {Date}
-   * @memberof InfoMessageDTO
    */
   gueltigVon?: Date;
   /**
    *
-   * @type {Date}
-   * @memberof InfoMessageDTO
    */
   gueltigBis?: Date;
   /**
    *
-   * @type {boolean}
-   * @memberof InfoMessageDTO
    */
   gueltig: boolean;
   /**
    *
-   * @type {boolean}
-   * @memberof InfoMessageDTO
    */
   aktiv: boolean;
 }
@@ -84,9 +78,9 @@ export function InfoMessageDTOFromJSONTyped(
     id: json["id"] == null ? undefined : json["id"],
     content: json["content"] == null ? undefined : json["content"],
     gueltigVon:
-      json["gueltigVon"] == null ? undefined : new Date(json["gueltigVon"]),
+      json["gueltigVon"] == null ? undefined : parseDate(json["gueltigVon"]),
     gueltigBis:
-      json["gueltigBis"] == null ? undefined : new Date(json["gueltigBis"]),
+      json["gueltigBis"] == null ? undefined : parseDate(json["gueltigBis"]),
     gueltig: json["gueltig"],
     aktiv: json["aktiv"],
   };
@@ -109,12 +103,12 @@ export function InfoMessageDTOToJSONTyped(
     content: value["content"],
     gueltigVon:
       value["gueltigVon"] == null
-        ? undefined
-        : value["gueltigVon"].toISOString().substring(0, 10),
+        ? value["gueltigVon"]
+        : serializeDate(value["gueltigVon"]),
     gueltigBis:
       value["gueltigBis"] == null
-        ? undefined
-        : value["gueltigBis"].toISOString().substring(0, 10),
+        ? value["gueltigBis"]
+        : serializeDate(value["gueltigBis"]),
     gueltig: value["gueltig"],
     aktiv: value["aktiv"],
   };

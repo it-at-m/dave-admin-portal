@@ -37,14 +37,10 @@ import {
 export interface CollectionModelEntityModelZeitintervall {
   /**
    *
-   * @type {PagedModelEntityModelZeitintervallEmbedded}
-   * @memberof CollectionModelEntityModelZeitintervall
    */
   embedded?: PagedModelEntityModelZeitintervallEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelEntityModelZeitintervall
    */
   links?: { [key: string]: Link };
 }

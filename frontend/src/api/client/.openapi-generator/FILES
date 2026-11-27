@@ -36,6 +36,12 @@ apis/PkwEinheitControllerApi.ts
 apis/PkwEinheitEntityControllerApi.ts
 apis/PkwEinheitSearchControllerApi.ts
 apis/ProfileControllerApi.ts
+apis/StadtbezirkControllerApi.ts
+apis/StadtbezirkEntityEntityControllerApi.ts
+apis/StadtbezirkEntitySearchControllerApi.ts
+apis/StadtbezirksviertelEntityEntityControllerApi.ts
+apis/StadtbezirksviertelEntityPropertyReferenceControllerApi.ts
+apis/StadtbezirksviertelEntitySearchControllerApi.ts
 apis/SucheControllerApi.ts
 apis/UnauffaelligerTagEntityControllerApi.ts
 apis/UnauffaelligerTagPropertyReferenceControllerApi.ts
@@ -74,6 +80,8 @@ models/CollectionModelEntityModelDienstleister.ts
 models/CollectionModelEntityModelInfoMessage.ts
 models/CollectionModelEntityModelKalendertag.ts
 models/CollectionModelEntityModelMessstelle.ts
+models/CollectionModelEntityModelStadtbezirkEntity.ts
+models/CollectionModelEntityModelStadtbezirksviertelEntity.ts
 models/CollectionModelEntityModelUnauffaelligerTag.ts
 models/CollectionModelEntityModelZaehlstelle.ts
 models/CollectionModelEntityModelZeitintervall.ts
@@ -104,6 +112,8 @@ models/EntityModelKalendertag.ts
 models/EntityModelMessstelle.ts
 models/EntityModelOptionsmenueSettings.ts
 models/EntityModelPkwEinheit.ts
+models/EntityModelStadtbezirkEntity.ts
+models/EntityModelStadtbezirksviertelEntity.ts
 models/EntityModelUnauffaelligerTag.ts
 models/EntityModelZaehlstelle.ts
 models/EntityModelZeitintervall.ts
@@ -118,9 +128,8 @@ models/FahrzeugOptionsDTO.ts
 models/Fahrzeugklasse.ts
 models/FjsKnotenarmValue.ts
 models/FjsStrassenseiteValue.ts
+models/GebietseinheitenDTO.ts
 models/GenerateMessstellePdfRequest.ts
-models/GeneratePdfAuswertungRequest.ts
-models/GeneratePdfReportRequest.ts
 models/GeneratePdfReportRequestAssetsInner.ts
 models/GenerateZaehlungPdfRequest.ts
 models/GeoPoint.ts
@@ -213,6 +222,10 @@ models/PagedModelEntityModelOptionsmenueSettings.ts
 models/PagedModelEntityModelOptionsmenueSettingsEmbedded.ts
 models/PagedModelEntityModelPkwEinheit.ts
 models/PagedModelEntityModelPkwEinheitEmbedded.ts
+models/PagedModelEntityModelStadtbezirkEntity.ts
+models/PagedModelEntityModelStadtbezirkEntityEmbedded.ts
+models/PagedModelEntityModelStadtbezirksviertelEntity.ts
+models/PagedModelEntityModelStadtbezirksviertelEntityEmbedded.ts
 models/PagedModelEntityModelUnauffaelligerTag.ts
 models/PagedModelEntityModelUnauffaelligerTagEmbedded.ts
 models/PagedModelEntityModelZaehlstelle.ts
@@ -234,6 +247,10 @@ models/RepresentationModelObject.ts
 models/ResetAuffaelligkeitenDTO.ts
 models/Rounding.ts
 models/SearchAndFilterOptionsDTO.ts
+models/StadtbezirkDTO.ts
+models/StadtbezirkEntityRequestBody.ts
+models/StadtbezirksviertelDTO.ts
+models/StadtbezirksviertelEntityRequestBody.ts
 models/StepLineSeriesEntryBaseDTO.ts
 models/StepLineSeriesEntryBigDecimalDTO.ts
 models/StepLineSeriesEntryIntegerDTO.ts

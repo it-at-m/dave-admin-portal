@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelMessstelle {
   /**
    *
-   * @type {PagedModelEntityModelMessstelleEmbedded}
-   * @memberof PagedModelEntityModelMessstelle
    */
   embedded?: PagedModelEntityModelMessstelleEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelMessstelle
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelMessstelle
    */
   page?: PageMetadata;
 }

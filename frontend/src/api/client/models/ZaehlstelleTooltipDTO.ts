@@ -22,38 +22,22 @@ import { mapValues } from "../runtime";
 export interface ZaehlstelleTooltipDTO {
   /**
    *
-   * @type {string}
-   * @memberof ZaehlstelleTooltipDTO
    */
   zaehlstellennnummer: string;
   /**
    *
-   * @type {string}
-   * @memberof ZaehlstelleTooltipDTO
    */
-  stadtbezirk: string;
+  stadtbezirknummer?: number;
   /**
    *
-   * @type {number}
-   * @memberof ZaehlstelleTooltipDTO
-   */
-  stadtbezirknummer: number;
-  /**
-   *
-   * @type {number}
-   * @memberof ZaehlstelleTooltipDTO
    */
   anzahlZaehlungen: number;
   /**
    *
-   * @type {string}
-   * @memberof ZaehlstelleTooltipDTO
    */
   datumLetzteZaehlung: string;
   /**
    *
-   * @type {string}
-   * @memberof ZaehlstelleTooltipDTO
    */
   kreuzungsname: string;
 }
@@ -67,13 +51,6 @@ export function instanceOfZaehlstelleTooltipDTO(
   if (
     !("zaehlstellennnummer" in value) ||
     value["zaehlstellennnummer"] === undefined
-  )
-    return false;
-  if (!("stadtbezirk" in value) || value["stadtbezirk"] === undefined)
-    return false;
-  if (
-    !("stadtbezirknummer" in value) ||
-    value["stadtbezirknummer"] === undefined
   )
     return false;
   if (!("anzahlZaehlungen" in value) || value["anzahlZaehlungen"] === undefined)
@@ -103,8 +80,8 @@ export function ZaehlstelleTooltipDTOFromJSONTyped(
   }
   return {
     zaehlstellennnummer: json["zaehlstellennnummer"],
-    stadtbezirk: json["stadtbezirk"],
-    stadtbezirknummer: json["stadtbezirknummer"],
+    stadtbezirknummer:
+      json["stadtbezirknummer"] == null ? undefined : json["stadtbezirknummer"],
     anzahlZaehlungen: json["anzahlZaehlungen"],
     datumLetzteZaehlung: json["datumLetzteZaehlung"],
     kreuzungsname: json["kreuzungsname"],
@@ -125,7 +102,6 @@ export function ZaehlstelleTooltipDTOToJSONTyped(
 
   return {
     zaehlstellennnummer: value["zaehlstellennnummer"],
-    stadtbezirk: value["stadtbezirk"],
     stadtbezirknummer: value["stadtbezirknummer"],
     anzahlZaehlungen: value["anzahlZaehlungen"],
     datumLetzteZaehlung: value["datumLetzteZaehlung"],

@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelEmailAddress {
   /**
    *
-   * @type {PagedModelEntityModelEmailAddressEmbedded}
-   * @memberof PagedModelEntityModelEmailAddress
    */
   embedded?: PagedModelEntityModelEmailAddressEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelEmailAddress
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelEmailAddress
    */
   page?: PageMetadata;
 }

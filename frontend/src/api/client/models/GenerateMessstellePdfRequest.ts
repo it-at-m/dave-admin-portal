@@ -37,32 +37,22 @@ import {
 export interface GenerateMessstellePdfRequest {
   /**
    *
-   * @type {string}
-   * @memberof GenerateMessstellePdfRequest
    */
   department: string;
   /**
    *
-   * @type {MessstelleOptionsDTO}
-   * @memberof GenerateMessstellePdfRequest
    */
   options: MessstelleOptionsDTO;
   /**
    *
-   * @type {LadeProcessedMesswerteDTO}
-   * @memberof GenerateMessstellePdfRequest
    */
   messswerte: LadeProcessedMesswerteDTO;
   /**
    *
-   * @type {string}
-   * @memberof GenerateMessstellePdfRequest
    */
   chartAsBase64Png?: string;
   /**
    *
-   * @type {string}
-   * @memberof GenerateMessstellePdfRequest
    */
   schematischeUebersichtAsBase64Png?: string;
 }

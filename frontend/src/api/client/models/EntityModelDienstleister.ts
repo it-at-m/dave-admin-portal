@@ -14,7 +14,13 @@
 
 import type { Link } from "./Link";
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 import {
   LinkFromJSON,
   LinkFromJSONTyped,
@@ -30,56 +36,38 @@ import {
 export interface EntityModelDienstleister {
   /**
    *
-   * @type {string}
-   * @memberof EntityModelDienstleister
    */
   id?: string;
   /**
    *
-   * @type {Date}
-   * @memberof EntityModelDienstleister
    */
   createdTime?: Date;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelDienstleister
    */
   version?: number;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelDienstleister
    */
   name?: string;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelDienstleister
    */
   kennung?: string;
   /**
    *
-   * @type {Array<string>}
-   * @memberof EntityModelDienstleister
    */
   emailAddresses?: Array<string>;
   /**
    *
-   * @type {boolean}
-   * @memberof EntityModelDienstleister
    */
   active?: boolean;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelDienstleister
    */
   entityVersion?: number;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof EntityModelDienstleister
    */
   links?: { [key: string]: Link };
 }
@@ -109,7 +97,9 @@ export function EntityModelDienstleisterFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     createdTime:
-      json["createdTime"] == null ? undefined : new Date(json["createdTime"]),
+      json["createdTime"] == null
+        ? undefined
+        : parseDateTime(json["createdTime"]),
     version: json["version"] == null ? undefined : json["version"],
     name: json["name"] == null ? undefined : json["name"],
     kennung: json["kennung"] == null ? undefined : json["kennung"],
@@ -143,8 +133,8 @@ export function EntityModelDienstleisterToJSONTyped(
     id: value["id"],
     createdTime:
       value["createdTime"] == null
-        ? undefined
-        : value["createdTime"].toISOString(),
+        ? value["createdTime"]
+        : serializeDateTime(value["createdTime"]),
     version: value["version"],
     name: value["name"],
     kennung: value["kennung"],

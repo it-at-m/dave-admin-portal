@@ -30,14 +30,10 @@ import {
 export interface Querungsverkehr {
   /**
    *
-   * @type {number}
-   * @memberof Querungsverkehr
    */
   knotenarm?: number;
   /**
    *
-   * @type {Himmelsrichtung}
-   * @memberof Querungsverkehr
    */
   richtung?: Himmelsrichtung;
 }

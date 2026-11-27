@@ -28,10 +28,7 @@
     <br />
     <span class="text-h5">{{ messstelle.mstId }}</span>
     <br /><br />
-    <span class="text-caption"
-      >Stadtbezirk {{ messstelle.stadtbezirkNummer }},
-      {{ messstelle.stadtbezirk }}</span
-    >
+    <span class="text-caption">Stadtbezirk{{ stadtbezirkInfo }}</span>
   </v-sheet>
 </template>
 <script setup lang="ts">
@@ -42,6 +39,7 @@ import { computed, ref } from "vue";
 
 import LageplanService from "@/api/service/LageplanService";
 import { useSnackbarStore } from "@/store/SnackbarStore";
+import { useStadtbezirkStore } from "@/store/StadtbezirkStore";
 
 interface Props {
   height: string;
@@ -57,6 +55,16 @@ const messstelle = defineModel<MessstelleEdit>({
 });
 
 const snackbarStore = useSnackbarStore();
+const stadtbezirkStore = useStadtbezirkStore();
+
+const stadtbezirkInfo = computed(() => {
+  const stadtbezirkName = stadtbezirkStore.getStadtbezirkName(
+    messstelle.value.stadtbezirkNummer
+  );
+  return messstelle.value.stadtbezirkNummer !== undefined
+    ? ` ${messstelle.value.stadtbezirkNummer} ${stadtbezirkName || ""}`
+    : ": keine Angabe";
+});
 
 const lageplanLoading = ref(false);
 

@@ -22,62 +22,40 @@ import { mapValues } from "../runtime";
 export interface MessstelleOverviewDTO {
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
    */
   id?: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
    */
   mstId: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
    */
   name?: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
    */
   status?: string;
   /**
    *
-   * @type {boolean}
-   * @memberof MessstelleOverviewDTO
    */
   sichtbarDatenportal?: boolean;
   /**
    *
-   * @type {boolean}
-   * @memberof MessstelleOverviewDTO
    */
   geprueft?: boolean;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
    */
-  stadtbezirk?: string;
+  stadtbezirkNummer?: number;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleOverviewDTO
-   */
-  stadtbezirkNummer?: string;
-  /**
-   *
-   * @type {boolean}
-   * @memberof MessstelleOverviewDTO
    */
   lageplanVorhanden?: boolean;
 }
 
 /**
- * Check if a given object implements the MessstelleOverview interface.
+ * Check if a given object implements the MessstelleOverviewDTO interface.
  */
 export function instanceOfMessstelleOverviewDTO(
   value: object
@@ -109,7 +87,6 @@ export function MessstelleOverviewDTOFromJSONTyped(
         ? undefined
         : json["sichtbarDatenportal"],
     geprueft: json["geprueft"] == null ? undefined : json["geprueft"],
-    stadtbezirk: json["stadtbezirk"] == null ? undefined : json["stadtbezirk"],
     stadtbezirkNummer:
       json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
     lageplanVorhanden:
@@ -136,7 +113,6 @@ export function MessstelleOverviewDTOToJSONTyped(
     status: value["status"],
     sichtbarDatenportal: value["sichtbarDatenportal"],
     geprueft: value["geprueft"],
-    stadtbezirk: value["stadtbezirk"],
     stadtbezirkNummer: value["stadtbezirkNummer"],
     lageplanVorhanden: value["lageplanVorhanden"],
   };

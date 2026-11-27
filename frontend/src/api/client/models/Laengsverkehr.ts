@@ -37,20 +37,14 @@ import {
 export interface Laengsverkehr {
   /**
    *
-   * @type {number}
-   * @memberof Laengsverkehr
    */
   knotenarm?: number;
   /**
    *
-   * @type {Bewegungsrichtung}
-   * @memberof Laengsverkehr
    */
   richtung?: Bewegungsrichtung;
   /**
    *
-   * @type {Himmelsrichtung}
-   * @memberof Laengsverkehr
    */
   strassenseite?: Himmelsrichtung;
 }

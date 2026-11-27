@@ -37,14 +37,10 @@ import {
 export interface CollectionModelEntityModelMessstelle {
   /**
    *
-   * @type {PagedModelEntityModelMessstelleEmbedded}
-   * @memberof CollectionModelEntityModelMessstelle
    */
   embedded?: PagedModelEntityModelMessstelleEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelEntityModelMessstelle
    */
   links?: { [key: string]: Link };
 }

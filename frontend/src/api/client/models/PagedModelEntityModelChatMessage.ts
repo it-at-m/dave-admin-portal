@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelChatMessage {
   /**
    *
-   * @type {PagedModelEntityModelChatMessageEmbedded}
-   * @memberof PagedModelEntityModelChatMessage
    */
   embedded?: PagedModelEntityModelChatMessageEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelChatMessage
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelChatMessage
    */
   page?: PageMetadata;
 }

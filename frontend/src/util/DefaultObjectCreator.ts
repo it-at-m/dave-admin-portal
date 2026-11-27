@@ -2,6 +2,7 @@ import type {
   ConfigurationDTO,
   DienstleisterDTO,
   EmailAddressDTO,
+  GebietseinheitenDTO,
   HochrechnungsfaktorDTO,
   MapConfigurationDTO,
   SearchAndFilterOptionsDTO,
@@ -142,6 +143,13 @@ export default class DefaultObjectCreator {
     return {
       datenportalHeader: "",
       mapConfiguration: this.createDefaultMapConfigurationDTO(),
+    };
+  }
+
+  public static createDefaultGebietseinheitenDTO(): GebietseinheitenDTO {
+    return {
+      stadtbezirke: [],
+      stadtbezirksviertel: [],
     };
   }
 }

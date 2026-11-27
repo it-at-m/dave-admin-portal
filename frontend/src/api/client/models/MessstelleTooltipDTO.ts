@@ -22,50 +22,30 @@ import { mapValues } from "../runtime";
 export interface MessstelleTooltipDTO {
   /**
    *
-   * @type {string}
-   * @memberof MessstelleTooltipDTO
    */
   mstId: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleTooltipDTO
    */
   standort: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleTooltipDTO
    */
-  stadtbezirk: string;
+  stadtbezirknummer?: number;
   /**
    *
-   * @type {number}
-   * @memberof MessstelleTooltipDTO
-   */
-  stadtbezirknummer: number;
-  /**
-   *
-   * @type {string}
-   * @memberof MessstelleTooltipDTO
    */
   realisierungsdatum: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleTooltipDTO
    */
   abbaudatum: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleTooltipDTO
    */
   datumLetztePlausibleMessung: string;
   /**
    *
-   * @type {string}
-   * @memberof MessstelleTooltipDTO
    */
   detektierteVerkehrsart: string;
 }
@@ -78,13 +58,6 @@ export function instanceOfMessstelleTooltipDTO(
 ): value is MessstelleTooltipDTO {
   if (!("mstId" in value) || value["mstId"] === undefined) return false;
   if (!("standort" in value) || value["standort"] === undefined) return false;
-  if (!("stadtbezirk" in value) || value["stadtbezirk"] === undefined)
-    return false;
-  if (
-    !("stadtbezirknummer" in value) ||
-    value["stadtbezirknummer"] === undefined
-  )
-    return false;
   if (
     !("realisierungsdatum" in value) ||
     value["realisierungsdatum"] === undefined
@@ -119,8 +92,8 @@ export function MessstelleTooltipDTOFromJSONTyped(
   return {
     mstId: json["mstId"],
     standort: json["standort"],
-    stadtbezirk: json["stadtbezirk"],
-    stadtbezirknummer: json["stadtbezirknummer"],
+    stadtbezirknummer:
+      json["stadtbezirknummer"] == null ? undefined : json["stadtbezirknummer"],
     realisierungsdatum: json["realisierungsdatum"],
     abbaudatum: json["abbaudatum"],
     datumLetztePlausibleMessung: json["datumLetztePlausibleMessung"],
@@ -143,7 +116,6 @@ export function MessstelleTooltipDTOToJSONTyped(
   return {
     mstId: value["mstId"],
     standort: value["standort"],
-    stadtbezirk: value["stadtbezirk"],
     stadtbezirknummer: value["stadtbezirknummer"],
     realisierungsdatum: value["realisierungsdatum"],
     abbaudatum: value["abbaudatum"],

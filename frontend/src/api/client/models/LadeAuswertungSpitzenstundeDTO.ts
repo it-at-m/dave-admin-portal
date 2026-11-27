@@ -12,7 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 
 /**
  *
@@ -22,172 +28,112 @@ import { mapValues } from "../runtime";
 export interface LadeAuswertungSpitzenstundeDTO {
   /**
    *
-   * @type {string}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   type?: string;
   /**
    *
-   * @type {string}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   startUhrzeit: string;
   /**
    *
-   * @type {string}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   endeUhrzeit: string;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   pkw: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   lkw: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   lastzuege: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   busse: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   kraftraeder: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   fahrradfahrer: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   fussgaenger: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   pkwEinheiten: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   von?: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   nach?: number;
   /**
    *
-   * @type {string}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   nummerZaehlstelle?: string;
   /**
    *
-   * @type {string}
-   * @memberof LadeAuswertungSpitzenstundeDTO
-   */
-  stadtbezirk?: string;
-  /**
-   *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   stadtbezirkNummer?: number;
   /**
    *
-   * @type {Date}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   datum?: Date;
   /**
    *
-   * @type {string}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   zaehlart?: string;
   /**
    *
-   * @type {string}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   kreuzungsname?: string;
   /**
    *
-   * @type {boolean}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   sonderzaehlung?: boolean;
   /**
    *
-   * @type {string}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   zaehlsituation?: string;
   /**
    *
-   * @type {string}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   zaehlsituationErweitert?: string;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
+   */
+  gueterverkehr: number;
+  /**
+   *
    */
   schwerverkehr: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
-   */
-  anteilSchwerverkehrAnKfzProzent: number;
-  /**
-   *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   anteilGueterverkehrAnKfzProzent: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
+   */
+  anteilSchwerverkehrAnKfzProzent: number;
+  /**
+   *
    */
   kfz: number;
   /**
    *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
    */
   gesamt: number;
-  /**
-   *
-   * @type {number}
-   * @memberof LadeAuswertungSpitzenstundeDTO
-   */
-  gueterverkehr: number;
 }
 
 /**
@@ -212,22 +158,22 @@ export function instanceOfLadeAuswertungSpitzenstundeDTO(
     return false;
   if (!("pkwEinheiten" in value) || value["pkwEinheiten"] === undefined)
     return false;
-  if (!("schwerverkehr" in value) || value["schwerverkehr"] === undefined)
+  if (!("gueterverkehr" in value) || value["gueterverkehr"] === undefined)
     return false;
-  if (
-    !("anteilSchwerverkehrAnKfzProzent" in value) ||
-    value["anteilSchwerverkehrAnKfzProzent"] === undefined
-  )
+  if (!("schwerverkehr" in value) || value["schwerverkehr"] === undefined)
     return false;
   if (
     !("anteilGueterverkehrAnKfzProzent" in value) ||
     value["anteilGueterverkehrAnKfzProzent"] === undefined
   )
     return false;
+  if (
+    !("anteilSchwerverkehrAnKfzProzent" in value) ||
+    value["anteilSchwerverkehrAnKfzProzent"] === undefined
+  )
+    return false;
   if (!("kfz" in value) || value["kfz"] === undefined) return false;
   if (!("gesamt" in value) || value["gesamt"] === undefined) return false;
-  if (!("gueterverkehr" in value) || value["gueterverkehr"] === undefined)
-    return false;
   return true;
 }
 
@@ -260,10 +206,9 @@ export function LadeAuswertungSpitzenstundeDTOFromJSONTyped(
     nach: json["nach"] == null ? undefined : json["nach"],
     nummerZaehlstelle:
       json["nummerZaehlstelle"] == null ? undefined : json["nummerZaehlstelle"],
-    stadtbezirk: json["stadtbezirk"] == null ? undefined : json["stadtbezirk"],
     stadtbezirkNummer:
       json["stadtbezirkNummer"] == null ? undefined : json["stadtbezirkNummer"],
-    datum: json["datum"] == null ? undefined : new Date(json["datum"]),
+    datum: json["datum"] == null ? undefined : parseDate(json["datum"]),
     zaehlart: json["zaehlart"] == null ? undefined : json["zaehlart"],
     kreuzungsname:
       json["kreuzungsname"] == null ? undefined : json["kreuzungsname"],
@@ -275,12 +220,12 @@ export function LadeAuswertungSpitzenstundeDTOFromJSONTyped(
       json["zaehlsituationErweitert"] == null
         ? undefined
         : json["zaehlsituationErweitert"],
+    gueterverkehr: json["gueterverkehr"],
     schwerverkehr: json["schwerverkehr"],
-    anteilSchwerverkehrAnKfzProzent: json["anteilSchwerverkehrAnKfzProzent"],
     anteilGueterverkehrAnKfzProzent: json["anteilGueterverkehrAnKfzProzent"],
+    anteilSchwerverkehrAnKfzProzent: json["anteilSchwerverkehrAnKfzProzent"],
     kfz: json["kfz"],
     gesamt: json["gesamt"],
-    gueterverkehr: json["gueterverkehr"],
   };
 }
 
@@ -313,22 +258,19 @@ export function LadeAuswertungSpitzenstundeDTOToJSONTyped(
     von: value["von"],
     nach: value["nach"],
     nummerZaehlstelle: value["nummerZaehlstelle"],
-    stadtbezirk: value["stadtbezirk"],
     stadtbezirkNummer: value["stadtbezirkNummer"],
     datum:
-      value["datum"] == null
-        ? undefined
-        : value["datum"].toISOString().substring(0, 10),
+      value["datum"] == null ? value["datum"] : serializeDate(value["datum"]),
     zaehlart: value["zaehlart"],
     kreuzungsname: value["kreuzungsname"],
     sonderzaehlung: value["sonderzaehlung"],
     zaehlsituation: value["zaehlsituation"],
     zaehlsituationErweitert: value["zaehlsituationErweitert"],
+    gueterverkehr: value["gueterverkehr"],
     schwerverkehr: value["schwerverkehr"],
-    anteilSchwerverkehrAnKfzProzent: value["anteilSchwerverkehrAnKfzProzent"],
     anteilGueterverkehrAnKfzProzent: value["anteilGueterverkehrAnKfzProzent"],
+    anteilSchwerverkehrAnKfzProzent: value["anteilSchwerverkehrAnKfzProzent"],
     kfz: value["kfz"],
     gesamt: value["gesamt"],
-    gueterverkehr: value["gueterverkehr"],
   };
 }

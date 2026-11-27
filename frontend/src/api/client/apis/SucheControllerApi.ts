@@ -11,40 +11,65 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
-import type {
-  ErhebungsstelleKarteDTO,
-  SearchAndFilterOptionsDTO,
-  SucheComplexSuggestsDTO,
-} from "../models/index";
+import type { ErhebungsstelleKarteDTO } from "../models/ErhebungsstelleKarteDTO";
+import type { SearchAndFilterOptionsDTO } from "../models/SearchAndFilterOptionsDTO";
+import type { SucheComplexSuggestsDTO } from "../models/SucheComplexSuggestsDTO";
 
 import {
   ErhebungsstelleKarteDTOFromJSON,
   ErhebungsstelleKarteDTOToJSON,
+} from "../models/ErhebungsstelleKarteDTO";
+import {
   SearchAndFilterOptionsDTOFromJSON,
   SearchAndFilterOptionsDTOToJSON,
+} from "../models/SearchAndFilterOptionsDTO";
+import {
   SucheComplexSuggestsDTOFromJSON,
   SucheComplexSuggestsDTOToJSON,
-} from "../models/index";
+} from "../models/SucheComplexSuggestsDTO";
 import * as runtime from "../runtime";
 
-export interface SearchErhebungsstelleForMapRequest {
+export interface SearchErhebungsstelleForKarteRequest {
+  /**
+   *
+   */
   query: string;
+  /**
+   *
+   */
   searchAndFilterOptionsDTO: SearchAndFilterOptionsDTO;
 }
 
-export interface SearchErhebungsstelleForMapDatenportalRequest {
+export interface SearchErhebungsstellenForKarteDatenportalRequest {
+  /**
+   *
+   */
   query: string;
+  /**
+   *
+   */
   searchAndFilterOptionsDTO: SearchAndFilterOptionsDTO;
 }
 
 export interface SuggestRequest {
+  /**
+   *
+   */
   query: string;
+  /**
+   *
+   */
   searchAndFilterOptionsDTO: SearchAndFilterOptionsDTO;
 }
 
 export interface SuggestDatenportalRequest {
+  /**
+   *
+   */
   query: string;
+  /**
+   *
+   */
   searchAndFilterOptionsDTO: SearchAndFilterOptionsDTO;
 }
 
@@ -53,22 +78,22 @@ export interface SuggestDatenportalRequest {
  */
 export class SucheControllerApi extends runtime.BaseAPI {
   /**
+   * Creates request options for searchErhebungsstelleForKarte without sending the request
    */
-  async searchErhebungsstelleForMapRaw(
-    requestParameters: SearchErhebungsstelleForMapRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<Set<ErhebungsstelleKarteDTO>>> {
+  async searchErhebungsstelleForKarteRequestOpts(
+    requestParameters: SearchErhebungsstelleForKarteRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["query"] == null) {
       throw new runtime.RequiredError(
         "query",
-        'Required parameter "query" was null or undefined when calling searchErhebungsstelleForMap().'
+        'Required parameter "query" was null or undefined when calling searchErhebungsstelleForKarte().'
       );
     }
 
     if (requestParameters["searchAndFilterOptionsDTO"] == null) {
       throw new runtime.RequiredError(
         "searchAndFilterOptionsDTO",
-        'Required parameter "searchAndFilterOptionsDTO" was null or undefined when calling searchErhebungsstelleForMap().'
+        'Required parameter "searchAndFilterOptionsDTO" was null or undefined when calling searchErhebungsstelleForKarte().'
       );
     }
 
@@ -84,18 +109,26 @@ export class SucheControllerApi extends runtime.BaseAPI {
 
     let urlPath = `/search`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "POST",
-        headers: headerParameters,
-        query: queryParameters,
-        body: SearchAndFilterOptionsDTOToJSON(
-          requestParameters["searchAndFilterOptionsDTO"]
-        ),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "POST",
+      headers: headerParameters,
+      query: queryParameters,
+      body: SearchAndFilterOptionsDTOToJSON(
+        requestParameters["searchAndFilterOptionsDTO"]
+      ),
+    };
+  }
+
+  /**
+   */
+  async searchErhebungsstelleForKarteRaw(
+    requestParameters: SearchErhebungsstelleForKarteRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<Set<ErhebungsstelleKarteDTO>>> {
+    const requestOptions =
+      await this.searchErhebungsstelleForKarteRequestOpts(requestParameters);
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(
       response,
@@ -105,11 +138,11 @@ export class SucheControllerApi extends runtime.BaseAPI {
 
   /**
    */
-  async searchErhebungsstelleForMap(
-    requestParameters: SearchErhebungsstelleForMapRequest,
+  async searchErhebungsstelleForKarte(
+    requestParameters: SearchErhebungsstelleForKarteRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
   ): Promise<Set<ErhebungsstelleKarteDTO>> {
-    const response = await this.searchErhebungsstelleForMapRaw(
+    const response = await this.searchErhebungsstelleForKarteRaw(
       requestParameters,
       initOverrides
     );
@@ -117,22 +150,22 @@ export class SucheControllerApi extends runtime.BaseAPI {
   }
 
   /**
+   * Creates request options for searchErhebungsstellenForKarteDatenportal without sending the request
    */
-  async searchErhebungsstelleForMapDatenportalRaw(
-    requestParameters: SearchErhebungsstelleForMapDatenportalRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<Set<ErhebungsstelleKarteDTO>>> {
+  async searchErhebungsstellenForKarteDatenportalRequestOpts(
+    requestParameters: SearchErhebungsstellenForKarteDatenportalRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["query"] == null) {
       throw new runtime.RequiredError(
         "query",
-        'Required parameter "query" was null or undefined when calling searchErhebungsstelleForMapDatenportal().'
+        'Required parameter "query" was null or undefined when calling searchErhebungsstellenForKarteDatenportal().'
       );
     }
 
     if (requestParameters["searchAndFilterOptionsDTO"] == null) {
       throw new runtime.RequiredError(
         "searchAndFilterOptionsDTO",
-        'Required parameter "searchAndFilterOptionsDTO" was null or undefined when calling searchErhebungsstelleForMapDatenportal().'
+        'Required parameter "searchAndFilterOptionsDTO" was null or undefined when calling searchErhebungsstellenForKarteDatenportal().'
       );
     }
 
@@ -148,18 +181,28 @@ export class SucheControllerApi extends runtime.BaseAPI {
 
     let urlPath = `/search-datenportal`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "POST",
-        headers: headerParameters,
-        query: queryParameters,
-        body: SearchAndFilterOptionsDTOToJSON(
-          requestParameters["searchAndFilterOptionsDTO"]
-        ),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "POST",
+      headers: headerParameters,
+      query: queryParameters,
+      body: SearchAndFilterOptionsDTOToJSON(
+        requestParameters["searchAndFilterOptionsDTO"]
+      ),
+    };
+  }
+
+  /**
+   */
+  async searchErhebungsstellenForKarteDatenportalRaw(
+    requestParameters: SearchErhebungsstellenForKarteDatenportalRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<Set<ErhebungsstelleKarteDTO>>> {
+    const requestOptions =
+      await this.searchErhebungsstellenForKarteDatenportalRequestOpts(
+        requestParameters
+      );
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(
       response,
@@ -169,11 +212,11 @@ export class SucheControllerApi extends runtime.BaseAPI {
 
   /**
    */
-  async searchErhebungsstelleForMapDatenportal(
-    requestParameters: SearchErhebungsstelleForMapDatenportalRequest,
+  async searchErhebungsstellenForKarteDatenportal(
+    requestParameters: SearchErhebungsstellenForKarteDatenportalRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
   ): Promise<Set<ErhebungsstelleKarteDTO>> {
-    const response = await this.searchErhebungsstelleForMapDatenportalRaw(
+    const response = await this.searchErhebungsstellenForKarteDatenportalRaw(
       requestParameters,
       initOverrides
     );
@@ -181,11 +224,11 @@ export class SucheControllerApi extends runtime.BaseAPI {
   }
 
   /**
+   * Creates request options for suggest without sending the request
    */
-  async suggestRaw(
-    requestParameters: SuggestRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<SucheComplexSuggestsDTO>> {
+  async suggestRequestOpts(
+    requestParameters: SuggestRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["query"] == null) {
       throw new runtime.RequiredError(
         "query",
@@ -212,18 +255,25 @@ export class SucheControllerApi extends runtime.BaseAPI {
 
     let urlPath = `/suggest`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "POST",
-        headers: headerParameters,
-        query: queryParameters,
-        body: SearchAndFilterOptionsDTOToJSON(
-          requestParameters["searchAndFilterOptionsDTO"]
-        ),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "POST",
+      headers: headerParameters,
+      query: queryParameters,
+      body: SearchAndFilterOptionsDTOToJSON(
+        requestParameters["searchAndFilterOptionsDTO"]
+      ),
+    };
+  }
+
+  /**
+   */
+  async suggestRaw(
+    requestParameters: SuggestRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<SucheComplexSuggestsDTO>> {
+    const requestOptions = await this.suggestRequestOpts(requestParameters);
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       SucheComplexSuggestsDTOFromJSON(jsonValue)
@@ -241,11 +291,11 @@ export class SucheControllerApi extends runtime.BaseAPI {
   }
 
   /**
+   * Creates request options for suggestDatenportal without sending the request
    */
-  async suggestDatenportalRaw(
-    requestParameters: SuggestDatenportalRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<SucheComplexSuggestsDTO>> {
+  async suggestDatenportalRequestOpts(
+    requestParameters: SuggestDatenportalRequest
+  ): Promise<runtime.RequestOpts> {
     if (requestParameters["query"] == null) {
       throw new runtime.RequiredError(
         "query",
@@ -272,18 +322,26 @@ export class SucheControllerApi extends runtime.BaseAPI {
 
     let urlPath = `/suggest-datenportal`;
 
-    const response = await this.request(
-      {
-        path: urlPath,
-        method: "POST",
-        headers: headerParameters,
-        query: queryParameters,
-        body: SearchAndFilterOptionsDTOToJSON(
-          requestParameters["searchAndFilterOptionsDTO"]
-        ),
-      },
-      initOverrides
-    );
+    return {
+      path: urlPath,
+      method: "POST",
+      headers: headerParameters,
+      query: queryParameters,
+      body: SearchAndFilterOptionsDTOToJSON(
+        requestParameters["searchAndFilterOptionsDTO"]
+      ),
+    };
+  }
+
+  /**
+   */
+  async suggestDatenportalRaw(
+    requestParameters: SuggestDatenportalRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<SucheComplexSuggestsDTO>> {
+    const requestOptions =
+      await this.suggestDatenportalRequestOpts(requestParameters);
+    const response = await this.request(requestOptions, initOverrides);
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
       SucheComplexSuggestsDTOFromJSON(jsonValue)

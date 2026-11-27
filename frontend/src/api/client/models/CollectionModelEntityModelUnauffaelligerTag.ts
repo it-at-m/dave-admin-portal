@@ -37,14 +37,10 @@ import {
 export interface CollectionModelEntityModelUnauffaelligerTag {
   /**
    *
-   * @type {PagedModelEntityModelUnauffaelligerTagEmbedded}
-   * @memberof CollectionModelEntityModelUnauffaelligerTag
    */
   embedded?: PagedModelEntityModelUnauffaelligerTagEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelEntityModelUnauffaelligerTag
    */
   links?: { [key: string]: Link };
 }

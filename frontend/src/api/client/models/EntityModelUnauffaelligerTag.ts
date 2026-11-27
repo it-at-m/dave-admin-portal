@@ -14,7 +14,13 @@
 
 import type { Link } from "./Link";
 
-import { mapValues } from "../runtime";
+import {
+  mapValues,
+  parseDate,
+  parseDateTime,
+  serializeDate,
+  serializeDateTime,
+} from "../runtime";
 import {
   LinkFromJSON,
   LinkFromJSONTyped,
@@ -30,38 +36,26 @@ import {
 export interface EntityModelUnauffaelligerTag {
   /**
    *
-   * @type {string}
-   * @memberof EntityModelUnauffaelligerTag
    */
   id?: string;
   /**
    *
-   * @type {Date}
-   * @memberof EntityModelUnauffaelligerTag
    */
   createdTime?: Date;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelUnauffaelligerTag
    */
   version?: number;
   /**
    *
-   * @type {string}
-   * @memberof EntityModelUnauffaelligerTag
    */
   mstId?: string;
   /**
    *
-   * @type {number}
-   * @memberof EntityModelUnauffaelligerTag
    */
   entityVersion?: number;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof EntityModelUnauffaelligerTag
    */
   links?: { [key: string]: Link };
 }
@@ -91,7 +85,9 @@ export function EntityModelUnauffaelligerTagFromJSONTyped(
   return {
     id: json["id"] == null ? undefined : json["id"],
     createdTime:
-      json["createdTime"] == null ? undefined : new Date(json["createdTime"]),
+      json["createdTime"] == null
+        ? undefined
+        : parseDateTime(json["createdTime"]),
     version: json["version"] == null ? undefined : json["version"],
     mstId: json["mstId"] == null ? undefined : json["mstId"],
     entityVersion:
@@ -121,8 +117,8 @@ export function EntityModelUnauffaelligerTagToJSONTyped(
     id: value["id"],
     createdTime:
       value["createdTime"] == null
-        ? undefined
-        : value["createdTime"].toISOString(),
+        ? value["createdTime"]
+        : serializeDateTime(value["createdTime"]),
     version: value["version"],
     mstId: value["mstId"],
     entityVersion: value["entityVersion"],

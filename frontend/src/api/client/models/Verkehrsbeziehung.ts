@@ -30,26 +30,18 @@ import {
 export interface Verkehrsbeziehung {
   /**
    *
-   * @type {number}
-   * @memberof Verkehrsbeziehung
    */
   von?: number;
   /**
    *
-   * @type {number}
-   * @memberof Verkehrsbeziehung
    */
   nach?: number;
   /**
    *
-   * @type {string}
-   * @memberof Verkehrsbeziehung
    */
   fahrbewegungKreisverkehr?: VerkehrsbeziehungFahrbewegungKreisverkehrEnum;
   /**
    *
-   * @type {Himmelsrichtung}
-   * @memberof Verkehrsbeziehung
    */
   strassenseite?: Himmelsrichtung;
 }

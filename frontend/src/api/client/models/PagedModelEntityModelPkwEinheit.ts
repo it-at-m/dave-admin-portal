@@ -44,20 +44,14 @@ import {
 export interface PagedModelEntityModelPkwEinheit {
   /**
    *
-   * @type {PagedModelEntityModelPkwEinheitEmbedded}
-   * @memberof PagedModelEntityModelPkwEinheit
    */
   embedded?: PagedModelEntityModelPkwEinheitEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof PagedModelEntityModelPkwEinheit
    */
   links?: { [key: string]: Link };
   /**
    *
-   * @type {PageMetadata}
-   * @memberof PagedModelEntityModelPkwEinheit
    */
   page?: PageMetadata;
 }

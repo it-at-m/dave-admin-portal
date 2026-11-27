@@ -37,14 +37,10 @@ import {
 export interface CollectionModelEntityModelKalendertag {
   /**
    *
-   * @type {PagedModelEntityModelKalendertagEmbedded}
-   * @memberof CollectionModelEntityModelKalendertag
    */
   embedded?: PagedModelEntityModelKalendertagEmbedded;
   /**
    *
-   * @type {{ [key: string]: Link; }}
-   * @memberof CollectionModelEntityModelKalendertag
    */
   links?: { [key: string]: Link };
 }
