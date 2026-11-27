@@ -47,7 +47,7 @@ export interface MessstelleOverviewDTO {
   /**
    *
    */
-  stadtbezirkNummer?: string;
+  stadtbezirkNummer?: number;
   /**
    *
    */

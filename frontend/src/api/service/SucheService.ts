@@ -33,7 +33,7 @@ export default class SucheService {
     searchAndFilterOptions: SearchAndFilterOptionsDTO
   ): Promise<Array<ErhebungsstelleKarteDTO>> {
     return handleOpenApiError(
-      this.API.searchErhebungsstelleForMap({
+      this.API.searchErhebungsstelleForKarte({
         query,
         searchAndFilterOptionsDTO: searchAndFilterOptions,
       }).then((response) => Array.from(response)),

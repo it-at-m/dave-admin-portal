@@ -26,7 +26,6 @@ type MessstelleBasis = Pick<
   | "mstId"
   | "name"
   | "status"
-  | "stadtbezirk"
   | "stadtbezirkNummer"
   | "geprueft"
   | "sichtbarDatenportal"
@@ -125,7 +124,6 @@ function mapToMessstelleBasis(
     status:
       (dto.status as MessstelleEdit["status"]) ??
       MessstelleKarteDTOStatusEnum.Unbekannt,
-    stadtbezirk: dto.stadtbezirk ?? "",
     stadtbezirkNummer: dto.stadtbezirkNummer?.toString() ?? "",
     geprueft: dto.geprueft ?? false,
     sichtbarDatenportal: dto.sichtbarDatenportal ?? false,
@@ -139,7 +137,6 @@ function mapToEditMessstelleDTO(data: MessstelleEdit): EditMessstelleDTO {
     name: data.name,
     status: data.status,
     bemerkung: data.bemerkung,
-    stadtbezirk: data.stadtbezirk,
     stadtbezirkNummer: data.stadtbezirkNummer
       ? Number(data.stadtbezirkNummer)
       : undefined,

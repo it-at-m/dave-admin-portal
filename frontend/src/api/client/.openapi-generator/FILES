@@ -140,7 +140,6 @@ models/Heading4Asset.ts
 models/Heading5Asset.ts
 models/Himmelsrichtung.ts
 models/Hochrechnung.ts
-models/Hochrechnungsfaktor.ts
 models/HochrechnungsfaktorDTO.ts
 models/HochrechnungsfaktorRequestBody.ts
 models/ImageAsset.ts
